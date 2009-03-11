@@ -18,28 +18,33 @@
 using namespace std;
 using namespace wso2wsf;
 
-class PWCB: public PasswordCallback
+class AuthnProvider: public AuthenticationProvider
 {
 public:
-    WSF_CALL PWCB();
-    WSF_CALL ~PWCB();
-    string& WSF_CALL getPassword(string username);
-    string& WSF_CALL getPKCS12Password(string username);
+    WSF_CALL AuthnProvider();
+    WSF_CALL ~AuthnProvider();
+    
+    bool WSF_CALL checkPassword(string username, string password, MessageContext* msgctx);
+    bool WSF_CALL checkDigestPassword(
+        string username, string nonce, string created, string digest, MessageContext* msgctx);
+
+private:
+    string& WSF_CALL getPassword(string& username);
 };
 
-WSF_PASSWORD_CALLBACK_INIT(PWCB);
+WSF_AUTHENTICATION_PROVIDER_INIT(AuthnProvider);
 
-PWCB::PWCB()
+AuthnProvider::AuthnProvider()
 {
     //you can write any construction logic
 }
 
-PWCB::~PWCB()
+AuthnProvider::~AuthnProvider()
 {
     //you can write any destruction logic
 }
 
-string& PWCB::getPassword(string username)
+string& AuthnProvider::getPassword(string& username)
 {
     string pw;
 
@@ -97,17 +102,17 @@ string& PWCB::getPassword(string username)
     return pw;
 }
 
-string& PWCB::getPKCS12Password(string username)
+bool AuthnProvider::checkPassword(std::string username, std::string password, MessageContext* msgctx)
 {
-    string pw;
-	if(username == "a")
-	{
-		pw = "a12345";
-	}
-	else if(username == "b")
-	{
-		pw = "b12345";
-	}
-	return pw;
+    string local_pw = getPassword(username);
+    return (local_pw == password);
+}
+bool WSF_CALL checkDigestPassword(
+    string username, string nonce, string created, string digest, MessageContext* msgctx)
+{
+    string local_pw = getPassword(username);
+    string local_digest = rampart_crypto_sha1(
+        Process::getEnv(), nonce.c_str(), created.c_str(), local_pw.c_str());
+    return (local_digest == digest);
 }
 

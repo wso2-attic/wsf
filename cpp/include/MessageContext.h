@@ -69,6 +69,11 @@ namespace wso2wsf
 		 */
 		 WSF_EXTERN MessageContext(axis2_msg_ctx_t *_msg_ctx);
 
+        /**
+        * Returns existing axis2_msg_ctx object
+        */
+        WSF_EXTERN axis2_msg_ctx_t * getAxis2MessageContext();
+
 		 /**
 		* This method returns the WS-Addressing fault to address. Fault to address tells where to 
 		* send the fault in case there is an error.

@@ -18,7 +18,6 @@
 #define PASSWORD_CALLBACK_H
 
 #include <WSFDefines.h>
-#include <OMElement.h>
 #include <string>
 #include <rampart_callback.h>
 
@@ -41,18 +40,18 @@ namespace wso2wsf
      * @brief class PasswordCallback Represents an interface needed implement any user specific
      * password callback
      */
-    class WSF_EXTERN PasswordCallback
+    class PasswordCallback
     {
     public:
         /**
          * Handler to be invoked to get the password
          */
-        virtual std::string WSF_CALL getPassword(std::string username) = 0;
+        virtual std::string& WSF_CALL getPassword(std::string username) = 0;
 
         /**
          * Handler to be invoked to get the pkcs12 password
          */
-        virtual std::string WSF_CALL getPKCS12Password(std::string username) = 0;
+        virtual std::string& WSF_CALL getPKCS12Password(std::string username) = 0;
 
         /**
          * destructor that can be overridden.
@@ -113,6 +112,7 @@ extern "C" \
         const axutil_env_t *env) \
     { \
         wsf_rampart_callback_t* rcb = NULL; \
+        wso2wsf::Process* process = NULL; \
     \
         rcb = (wsf_rampart_callback_t*)AXIS2_MALLOC(env->allocator, sizeof(wsf_rampart_callback_t)); \
     \
@@ -129,6 +129,10 @@ extern "C" \
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[wsf_rampart]Cannot initialize the PWCB module"); \
             return AXIS2_FAILURE; \
         } \
+\
+        process = wso2wsf::Process::getInstance(); \
+        process->setEnv(env); \
+\
     \
         return AXIS2_SUCCESS; \
     } \

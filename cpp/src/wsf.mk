@@ -21,7 +21,7 @@ LIBS = axutil.lib axis2_engine.lib axis2_parser.lib \
        neethi_util.lib neethi.lib sandesha2.lib mod_rampart.lib
 !endif
 
-INCLUDE_PATH = /I.\..\include /I$(WSFCPP_HOME_DIR)\include /I$(WSFCPP_HOME_DIR)\include\platforms /I$(LIBXML2_BIN_DIR)\include /I$(ICONV_BIN_DIR)\include       
+INCLUDE_PATH = /I.\..\include /I$(WSFCPP_HOME_DIR)\include /I$(WSFCPP_HOME_DIR)\include\platforms /I$(LIBXML2_BIN_DIR)\include /I$(ICONV_BIN_DIR)\include /I$(OPENSSL_BIN_DIR)\include
 
 !if "$(DEBUG)" == "1"
 CFLAGS = $(CFLAGS) /D "_DEBUG" /Od /Z7 $(CRUNTIME)d

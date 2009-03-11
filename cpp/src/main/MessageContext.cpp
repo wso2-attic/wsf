@@ -36,6 +36,14 @@ MessageContext::MessageContext(axis2_msg_ctx_t *msg_ctx)
 }
 
 /**
+* Returns existing axis2_msg_ctx object
+*/
+axis2_msg_ctx_t* MessageContext::getAxis2MessageContext()
+{
+    return _msg_ctx;
+}
+
+/**
 * This method returns the WS-Addressing fault to address. Fault to address tells where to 
 * send the fault in case there is an error.
 * @return returns an string of the fault to endpoint 
@@ -595,7 +603,17 @@ WSF_EXTERN Property *WSF_CALL MessageContext::getProperty(std::string key)
 */
 WSF_EXTERN void* WSF_CALL MessageContext::getPropertyValue(std::string propStr)
 {
-	/** TODO, is this method needed ? */
+	axutil_property_t *prop = NULL;
+	if(!key.empty())
+	{
+		prop = axis2_msg_ctx_get_property(_msg_ctx, getEnv(),key.c_str());
+		if(prop)
+		{
+			void *value = NULL;
+			value = axutil_property_get_value(prop,getEnv());
+			return value;
+		}
+	}
 	return NULL;
 }
 

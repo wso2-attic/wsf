@@ -15,6 +15,8 @@
  */
 
 #include <PasswordCallback.h>
+#include <axutil_string.h>
+
 using namespace std;
 using namespace wso2wsf;
 
