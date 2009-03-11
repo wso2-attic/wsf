@@ -1,0 +1,13 @@
+<service name="version">
+    <parameter name="ServiceClass" locked="xsd:false">version</parameter>
+
+   <description>
+        This is a testing service , to test one way service support
+   </description>
+
+    <operation name="version" mep="http://www.w3.org/2004/08/wsdl/in-only">
+            <messageReceiver class="wsf_cpp_msg_recv"/>
+            <parameter name="wsamapping" >http://example.org/action/version</parameter>
+    </operation>
+
+</service>
