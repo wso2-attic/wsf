@@ -604,9 +604,9 @@ WSF_EXTERN Property *WSF_CALL MessageContext::getProperty(std::string key)
 WSF_EXTERN void* WSF_CALL MessageContext::getPropertyValue(std::string propStr)
 {
 	axutil_property_t *prop = NULL;
-	if(!key.empty())
+	if(!propStr.empty())
 	{
-		prop = axis2_msg_ctx_get_property(_msg_ctx, getEnv(),key.c_str());
+		prop = axis2_msg_ctx_get_property(_msg_ctx, getEnv(),propStr.c_str());
 		if(prop)
 		{
 			void *value = NULL;
