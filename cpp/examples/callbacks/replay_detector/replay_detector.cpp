@@ -79,7 +79,7 @@ ReplaySet_t* RDetect::getReplaySet(MessageContext* msgctx)
 {
     String propertyName = "ReplayDetectorSet";
     ReplaySet_t* psetReplay = (ReplaySet_t*)msgctx->getPropertyValue(propertyName);
-    if(psetReplay)
+    if(!psetReplay)
     {
        //The property is not created yet. So we have to create it and store it in conf context
         psetReplay = new ReplaySet_t;
@@ -88,7 +88,7 @@ ReplaySet_t* RDetect::getReplaySet(MessageContext* msgctx)
             msgctx->getAxis2MessageContext(), env);
         axutil_property_t* replay_set_prop = axutil_property_create_with_args(
             env, AXIS2_SCOPE_APPLICATION, AXIS2_TRUE, NULL, psetReplay);
-        axis2_conf_ctx_set_property(conf_ctx, env, propertyName.c_str(), psetReplay); 
+        axis2_conf_ctx_set_property(conf_ctx, env, propertyName.c_str(), replay_set_prop); 
     }
     
     return psetReplay;
