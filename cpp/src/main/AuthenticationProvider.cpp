@@ -18,7 +18,7 @@
 using namespace std;
 using namespace wso2wsf;
 
-rampart_authn_provider_status_t WSF_CALL AuthenticationProvider::callbackPasswordPlain(
+WSF_EXTERN rampart_authn_provider_status_t WSF_CALL AuthenticationProvider::callbackPasswordPlain(
     rampart_authn_provider_t * authn_provider, 
     const axutil_env_t* env, 
     axis2_msg_ctx_t *msg_ctx,
@@ -32,7 +32,7 @@ rampart_authn_provider_status_t WSF_CALL AuthenticationProvider::callbackPasswor
     return (status?RAMPART_AUTHN_PROVIDER_GRANTED:RAMPART_AUTHN_PROVIDER_DENIED);
 }
 
-rampart_authn_provider_status_t WSF_CALL AuthenticationProvider::callbackPasswordDigest(
+WSF_EXTERN rampart_authn_provider_status_t WSF_CALL AuthenticationProvider::callbackPasswordDigest(
     rampart_authn_provider_t *authn_provider,
     const axutil_env_t* env,
     axis2_msg_ctx_t *msg_ctx,
@@ -48,6 +48,6 @@ rampart_authn_provider_status_t WSF_CALL AuthenticationProvider::callbackPasswor
     return (status?RAMPART_AUTHN_PROVIDER_GRANTED:RAMPART_AUTHN_PROVIDER_DENIED);
 }
 
-WSF_CALL AuthenticationProvider::~AuthenticationProvider()
+WSF_EXTERN WSF_CALL AuthenticationProvider::~AuthenticationProvider()
 {
 }

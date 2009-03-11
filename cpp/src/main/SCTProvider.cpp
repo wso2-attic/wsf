@@ -20,7 +20,7 @@
 using namespace std;
 using namespace wso2wsf;
 
-axis2_status_t WSF_CALL SCTProvider::storeToken(
+WSF_EXTERN axis2_status_t WSF_CALL SCTProvider::storeToken(
     const axutil_env_t *env, 
     axis2_msg_ctx_t* msg_ctx, 
     axis2_char_t *sct_global_id, 
@@ -39,7 +39,7 @@ axis2_status_t WSF_CALL SCTProvider::storeToken(
     return AXIS2_FAILURE;
 }
 
-void* WSF_CALL SCTProvider::getToken(
+WSF_EXTERN void* WSF_CALL SCTProvider::getToken(
     const axutil_env_t *env, 
     axis2_bool_t is_encryption, 
     axis2_msg_ctx_t* msg_ctx, 
@@ -58,7 +58,7 @@ void* WSF_CALL SCTProvider::getToken(
     return NULL;
 }
 
-axis2_status_t WSF_CALL SCTProvider::removeToken(
+WSF_EXTERN axis2_status_t WSF_CALL SCTProvider::removeToken(
     const axutil_env_t *env, 
     axis2_msg_ctx_t* msg_ctx, 
     axis2_char_t *sct_id, 
@@ -76,7 +76,7 @@ axis2_status_t WSF_CALL SCTProvider::removeToken(
     return AXIS2_FAILURE;
 }
 
-axis2_status_t WSF_CALL SCTProvider::validateToken(
+WSF_EXTERN axis2_status_t WSF_CALL SCTProvider::validateToken(
     const axutil_env_t *env, 
     axiom_node_t *sct_node, 
     axis2_msg_ctx_t *msg_ctx, 
@@ -95,6 +95,6 @@ axis2_status_t WSF_CALL SCTProvider::validateToken(
     return AXIS2_FAILURE;
 }
 
-WSF_CALL SCTProvider::~SCTProvider()
+WSF_EXTERN WSF_CALL SCTProvider::~SCTProvider()
 {
 }

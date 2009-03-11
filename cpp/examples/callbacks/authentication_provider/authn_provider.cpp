@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-#include <PasswordCallback.h>
+#include <AuthenticationProvider.h>
+#include <rampart_crypto_util.h>
+
 using namespace std;
 using namespace wso2wsf;
 
@@ -107,7 +109,7 @@ bool AuthnProvider::checkPassword(std::string username, std::string password, Me
     string local_pw = getPassword(username);
     return (local_pw == password);
 }
-bool WSF_CALL checkDigestPassword(
+bool AuthnProvider::checkDigestPassword(
     string username, string nonce, string created, string digest, MessageContext* msgctx)
 {
     string local_pw = getPassword(username);

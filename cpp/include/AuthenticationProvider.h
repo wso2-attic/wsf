@@ -65,12 +65,12 @@ namespace wso2wsf
         /**
          * destructor that can be overridden.
          */
-        virtual WSF_CALL ~AuthenticationProvider();
+        WSF_EXTERN virtual WSF_CALL ~AuthenticationProvider();
 
         /**
          * Static Handler to be invoked to check plain password
          */
-        static rampart_authn_provider_status_t WSF_CALL callbackPasswordPlain(
+        WSF_EXTERN static rampart_authn_provider_status_t WSF_CALL callbackPasswordPlain(
             rampart_authn_provider_t * authn_provider, 
             const axutil_env_t* env, 
             axis2_msg_ctx_t *msg_ctx,
@@ -80,7 +80,7 @@ namespace wso2wsf
         /**
          * Static Handler to be invoked to check digest password
          */
-        static rampart_authn_provider_status_t WSF_CALL callbackPasswordDigest(
+        WSF_EXTERN static rampart_authn_provider_status_t WSF_CALL callbackPasswordDigest(
             rampart_authn_provider_t *authn_provider,
             const axutil_env_t* env,
             axis2_msg_ctx_t *msg_ctx,

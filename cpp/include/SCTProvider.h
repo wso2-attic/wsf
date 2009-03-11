@@ -76,12 +76,12 @@ namespace wso2wsf
         /**
          * destructor that can be overridden.
          */
-        virtual WSF_CALL ~SCTProvider();
+        WSF_EXTERN virtual WSF_CALL ~SCTProvider();
 
         /**
          * Static Handler to be invoked to store the sct
          */
-        static axis2_status_t WSF_CALL storeToken(
+        WSF_EXTERN static axis2_status_t WSF_CALL storeToken(
             const axutil_env_t *env, 
             axis2_msg_ctx_t* msg_ctx, 
             axis2_char_t *sct_global_id, 
@@ -92,7 +92,7 @@ namespace wso2wsf
         /**
          * Static Handler to be invoked to get previously stored sct
          */
-        static void* WSF_CALL getToken(
+        WSF_EXTERN static void* WSF_CALL getToken(
             const axutil_env_t *env, 
             axis2_bool_t is_encryption, 
             axis2_msg_ctx_t* msg_ctx, 
@@ -103,7 +103,7 @@ namespace wso2wsf
         /**
          * Static Handler to be invoked to remove previously stored sct
          */
-        static axis2_status_t WSF_CALL removeToken(
+        WSF_EXTERN static axis2_status_t WSF_CALL removeToken(
             const axutil_env_t *env, 
             axis2_msg_ctx_t* msg_ctx, 
             axis2_char_t *sct_id, 
@@ -113,7 +113,7 @@ namespace wso2wsf
         /**
          * Static Handler to be invoked to validate whether security context token is valid or not
          */
-        static axis2_status_t WSF_CALL validateToken(
+        WSF_EXTERN static axis2_status_t WSF_CALL validateToken(
             const axutil_env_t *env, 
             axiom_node_t *sct_node, 
             axis2_msg_ctx_t *msg_ctx, 
@@ -125,7 +125,7 @@ namespace wso2wsf
 #define WSF_SCT_PROVIDER_INIT(class_name) \
 extern "C" \
 { \
-    WSF_EXTERN int \
+    WSF_EXTERN axis2_status_t WSF_CALL \
     axis2_remove_instance( \
         rampart_sct_provider_t *inst, \
         const axutil_env_t *env) \

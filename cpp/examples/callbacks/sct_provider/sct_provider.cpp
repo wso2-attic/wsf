@@ -81,13 +81,13 @@ bool TokenProvider::validateToken(OMNode* sct_node, MessageContext* msgctx)
 
 MapSCT_t* TokenProvider::getSCTMap(MessageContext* msgctx)
 {
-    String propertyName = "SCTContainerMap";
+    string propertyName = "SCTContainerMap";
     MapSCT_t* pmapSCT = (MapSCT_t*)msgctx->getPropertyValue(propertyName);
     if(!pmapSCT)
     {
        //The property is not created yet. So we have to create it and store it in conf context
         pmapSCT = new MapSCT_t;
-        axutil_env_t* env = Process::getEnv();
+        const axutil_env_t* env = Process::getEnv();
         axis2_conf_ctx_t *conf_ctx = axis2_msg_ctx_get_conf_ctx(
             msgctx->getAxis2MessageContext(), env);
         axutil_property_t* sct_map_prop = axutil_property_create_with_args(
@@ -95,5 +95,5 @@ MapSCT_t* TokenProvider::getSCTMap(MessageContext* msgctx)
         axis2_conf_ctx_set_property(conf_ctx, env, propertyName.c_str(), sct_map_prop); 
     }
     
-    return psetReplay;
+    return pmapSCT;
 }

@@ -20,6 +20,7 @@
 #include <WSFDefines.h>
 #include <string>
 #include <rampart_callback.h>
+#include <Process.h>
 
 /**
  * @file PasswordCallback.h
@@ -56,18 +57,18 @@ namespace wso2wsf
         /**
          * destructor that can be overridden.
          */
-        virtual WSF_CALL ~PasswordCallback();
+        WSF_EXTERN virtual WSF_CALL ~PasswordCallback();
 
         /**
          * Static Handler to be invoked to get the password
          */
-        static axis2_char_t* WSF_CALL callbackPassword(
+        static WSF_EXTERN axis2_char_t* WSF_CALL callbackPassword(
             rampart_callback_t * callback, const axutil_env_t* env, const axis2_char_t *username, void *param);
 
         /**
          * Static Handler to be invoked to get the pkcs12 password
          */
-        static axis2_char_t* WSF_CALL callbackPKCS12Password(
+        static WSF_EXTERN axis2_char_t* WSF_CALL callbackPKCS12Password(
             rampart_callback_t * callback, const axutil_env_t* env, const axis2_char_t *username, void *param);
     };
     /** @} */

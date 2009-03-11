@@ -22,7 +22,7 @@ LDFLAGS = /nologo /LIBPATH:$(WSFCPP_HOME_DIR)\lib
 
 LIBS = axutil.lib axis2_engine.lib axis2_parser.lib axiom.lib wso2_wsf.lib
 
-INCLUDE_PATH = /I$(WSFCPP_HOME_DIR)\include /I.\..\include /I$(WSFCPP_HOME_DIR)\include\platforms
+INCLUDE_PATH = /I$(WSFCPP_HOME_DIR)\include /I.\..\include /I$(WSFCPP_HOME_DIR)\include\platforms /I$(OPENSSL_BIN_DIR)\include
 
 !if "$(DEBUG)" == "1"
 CFLAGS = $(CFLAGS) /D "_DEBUG" /Od /Z7 $(CRUNTIME)d /D "AXIS2_DECLARE_EXPORT"
@@ -204,7 +204,28 @@ password_callback:
 	$(LD) $(LDFLAGS) int.msvc\callbacks\password_callback\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_SAMPLES_LIB_DIR)\pwcb.dll
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
-wsfcpp_callback: password_callback
+authentication_provider:
+	@if not exist int.msvc\callbacks\authentication_provider mkdir int.msvc\callbacks\authentication_provider
+	@if not exist $(WSFCPP_SAMPLES_LIB_DIR) mkdir $(WSFCPP_SAMPLES_LIB_DIR)
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CALLBACK_SAMPLES_HOME_DIR)\authentication_provider\*.cpp /Foint.msvc\callbacks\authentication_provider\ /c
+	$(LD) $(LDFLAGS) int.msvc\callbacks\authentication_provider\*.obj $(LIBS) mod_rampart.lib /DLL /OUT:$(WSFCPP_SAMPLES_LIB_DIR)\authn_provider.dll
+	-@$(_VC_MANIFEST_EMBED_EXE)
+
+replay_detector:
+	@if not exist int.msvc\callbacks\replay_detector mkdir int.msvc\callbacks\replay_detector
+	@if not exist $(WSFCPP_SAMPLES_LIB_DIR) mkdir $(WSFCPP_SAMPLES_LIB_DIR)
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CALLBACK_SAMPLES_HOME_DIR)\replay_detector\*.cpp /Foint.msvc\callbacks\replay_detector\ /c
+	$(LD) $(LDFLAGS) int.msvc\callbacks\replay_detector\*.obj $(LIBS) mod_rampart.lib /DLL /OUT:$(WSFCPP_SAMPLES_LIB_DIR)\replay_detector.dll
+	-@$(_VC_MANIFEST_EMBED_EXE)
+
+sct_provider:
+	@if not exist int.msvc\callbacks\sct_provider mkdir int.msvc\callbacks\sct_provider
+	@if not exist $(WSFCPP_SAMPLES_LIB_DIR) mkdir $(WSFCPP_SAMPLES_LIB_DIR)
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CALLBACK_SAMPLES_HOME_DIR)\sct_provider\*.cpp /Foint.msvc\callbacks\sct_provider\ /c
+	$(LD) $(LDFLAGS) int.msvc\callbacks\sct_provider\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_SAMPLES_LIB_DIR)\sct_provider.dll
+	-@$(_VC_MANIFEST_EMBED_EXE)
+
+wsfcpp_callback: password_callback authentication_provider replay_detector sct_provider
 
 clean: 
 	@if exist int.msvc rmdir /s /q int.msvc

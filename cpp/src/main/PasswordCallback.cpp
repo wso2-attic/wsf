@@ -20,7 +20,7 @@
 using namespace std;
 using namespace wso2wsf;
 
-axis2_char_t* WSF_CALL PasswordCallback::callbackPassword(
+WSF_EXTERN axis2_char_t* WSF_CALL PasswordCallback::callbackPassword(
     rampart_callback_t * callback, const axutil_env_t* env, const axis2_char_t *username, void *param)
 {
     wsf_rampart_callback_t * cb = (wsf_rampart_callback_t*) callback;
@@ -28,7 +28,7 @@ axis2_char_t* WSF_CALL PasswordCallback::callbackPassword(
     return (axis2_char_t*)axutil_strdup(env, password.c_str());
 }
 
-axis2_char_t* WSF_CALL PasswordCallback::callbackPKCS12Password(
+WSF_EXTERN axis2_char_t* WSF_CALL PasswordCallback::callbackPKCS12Password(
     rampart_callback_t * callback, const axutil_env_t* env, const axis2_char_t *username, void *param)
 {
     wsf_rampart_callback_t * cb = (wsf_rampart_callback_t*) callback;
@@ -36,6 +36,6 @@ axis2_char_t* WSF_CALL PasswordCallback::callbackPKCS12Password(
     return (axis2_char_t*)axutil_strdup(env, password.c_str());
 }
 
-WSF_CALL PasswordCallback::~PasswordCallback()
+WSF_EXTERN WSF_CALL PasswordCallback::~PasswordCallback()
 {
 }
