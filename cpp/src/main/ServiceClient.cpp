@@ -232,6 +232,7 @@ bool ServiceClient::initializeClient()
 
 	if (!_wsf_service_client)
 	{
+        WSF_LOG_CRITICAL_MSG("Cannot create service client");
 		return false;
 	}
 

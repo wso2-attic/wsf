@@ -36,26 +36,26 @@ int main(int argc, char *argv[])
     {
         if (string (argv[1]).compare("-h") == 0)
         {
-            cout << "Usage : " << argv[0] << " [client_repo] [end_point] [policy_file]" << endl;
+            cout << "Usage : " << argv[0] << " [end_point] [client_repo] [policy_file]" << endl;
             cout << "use -h for help" << endl;
-            cout << "default client_repo " << client_repo << endl;
             cout << "default end_point " << end_point << endl;
+            cout << "default client_repo " << client_repo << endl;
             cout << "default policy_file " << policy_file << endl;
             cout << "NOTE: command line arguments must appear in given order, with trailing ones being optional" << endl;
             cout << "IMPORTANT: please add a trailing slash (or back-slash) after client_repo location" << endl;
             return 0;
         }
         else
-            client_repo = argv[1];
+            end_point = argv[1];
     }
     if (argc > 2)
-        end_point = argv[2];
+        client_repo = argv[2];
     if (argc > 3)
         policy_file = argv[3];
 
     WSSOAPClient sc(client_repo, end_point);
     sc.engageModule(AXIS2_MODULE_ADDRESSING);
-    sc.setPolicy(new NeethiPolicy(client_repo + policy_file));
+    sc.setPolicy(new NeethiPolicy(client_repo + "/" + policy_file));
 
     OMNamespace * ns = new OMNamespace("http://ws.apache.org/rampart/c/samples", "ns1");
     OMElement * payload = new OMElement(NULL,"echoIn", ns);
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
         OMElement* response = sc.request(payload, "http://example.com/ws/2004/09/policy/Test/EchoRequest");
         if (response)
         {
-            cout << endl << "ResponseEnvelope: " << sc.getLastResponseSoapEnvelopeString() << endl;
+            //cout << endl << "ResponseEnvelope: " << sc.getLastResponseSoapEnvelopeString() << endl;
             cout << endl << "Response: " << response << endl;
         }
     }
