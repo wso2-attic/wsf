@@ -56,8 +56,11 @@ rmdir /S /Q docs_temp
 
 :remove_wsf_c_services
 @cd %WSFCPP_HOME%
-@rmdir /s /q services
+move services services_c
 @mkdir services
+xcopy /E /I /Q /Y services_c\sec_echo services\sec_echo\
+xcopy /E /I /Q /Y services_c\secconv_echo services\secconv_echo\
+@rmdir /s /q services_c
 @cd %WSFCPP_SOURCE%
 
 rem Clean bin Folder
@@ -78,11 +81,13 @@ rem Build Source
 
 rem Build Client Samples
 :build_client_samples
+copy "%WSFCPP_HOME%\samples\bin\*.bat" "%WSFCPP_HOME%\samples\"
 @if exist "%WSFCPP_HOME%\samples\bin" rmdir /s /q "%WSFCPP_HOME%\samples\bin"
 @if exist "%WSFCPP_HOME%\samples\lib" rmdir /s /q "%WSFCPP_HOME%\samples\lib"
 @cd "%WSFCPP_SOURCE%"
 @cd examples
 @nmake dist -f samples.mk AUTOCONF=..\configure.in
+move "%WSFCPP_HOME%\samples\*.bat" "%WSFCPP_HOME%\samples\bin\"
 @if not %ERRORLEVEL% EQU 0 goto end
 
 rem Deploy Sample Source
