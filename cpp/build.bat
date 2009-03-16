@@ -29,6 +29,7 @@ rem @if exist "%WSFCPP_HOME%" rmdir /s /q "%WSFCPP_HOME%"
 @copy /Y "%WSFCPP_SOURCE%\COPYING" .
 @copy /Y "%WSFCPP_SOURCE%\AUTHORS" .
 @copy /Y "%WSFCPP_SOURCE%\NOTICE" .
+@copy /Y "%WSFCPP_SOURCE%\ChangeLog" .
 @cd "%WSFCPP_SOURCE%"
 
 rem Add HTML Documentation
@@ -52,17 +53,6 @@ rmdir /S /Q docs_temp
 @if exist docs\wsf_c\docs\axis2c rmdir /S /Q docs\wsf_c\docs\axis2c
 @if exist docs\wsf_c\docs\rampartc rmdir /S /Q docs\wsf_c\docs\rampartc
 @if exist docs\wsf_c\docs\sandesha2c rmdir /S /Q docs\wsf_c\docs\sandesha2c
-
-rem Remove WSF/C Client Samples
-:strip_c_client_samples
-@cd "%WSFCPP_HOME%\bin\samples"
-@if exist security xcopy /E /Q /I /Y security ..\security
-@cd ..\
-@rmdir /s /q samples
-@mkdir samples
-@if exist security xcopy /E /Q /I /Y security samples\security
-@if exist security rmdir /s /q security
-@cd "%WSFCPP_SOURCE%"
 
 :remove_wsf_c_services
 @cd %WSFCPP_HOME%
@@ -88,38 +78,23 @@ rem Build Source
 
 rem Build Client Samples
 :build_client_samples
-@cd "%WSFCPP_HOME%\bin\samples"
+@if exist "%WSFCPP_HOME%\samples\bin" rmdir /s /q "%WSFCPP_HOME%\samples\bin"
+@if exist "%WSFCPP_HOME%\samples\lib" rmdir /s /q "%WSFCPP_HOME%\samples\lib"
 @cd "%WSFCPP_SOURCE%"
 @cd examples
 @nmake dist -f samples.mk AUTOCONF=..\configure.in
 @if not %ERRORLEVEL% EQU 0 goto end
-@cd "%WSFCPP_HOME%\bin\samples\"
 
-rem Build security Samples
-@cd "%WSFCPP_HOME%\bin\samples\security"
-@mkdir client
-@cd "%WSFCPP_SOURCE%"
-@cd examples\clients
-@cd security
-@xcopy /E /Q /I /Y secpolicy %WSFCPP_HOME%\bin\samples\security\secpolicy
-@nmake dist -f sec_samples.mk AUTOCONF=..\..\..\configure.in
-@if not %ERRORLEVEL% EQU 0 goto end
-@cd "%WSFCPP_HOME%\bin\samples\security"
-@if not exist .svn mkdir .svn
-@for /F "tokens=*" %%G in ('dir /B /AD /S *.svn*') do rmdir /S /Q "%%G"
-@if not exist *.sh echo > #.sh
-@for /F "tokens=*" %%G in ('dir /B /S *.sh*') do del "%%G"
-@if not exist *.am echo > #.am
-@for /F "tokens=*" %%G in ('dir /B /S *.am*') do del "%%G"
-@cd "%WSFCPP_SOURCE%"
- 
 rem Deploy Sample Source
 :dep_sample_source
-@if exist "%WSFCPP_HOME%\samples" rmdir /s /q "%WSFCPP_HOME%\samples"
-@xcopy /E /I /Q /Y examples "%WSFCPP_HOME%\samples"
-@copy /Y configure.in "%WSFCPP_HOME%"
-@set WSFCPP_SOURCE=%CD%
-@cd "%WSFCPP_HOME%\samples"
+@move "%WSFCPP_HOME%\samples\src" "%WSFCPP_HOME%\samples\src_c"
+@mkdir "%WSFCPP_HOME%\samples\src\c"
+@xcopy /E /I /Q /Y "%WSFCPP_HOME%\samples\src_c" "%WSFCPP_HOME%\samples\src\c"
+@rmdir /s /q "%WSFCPP_HOME%\samples\src_c"
+@cd %WSFCPP_SOURCE%
+@xcopy /E /I /Q /Y examples "%WSFCPP_HOME%\samples\src\cpp"
+@copy /Y configure.in "%WSFCPP_HOME%\samples\src"
+@cd "%WSFCPP_HOME%\samples\src\cpp"
 @if not exist .svn mkdir .svn
 @for /F "tokens=*" %%G in ('dir /B /AD /S *.svn*') do rmdir /S /Q "%%G"
 @if not exist int.msvc mkdir int.msvc

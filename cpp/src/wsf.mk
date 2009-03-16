@@ -14,11 +14,11 @@ RC=rc.exe
 !if "$(ENABLE_LIBXML2)" == "1"
 LIBS = axutil.lib axis2_engine.lib axis2_parser.lib \
        axiom.lib libxml2.lib wsock32.lib axis2_http_sender.lib \
-       neethi_util.lib neethi.lib sandesha2.lib mod_rampart.lib
+       neethi_util.lib neethi.lib sandesha2.lib rampart.lib
 !else
 LIBS = axutil.lib axis2_engine.lib axis2_parser.lib \
        axiom.lib guththila.lib wsock32.lib axis2_http_sender.lib \
-       neethi_util.lib neethi.lib sandesha2.lib mod_rampart.lib
+       neethi_util.lib neethi.lib sandesha2.lib rampart.lib
 !endif
 
 INCLUDE_PATH = /I.\..\include /I$(WSFCPP_HOME_DIR)\include /I$(WSFCPP_HOME_DIR)\include\platforms /I$(LIBXML2_BIN_DIR)\include /I$(ICONV_BIN_DIR)\include /I$(OPENSSL_BIN_DIR)\include
