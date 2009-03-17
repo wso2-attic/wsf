@@ -48,18 +48,18 @@ namespace wso2wsf
          * Handler to be invoked to check plain password
          */
         virtual bool WSF_CALL checkPassword(
-            std::string username, 
-            std::string password, 
+            std::string& username, 
+            std::string& password, 
             MessageContext* msgctx) = 0;
 
         /**
          * Handler to be invoked to check digest password
          */
         virtual bool WSF_CALL checkDigestPassword(
-            std::string username, 
-            std::string nonce, 
-            std::string created, 
-            std::string digest, 
+            std::string& username, 
+            std::string& nonce, 
+            std::string& created, 
+            std::string& digest, 
             MessageContext* msgctx) = 0;
 
         /**

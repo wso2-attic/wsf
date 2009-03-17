@@ -27,7 +27,13 @@ WSF_EXTERN rampart_authn_provider_status_t WSF_CALL AuthenticationProvider::call
 {
     wsf_authn_provider_t * cb = (wsf_authn_provider_t*) authn_provider;
     MessageContext* msgctx = new MessageContext(msg_ctx);
-    bool status = cb->callback->checkPassword(username, password, msgctx);
+    string str_username;
+    if(username)
+        str_username = username;
+    string str_password;
+    if(password)
+        str_password = password;
+    bool status = cb->callback->checkPassword(str_username, str_password, msgctx);
     delete msgctx;
     return (status?RAMPART_AUTHN_PROVIDER_GRANTED:RAMPART_AUTHN_PROVIDER_DENIED);
 }
@@ -39,11 +45,23 @@ WSF_EXTERN rampart_authn_provider_status_t WSF_CALL AuthenticationProvider::call
     const axis2_char_t *username,
     const axis2_char_t *nonce,
     const axis2_char_t *created,
-    const char *digest)
+    const axis2_char_t *digest)
 {
     wsf_authn_provider_t * cb = (wsf_authn_provider_t*) authn_provider;
     MessageContext* msgctx = new MessageContext(msg_ctx);
-    bool status = cb->callback->checkDigestPassword(username, nonce, created, digest, msgctx);
+    string str_username;
+    if(username)
+        str_username = username;
+    string str_nonce;
+    if(nonce)
+        str_nonce = nonce;
+    string str_created;
+    if(created)
+        str_created = created;
+    string str_digest;
+    if(digest)
+        str_digest = digest;
+    bool status = cb->callback->checkDigestPassword(str_username, str_nonce, str_created, str_digest, msgctx);
     delete msgctx;
     return (status?RAMPART_AUTHN_PROVIDER_GRANTED:RAMPART_AUTHN_PROVIDER_DENIED);
 }

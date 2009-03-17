@@ -211,14 +211,16 @@ replay_detector:
 	@if not exist int.msvc\callbacks\replay_detector mkdir int.msvc\callbacks\replay_detector
 	@if not exist $(WSFCPP_SAMPLES_LIB_DIR) mkdir $(WSFCPP_SAMPLES_LIB_DIR)
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CALLBACK_SAMPLES_HOME_DIR)\replay_detector\*.cpp /Foint.msvc\callbacks\replay_detector\ /c
-	$(LD) $(LDFLAGS) int.msvc\callbacks\replay_detector\*.obj $(LIBS)  /DLL /OUT:$(WSFCPP_SAMPLES_LIB_DIR)\replay_detector.dll
+	$(LD) $(LDFLAGS) int.msvc\callbacks\replay_detector\*.obj $(LIBS)  /DLL /OUT:$(WSFCPP_SAMPLES_LIB_DIR)\rdflatfile.dll
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
 sct_provider:
 	@if not exist int.msvc\callbacks\sct_provider mkdir int.msvc\callbacks\sct_provider
 	@if not exist $(WSFCPP_SAMPLES_LIB_DIR) mkdir $(WSFCPP_SAMPLES_LIB_DIR)
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CALLBACK_SAMPLES_HOME_DIR)\sct_provider\*.cpp /Foint.msvc\callbacks\sct_provider\ /c
-	$(LD) $(LDFLAGS) int.msvc\callbacks\sct_provider\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_SAMPLES_LIB_DIR)\sct_provider.dll
+	$(LD) $(LDFLAGS) int.msvc\callbacks\sct_provider\sct_provider_hashdb.obj $(LIBS) /DLL /OUT:$(WSFCPP_SAMPLES_LIB_DIR)\sctprovider_hashdb.dll
+	-@$(_VC_MANIFEST_EMBED_EXE)
+	$(LD) $(LDFLAGS) int.msvc\callbacks\sct_provider\sct_provider.obj $(LIBS) /DLL /OUT:$(WSFCPP_SAMPLES_LIB_DIR)\sctprovider.dll
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
 wsfcpp_callback: password_callback authentication_provider replay_detector sct_provider

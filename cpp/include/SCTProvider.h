@@ -48,14 +48,14 @@ namespace wso2wsf
          * Handler to be invoked to get previously stored sct
          */
         virtual void* WSF_CALL getToken(
-            std::string sct_id, 
+            std::string& sct_id, 
             MessageContext* msgctx) = 0;
 
         /**
          * Handler to be invoked to store sct
          */
         virtual bool WSF_CALL storeToken(
-            std::string sct_id, 
+            std::string& sct_id, 
             MessageContext* msgctx, 
             void* sct) = 0;
 
@@ -63,7 +63,7 @@ namespace wso2wsf
          * Handler to be invoked to remove previously stored sct
          */
         virtual bool WSF_CALL removeToken(
-            std::string sct_id, 
+            std::string& sct_id, 
             MessageContext* msgctx) = 0;
 
         /**
@@ -125,7 +125,7 @@ namespace wso2wsf
 #define WSF_SCT_PROVIDER_INIT(class_name) \
 extern "C" \
 { \
-    WSF_EXTERN axis2_status_t WSF_CALL \
+    WSF_EXTERN int \
     axis2_remove_instance( \
         rampart_sct_provider_t *inst, \
         const axutil_env_t *env) \
@@ -137,6 +137,14 @@ extern "C" \
         } \
         return AXIS2_SUCCESS; \
     } \
+\
+    axis2_status_t WSF_CALL \
+    wsf_sct_provider_free( \
+        rampart_sct_provider_t *inst, \
+        const axutil_env_t *env) \
+    { \
+        return axis2_remove_instance(inst, env); \
+    }\
 \
     void* WSF_CALL wsf_sct_get_user_params(const axutil_env_t *env) \
     { \
@@ -159,7 +167,7 @@ extern "C" \
         sct_provider->ops->delete_security_context_token = wso2wsf::SCTProvider::removeToken; \
         sct_provider->ops->validate_security_context_token = wso2wsf::SCTProvider::validateToken; \
         sct_provider->ops->get_user_params = wsf_sct_get_user_params; \
-        sct_provider->ops->free = axis2_remove_instance; \
+        sct_provider->ops->free = wsf_sct_provider_free; \
     \
         *inst = sct_provider; \
         if (!(*inst)) \

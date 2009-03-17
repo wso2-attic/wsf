@@ -26,9 +26,9 @@ public:
     WSF_CALL AuthnProvider();
     WSF_CALL ~AuthnProvider();
     
-    bool WSF_CALL checkPassword(string username, string password, MessageContext* msgctx);
+    bool WSF_CALL checkPassword(string& username, string& password, MessageContext* msgctx);
     bool WSF_CALL checkDigestPassword(
-        string username, string nonce, string created, string digest, MessageContext* msgctx);
+        string& username, string& nonce, string& created, string& digest, MessageContext* msgctx);
 
 private:
     string& WSF_CALL getPassword(string& username);
@@ -104,13 +104,13 @@ string& AuthnProvider::getPassword(string& username)
     return pw;
 }
 
-bool AuthnProvider::checkPassword(std::string username, std::string password, MessageContext* msgctx)
+bool AuthnProvider::checkPassword(std::string& username, std::string& password, MessageContext* msgctx)
 {
     string local_pw = getPassword(username);
     return (local_pw == password);
 }
 bool AuthnProvider::checkDigestPassword(
-    string username, string nonce, string created, string digest, MessageContext* msgctx)
+    string& username, string& nonce, string& created, string& digest, MessageContext* msgctx)
 {
     string local_pw = getPassword(username);
     string local_digest = rampart_crypto_sha1(

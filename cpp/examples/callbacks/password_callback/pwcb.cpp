@@ -23,8 +23,8 @@ class PWCB: public PasswordCallback
 public:
     WSF_CALL PWCB();
     WSF_CALL ~PWCB();
-    string WSF_CALL getPassword(string username);
-    string WSF_CALL getPKCS12Password(string username);
+    string WSF_CALL getPassword(string& username);
+    string WSF_CALL getPKCS12Password(string& username);
 };
 
 WSF_PASSWORD_CALLBACK_INIT(PWCB);
@@ -39,7 +39,7 @@ PWCB::~PWCB()
     //you can write any destruction logic
 }
 
-string PWCB::getPassword(string username)
+string PWCB::getPassword(string& username)
 {
     string pw;
 
@@ -97,7 +97,7 @@ string PWCB::getPassword(string username)
     return pw;
 }
 
-string PWCB::getPKCS12Password(string username)
+string PWCB::getPKCS12Password(string& username)
 {
     string pw;
 	if(username == "a")

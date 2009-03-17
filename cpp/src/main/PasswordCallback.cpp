@@ -24,7 +24,10 @@ WSF_EXTERN axis2_char_t* WSF_CALL PasswordCallback::callbackPassword(
     rampart_callback_t * callback, const axutil_env_t* env, const axis2_char_t *username, void *param)
 {
     wsf_rampart_callback_t * cb = (wsf_rampart_callback_t*) callback;
-    string password = cb->callback->getPassword(username);
+    string str_username;
+    if(username)
+        str_username = username;
+    string password = cb->callback->getPassword(str_username);
     return (axis2_char_t*)axutil_strdup(env, password.c_str());
 }
 
@@ -32,7 +35,10 @@ WSF_EXTERN axis2_char_t* WSF_CALL PasswordCallback::callbackPKCS12Password(
     rampart_callback_t * callback, const axutil_env_t* env, const axis2_char_t *username, void *param)
 {
     wsf_rampart_callback_t * cb = (wsf_rampart_callback_t*) callback;
-    string password = cb->callback->getPKCS12Password(username);
+    string str_username;
+    if(username)
+        str_username = username;
+    string password = cb->callback->getPKCS12Password(str_username);
     return (axis2_char_t*)axutil_strdup(env, password.c_str());
 }
 

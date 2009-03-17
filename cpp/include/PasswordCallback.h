@@ -47,12 +47,12 @@ namespace wso2wsf
         /**
          * Handler to be invoked to get the password
          */
-        virtual std::string WSF_CALL getPassword(std::string username) = 0;
+        virtual std::string WSF_CALL getPassword(std::string& username) = 0;
 
         /**
          * Handler to be invoked to get the pkcs12 password
          */
-        virtual std::string WSF_CALL getPKCS12Password(std::string username) = 0;
+        virtual std::string WSF_CALL getPKCS12Password(std::string& username) = 0;
 
         /**
          * destructor that can be overridden.
