@@ -14,7 +14,7 @@ if not %ERRORLEVEL% EQU 0 goto end
 rem Build Flickr sample
 cd ..\..\..\examples\flickr
 nmake -f flickr.mk
-copy /Y flickr.exe  ..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\samples
+copy /Y flickr.exe  ..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples\bin\
 
 rem Build Trader sample
 cd ..\trader
