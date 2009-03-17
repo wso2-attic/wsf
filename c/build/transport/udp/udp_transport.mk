@@ -17,7 +17,7 @@ LDFLAGS = $(LDFLAGS)
 !endif
 
 !if "$(ENABLE_RAMPARTC)" == "1"
-OPFLAGS = mod_rampart.lib
+OPFLAGS = rampart.lib
 !else
 OPFLAGS =
 !endif
