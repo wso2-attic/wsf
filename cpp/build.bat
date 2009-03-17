@@ -86,8 +86,8 @@ copy "%WSFCPP_HOME%\samples\bin\*.bat" "%WSFCPP_HOME%\samples\"
 @cd "%WSFCPP_SOURCE%"
 @cd examples
 @nmake dist -f samples.mk AUTOCONF=..\configure.in
-move "%WSFCPP_HOME%\samples\*.bat" "%WSFCPP_HOME%\samples\bin\"
 @if not %ERRORLEVEL% EQU 0 goto end
+move "%WSFCPP_HOME%\samples\*.bat" "%WSFCPP_HOME%\samples\bin\"
 
 rem Deploy Sample Source
 :dep_sample_source
