@@ -1,2 +1,2 @@
-SUBDIRS=clients services
-EXTRA_DIST=secpolicy samples.mk
+SUBDIRS=clients services callbacks
+EXTRA_DIST=samples.mk

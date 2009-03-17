@@ -1,1 +1,1 @@
-SUBDIRS=echo flickr google math mtom notify yahoo security 
+SUBDIRS=echo flickr google math mtom notify yahoo

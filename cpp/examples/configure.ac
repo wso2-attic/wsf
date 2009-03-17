@@ -46,7 +46,12 @@ AC_CONFIG_FILES([Makefile \
     clients/yahoo/Makefile \
     clients/google/Makefile \
     services/Makefile \
-    services/echocpp/Makefile
+    services/echocpp/Makefile \
+    callbacks/Makefile \
+    callbacks/authentication_provider/Makefile \
+    callbacks/password_callback/Makefile \
+    callbacks/replay_detect/Makefile \
+    callbacks/sct_provider/Makefile
     ])
     
 AC_OUTPUT

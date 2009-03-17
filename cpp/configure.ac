@@ -140,7 +140,8 @@ export prefix
 AC_CONFIG_FILES([Makefile \
 	src/Makefile \
 	src/main/Makefile \
-	src/msg_recv/Makefile 
+	src/msg_recv/Makefile  \
+	src/security/Makefile
     ])
     
 AC_OUTPUT
