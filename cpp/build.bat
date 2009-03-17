@@ -5,7 +5,6 @@
 
 rem Build WSO2 WSF/C
 @copy configure.in wsf_c\configure.in
-rem @copy wsf_c_build.bat wsf_c\build.bat
 @cd wsf_c
 @call build.bat
 

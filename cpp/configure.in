@@ -75,16 +75,16 @@ APACHE_VERSION_2_0_X = 0
 ### Apache Rampart/C Build Configuration Parameters
 
 # Whether Rampart/C is built or not
-ENABLE_RAMPARTC = 0
+ENABLE_RAMPARTC = 1
 
 #############################################################################
 ### Apache Sandesha2/C Build Configuration Parameters
 
 # Whether Sandesha2/C is built or not
-ENABLE_SANDESHA2C = 0
+ENABLE_SANDESHA2C = 1
 
 #############################################################################
 ### Apache Savan/C Build Configuration Parameters
 
 # Whether Savan/C is built or not
-ENABLE_SAVANC = 0
+ENABLE_SAVANC = 1
