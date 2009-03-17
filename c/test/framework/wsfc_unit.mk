@@ -4,7 +4,7 @@ AUTOCONF = .\..\..\configure.in
 !include $(AUTOCONF)
 
 WSFC_HOME_DIR_DLL=.\..\..\wso2-wsf-c-bin-$(WSFC_VERSION)-win32
-WSFC_HOME_DIR_SAMPLE=.\..\..\..\wso2-wsf-c-bin-$(WSFC_VERSION)-win32
+WSFC_HOME_DIR_SAMPLE=.\..\..\..\wso2-wsf-c-bin-$(WSFC_VERSION)-win32\samples
 
 CFLAGS = /nologo /w /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT"
 
@@ -46,7 +46,7 @@ wso2_wsfc_unit_samples:
 	if not exist $(WSFC_HOME_DIR_SAMPLE)\bin\test mkdir $(WSFC_HOME_DIR_SAMPLE)\bin\test
 	if not exist $(WSFC_HOME_DIR_SAMPLE)\bin\test\framework mkdir $(WSFC_HOME_DIR_SAMPLE)\bin\test\framework
 	if not exist $(WSFC_HOME_DIR_SAMPLE)\bin\test\framework\samples mkdir $(WSFC_HOME_DIR_SAMPLE)\bin\test\framework\samples
-	link.exe $(LDFLAGS) /LIBPATH:$(WSFC_HOME_DIR_SAMPLE)\lib int.msvc\*.obj wso2_wsfc_unit.lib \
+	link.exe $(LDFLAGS) /LIBPATH:$(WSFC_HOME_DIR_DLL)\lib int.msvc\*.obj wso2_wsfc_unit.lib \
         /OUT:$(WSFC_HOME_DIR_SAMPLE)\bin\test\framework\samples\sample.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 	cd ..
