@@ -9,14 +9,12 @@ nmake dist AUTOCONF=..\..\..\configure.in AXIS2_BIN_DIR=.\..\..\..\axis2c\build\
 if not %ERRORLEVEL% EQU 0 goto rampart_error
 
 cd ..
-xcopy /E /Q /I /Y rampartc-%RAMPARTC_VERSION%\modules\rampart .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\modules\rampart
+xcopy /E /Q /I /Y rampartc-%RAMPARTC_VERSION%\modules .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\modules
 copy /Y rampartc-%RAMPARTC_VERSION%\include\*.h .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\include\
-copy /Y rampartc-%RAMPARTC_VERSION%\modules\rampart\mod_rampart.lib .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
-copy /Y rampartc-%RAMPARTC_VERSION%\modules\rampart\mod_rampart.dll .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
-copy /Y rampartc-%RAMPARTC_VERSION%\bin\samples\services\sec_echo\server_axis2.xml .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\axis2.xml
-xcopy /E /I /Q /Y rampartc-%RAMPARTC_VERSION%\bin\samples .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\samples\rampart
-xcopy /E /I /Q /Y .\..\samples .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples\rampart
-xcopy /E /I /Q /Y rampartc-%RAMPARTC_VERSION%\bin\samples\services\sec_echo .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\services\sec_echo
+copy /Y rampartc-%RAMPARTC_VERSION%\lib\* .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
+copy /Y rampartc-%RAMPARTC_VERSION%\samples\data\server_axis2.xml .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\axis2.xml
+xcopy /E /I /Q /Y rampartc-%RAMPARTC_VERSION%\samples .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples
+xcopy /E /I /Q /Y rampartc-%RAMPARTC_VERSION%\services .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\services
 cd ..\..
 goto build_sandesha2
 
