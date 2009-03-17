@@ -20,7 +20,12 @@ LD=@link.exe
 
 LDFLAGS = /nologo /LIBPATH:$(WSFCPP_HOME_DIR)\lib
 
-LIBS = axutil.lib axis2_engine.lib axis2_parser.lib axiom.lib wso2_wsf.lib rampart.lib
+!if "$(ENABLE_RAMPARTC)" == "0"
+LIBS = axutil.lib axis2_engine.lib axis2_parser.lib axiom.lib wso2_wsf.lib
+!else
+LIBS = axutil.lib axis2_engine.lib axis2_parser.lib axiom.lib wso2_wsf.lib wso2_wsf_security.lib rampart.lib
+!endif
+
 
 INCLUDE_PATH = /I$(WSFCPP_HOME_DIR)\include /I.\..\include /I$(WSFCPP_HOME_DIR)\include\platforms /I$(OPENSSL_BIN_DIR)\include
 
@@ -228,4 +233,8 @@ wsfcpp_callback: password_callback authentication_provider replay_detector sct_p
 clean: 
 	@if exist int.msvc rmdir /s /q int.msvc
 		
+!if "$(ENABLE_RAMPARTC)" == "0"
+dist: clean wsfcpp_samples
+!else
 dist: clean wsfcpp_samples wsfcpp_callback
+!endif

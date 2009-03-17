@@ -14,11 +14,11 @@ RC=rc.exe
 !if "$(ENABLE_LIBXML2)" == "1"
 LIBS = axutil.lib axis2_engine.lib axis2_parser.lib \
        axiom.lib libxml2.lib wsock32.lib axis2_http_sender.lib \
-       neethi_util.lib neethi.lib sandesha2.lib rampart.lib
+       neethi_util.lib neethi.lib 
 !else
 LIBS = axutil.lib axis2_engine.lib axis2_parser.lib \
        axiom.lib guththila.lib wsock32.lib axis2_http_sender.lib \
-       neethi_util.lib neethi.lib sandesha2.lib rampart.lib
+       neethi_util.lib neethi.lib 
 !endif
 
 INCLUDE_PATH = /I.\..\include /I$(WSFCPP_HOME_DIR)\include /I$(WSFCPP_HOME_DIR)\include\platforms /I$(LIBXML2_BIN_DIR)\include /I$(ICONV_BIN_DIR)\include /I$(OPENSSL_BIN_DIR)\include
@@ -50,8 +50,16 @@ wsf_cpp_msg_recv_dll:
 	$(LD) $(LDFLAGS) int.msvc\msg_recv\wsf_cpp_msg_recv.obj $(LIBS) wso2_wsf.lib /DLL /OUT:$(WSFCPP_HOME_DIR)\lib\wsf_cpp_msg_recv.dll
 	-@$(_VC_MANIFEST_EMBED_DLL)
 
+wso2_wsf_security_dll:
+	@if not exist int.msvc\security mkdir int.msvc\security
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) security\*.cpp /Foint.msvc\ /c
+	$(LD) $(LDFLAGS) int.msvc\security\*.obj $(LIBS) rampart.lib /DLL  /OUT:$(WSFCPP_HOME_DIR)\lib\wso2_wsf_security.dll /IMPLIB:$(WSFCPP_HOME_DIR)\lib\wso2_wsf_security.lib
 
+!if "$(ENABLE_RAMPARTC)" == "0"
 wsfcpp: wso2_wsf_dll wsf_cpp_msg_recv_dll
+!else
+wsfcpp: wso2_wsf_dll wsf_cpp_msg_recv_dll wso2_wsf_security_dll
+!endif
 	
 cleanint:
 	@if exist $(WSFCPP_HOME_DIR)\lib\wso2_wsf.ilk del $(WSFCPP_HOME_DIR)\lib\wso2_wsf.ilk

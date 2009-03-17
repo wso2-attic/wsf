@@ -5,65 +5,6 @@
 WSFCPP_VERSION=1.1.0
 #
 #############################################################################
-### Build Details ###
-#############################################################################
-# enables https support 
-ENABLE_SSL = 0          
-#
-# build libcurl transport 
-ENABLE_LIBCURL = 0
-#
-# build WSF/C++ with Libxml2 Parser. WSF/C++ will be built with embeded guththila 
-# parser by Default. 
-ENABLE_LIBXML2= 1
-#
-# build tcp server in addition to http server
-WITH_TCP = 1
-#
-# build with archive based deployment
-WITH_ARCHIVE = 0
-#
-#
-#############################################################################
-### Dependant Binary Locations (Required) ###
-#############################################################################
-#
-# libxml2 binary location ( WSF/C++ is built with libxml2 )
-LIBXML2_BIN_DIR = E:\libxml2-2.6.30.win32
-
-#
-# iconv binary location
-ICONV_BIN_DIR = E:\iconv-1.9.2.win32
-#
-# zlib binary location
-ZLIB_BIN_DIR= E:\zlib-1.2.3.win32
-#
-#
-#############################################################################
-### Dependant Binary Locations (Optional) ###
-#############################################################################
-#
-# openssl  binary location
-# required if ENABLE_SSL = 1
-OPENSSL_BIN_DIR = E:\OpenSSL
-#
-# libcurl binary location, only required if libcurl transport is enabled
-LIBCURL_BIN_DIR = E:\libcurl-7.15.1-msvc-win32-ssl-0.9.8a-zlib-1.2.3
-#
-#
-#############################################################################
-### Apache Server module (required when building Axis2/C Apache Module) ###
-#############################################################################
-#
-# apache binary location
-APACHE_BIN_DIR = "E:\Apache22"
-#
-# apache 2 server family
-# To use apache 2.2 family, use  APACHE_VERSION_IS_2_0_X = 0
-APACHE_VERSION_2_0_X = 0
-#
-#
-#############################################################################
 ### Compiler Options ###
 #############################################################################
 #
@@ -77,3 +18,73 @@ EMBED_MANIFEST = 1
 # To build with debug symbols use DEBUG = 1
 DEBUG = 1
 #
+#############################################################################
+### Build Details ###
+#############################################################################
+# enables https support 
+ENABLE_SSL = 0          
+#
+# build libcurl transport 
+ENABLE_LIBCURL = 0
+#
+# build WSF/C++ with Libxml2 Parser. WSF/C++ will be built with embeded guththila 
+# parser by Default. 
+ENABLE_LIBXML2= 0
+#
+# build tcp server in addition to http server
+WITH_TCP = 1
+#
+# build with archive based deployment
+WITH_ARCHIVE = 0
+#
+#
+#############################################################################
+### Dependant Binary Locations
+#############################################################################
+#
+# libxml2 binary location ( WSF/C++ is built with libxml2 )
+LIBXML2_BIN_DIR = E:\libxml2-2.6.30.win32
+#
+# iconv binary location
+ICONV_BIN_DIR = E:\iconv-1.9.2.win32
+#
+# zlib binary location
+ZLIB_BIN_DIR= E:\zlib-1.2.3.win32
+#
+# openssl  binary location
+# required if ENABLE_SSL = 1
+OPENSSL_BIN_DIR = E:\src\external\OpenSSL
+#
+# libcurl binary location, only required if libcurl transport is enabled
+LIBCURL_BIN_DIR = E:\libcurl-7.15.1-msvc-win32-ssl-0.9.8a-zlib-1.2.3
+#
+#
+#############################################################################
+### Apache Server module (required when building Axis2/C Apache Module) ###
+#############################################################################
+#
+# apache binary location
+APACHE_BIN_DIR = "C:\Program Files\Apache Software Foundation\Apache2.2"
+#
+# apache 2 server family
+# To use apache 2.2 family, use  APACHE_VERSION_IS_2_0_X = 0
+APACHE_VERSION_2_0_X = 0
+#
+#
+#############################################################################
+### Apache Rampart/C Build Configuration Parameters
+
+# Whether Rampart/C is built or not
+ENABLE_RAMPARTC = 0
+
+#############################################################################
+### Apache Sandesha2/C Build Configuration Parameters
+
+# Whether Sandesha2/C is built or not
+ENABLE_SANDESHA2C = 0
+
+#############################################################################
+### Apache Savan/C Build Configuration Parameters
+
+# Whether Savan/C is built or not
+ENABLE_SAVANC = 0

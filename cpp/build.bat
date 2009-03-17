@@ -5,7 +5,7 @@
 
 rem Build WSO2 WSF/C
 @copy configure.in wsf_c\configure.in
-@copy wsf_c_build.bat wsf_c\build.bat
+rem @copy wsf_c_build.bat wsf_c\build.bat
 @cd wsf_c
 @call build.bat
 
@@ -20,7 +20,7 @@ rem Pack WSO2 WSF/C++
 rem @if exist "%WSFCPP_HOME%" rmdir /s /q "%WSFCPP_HOME%"
 @mkdir "%WSFCPP_HOME%"
 @cd "%WSFCPP_HOME%"
-@xcopy /E /Q /I /Y "%WSFCPP_SOURCE%\wsf_c\wso2-wsf-c-bin-%WSFC_VERSION%" .
+@xcopy /E /Q /I /Y "%WSFCPP_SOURCE%\wsf_c\wso2-wsf-c-bin-%WSFC_VERSION%-win32" .
 @copy /Y "%WSFCPP_SOURCE%\INSTALL" .
 @copy /Y "%WSFCPP_SOURCE%\README.INSTALL.WINDOWS" .
 @copy /Y "%WSFCPP_SOURCE%\README.SAMPLES" .
