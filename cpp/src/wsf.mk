@@ -52,8 +52,8 @@ wsf_cpp_msg_recv_dll:
 
 wso2_wsf_security_dll:
 	@if not exist int.msvc\security mkdir int.msvc\security
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) security\*.cpp /Foint.msvc\ /c
-	$(LD) $(LDFLAGS) int.msvc\security\*.obj $(LIBS) rampart.lib /DLL  /OUT:$(WSFCPP_HOME_DIR)\lib\wso2_wsf_security.dll /IMPLIB:$(WSFCPP_HOME_DIR)\lib\wso2_wsf_security.lib
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) security\*.cpp /Foint.msvc\security\ /c
+	$(LD) $(LDFLAGS) int.msvc\security\*.obj $(LIBS) wso2_wsf.lib rampart.lib /DLL  /OUT:$(WSFCPP_HOME_DIR)\lib\wso2_wsf_security.dll /IMPLIB:$(WSFCPP_HOME_DIR)\lib\wso2_wsf_security.lib
 
 !if "$(ENABLE_RAMPARTC)" == "0"
 wsfcpp: wso2_wsf_dll wsf_cpp_msg_recv_dll
