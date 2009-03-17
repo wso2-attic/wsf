@@ -1,1 +1,0 @@
-SUBDIRS=sec_echo
