@@ -109,7 +109,7 @@ namespace wso2wsf
     };
     /** @} */
 
-    /* inline implementation of ICallback class. */
+    /* inline implementation of the service skeleton destructor. */
     inline WSF_CALL ServiceSkeleton::~ServiceSkeleton()
     {}
 }
