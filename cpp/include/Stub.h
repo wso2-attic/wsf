@@ -36,7 +36,7 @@ namespace wso2wsf
      */
 
     /**
-     * @brief class WSSOAPClient This object serves as the primary client
+     * @brief class Stub This object serves as the primary client
      * for consuming SOAP services.
      */
     class Stub: public AxisObject
