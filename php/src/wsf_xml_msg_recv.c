@@ -1246,16 +1246,18 @@ wsf_xml_msg_recv_set_soap_fault (
     out_header = axiom_soap_header_create_with_parent(env, out_envelope);
     out_body = axiom_soap_body_create_with_parent (env, out_envelope);
     out_fault = axiom_soap_fault_create_default_fault (env, out_body, code, reason, soap_version);
-    if (detail) 
+	if (role) 
+	{
+		fault_role = axiom_soap_fault_role_create_with_parent (env, out_fault);
+		axiom_soap_fault_role_set_role_value (fault_role, env, role);
+	}
+
+	if (detail) 
 	{
         fault_detail = axiom_soap_fault_detail_create_with_parent (env, out_fault);
         axiom_soap_fault_detail_add_detail_entry (fault_detail, env, detail_node);
     }
-    if (role) 
-	{
-        fault_role = axiom_soap_fault_role_create_with_parent (env, out_fault);
-        axiom_soap_fault_role_set_role_value (fault_role, env, role);
-    }
+   
     axis2_msg_ctx_set_soap_envelope (out_msg_ctx, env, out_envelope);
     smart_str_free(&fcode);
 }
