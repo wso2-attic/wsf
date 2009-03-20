@@ -20,31 +20,32 @@
 using namespace std;
 using namespace wso2wsf;
 
-Options* Stub::_getOptions()
+Options* Stub::getOptions()
 {
 	return _options;
 }
 
-ServiceClient*  Stub::_getServiceClient()
+ServiceClient*  Stub::getServiceClient()
 {
 	return _serviceClient;
 }
 
-bool Stub::_setServiceClient(ServiceClient *client)
+bool Stub::setServiceClient(ServiceClient *client)
 {
 	if(_serviceClient)
 		delete _serviceClient;
 	_serviceClient = client;
+	return true;
 }
 
-bool Stub::_engageModule(std::string moduleName)
+bool Stub::engageModule(std::string moduleName)
 {
 	_serviceClient->engageModule(moduleName);
 	return true;
 }
 
 
-void Stub::_addAnonymousOperations()
+void Stub::addAnonymousOperations()
 {	
 	
 }
