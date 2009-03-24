@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WSSOAPCLIENT_H
-#define WSSOAPCLIENT_H
+#ifndef STUB_H
+#define STUB_H
 
 #include <WSFDefines.h>
 #include <ServiceClient.h>
@@ -39,7 +39,7 @@ namespace wso2wsf
      * @brief class Stub This object serves as the primary client
      * for consuming SOAP services.
      */
-    class Stub: public AxisObject
+    class Stub
     {
 	
 	
@@ -56,7 +56,7 @@ namespace wso2wsf
 		// Returns:   void
 		// Qualifier:
 		//************************************
-		virtual void _populateServices();
+		virtual void populateServices();
 
 
 
@@ -69,7 +69,7 @@ namespace wso2wsf
        // Returns:   void
        // Qualifier:
        //************************************
-       virtual void _getEndpointURI();
+       virtual void getEndpointURI();
 
 
 		//************************************
@@ -79,7 +79,7 @@ namespace wso2wsf
 		// Returns:   WSF_EXTERN Options* WSF_CALL
 		// Qualifier:
 		//************************************
-		WSF_EXTERN Options* WSF_CALL _getOptions();
+		WSF_EXTERN Options* WSF_CALL getOptions();
 
 		//************************************
 		// Method:    _getServiceClient
@@ -89,7 +89,7 @@ namespace wso2wsf
 		// Qualifier:
 		// Returns the service client associated with this stub
 		//************************************
-		WSF_EXTERN ServiceClient* WSF_CALL _getServiceClient();
+		WSF_EXTERN ServiceClient* WSF_CALL getServiceClient();
 		
 		//************************************
 		// Method:    _setServiceClient
@@ -99,7 +99,7 @@ namespace wso2wsf
 		// Qualifier:
 		// Parameter: ServiceClient * client
 		//************************************
-		WSF_EXTERN bool WSF_CALL _setServiceClient(ServiceClient *client);
+		WSF_EXTERN bool WSF_CALL setServiceClient(ServiceClient *client);
 		
 		//************************************
 		// Method:    _engageModule
@@ -109,7 +109,7 @@ namespace wso2wsf
 		// Qualifier:
 		// Parameter: std::string moduleName
 		//************************************
-		WSF_EXTERN bool WSF_CALL _engageModule(std::string moduleName);
+		WSF_EXTERN bool WSF_CALL engageModule(std::string moduleName);
 
 		//************************************
 		// Method:    _addAnonymousOperations
@@ -118,10 +118,10 @@ namespace wso2wsf
 		// Returns:   WSF_EXTERN void WSF_CALL
 		// Qualifier:
 		//************************************
-		WSF_EXTERN void WSF_CALL _addAnonymousOperations();
+		WSF_EXTERN void WSF_CALL addAnonymousOperations();
 
 
     };
     /** @} */
 }
-#endif // WSSOAPCLIENT_H
+#endif // STUB_H

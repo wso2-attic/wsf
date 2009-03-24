@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef ServiceSkeleton_H
-#define ServiceSkeleton_H
+#ifndef SERVICESKELETON_H
+#define SERVICESKELETON_H
 
 #include <WSFDefines.h>
 #include <OMElement.h>
