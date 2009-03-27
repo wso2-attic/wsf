@@ -155,7 +155,7 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
 	axiom_node_t *fault_node = NULL;
 	axiom_soap_fault_detail_t *fault_detail;
 	axis2_bool_t is_fault = AXIS2_FALSE;
-	Process *p = NULL;
+	Environment *p = NULL;
 
 	AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
 	AXIS2_PARAM_CHECK(env->error, new_msg_ctx, AXIS2_FAILURE);
@@ -163,7 +163,7 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
 	AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
 		"[axis2]Entry:wsf_cpp_msg_recv_invoke_business_logic_sync");
 
-	p = Process::getInstance();
+	p = Environment::getInstance();
 	p->setEnv(env);
 
 	/* get the implementation class for the Web Service */

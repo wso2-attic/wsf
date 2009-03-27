@@ -26,7 +26,7 @@ using namespace wso2wsf;
 
 void AxisObject::enableLogging(bool enable)
 {
-	axutil_env_t *_env = (axutil_env_t*)Process::getEnv();
+	axutil_env_t *_env = (axutil_env_t*)Environment::getEnv();
     if (enable)
     {
         axutil_env_enable_log(_env, AXIS2_TRUE);
@@ -40,18 +40,18 @@ void AxisObject::enableLogging(bool enable)
 AxisObject::AxisObject()
 {
 	/** Initialize the Process Object which keeps the system thread safe */
-	Process::getInstance();
+	Environment::getInstance();
 
-	if(!Process::getEnv())
+	if(!Environment::getEnv())
 	{
-		axutil_env_t* env = axutil_env_create_all(Process::_logFileName.c_str(), Process::_logLevel);
-		Process::setEnv(env);
+		axutil_env_t* env = axutil_env_create_all(Environment::_logFileName.c_str(), Environment::_logLevel);
+		Environment::setEnv(env);
     }
 }
 
 const axutil_env_t * AxisObject::getEnv()
 {
-	return Process::getEnv();
+	return Environment::getEnv();
 }
 
  

@@ -22,7 +22,7 @@
 using namespace wso2wsf;
 using namespace std;
 
-Process* WSF_CALL Process::getInstance()
+Environment* WSF_CALL Environment::getInstance()
 {
 	if(_processObj)
 	{
@@ -30,7 +30,7 @@ Process* WSF_CALL Process::getInstance()
 	}
 	else
 	{
-		_processObj =  new Process();
+		_processObj =  new Environment();
 #ifdef WIN32
 		lock = new RWLock();
 		lock->init();
@@ -43,7 +43,7 @@ Process* WSF_CALL Process::getInstance()
 *	Method to store the current thread specific environment. 
 *  @param env Pointer to the axutil_env
 */
-void WSF_CALL Process::setEnv(const axutil_env_t *env)
+void WSF_CALL Environment::setEnv(const axutil_env_t *env)
 {
 #ifdef WIN32
 	lock->writeLock();
@@ -65,7 +65,7 @@ void WSF_CALL Process::setEnv(const axutil_env_t *env)
 /**
 *	
 */
-const axutil_env_t* WSF_CALL Process::getEnv() 
+const axutil_env_t* WSF_CALL Environment::getEnv() 
 {
 	const axutil_env_t *env = NULL;
 #ifdef WIN32
@@ -90,7 +90,7 @@ const axutil_env_t* WSF_CALL Process::getEnv()
 	return env;
 }
 
-WSF_EXTERN void WSF_CALL Process::removeEnv()
+WSF_EXTERN void WSF_CALL Environment::removeEnv()
 {
 #ifdef WIN32
 	lock->writeLock();
@@ -113,7 +113,7 @@ WSF_EXTERN void WSF_CALL Process::removeEnv()
 /**
 * destructor frees resources.
 */
-WSF_CALL Process::~Process()
+WSF_CALL Environment::~Environment()
 {
 	std::map<int, const axutil_env_t*>::iterator _it;
 	for(_it = _envmap.begin(); _it != _envmap.end(); ++_it)
@@ -122,7 +122,7 @@ WSF_CALL Process::~Process()
 	}
 }
 
-void WSF_CALL Process::switchToGlobalPool()
+void WSF_CALL Environment::switchToGlobalPool()
 {
 	std::map<int, const axutil_env_t*>::const_iterator _it;
 	int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
@@ -133,7 +133,7 @@ void WSF_CALL Process::switchToGlobalPool()
 	}
 }
 
-void WSF_CALL Process::switchToLocalPool()
+void WSF_CALL Environment::switchToLocalPool()
 {
 
 	std::map<int, const axutil_env_t*>::const_iterator _it;
@@ -145,26 +145,26 @@ void WSF_CALL Process::switchToLocalPool()
 	}
 }
 
-void WSF_CALL Process::initialize(std::string logFileName, axutil_log_levels_t logLevel)
+void WSF_CALL Environment::initialize(std::string logFileName, axutil_log_levels_t logLevel)
 {
 	_logFileName = logFileName;
 	_logLevel = logLevel;
 }
 
-std::string Process::_logFileName;
+std::string Environment::_logFileName;
 
-axutil_log_levels_t Process::_logLevel;
+axutil_log_levels_t Environment::_logLevel;
 
-Process* Process::_processObj = NULL;
+Environment* Environment::_processObj = NULL;
 
-std::map<int, const axutil_env_t*> Process::_envmap;
+std::map<int, const axutil_env_t*> Environment::_envmap;
 
 #ifdef WIN32
 
-RWLock* Process::lock;
+RWLock* Environment::lock;
 
 #else 
 
-pthread_rwlock_t Process::rwlock = PTHREAD_RWLOCK_INITIALIZER;
+pthread_rwlock_t Environment::rwlock = PTHREAD_RWLOCK_INITIALIZER;
 
 #endif
