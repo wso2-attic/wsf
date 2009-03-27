@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     string end_point = "http://localhost:9090/axis2/services/mtom";
     string file_name = "resources/axis2.jpg";
 	
-	Process::initialize("mtom.log",AXIS2_LOG_LEVEL_TRACE);
+	Environment::initialize("mtom.log",AXIS2_LOG_LEVEL_TRACE);
 
     if (argc > 1)
     {

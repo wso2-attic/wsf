@@ -24,7 +24,7 @@ using namespace wso2wsf;
 
 int main()
 {
-	Process::initialize("flicker.log", AXIS2_LOG_LEVEL_TRACE);
+	Environment::initialize("flicker.log", AXIS2_LOG_LEVEL_TRACE);
 
     WSSOAPClient * sc = new WSSOAPClient("http://api.flickr.com/services/soap/");
 

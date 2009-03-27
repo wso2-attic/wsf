@@ -25,7 +25,7 @@ using namespace wso2wsf;
 
 int main()
 {
-    Process::initialize("yahoo_rest_search.log", AXIS2_LOG_LEVEL_TRACE);
+    Environment::initialize("yahoo_rest_search.log", AXIS2_LOG_LEVEL_TRACE);
 
     WSRESTClient sc("http://search.yahooapis.com/WebSearchService/V1/webSearch");
     

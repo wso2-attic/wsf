@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     string param2 = "8";
     string end_point = "http://localhost:9090/axis2/services/math";
 
-	Process::initialize("math.log", AXIS2_LOG_LEVEL_TRACE);
+	Environment::initialize("math.log", AXIS2_LOG_LEVEL_TRACE);
 
     if (argc > 1)
     {

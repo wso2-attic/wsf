@@ -25,7 +25,7 @@ using namespace wso2wsf;
 
 int main(int argc, char *argv[])
 {
-	Process::initialize("echo_blocking_dual.log", AXIS2_LOG_LEVEL_TRACE);
+	Environment::initialize("echo_blocking_dual.log", AXIS2_LOG_LEVEL_TRACE);
 
     string end_point = "http://localhost:9090/axis2/services/echo";
     string reply_to = "http://localhost:6060/axis2/services/__ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__";

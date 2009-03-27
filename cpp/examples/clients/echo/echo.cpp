@@ -25,7 +25,7 @@ using namespace wso2wsf;
 
 int main(int argc, char *argv[])
 {
-    Process::initialize("echo.log", AXIS2_LOG_LEVEL_TRACE);
+    Environment::initialize("echo.log", AXIS2_LOG_LEVEL_TRACE);
     
     string end_point = "http://localhost:9090/axis2/services/echo";
 

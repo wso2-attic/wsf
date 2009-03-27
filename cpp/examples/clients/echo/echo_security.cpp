@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     string client_repo = "client_repo/";
     string policy_file = "policy.xml";
 
-	Process::initialize("echo_security.log", AXIS2_LOG_LEVEL_TRACE);
+	Environment::initialize("echo_security.log", AXIS2_LOG_LEVEL_TRACE);
 
 
     if (argc > 1)
