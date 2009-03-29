@@ -56,7 +56,7 @@ namespace wso2wsf
 		// Returns:   void
 		// Qualifier:
 		//************************************
-		virtual void populateServices();
+	virtual void populateServices();
 
 
 

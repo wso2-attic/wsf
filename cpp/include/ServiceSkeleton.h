@@ -99,9 +99,9 @@ namespace wso2wsf
          */
 		virtual OMElement* WSF_CALL onFault(OMElement* omEle){return NULL;};
 
-		/**
+	   /**
 		*	Initialization method. Any service specific initialization can be done here.                                                    
-		*
+		*    
 		*/
 		virtual void WSF_CALL init(){};
 		

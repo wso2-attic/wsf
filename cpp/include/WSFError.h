@@ -23,14 +23,14 @@
 
 #define WSF_LOG_PROJECT_PREFIX "[WSFCPP]"
 
-#define WSF_LOG_USER_MSG(msg) AXIS2_LOG_USER(Process::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
+#define WSF_LOG_USER_MSG(msg) AXIS2_LOG_USER(Environment::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
 
-#define WSF_LOG_DEBUG_MSG( msg) AXIS2_LOG_DEBUG (Process::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
-#define WSF_LOG_INFO_MSG( msg) AXIS2_LOG_INFO (Process::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
-#define WSF_LOG_WARNING_MSG( msg) AXIS2_LOG_WARNING (Process::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
-#define WSF_LOG_ERROR_MSG( msg) AXIS2_LOG_ERROR (Process::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
-#define WSF_LOG_CRITICAL_MSG( msg) AXIS2_LOG_CRITICAL (Process::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
-#define WSF_LOG_TRACE_MSG( msg) AXIS2_LOG_TRACE (Process::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
+#define WSF_LOG_DEBUG_MSG( msg) AXIS2_LOG_DEBUG (Environment::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
+#define WSF_LOG_INFO_MSG( msg) AXIS2_LOG_INFO (Environment::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
+#define WSF_LOG_WARNING_MSG( msg) AXIS2_LOG_WARNING (Environment::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
+#define WSF_LOG_ERROR_MSG( msg) AXIS2_LOG_ERROR (Environment::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
+#define WSF_LOG_CRITICAL_MSG( msg) AXIS2_LOG_CRITICAL (Environment::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
+#define WSF_LOG_TRACE_MSG( msg) AXIS2_LOG_TRACE (Environment::getEnv()->log, AXIS2_LOG_SI, "%s %s", WSF_LOG_PROJECT_PREFIX, msg)
 
 
 #define CREATION_OF_EXECUTION_ENVIRONMENT_FAILED "Creation of Execution Environment Failed"

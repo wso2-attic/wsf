@@ -43,7 +43,7 @@ namespace wso2wsf
 	/**
 	* @brief class Process. This keeps track of axis2_env_t when running with threads.
 	*/
-	class Process
+	class Environment
 	{
 
 	private:
@@ -51,7 +51,7 @@ namespace wso2wsf
 		* @var _env private variable holds reference for
 		* axutil_env struct.
 		*/
-		static Process *_processObj;
+		static Environment *_processObj;
 		
 		static std::map<int, const axutil_env_t*> _envmap;
 
@@ -74,7 +74,7 @@ namespace wso2wsf
 		* Return an instance of the Static Process Object
 		*
 		*/
-		static WSF_EXTERN Process* WSF_CALL getInstance();
+		static WSF_EXTERN Environment* WSF_CALL getInstance();
 		/**
 		*	Method to store the current thread specific environment. 
 		*  @param env Pointer to the axutil_env
@@ -102,7 +102,7 @@ namespace wso2wsf
 		*/
 		static WSF_EXTERN void WSF_CALL initialize(std::string logFileName,  axutil_log_levels_t logLevel);
 	
-		WSF_CALL ~Process();
+		WSF_CALL ~Environment();
 	};
 	/** @} */
 }
