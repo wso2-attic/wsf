@@ -8,9 +8,7 @@ prglib_DATA= ../data/rahas_module.xml
 
 libmod_rahas_la_SOURCES = mod_rahas.c rahas_in_handler.c rahas_request_processor.c
 
-libmod_rahas_la_LIBADD  = ../util/librampart_util.la \
-			  ../omxmlsec/libomxmlsec.la \
-			  ../secconv/libsecconv.la \
+libmod_rahas_la_LIBADD  = ../util/librampart.la \
 				../../../axis2c/src/core/engine/libaxis2_engine.la \
 				@OPENSSLLIB@ \
 				-lcrypto 
