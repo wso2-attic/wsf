@@ -49,7 +49,7 @@ namespace wso2wsf
 		*  Serialize the ADBObject                                                    
 		*
 		*/
-		WSF_EXTERN virtual void WSF_CALL serialize(axiom_node_t** omNode, axiom_element_t *omElement, int tagClosed, axutil_hash_t *namespaces, int *nextNsIndex);
+		WSF_EXTERN virtual void WSF_CALL serialize(axiom_node_t* omNode, axiom_element_t *omElement, int tagClosed, axutil_hash_t *namespaces, int *nextNsIndex);
 		/**
 		* De serialize the ADB Object                                                   
 		*
