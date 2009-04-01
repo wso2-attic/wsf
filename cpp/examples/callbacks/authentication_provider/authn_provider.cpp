@@ -114,7 +114,7 @@ bool AuthnProvider::checkDigestPassword(
 {
     string local_pw = getPassword(username);
     string local_digest = rampart_crypto_sha1(
-        Process::getEnv(), nonce.c_str(), created.c_str(), local_pw.c_str());
+        Environment::getEnv(), nonce.c_str(), created.c_str(), local_pw.c_str());
     return (local_digest == digest);
 }
 

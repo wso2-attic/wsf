@@ -17,6 +17,7 @@
 #include <SCTProvider.h>
 #include <map>
 #include <axutil_hash.h>
+#include <Environment.h>
 
 using namespace std;
 using namespace wso2wsf;
@@ -60,7 +61,7 @@ void* TokenProvider::getToken(string& sct_id, MessageContext* msgctx)
 bool TokenProvider::storeToken(string& sct_id, MessageContext* msgctx, void* sct)
 {
     MapSCT_t* pmapSCT = getSCTMap(msgctx);
-    axutil_hash_set(pmapSCT, axutil_strdup(Process::getEnv(), sct_id.c_str()), AXIS2_HASH_KEY_STRING, sct);
+    axutil_hash_set(pmapSCT, axutil_strdup(Environment::getEnv(), sct_id.c_str()), AXIS2_HASH_KEY_STRING, sct);
     return true;
 }
 
@@ -79,7 +80,7 @@ bool TokenProvider::validateToken(OMNode* sct_node, MessageContext* msgctx)
 MapSCT_t* TokenProvider::getSCTMap(MessageContext* msgctx)
 {
     MapSCT_t* pmapSCT = (MapSCT_t*)msgctx->getPropertyValue(propertyName);
-	const axutil_env_t* env = Process::getEnv();
+	const axutil_env_t* env = Environment::getEnv();
     if(!pmapSCT)
     {
        //The property is not created yet. So we have to create it and store it in conf context

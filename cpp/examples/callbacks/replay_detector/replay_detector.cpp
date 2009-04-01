@@ -56,7 +56,7 @@ bool RDetect::isValid(MessageContext* msgctx)
 
     //Get the time stamp
     axutil_hash_t *sec_process_result = rampart_get_all_security_processed_results(
-        Process::getEnv(), msgctx->getAxis2MessageContext());
+        Environment::getEnv(), msgctx->getAxis2MessageContext());
     string timestamp = (char*) axutil_hash_get(
         sec_process_result, RAMPART_SPR_TS_CREATED, AXIS2_HASH_KEY_STRING);
 
@@ -87,7 +87,7 @@ ReplaySet_t* RDetect::getReplaySet(MessageContext* msgctx)
     {
        //The property is not created yet. So we have to create it and store it in conf context
         psetReplay = new ReplaySet_t;
-        const axutil_env_t* env = Process::getEnv();
+        const axutil_env_t* env = Environment::getEnv();
         axis2_conf_ctx_t *conf_ctx = axis2_msg_ctx_get_conf_ctx(
             msgctx->getAxis2MessageContext(), env);
         axutil_property_t* replay_set_prop = axutil_property_create_with_args(

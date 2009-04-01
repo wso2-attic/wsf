@@ -22,6 +22,9 @@
 #include <OMDataHandler.h>
 #include <iostream>
 #include <AxisFault.h>
+#include <Environment.h>
+
+
 using namespace std;
 using namespace wso2wsf;
 

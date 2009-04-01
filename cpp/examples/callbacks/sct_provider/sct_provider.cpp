@@ -60,8 +60,8 @@ void* TokenProvider::getToken(string& sct_id, MessageContext* msgctx)
     }
 	else
 	{
-		const axutil_env_t* env = Process::getEnv();
-		Process::switchToGlobalPool();
+		const axutil_env_t* env = Environment::getEnv();
+		Environment::switchToGlobalPool();
 		security_context_token_t *sct = security_context_token_create(env);
         if(sct)
         {
@@ -82,7 +82,7 @@ void* TokenProvider::getToken(string& sct_id, MessageContext* msgctx)
             security_context_token_set_is_sc10(sct, env, AXIS2_TRUE);
     
 		}
-		Process::switchToLocalPool();
+		Environment::switchToLocalPool();
 		return sct;
 	}
 }
@@ -114,7 +114,7 @@ MapSCT_t* TokenProvider::getSCTMap(MessageContext* msgctx)
     {
        //The property is not created yet. So we have to create it and store it in conf context
         pmapSCT = new MapSCT_t;
-        const axutil_env_t* env = Process::getEnv();
+        const axutil_env_t* env = Environment::getEnv();
         axis2_conf_ctx_t *conf_ctx = axis2_msg_ctx_get_conf_ctx(
             msgctx->getAxis2MessageContext(), env);
         axutil_property_t* sct_map_prop = axutil_property_create_with_args(

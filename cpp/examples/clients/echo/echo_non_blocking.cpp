@@ -21,6 +21,10 @@
 #include <iostream>
 #include <AxisFault.h>
 #include <WSFDefines.h>
+#include <Environment.h>
+
+
+
 using namespace std;
 using namespace wso2wsf;
 
