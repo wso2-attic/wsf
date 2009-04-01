@@ -1,5 +1,4 @@
-environment = wso2wsf::Environment::getInstance(); \
-        /*
+/*
  * Copyright 2005,2009 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
