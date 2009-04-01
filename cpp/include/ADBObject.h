@@ -49,12 +49,12 @@ namespace wso2wsf
 		*  Serialize the ADBObject                                                    
 		*
 		*/
-		WSF_EXTERN virtual void WSF_CALL serialize(OMElement *element, int tagClosed,std::vector<OMNamespace *> namespaces,int *nextNsIndex);
+		WSF_EXTERN virtual void WSF_CALL serialize(axiom_node_t** omNode, axiom_element_t *omElement, int tagClosed, axutil_hash_t *namespaces, int *nextNsIndex);
 		/**
-		* Deserialize the ADB Object                                                   
+		* De serialize the ADB Object                                                   
 		*
 		*/
-		WSF_EXTERN virtual void WSF_CALL deserialize(OMElement *parent, bool isEarlyNodeValid, bool dontCareMinoccurs);
+		WSF_EXTERN virtual void WSF_CALL deserialize(axiom_node_t** omNode, bool isEarlyNodeValid, bool dontCareMinoccurs);
 
 		~ADBObject();
 

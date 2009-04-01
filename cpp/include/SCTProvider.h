@@ -1,4 +1,5 @@
-/*
+environment = wso2wsf::Environment::getInstance(); \
+        /*
  * Copyright 2005,2009 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +22,7 @@
 #include <string>
 #include <rampart_sct_provider.h>
 #include <MessageContext.h>
+#include <Environment.h>
 
 /**
  * @file SCTProvider.h
@@ -157,7 +159,7 @@ extern "C" \
         const axutil_env_t *env) \
     { \
         rampart_sct_provider_t* sct_provider = NULL; \
-        wso2wsf::Process* process = NULL; \
+        wso2wsf::Environment* environment = NULL; \
     \
         sct_provider = (rampart_sct_provider_t*)AXIS2_MALLOC(env->allocator, sizeof(rampart_sct_provider_t)); \
     \
@@ -176,8 +178,8 @@ extern "C" \
             return AXIS2_FAILURE; \
         } \
 \
-        process = wso2wsf::Process::getInstance(); \
-        process->setEnv(env); \
+        environment = wso2wsf::Environment::getInstance(); \
+        environment->setEnv(env); \
 \
         return AXIS2_SUCCESS; \
     } \

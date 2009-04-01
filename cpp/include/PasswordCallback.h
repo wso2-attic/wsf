@@ -20,7 +20,7 @@
 #include <WSFDefines.h>
 #include <string>
 #include <rampart_callback.h>
-#include <Process.h>
+#include <Environment.h>
 
 /**
  * @file PasswordCallback.h
@@ -113,7 +113,7 @@ extern "C" \
         const axutil_env_t *env) \
     { \
         wsf_rampart_callback_t* rcb = NULL; \
-        wso2wsf::Process* process = NULL; \
+        wso2wsf::Environment* environment = NULL; \
     \
         rcb = (wsf_rampart_callback_t*)AXIS2_MALLOC(env->allocator, sizeof(wsf_rampart_callback_t)); \
     \
@@ -131,8 +131,8 @@ extern "C" \
             return AXIS2_FAILURE; \
         } \
 \
-        process = wso2wsf::Process::getInstance(); \
-        process->setEnv(env); \
+        environment = wso2wsf::Environment::getInstance(); \
+        environment->setEnv(env); \
 \
     \
         return AXIS2_SUCCESS; \

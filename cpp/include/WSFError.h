@@ -16,7 +16,7 @@
 
 #ifndef WSFERROR_H
 #define WSFERROR_H
-#include <Process.h>
+#include <Environment.h>
 /**
  * @file WSFError.h
  */

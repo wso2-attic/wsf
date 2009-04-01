@@ -21,6 +21,7 @@
 #include <string>
 #include <MessageContext.h>
 #include <rampart_replay_detector.h>
+#include <Environment.h>
 
 /**
  * @file ReplayDetector.h
@@ -106,7 +107,7 @@ extern "C" \
         const axutil_env_t *env) \
     { \
         wsf_replay_detector_t* replay_detector = NULL; \
-        wso2wsf::Process* process = NULL; \
+        wso2wsf::Environment* environment = NULL; \
     \
         replay_detector = (wsf_replay_detector_t*)AXIS2_MALLOC(env->allocator, sizeof(wsf_replay_detector_t)); \
     \
@@ -123,8 +124,8 @@ extern "C" \
             return AXIS2_FAILURE; \
         } \
 \
-        process = wso2wsf::Process::getInstance(); \
-        process->setEnv(env); \
+        environment = wso2wsf::Environment::getInstance(); \
+        environment->setEnv(env); \
 \
         return AXIS2_SUCCESS; \
     } \
