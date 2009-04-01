@@ -17,6 +17,8 @@
 #include <stdio.h>
 #include <WSFError.h>
 #include <AxisObject.h>
+#include <Environment.h>
+
 using namespace std;
 using namespace wso2wsf;
 

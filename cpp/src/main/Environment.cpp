@@ -18,7 +18,7 @@
 #include <axutil_env.h>
 #include <string>
 #include <map>
-#include <Process.h>
+#include <Environment.h>
 using namespace wso2wsf;
 using namespace std;
 

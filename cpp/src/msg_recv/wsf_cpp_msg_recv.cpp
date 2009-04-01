@@ -32,6 +32,7 @@
 #include <ServiceSkeleton.h>
 #include <OMElement.h>
 #include <MessageContext.h>
+#include <Environment.h>
 
 using namespace wso2wsf;
 
