@@ -29,7 +29,7 @@ cd ../../sandesha2c/samples; ./configure --prefix=$1 --with-axis2=$1/include/axi
 fi
 if test -e ../../rampartc/Makefile; then
 cd ../../rampartc/samples; ./configure --prefix=$1  --with-axis2=$1/include/axis2-1.6.0; make; make install;
-cd client/sec_echo; sh update_n_run.sh; cd ../../secpolicy; sh deploy.sh scenario5; cd ../
+cd client/sec_echo; cd ../../secpolicy; sh deploy.sh scenario5; cd ../
 fi
 if test -e ../../savanc/Makefile; then
 cd ../../savanc/samples; ./configure --prefix=$1  --with-axis2=$1/include/axis2-1.6.0 --with-savan=$1/include/savan-0.90; make; make install;
