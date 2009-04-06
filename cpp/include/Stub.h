@@ -18,6 +18,7 @@
 #define STUB_H
 
 #include <WSFDefines.h>
+#include <axis2_svc_client.h>
 #include <ServiceClient.h>
 
 /**
@@ -45,32 +46,14 @@ namespace wso2wsf
 	
 	private:
 		/** service client */
-		ServiceClient *_serviceClient;
+		ServiceClient *serviceClient;
 		/** Options */
-		Options *_options;
-
-		//************************************
-		// Method:    _populateServices
-		// FullName:  wso2wsf::Stub::_populateServices
-		// Access:    virtual private 
-		// Returns:   void
-		// Qualifier:
-		//************************************
-	virtual void populateServices();
-
-
-
+		
+		Options *options;
+		
     public:
        
-       //************************************
-       // Method:    getEndpointURI
-       // FullName:  wso2wsf::Stub::_getEndpointURI
-       // Access:    virtual public 
-       // Returns:   void
-       // Qualifier:
-       //************************************
-       virtual void getEndpointURI();
-
+		WSF_EXTERN void WSF_CALL init(std::string& client_home, std::string& endpointUri);
 
 		//************************************
 		// Method:    _getOptions

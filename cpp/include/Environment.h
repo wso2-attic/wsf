@@ -14,8 +14,8 @@
 * limitations under the License.
 */
 
-#ifndef  PROCESS_H
-#define  PROCESS_H
+#ifndef  ENVIRONMENT_H
+#define  ENVIRONMENT_H
 
 #include <axutil_platform_auto_sense.h>
 #include <WSFDefines.h>
@@ -107,4 +107,4 @@ namespace wso2wsf
 	/** @} */
 }
 
-#endif // PROCESS_H
+#endif // ENVIRONMENT_H

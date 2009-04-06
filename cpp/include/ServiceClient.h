@@ -69,6 +69,9 @@ namespace wso2wsf
      */
     class ServiceClient : public AxisObject
     {
+
+	friend class Stub;
+
     private:
         /**
          * @var _wsf_service_client private variable holds reference for
@@ -131,12 +134,7 @@ namespace wso2wsf
         bool WSF_CALL initializeClient();
 
     protected:
-        /**
-         * Sets the options to be used by service client.
-         * @param options pointer to options struct to be set.
-         * @return true on success or false on failure.
-         */
-        virtual bool WSF_CALL setOptions(Options * options)=0;
+
 
     public:
         /**
@@ -163,6 +161,13 @@ namespace wso2wsf
          * destructor frees resources.
          */
         WSF_EXTERN virtual WSF_CALL ~ServiceClient();
+
+		/**
+		* Sets the options to be used by service client.
+		* @param options pointer to options struct to be set.
+		* @return true on success or false on failure.
+		*/
+		bool WSF_CALL setOptions(Options * options);
 
         /**
          * Method to retrieve the last SOAP fault that resulted after invoking

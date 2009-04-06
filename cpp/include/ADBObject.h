@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-#ifndef WSSOAPCLIENT_H
-#define WSSOAPCLIENT_H
+#ifndef ADBOBJECT_H
+#define ADBOBJECT_H
 
 #include <WSFDefines.h>
 #include <ServiceClient.h>
+#include <axiom_node.h>
 
 /**
  * @file Stub.h
@@ -49,16 +50,16 @@ namespace wso2wsf
 		*  Serialize the ADBObject                                                    
 		*
 		*/
-		WSF_EXTERN virtual void WSF_CALL serialize(axiom_node_t* omNode, axiom_element_t *omElement, int tagClosed, axutil_hash_t *namespaces, int *nextNsIndex);
+		WSF_EXTERN virtual axiom_node_t* WSF_CALL serialize(axiom_node_t* omNode, axiom_element_t *omElement, int tagClosed, axutil_hash_t *namespaces, int *nextNsIndex);
 		/**
 		* De serialize the ADB Object                                                   
 		*
 		*/
-		WSF_EXTERN virtual void WSF_CALL deserialize(axiom_node_t** omNode, bool isEarlyNodeValid, bool dontCareMinoccurs);
+		WSF_EXTERN virtual bool WSF_CALL deserialize(axiom_node_t** omNode, bool *isEarlyNodeValid, bool dontCareMinoccurs);
 
 		~ADBObject();
 
     };
     /** @} */
 }
-#endif // WSSOAPCLIENT_H
+#endif // ADBOBJECT_H
