@@ -4,21 +4,21 @@ export LD_LIBRARY_PATH=$1/lib;
 
 # copy samples
 if ! test -d $1/samples/savanc; then 
-    mkdir $1/samples/savanc;
-    cp -r savanc/samples/* $1/samples/savanc;
+    mkdir $1/samples/src/savanc;
+    cp -r savanc/samples/* $1/samples/src/savanc;
 fi    
 
 if ! test -d $1/samples/sandesha2c; then 
-    mkdir $1/samples/sandesha2c;
-    cp -r sandesha2c/samples/* $1/samples/sandesha2c;
+    mkdir $1/samples/src/sandesha2c;
+    cp -r sandesha2c/samples/* $1/samples/src/sandesha2c;
 fi    
 if ! test -d $1/samples/rampartc; then 
-    mkdir $1/samples/rampartc;
-    cp -r rampartc/samples/* $1/samples/rampartc;
+    mkdir $1/samples/src/rampartc;
+    cp -r rampartc/samples/* $1/samples/src/rampartc;
 fi    
 if ! test -d $1/samples/wsclient; then 
-    mkdir $1/samples/wsclient;
-    cp -r wsclient/samples/* $1/samples/wsclient;
+    mkdir $1/samples/src/wsclient;
+    cp -r wsclient/samples/* $1/samples/src/wsclient;
 fi    
 
 find $1/samples -name "*.o"| xargs rm -rf
@@ -32,7 +32,7 @@ cd ../../rampartc/samples; ./configure --prefix=$1  --with-axis2=$1/include/axis
 cd client/sec_echo; cd ../../secpolicy; sh deploy.sh scenario5; cd ../
 fi
 if test -e ../../savanc/Makefile; then
-cd ../../savanc/samples; ./configure --prefix=$1  --with-axis2=$1/include/axis2-1.6.0 --with-savan=$1/include/savan-0.90; make; make install;
+cd ../../savanc/samples; ./configure --prefix=$1  --with-axis2=$1/include/axis2-1.6.0 --with-savan=$1/include/savan-1.0; make; make install;
 fi
 cd ../../examples; ./configure --prefix=$1  --with-wsfc=$1/include; make; make install
 
