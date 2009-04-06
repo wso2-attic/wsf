@@ -30,5 +30,5 @@ bindist: $(bin_PROGRAMS)
 	rm -rf axis2c-bin-${PACKAGE_VERSION}-linux
 
 install-data-hook:
-	cp -rf samples/* $(samplesdir)
+	cp -rf samples/* $(samplesdir)/src/axis2c
 
