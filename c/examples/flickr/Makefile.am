@@ -1,7 +1,7 @@
 prgbindir=$(prefix)/bin/samples
-samplesdir=$(prefix)/samples/client/flickr
+#samplesdir=$(prefix)/samples/client/flickr
 prgbin_PROGRAMS = flickr
-samples_DATA=flickr_client.c Makefile.am README.txt Makefile.in
+#samples_DATA=flickr_client.c Makefile.am README.txt Makefile.in
 flickr_SOURCES = flickr_client.c
 
 flickr_LDADD   =    $(LDFLAGS) \
