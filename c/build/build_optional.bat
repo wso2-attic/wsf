@@ -37,10 +37,8 @@ xcopy /E /Q /I /Y sandesha2\lib\*  .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSI
 xcopy /E /I /Q /Y sandesha2\samples .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples
 xcopy /E /Q /I /Y sandesha2\services .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\services
 copy /Y sandesha2\include\*.h  .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\include\
-mkdir .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\sandesha2
-copy /Y ..\config\*.txt .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\sandesha2
-copy /Y ..\config\*.bat .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\sandesha2
-copy /Y ..\config\*.sh .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\bin\sandesha2
+copy /Y ..\config\*.bat .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples\bin\sandesha2
+copy /Y ..\config\*.sh .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples\bin\sandesha2
 cd ..\..
 goto build_savan
 
@@ -59,8 +57,6 @@ cd ..
 xcopy /E /Q /I /Y savanc\modules\savan .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\modules\savan
 xcopy /E /Q /I /Y savanc\services .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\services
 xcopy /E /Q /I /Y savanc\samples .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples
-copy /Y savanc\modules\savan\mod_savan.dll .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
-copy /Y savanc\modules\savan\mod_savan.lib .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
 copy /Y savanc\lib\* .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
 cd ..\..\
 goto build_udp_transport
