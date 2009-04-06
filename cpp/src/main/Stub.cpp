@@ -17,30 +17,36 @@
 #include <stdio.h>
 #include <Stub.h>
 #include <Options.h>
+#include <ServiceClient.h>
 using namespace std;
 using namespace wso2wsf;
 
+void Stub::init(std::string& client_home, std::string& endpointUri)
+{
+	serviceClient = new ServiceClient(client_home, endpointUri);
+}
+
 Options* Stub::getOptions()
 {
-	return _options;
+	return options;
 }
 
 ServiceClient*  Stub::getServiceClient()
 {
-	return _serviceClient;
+	return serviceClient;
 }
 
 bool Stub::setServiceClient(ServiceClient *client)
 {
-	if(_serviceClient)
-		delete _serviceClient;
-	_serviceClient = client;
+	if(serviceClient)
+		delete serviceClient;
+	serviceClient = client;
 	return true;
 }
 
 bool Stub::engageModule(std::string moduleName)
 {
-	_serviceClient->engageModule(moduleName);
+	serviceClient->engageModule(moduleName);
 	return true;
 }
 
@@ -49,3 +55,4 @@ void Stub::addAnonymousOperations()
 {	
 	
 }
+
