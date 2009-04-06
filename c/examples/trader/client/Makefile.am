@@ -1,5 +1,5 @@
-prgbindir=$(prefix)/bin/samples
-samplesdir=$(prefix)/samples/client/trader
+prgbindir=$(prefix)/samples/bin/wsf_c
+samplesdir=$(prefix)/samples/src/wsf_c/client/trader
 prgbin_PROGRAMS = trader
 samples_DATA=trader_client.c Makefile.am Makefile.in README.txt
 trader_SOURCES = trader_client.c axis2_stub_TraderClient.c axis2_stub_ExchangeClient.c
