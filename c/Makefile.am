@@ -12,7 +12,13 @@ dist-hook:
 samples:
 	sh build_samples.sh $(prefix)
 	mkdir -p  $(samplesdir)/src/wsf_c
-	cp -rf examples/* $(samplesdir)
+	cp -rf examples/* $(samplesdir)/src/wsf_c
+	cd $(samplesdir)
+	rm -rf `find $(samplesdir)/ -type d -name *.svn`
+	rm -rf `find $(samplesdir)/ -type d -name *.libs`
+	rm -rf `find $(samplesdir)/ -type d -name *.deps`
+	rm -rf `find $(samplesdir)/ -type f -name Makefile`
+	rm -rf `find $(samplesdir)/ -type d -name autom4te.cache`
 
 install-data-hook:
 	cp -rf docs/* $(docsdir)
