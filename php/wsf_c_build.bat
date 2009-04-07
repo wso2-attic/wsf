@@ -19,8 +19,8 @@ rem Build Apache Rampart/C
 @cd ..
 @xcopy /E /Q /I /Y rampartc-%RAMPARTC_VERSION%\modules\rampart .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\modules\rampart
 @copy /Y rampartc-%RAMPARTC_VERSION%\include\*.h .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\include\
-@copy /Y rampartc-%RAMPARTC_VERSION%\modules\rampart\mod_rampart.lib .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
-@copy /Y rampartc-%RAMPARTC_VERSION%\modules\rampart\mod_rampart.dll .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
+@copy /Y rampartc-%RAMPARTC_VERSION%\lib\rampart.lib .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
+@copy /Y rampartc-%RAMPARTC_VERSION%\lib\rampart.dll .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
 @xcopy /E /Q /I /Y rampartc-%RAMPARTC_VERSION%\modules\rahas .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\modules\rahas
 
 @goto build_sandesha2

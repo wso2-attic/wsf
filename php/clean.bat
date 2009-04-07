@@ -12,7 +12,7 @@ set WSFPHP_VERSION=2.0.0
 
 @if exist wsf_c\axis2c\build\win32\int.msvc rmdir /s /q wsf_c\axis2c\build\win32\int.msvc
 
-@if exist wsf_c\rampartc\build\rampartc-%RAMPART_VERSION% rmdir /s /q wsf_c\rampartc\build\rampartc-%RAMPART_VERSION%
+@if exist wsf_c\rampartc\build\rampartc-%RAMPARTC_VERSION% rmdir /s /q wsf_c\rampartc\build\rampartc-%RAMPARTC_VERSION%
 
 @if exist wsf_c\rampartc\build\win32\int.msvc rmdir /s /q wsf_c\rampartc\build\win32\int.msvc
 

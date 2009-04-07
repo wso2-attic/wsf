@@ -11,7 +11,7 @@ LDFLAGS = /nologo /LIBPATH:.\..\$(WSFPHP_BIN_DIR)\wsf_c\lib /LIBPATH:$(PHP_BIN_D
 	  /LIBPATH:$(LIBXML2_BIN_DIR)\lib
 
 LIBS = axutil.lib axis2_engine.lib axis2_parser.lib \
-       axiom.lib libxml2.lib mod_rampart.lib axis2_http_sender.lib \
+       axiom.lib libxml2.lib rampart.lib axis2_http_sender.lib \
        neethi_util.lib neethi.lib sandesha2.lib sandesha2_client.lib libxml2.lib wsock32.lib
 
 INCLUDE_PATH = /I$(PHP_SRC_DIR) /I$(PHP_SRC_DIR)\main /I$(PHP_SRC_DIR)\regex \
