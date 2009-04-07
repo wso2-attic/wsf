@@ -11,10 +11,11 @@ dist-hook:
 
 samples:
 	sh build_samples.sh $(prefix)
+	mkdir -p  $(samplesdir)/src/wsf_c
+	cp -rf examples/* $(samplesdir)
 
 install-data-hook:
 	cp -rf docs/* $(docsdir)
-	cp -rf examples/* $(samplesdir)
 	rm -rf `find $(samplesdir)/ -type d -name *.svn`
 	rm -rf `find $(samplesdir)/ -type d -name *.libs`
 	rm -rf `find $(samplesdir)/ -type d -name *.deps`
