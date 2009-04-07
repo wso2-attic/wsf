@@ -63,7 +63,23 @@ Contents:
        ( Before running the build.bat file, add your vcvars32.bat file location to PATH environment variable. 
 	    If you are using vc2005, it is located in C:\Program Files\Microsoft Visual Studio 8\VC\bin)
 
- 2. Installing WSO2 WSF as a PHP extension.
+ 2. Installing WSO2 WSF/PHP Binary
+
+	You need to download following dependency libraries:
+
+	libxml2 binary distribution 
+	iconv binary distribution
+	OpenSSL binary distribution
+	PHP Binary
+	
+	obtain libxml2 and iconv win32 binaries from [1].
+	obtain OpenSSL binary from [2] [the build system assumes that you install openssl from msi].
+	obtain PHP Bianry from [3].
+
+
+	[1] http://www.zlatkovic.com/pub/libxml/
+	[2] http://www.slproweb.com/products/Win32OpenSSL.html
+	[3] http://www.php.net/downloads.php
 
     1.If you built the extension from the source, you will find the wso2-wsf-php-bin-x.y.z-win32 (binary pack) 
       located in your source directory.
@@ -109,30 +125,30 @@ Contents:
 
     Uncomment the include_path and edit it to point to the location for scripts folder as
 
-    include_path = ".;/<path to the scripts folder>"
+    include_path = ".;/<path to the WSF/PHP scripts folder>"
 
     6. Configure the Apache2 Web server with PHP as follows.
 
-        6.1. Copy php5apache2.dll to Apache2/modules directory and add the following entries in httpd.conf file.
+        6.1. Copy php5apache2_2.dll to Apache2/modules directory and add the following entries in httpd.conf file.
 
-            LoadModule php5_module modules/php5apache2.dll
+            LoadModule php5_module modules/php5apache2_2.dll
             PHPIniDir "< your php.ini file location> "
 
             AddType application/x-httpd-php .php .phtml
             AddType application/x-httpd-php-source .phps
 
-    7. Copy the samples folder to your Apache Web server's document root. If you want to run samples
+    7. Copy the samples folder to your Apache Web server's document root, if you want to run samples
 
-    Now you should be able to run the samples in the samples directory.
+    Now you should be able to run the samples in the samples directory. Samples were written assuming httpd is running on port 80. If you are running httpd in some other ports, please modify the samples accordingly.
 
 3. Binary Dependency version numbers.
 
-  WSO2-WSF-PHP-1.3.2 Win32 Binary Will be compiled using following version of dependency libraries.
+  WSO2-WSF-PHP-2.0.0 Win32 Binary Will be compiled using following version of dependency libraries.
 
   1. PHP     5.2.6
-  2. Libxml2 2.6.30
+  2. Libxml2 2.7.3
   3. Iconv   1.9.2 
-  4. openssl .98e (MSI)
+  4. openssl .98i (MSI)
 
 Note:- By default, we compiled WSF/PHP with SSL enabled. For it to work properly, apache needs to have SSL configured.
 ===============================================================================================
