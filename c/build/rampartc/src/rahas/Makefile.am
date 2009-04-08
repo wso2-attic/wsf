@@ -7,6 +7,7 @@ prglib_LTLIBRARIES = libmod_rahas.la
 prglib_DATA= ../data/rahas_module.xml
 
 libmod_rahas_la_SOURCES = mod_rahas.c rahas_in_handler.c rahas_request_processor.c
+libmod_rahas_la_LDFLAGS = -version-info $(VERSION_NO)
 
 libmod_rahas_la_LIBADD  = ../util/librampart.la \
 				../../../axis2c/src/core/engine/libaxis2_engine.la \
