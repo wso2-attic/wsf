@@ -11,6 +11,8 @@ libtrust_la_SOURCES = context.c \
 			policy_util.c \
 			token.c
 
+libtrust_la_LDFLAGS = -version-info $(VERSION_NO)
+
 INCLUDES = -I$(top_builddir)/include \
             -I ../../../../util/include \
             -I ../../../../include \
