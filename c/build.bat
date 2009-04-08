@@ -18,12 +18,21 @@ if not %ERRORLEVEL% EQU 0 goto end
 rem Build Flickr sample
 cd ..\..\..\..\examples\flickr
 nmake -f flickr.mk
-copy /Y flickr.exe  ..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples\bin\
+mkdir ..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples\bin\wsf_c
+copy /Y flickr.exe  ..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples\bin\wsf_c
 
 rem Build Trader sample
 cd ..\trader
 nmake -f trader.mk
 cd ..\..
+
+mkdir axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples\src\wsf_c
+xcopy /E /Q /I /Y examples axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples\src\wsf_c
+del /s /q axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples\src\wsf_c\*.exe
+del /s /q axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples\src\wsf_c\*.dll
+del /s /q axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples\src\wsf_c\*.exp
+del /s /q axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples\src\wsf_c\*.lib
+del /s /q axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples\src\wsf_c\*.obj
 
 rem Build Optional Modules
 cd build

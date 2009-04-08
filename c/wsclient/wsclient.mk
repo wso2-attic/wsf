@@ -35,4 +35,6 @@ wsclient:
 	if exist int.msvc rmdir /s /q int.msvc
 	if not exist $(AXIS2_BIN_DIR)\samples\bin\wsclient mkdir $(AXIS2_BIN_DIR)\samples\bin\wsclient
 	xcopy /S /Y samples\* $(AXIS2_BIN_DIR)\samples\bin\wsclient
+	if not exist $(AXIS2_BIN_DIR)\samples\src\wsclient mkdir $(AXIS2_BIN_DIR)\samples\src\wsclient 
+	xcopy /S /Y samples\* $(AXIS2_BIN_DIR)\samples\src\wsclient
 	

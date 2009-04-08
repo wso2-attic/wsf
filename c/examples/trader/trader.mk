@@ -21,7 +21,7 @@ echo:
 	cd $(TRADER_CLIENT)
 	cl.exe /nologo $(TRADER_DECLARES) trader_client.c axis2_stub_TraderClient.c axis2_stub_ExchangeClient.c /I..\..\..\axis2c\build\axis2c-bin-$(AXIS2C_VERSION)-win32\include /I../include /c
 	link.exe /nologo *.obj ..\util\*.obj /LIBPATH:..\..\..\axis2c\build\axis2c-bin-$(AXIS2C_VERSION)-win32\lib axiom.lib axutil.lib axis2_engine.lib axis2_parser.lib axis2_http_sender.lib axis2_http_receiver.lib  /OUT:trader.exe
-	copy /Y trader.exe ..\..\..\axis2c\build\axis2c-bin-$(AXIS2C_VERSION)-win32\samples\bin\
+	copy /Y trader.exe ..\..\..\axis2c\build\axis2c-bin-$(AXIS2C_VERSION)-win32\samples\bin\wsf_c\
 	
 	cd $(TRADER_EXCHANGE_UTIL)
 	cl.exe /nologo $(TRADER_DECLARES) *.C  /I..\..\..\..\axis2c\build\axis2c-bin-$(AXIS2C_VERSION)-win32\include /I..\..\include /c
