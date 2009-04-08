@@ -3,20 +3,20 @@ set -e
 export LD_LIBRARY_PATH=$1/lib; 
 
 # copy samples
-if ! test -d $1/samples/savanc; then 
+if ! test -d $1/samples/src/savanc; then 
     mkdir $1/samples/src/savanc;
     cp -r savanc/samples/* $1/samples/src/savanc;
 fi    
 
-if ! test -d $1/samples/sandesha2c; then 
+if ! test -d $1/samples/src/sandesha2c; then 
     mkdir $1/samples/src/sandesha2c;
     cp -r sandesha2c/samples/* $1/samples/src/sandesha2c;
 fi    
-if ! test -d $1/samples/rampartc; then 
+if ! test -d $1/samples/src/rampartc; then 
     mkdir $1/samples/src/rampartc;
     cp -r rampartc/samples/* $1/samples/src/rampartc;
 fi    
-if ! test -d $1/samples/wsclient; then 
+if ! test -d $1/samples/src/wsclient; then 
     mkdir $1/samples/src/wsclient;
     cp -r wsclient/samples/* $1/samples/src/wsclient;
 fi    
