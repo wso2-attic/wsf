@@ -3,7 +3,7 @@ includedir=$(prefix)/include/sandesha2-0.91
 docsdir=$(prefix)/docs/sandesha2c
 sysconfdir=$(prefix)
 samplesdir=$(prefix)/samples/src/sandesha2c
-scriptsdir=$(prefix)/bin/sandesha2
+scriptsdir=$(prefix)/samples/bin/sandesha2c
 
 SUBDIRS = src
 samples_DATA=
