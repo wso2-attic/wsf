@@ -248,8 +248,8 @@ deleteEventsResponse Object
     [success] => deleteEvents Object
 (
     [user_name] => dimuthu
-    [start_date_time] => 2009-07-08Z18:00:00
-    [end_date_time] => 2009-09-08Z18:00:00
+    [start_date_time] => 1247076000
+    [end_date_time] => 1252432800
 )
 
 )
@@ -261,12 +261,11 @@ addEventResponse Object
     [event] => Event Object
         (
             [name] => another event
-            [start_date_time] => 2008-07-08Z18:00:00
-            [end_date_time] => 2008-09-08Z18:00:00
+            [start_date_time] => 1215540000
+            [end_date_time] => 1220896800
             [description] => 
         )
 
 )
 
 )
-

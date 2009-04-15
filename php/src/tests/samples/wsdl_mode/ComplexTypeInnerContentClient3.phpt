@@ -21,7 +21,7 @@ END;
 soap_post($url, $msg, "urn:myDemo");
 ?>
 --EXPECT--
-<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope"><soapenv:Header/><soapenv:Body><ns1:myDemoResponse xmlns:ns1="http://wso2.org/dyn/codegen/demo">myDemo Object
+<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope"><soapenv:Body><ns1:myDemoResponse xmlns:ns1="http://wso2.org/dyn/codegen/demo">myDemo Object
 (
     [demo1] =&gt; 
     [demo2] =&gt; Hi string
