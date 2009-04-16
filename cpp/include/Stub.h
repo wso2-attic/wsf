@@ -44,12 +44,12 @@ namespace wso2wsf
     {
 	
 	
-	private:
+	protected:
 		/** service client */
 		ServiceClient *serviceClient;
 		/** Options */
 		
-		Options *options;
+		Options *clientOptions;
 		
     public:
        

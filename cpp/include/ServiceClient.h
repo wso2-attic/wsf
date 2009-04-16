@@ -350,6 +350,13 @@ namespace wso2wsf
          * when request was called last time, as a String.
          */
         WSF_EXTERN std::string WSF_CALL getLastResponseSoapEnvelopeString();
+
+		/**
+		* Returns the axis2_svc_client used within ServiceClient.
+		*/
+		WSF_EXTERN axis2_svc_client_t* WSF_CALL getAxis2SvcClient();
+
+
     };
     /** @} */
 }

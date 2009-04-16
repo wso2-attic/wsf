@@ -241,6 +241,11 @@ namespace wso2wsf
          * can be either AXIS2_HTTP_GET or AXIS2_HTTP_POST
          */
         WSF_EXTERN void WSF_CALL setHTTPMethod(std::string http_method);
+		/**
+		* Returns the axis2_options used within Options class                                                   
+		*
+		*/
+		WSF_EXTERN axis2_options_t* WSF_CALL getAxis2Options();
     };
     /** @} */
 }

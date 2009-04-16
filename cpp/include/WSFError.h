@@ -23,14 +23,15 @@
 
 
 
-#define WSF_LOG_USER_MSG(msg) AXIS2_LOG_USER(Environment::getEnv()->log, AXIS2_LOG_SI,  msg)
-#define WSF_LOG_DEBUG_MSG( msg) AXIS2_LOG_DEBUG (Environment::getEnv()->log, AXIS2_LOG_SI, msg)
-#define WSF_LOG_INFO_MSG( msg) AXIS2_LOG_INFO (Environment::getEnv()->log, AXIS2_LOG_SI, msg)
-#define WSF_LOG_WARNING_MSG( msg) AXIS2_LOG_WARNING (Environment::getEnv()->log, AXIS2_LOG_SI,  msg)
-#define WSF_LOG_ERROR_MSG( msg) AXIS2_LOG_ERROR (Environment::getEnv()->log, AXIS2_LOG_SI, msg)
-#define WSF_LOG_CRITICAL_MSG( msg) AXIS2_LOG_CRITICAL (Environment::getEnv()->log, AXIS2_LOG_SI, msg)
-#define WSF_LOG_TRACE_MSG( msg) AXIS2_LOG_TRACE (Environment::getEnv()->log, AXIS2_LOG_SI, msg)
+#define WSF_LOG_USER_MSG axutil_log_impl_log_user
+#define WSF_LOG_DEBUG_MSG axutil_log_impl_log_debug  
+#define WSF_LOG_INFO_MSG axutil_log_impl_log_info
+#define WSF_LOG_WARNING_MSG axutil_log_impl_log_warning
+#define WSF_LOG_ERROR_MSG axutil_log_impl_log_error
+#define WSF_LOG_CRITICAL_MSG axutil_log_impl_log_critical
+#define WSF_LOG_TRACE_MSG axutil_log_impl_log_trace
 
+#define WSF_LOG_SI AXIS2_LOG_SI
 
 #define CREATION_OF_EXECUTION_ENVIRONMENT_FAILED "Creation of Execution Environment Failed"
 #define CREATION_OF_NEETHI_POLICY_OBJECT_FAILED "Unable to create NeethiPolicy object"

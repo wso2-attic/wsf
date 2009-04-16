@@ -27,11 +27,11 @@
 #include <map>
 
 /**
-* @file Process.h
+* @file Environment.h
 */
 
 /**
-* @brief namespace wso2wsf Namespace of WSO2 Web Services Framework.
+* @brief namespace wso2wsf namespace of WSO2 Web Services Framework.
 */
 namespace wso2wsf
 {
@@ -41,7 +41,7 @@ namespace wso2wsf
 	* @{
 	*/
 	/**
-	* @brief class Process. This keeps track of axis2_env_t when running with threads.
+	* @brief class Environment. This keeps track of axis2_env_t when running with threads.
 	*/
 	class Environment
 	{
@@ -51,7 +51,7 @@ namespace wso2wsf
 		* @var _env private variable holds reference for
 		* axutil_env struct.
 		*/
-		static Environment *_processObj;
+		static Environment *_envObj;
 		
 		static std::map<int, const axutil_env_t*> _envmap;
 
@@ -71,7 +71,7 @@ namespace wso2wsf
 		/** keeps the log level */
 		static axutil_log_levels_t _logLevel;
 		/**
-		* Return an instance of the Static Process Object
+		* Return an instance of the Static Environment Object
 		*
 		*/
 		static WSF_EXTERN Environment* WSF_CALL getInstance();
