@@ -24,11 +24,12 @@ using namespace wso2wsf;
 void Stub::init(std::string& client_home, std::string& endpointUri)
 {
 	serviceClient = new ServiceClient(client_home, endpointUri);
+	clientOptions = serviceClient->getOptions();
 }
 
 Options* Stub::getOptions()
 {
-	return options;
+	return clientOptions;
 }
 
 ServiceClient*  Stub::getServiceClient()
@@ -39,8 +40,16 @@ ServiceClient*  Stub::getServiceClient()
 bool Stub::setServiceClient(ServiceClient *client)
 {
 	if(serviceClient)
+	{
 		delete serviceClient;
+		clientOptions = NULL;
+	}
 	serviceClient = client;
+	if((clientOptions = serviceClient->getOptions())== NULL)
+	{
+		clientOptions = new Options();
+		serviceClient->setOptions(clientOptions);
+	}
 	return true;
 }
 

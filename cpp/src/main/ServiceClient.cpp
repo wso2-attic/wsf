@@ -113,6 +113,11 @@ axis2_status_t AXIS2_CALL callbackOnFault(axis2_callback_t * callback, const axu
     return AXIS2_SUCCESS;
 }
 
+axis2_svc_client_t* WSF_CALL ServiceClient::getAxis2SvcClient()
+{
+	return _wsf_service_client;
+}
+
 /** @brief ~ServiceClient
   *
   * @todo: document this function
@@ -232,7 +237,7 @@ bool ServiceClient::initializeClient()
 
 	if (!_wsf_service_client)
 	{
-        WSF_LOG_CRITICAL_MSG("Cannot create service client");
+		WSF_LOG_CRITICAL_MSG(Environment::getEnv()->log, WSF_LOG_SI, "Cannot create service client");
 		return false;
 	}
 

@@ -28,6 +28,12 @@ void Options::setHTTPMethod(std::string http_method)
     axis2_options_set_http_method(_wsf_options, getEnv(), http_method.c_str());
 }
 
+
+axis2_options_t* WSF_CALL Options::getAxis2Options()
+{
+	return _wsf_options;
+}
+
 /** @brief getEnableMTOM
   *
   * @todo: document this function

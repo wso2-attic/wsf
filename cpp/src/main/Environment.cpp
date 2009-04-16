@@ -24,18 +24,18 @@ using namespace std;
 
 Environment* WSF_CALL Environment::getInstance()
 {
-	if(_processObj)
+	if(_envObj)
 	{
-		return _processObj;
+		return _envObj;
 	}
 	else
 	{
-		_processObj =  new Environment();
+		_envObj =  new Environment();
 #ifdef WIN32
 		lock = new RWLock();
 		lock->init();
 #endif
-		return _processObj;
+		return _envObj;
 	}
 }
 
@@ -155,7 +155,7 @@ std::string Environment::_logFileName;
 
 axutil_log_levels_t Environment::_logLevel;
 
-Environment* Environment::_processObj = NULL;
+Environment* Environment::_envObj = NULL;
 
 std::map<int, const axutil_env_t*> Environment::_envmap;
 
