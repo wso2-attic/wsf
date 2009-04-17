@@ -70,27 +70,7 @@ b. Installing WSO2 WSF/Ruby as a Ruby extension.
     
     2. Add "<wso2-wsf-ruby-bin-1.1.0-win32 extracted directory>\wsf_c\lib" directory to PATH environment variable.
 
-    3. Add the following entries to your rbconfig.rb file which is in your Ruby installation location.
-       
-        NOTE : run "ruby find_rbconfig.rb" in a console to find where this 'rbconfig.rb' file is.
-
-        (use '/' or '\\' to to seperate directories.                                          |
-         e.g. "E:/install/wsfc" or "E:\\install\\wsfc")
-     
-       #---------------------------------------------------------------------------------
-       CONFIG["WSFC_HOME"] = "<wso2-wsf-ruby-bin-1.0.0-win32 extracted directory>\\wsf_c"
-       CONFIG["WSF_LOG_DIR"] = "where\\you\\wish\\log\\file\\should\\be"
-       CONFIG["WSF_LOG_LEVEL"] = "3"
-       CONFIG["WSF_RUBY_HOME"] = "your\\wsf\\ruby\\home\\dir"
-       #---------------------------------------------------------------------------------
-       
-        NOTE: Above WSF_LOG_LEVEL entry can have one of the following values- 
-                  "0" - CRITICAL
-                  "1" - ERROR
-                  "2" - WARNING
-                  "3" - INFO
-                  "4" - DEBUG
-                  "5" - TRACE
+    3. Set 'WSFC_HOME' environment variable to where you have installed it
     
     4. Now proceed to RUN SAMPLES section for a guide on how to run samples in WSO2 WSF/Ruby.
         NOTE: User should set the database directory in module.xml found under wsf_c\modules\sandesha2\ 
@@ -107,27 +87,7 @@ b. Installing WSO2 WSF/Ruby as a Ruby extension.
 
        NOTE : run "ruby find_config_h.rb" in a console to find where this file is.
 
-    2. Add the following entries to your rbconfig.rb file which is in your Ruby installation location.
-       
-        NOTE : run "ruby find_rbconfig.rb" in a console to find where this 'rbconfig.rb' file is.
-
-        (use '/' or '\\' to to seperate directories.                                          |
-         e.g. "E:/install/wsfc" or "E:\\install\\wsfc")
-     
-       #---------------------------------------------------------------------------------
-       CONFIG["WSFC_HOME"] = "<wso2-wsf-ruby-bin-1.0.0-win32 extracted directory>\\wsf_c"
-       CONFIG["WSF_LOG_DIR"] = "where\\you\\wish\\log\\files\\should\\be"
-       CONFIG["WSF_LOG_LEVEL"] = "3"
-       CONFIG["WSF_RUBY_HOME"] = "your\\wsf\\ruby\\home\\dir"
-       #---------------------------------------------------------------------------------
-       
-        NOTE: Above WSF_LOG_LEVEL entry can have one of the following values- 
-                  "0" - CRITICAL
-                  "1" - ERROR
-                  "2" - WARNING
-                  "3" - INFO
-                  "4" - DEBUG
-                  "5" - TRACE
+    2. Set 'WSFC_HOME' environment variable to where you have installed it
     
     3. Do necessary changes to "configure.in" file found under WSF/Ruby source directory.
 

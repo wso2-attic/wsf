@@ -46,29 +46,7 @@ Contents:
 
        NOTE : run "ruby find_config_h.rb" in a console to find where this file is.
 
-    2. Add the following entries to your rbconfig.rb file which is in your Ruby installation location.
-       
-        NOTE : run "ruby find_rbconfig.rb" in a console to find where this 'rbconfig.rb' file is.
-
-        (use '/' to seperate directories.                                          |
-         e.g. "E:/install/wsfc" )
-     
-	Since you are building the svn source, this directory will be <your svn source>/wsf_c/<wso2-wsf-c-bin-'versionnumber'>
-
-       #---------------------------------------------------------------------------------
-       CONFIG["WSFC_HOME"] = "<wso2-wsf-ruby-bin-1.0.0-win32 extracted directory>\\wsf_c"
-       CONFIG["WSF_LOG_DIR"] = "where\\you\\wish\\log\\files\\should\\be"
-       CONFIG["WSF_LOG_LEVEL"] = "3"
-       CONFIG["WSF_RUBY_HOME"] = "your\\wsf\\ruby\\home\\dir"
-       #---------------------------------------------------------------------------------
-       
-        NOTE: Above WSF_LOG_LEVEL entry can have one of the following values- 
-                  "0" - CRITICAL
-                  "1" - ERROR
-                  "2" - WARNING
-                  "3" - INFO
-                  "4" - DEBUG
-                  "5" - TRACE
+    2. Set 'WSFC_HOME' environment variable to where you have installed it
     
     3. Do necessary changes to "configure.in" and "configure.in.dist" files found under WSF/Ruby source directory.
 	Make sure the setting CRUNTIME to MD and EMBED_MANIFEST option to 1.
