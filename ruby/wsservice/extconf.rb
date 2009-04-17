@@ -2,26 +2,45 @@
 
 require 'mkmf'
 require 'rbconfig'
-
+require 'fileutils'
 
 # Check the configurations
-WSFC_HOME = Config::CONFIG['WSFC_HOME']
-if(WSFC_HOME == nil)
-  puts "Error in retrieving the WSFC_HOME from configuration, Add the WSFC_HOME in rbconfig.rb\n"
-  exit(-1)
+wsfc_Home = '/opt/wso2/wsf_c'
+
+# recording the dir we're at
+pwd = FileUtils.pwd()
+
+
+if not ENV['WSFC_HOME'].nil?
+  wsfc_Home = ENV['WSFC_HOME']
+else
+  begin
+    FileUtils.cd(wsfc_Home)
+    # ah, we came here, so the standard directory exists
+    # let's go back then
+    FileUtils.cd(pwd)
+  rescue Exception => e
+    puts <<E
+WSF/C not found. If you have installed WSF/C into a non standard location
+please set wsfc_Home environment variable to where you have installed it.
+E
+    exit -1
+  end
 end
+puts "Using WSF/C installed in #{wsfc_Home}"
+
 
 
 dir_config('wsdlc', '../wsdlc/include', '../wsdlc/lib')
 
 if /mswin32|bccwin32/ =~ RUBY_PLATFORM
-    dir_config('WSFC', WSFC_HOME + '/include', WSFC_HOME + '/lib')
+    dir_config('WSFC', wsfc_Home + '/include', wsfc_Home + '/lib')
     $CFLAGS = $CFLAGS + " -DWIN32 -DSWIG_NOINCLUDE"
     have_library('libxml2')
     have_library('axiom')
 else
-    dir_config('WSFC', WSFC_HOME + '/include/axis2-1.4.0', WSFC_HOME + '/lib')
-    dir_config('Rampart', WSFC_HOME + '/include/rampart-1.2.0', WSFC_HOME + '/modules/rampart')
+    dir_config('WSFC', wsfc_Home + '/include/axis2-1.4.0', wsfc_Home + '/lib')
+    dir_config('Rampart', wsfc_Home + '/include/rampart-1.2.0', wsfc_Home + '/modules/rampart')
     have_library('axis2_axiom')    
 end
 
