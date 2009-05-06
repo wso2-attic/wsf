@@ -16,7 +16,7 @@
 
 #ifndef AXISOBJECT_H
 #define AXISOBJECT_H
-#include <Process.h>
+#include <Environment.h>
 #include <WSFDefines.h>
 #include <axutil_env.h>
 #include <string>

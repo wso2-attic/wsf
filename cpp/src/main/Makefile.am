@@ -14,7 +14,7 @@ libwso2_wsf_la_SOURCES= AxisFault.cpp \
 			OMText.cpp \
 			Property.cpp \
 			Parameter.cpp \
-			Process.cpp \
+			Environment.cpp \
 			WSRESTClient.cpp \
 			NeethiPolicy.cpp \
 			MessageContext.cpp

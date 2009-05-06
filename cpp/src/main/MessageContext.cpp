@@ -18,7 +18,7 @@
 #include <axutil_env.h>
 #include <string>
 #include <map>
-#include <Process.h>
+#include <Environment.h>
 #include <MessageContext.h>
 #include <axis2_endpoint_ref.h>
 #include <axiom_soap.h>
