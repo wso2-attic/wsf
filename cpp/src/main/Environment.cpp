@@ -149,6 +149,12 @@ void WSF_CALL Environment::initialize(std::string logFileName, axutil_log_levels
 {
 	_logFileName = logFileName;
 	_logLevel = logLevel;
+	getInstance();
+
+	axutil_env_t *env = axutil_env_create_all(logFileName.c_str(), logLevel);
+	if(env){
+		setEnv(env);
+	}
 }
 
 std::string Environment::_logFileName;
