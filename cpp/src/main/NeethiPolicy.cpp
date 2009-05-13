@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <WSFError.h>
 #include <NeethiPolicy.h>
+#include <Environment.h>
 using namespace std;
 using namespace wso2wsf;
 
@@ -24,7 +25,7 @@ NeethiPolicy::~NeethiPolicy()
  {
 	 if ( _wsf_neethi_policy)
 	 {
-		 neethi_policy_free(_wsf_neethi_policy,getEnv());
+		 neethi_policy_free(_wsf_neethi_policy,Environment::getEnv());
 	 }
  }
 
@@ -33,7 +34,7 @@ NeethiPolicy::NeethiPolicy(OMElement * element)
     _wsf_neethi_policy = NULL;
     if (element && (element->getAxiomNode()))
     {
-        _wsf_neethi_policy = neethi_util_create_policy_from_om(getEnv(), element->getAxiomNode());
+        _wsf_neethi_policy = neethi_util_create_policy_from_om(Environment::getEnv(), element->getAxiomNode());
     }
 }
 
@@ -43,7 +44,7 @@ NeethiPolicy::NeethiPolicy(std::string file_name)
     if (file_name != "")
     {
         _wsf_neethi_policy = neethi_util_create_policy_from_file(
-            getEnv(), const_cast<char *>(file_name.c_str()));
+            Environment::getEnv(), const_cast<char *>(file_name.c_str()));
     }
 }
 
@@ -60,23 +61,23 @@ neethi_policy_t * NeethiPolicy::getNeethiPolicy()
 bool NeethiPolicy::setName(std::string name)
 {
     axis2_status_t status =
-        neethi_policy_set_name(_wsf_neethi_policy, getEnv(), const_cast<char *>(name.c_str()));
+        neethi_policy_set_name(_wsf_neethi_policy, Environment::getEnv(), const_cast<char *>(name.c_str()));
     return (status == AXIS2_SUCCESS);
 }
 
 std::string NeethiPolicy::getName()
 {
-    return neethi_policy_get_name(_wsf_neethi_policy, getEnv());
+    return neethi_policy_get_name(_wsf_neethi_policy, Environment::getEnv());
 }
 
 bool NeethiPolicy::setId(std::string id)
 {
     axis2_status_t status =
-        neethi_policy_set_id(_wsf_neethi_policy, getEnv(), const_cast<char *>(id.c_str()));
+        neethi_policy_set_id(_wsf_neethi_policy, Environment::getEnv(), const_cast<char *>(id.c_str()));
     return (status == AXIS2_SUCCESS);
 }
 
 std::string NeethiPolicy::getId()
 {
-    return neethi_policy_get_id(_wsf_neethi_policy, getEnv());
+    return neethi_policy_get_id(_wsf_neethi_policy, Environment::getEnv());
 }

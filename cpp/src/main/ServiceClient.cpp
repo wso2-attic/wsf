@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <WSFError.h>
 #include <sstream>
+#include <Environment.h>
 #include <axis2_callback.h>
 #include <ServiceClient.h>
 using namespace std;
@@ -152,7 +153,7 @@ ServiceClient::~ServiceClient()
         delete _options;
     }
 	/** Freeing conf context is not done since it is freed by service client free */    
-    axis2_svc_client_free(_wsf_service_client, getEnv());
+    axis2_svc_client_free(_wsf_service_client, Environment::getEnv());
 
 	_conf_ctx = NULL;
 }
@@ -224,15 +225,15 @@ bool ServiceClient::initializeClient()
 	{
 		if (_repo_home == "")
 		{
-			axis2_conf_t * conf = axis2_conf_ctx_get_conf(_conf_ctx, getEnv());
-			_repo_home = axis2_conf_get_repo(conf, getEnv());
+			axis2_conf_t * conf = axis2_conf_ctx_get_conf(_conf_ctx, Environment::getEnv());
+			_repo_home = axis2_conf_get_repo(conf, Environment::getEnv());
 		}
-		_wsf_service_client = axis2_svc_client_create_with_conf_ctx_and_svc(getEnv(), _repo_home.c_str(),
+		_wsf_service_client = axis2_svc_client_create_with_conf_ctx_and_svc(Environment::getEnv(), _repo_home.c_str(),
 			const_cast<axis2_conf_ctx_t *>(_conf_ctx), NULL);
 	}
     else
     {
-	    _wsf_service_client = axis2_svc_client_create(getEnv(), _repo_home.c_str());
+	    _wsf_service_client = axis2_svc_client_create(Environment::getEnv(), _repo_home.c_str());
     }
 
 	if (!_wsf_service_client)
@@ -253,7 +254,7 @@ bool ServiceClient::initializeClient()
 		_options->setUseSeparateListener(false);
 		_options->setTo(_endpoint_address);
 		axis2_status_t status = axis2_svc_client_set_options(
-            _wsf_service_client, getEnv(), _options->_wsf_options);
+            _wsf_service_client, Environment::getEnv(), _options->_wsf_options);
 		if (status != AXIS2_SUCCESS)
 		{
 			return false;
@@ -276,7 +277,7 @@ bool ServiceClient::setOptions(Options * options)
             return true;
         }
         _options = options;
-        status = axis2_svc_client_set_options(_wsf_service_client, getEnv(), _options->_wsf_options);
+        status = axis2_svc_client_set_options(_wsf_service_client, Environment::getEnv(), _options->_wsf_options);
     }
     return (status == AXIS2_SUCCESS);
 }
@@ -288,14 +289,14 @@ bool ServiceClient::setOptions(Options * options)
 string ServiceClient::getLastResponseSoapEnvelopeString()
 {
     axiom_soap_envelope_t * envelope =
-        axis2_svc_client_get_last_response_soap_envelope(_wsf_service_client, getEnv());
+        axis2_svc_client_get_last_response_soap_envelope(_wsf_service_client, Environment::getEnv());
     if (!envelope)
     {
         return "";
     }
     _last_response_soap_envelope = envelope;
-    axiom_node_t * node = axiom_soap_envelope_get_base_node(_last_response_soap_envelope, getEnv());
-    return axiom_node_to_string(node, getEnv());
+    axiom_node_t * node = axiom_soap_envelope_get_base_node(_last_response_soap_envelope, Environment::getEnv());
+    return axiom_node_to_string(node, Environment::getEnv());
 }
 
 /** @brief getLastResponseSoapEnvelope
@@ -305,24 +306,24 @@ string ServiceClient::getLastResponseSoapEnvelopeString()
 OMElement * ServiceClient::getLastResponseSoapEnvelope()
 {
     axiom_soap_envelope_t * envelope =
-        axis2_svc_client_get_last_response_soap_envelope(_wsf_service_client, getEnv());
+        axis2_svc_client_get_last_response_soap_envelope(_wsf_service_client, Environment::getEnv());
     if (!envelope)
     {
         return NULL;
     }
     _last_response_soap_envelope = envelope;
-    axiom_node_t * node = axiom_soap_envelope_get_base_node(_last_response_soap_envelope, getEnv());
+    axiom_node_t * node = axiom_soap_envelope_get_base_node(_last_response_soap_envelope, Environment::getEnv());
     axiom_element_t * element = NULL;
-    if (node && (axiom_node_get_node_type(node, getEnv()) == AXIOM_ELEMENT))
+    if (node && (axiom_node_get_node_type(node, Environment::getEnv()) == AXIOM_ELEMENT))
     {
-        element = (axiom_element_t *)axiom_node_get_data_element(node, getEnv());
+        element = (axiom_element_t *)axiom_node_get_data_element(node, Environment::getEnv());
     }
     if (!element)
     {
         return NULL;
     }
     axis2_bool_t has_fault =
-        axis2_svc_client_get_last_response_has_fault(_wsf_service_client, getEnv());
+        axis2_svc_client_get_last_response_has_fault(_wsf_service_client, Environment::getEnv());
     if (has_fault)
     {
         if (_last_soap_fault)
@@ -375,10 +376,10 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
     {
         if (_options->getSoapVersion() == AXIOM_SOAP11)
         {
-            axutil_string_t * soap_action = axutil_string_create(getEnv(), action.c_str());
+            axutil_string_t * soap_action = axutil_string_create(Environment::getEnv(), action.c_str());
 
-            status = axis2_options_set_soap_action(_options->_wsf_options, getEnv(), soap_action);
-            axutil_string_free(soap_action, getEnv());
+            status = axis2_options_set_soap_action(_options->_wsf_options, Environment::getEnv(), soap_action);
+            axutil_string_free(soap_action, Environment::getEnv());
             if (status != AXIS2_SUCCESS)
             {
                 if (payload->getNamespace(false))
@@ -391,14 +392,14 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
         }
         else
         {
-            axutil_qname_t * qname = axutil_qname_create(getEnv(), AXIS2_MODULE_ADDRESSING, NULL, NULL);
+            axutil_qname_t * qname = axutil_qname_create(Environment::getEnv(), AXIS2_MODULE_ADDRESSING, NULL, NULL);
             axis2_bool_t engaged =
-                axis2_svc_is_module_engaged(axis2_svc_client_get_svc(_wsf_service_client, getEnv()),
-                getEnv(), qname);
-            axutil_qname_free(qname, getEnv());
+                axis2_svc_is_module_engaged(axis2_svc_client_get_svc(_wsf_service_client, Environment::getEnv()),
+                Environment::getEnv(), qname);
+            axutil_qname_free(qname, Environment::getEnv());
             if (engaged)
             {
-                status = axis2_options_set_action(_options->_wsf_options, getEnv(), action.c_str());
+                status = axis2_options_set_action(_options->_wsf_options, Environment::getEnv(), action.c_str());
                 if (status != AXIS2_SUCCESS)
                 {
                     if (payload->getNamespace(false))
@@ -416,14 +417,14 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
     {
         if (operation != "")
         {
-            axutil_qname_t * qname =  axutil_qname_create(getEnv(), operation.c_str(), NULL, NULL);
-            node = axis2_svc_client_send_receive_with_op_qname(_wsf_service_client, getEnv(),
+            axutil_qname_t * qname =  axutil_qname_create(Environment::getEnv(), operation.c_str(), NULL, NULL);
+            node = axis2_svc_client_send_receive_with_op_qname(_wsf_service_client, Environment::getEnv(),
                 qname, payload->getAxiomNode());
-            axutil_qname_free(qname, getEnv());
+            axutil_qname_free(qname, Environment::getEnv());
         }
         else
         {
-            node = axis2_svc_client_send_receive(_wsf_service_client, getEnv(), payload->getAxiomNode());
+            node = axis2_svc_client_send_receive(_wsf_service_client, Environment::getEnv(), payload->getAxiomNode());
         }
         if (!node)
         {
@@ -437,9 +438,9 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
         else
         {
             axiom_element_t * element = NULL;
-            if (node && (axiom_node_get_node_type(node, getEnv()) == AXIOM_ELEMENT))
+            if (node && (axiom_node_get_node_type(node, Environment::getEnv()) == AXIOM_ELEMENT))
             {
-                element = (axiom_element_t *)axiom_node_get_data_element(node, getEnv());
+                element = (axiom_element_t *)axiom_node_get_data_element(node, Environment::getEnv());
             }
             if (!element)
             {
@@ -451,7 +452,7 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
                 throw AxisFault(UNABLE_TO_RETRIEVE_RESPONSE_ELEMENT);
             }
             axis2_bool_t has_fault =
-                axis2_svc_client_get_last_response_has_fault(_wsf_service_client, getEnv());
+                axis2_svc_client_get_last_response_has_fault(_wsf_service_client, Environment::getEnv());
             if (has_fault)
             {
                 if (_last_soap_fault)
@@ -484,7 +485,7 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
     else
     {
         _m_callback = callback;
-        axis2_callback_t * callback_c = axis2_callback_create(getEnv());
+        axis2_callback_t * callback_c = axis2_callback_create(Environment::getEnv());
         if (!callback_c)
         {
             if (payload->getNamespace(false))
@@ -499,14 +500,14 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
 
         if (operation != "")
         {
-            axutil_qname_t * qname =  axutil_qname_create(getEnv(), operation.c_str(), NULL, NULL);
-            axis2_svc_client_send_receive_non_blocking_with_op_qname(_wsf_service_client, getEnv(),
+            axutil_qname_t * qname =  axutil_qname_create(Environment::getEnv(), operation.c_str(), NULL, NULL);
+            axis2_svc_client_send_receive_non_blocking_with_op_qname(_wsf_service_client, Environment::getEnv(),
                 qname, payload->getAxiomNode(), callback_c);
-            axutil_qname_free(qname, getEnv());
+            axutil_qname_free(qname, Environment::getEnv());
         }
         else
         {
-            axis2_svc_client_send_receive_non_blocking(_wsf_service_client, getEnv(), payload->getAxiomNode(), callback_c);
+            axis2_svc_client_send_receive_non_blocking(_wsf_service_client, Environment::getEnv(), payload->getAxiomNode(), callback_c);
         }
         if (payload->getNamespace(false))
         {
@@ -550,9 +551,9 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string operation
     {
         if (_options->getSoapVersion() == AXIOM_SOAP11)
         {
-            axutil_string_t * soap_action = axutil_string_create(getEnv(), action.c_str());
-            status = axis2_options_set_soap_action(_options->_wsf_options, getEnv(), soap_action);
-            axutil_string_free(soap_action, getEnv());
+            axutil_string_t * soap_action = axutil_string_create(Environment::getEnv(), action.c_str());
+            status = axis2_options_set_soap_action(_options->_wsf_options, Environment::getEnv(), soap_action);
+            axutil_string_free(soap_action, Environment::getEnv());
             if (status != AXIS2_SUCCESS)
             {
                     if (payload->getNamespace(false))
@@ -565,14 +566,14 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string operation
         }
         else
         {
-            axutil_qname_t * qname = axutil_qname_create(getEnv(), AXIS2_MODULE_ADDRESSING, NULL, NULL);
+            axutil_qname_t * qname = axutil_qname_create(Environment::getEnv(), AXIS2_MODULE_ADDRESSING, NULL, NULL);
             axis2_bool_t engaged =
-                axis2_svc_is_module_engaged(axis2_svc_client_get_svc(_wsf_service_client, getEnv()),
-                getEnv(), qname);
-            axutil_qname_free(qname, getEnv());
+                axis2_svc_is_module_engaged(axis2_svc_client_get_svc(_wsf_service_client, Environment::getEnv()),
+                Environment::getEnv(), qname);
+            axutil_qname_free(qname, Environment::getEnv());
             if (engaged)
             {
-                status = axis2_options_set_action(_options->_wsf_options, getEnv(), action.c_str());
+                status = axis2_options_set_action(_options->_wsf_options, Environment::getEnv(), action.c_str());
                 if (status != AXIS2_SUCCESS)
                 {
                     if (payload->getNamespace(false))
@@ -589,14 +590,14 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string operation
     {
         if (operation != "")
         {
-            axutil_qname_t * qname =  axutil_qname_create(getEnv(), operation.c_str(), NULL, NULL);
-            status = axis2_svc_client_send_robust_with_op_qname(_wsf_service_client, getEnv(),
+            axutil_qname_t * qname =  axutil_qname_create(Environment::getEnv(), operation.c_str(), NULL, NULL);
+            status = axis2_svc_client_send_robust_with_op_qname(_wsf_service_client, Environment::getEnv(),
                 qname, payload->getAxiomNode());
-            axutil_qname_free(qname, getEnv());
+            axutil_qname_free(qname, Environment::getEnv());
         }
         else
         {
-            status = axis2_svc_client_send_robust(_wsf_service_client, getEnv(), payload->getAxiomNode());
+            status = axis2_svc_client_send_robust(_wsf_service_client, Environment::getEnv(), payload->getAxiomNode());
         }
         if (status != AXIS2_SUCCESS)
         {
@@ -608,7 +609,7 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string operation
             throw AxisFault(ROBUST_SEND_OPERATION_FAILED);
         }
         axis2_bool_t has_fault =
-            axis2_svc_client_get_last_response_has_fault(_wsf_service_client, getEnv());
+            axis2_svc_client_get_last_response_has_fault(_wsf_service_client, Environment::getEnv());
         if (has_fault)
         {
             if (payload->getNamespace(false))
@@ -623,14 +624,14 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string operation
     {
         if (operation != "")
         {
-            axutil_qname_t * qname =  axutil_qname_create(getEnv(), operation.c_str(), NULL, NULL);
-            axis2_svc_client_fire_and_forget_with_op_qname(_wsf_service_client, getEnv(),
+            axutil_qname_t * qname =  axutil_qname_create(Environment::getEnv(), operation.c_str(), NULL, NULL);
+            axis2_svc_client_fire_and_forget_with_op_qname(_wsf_service_client, Environment::getEnv(),
                 qname, payload->getAxiomNode());
-            axutil_qname_free(qname, getEnv());
+            axutil_qname_free(qname, Environment::getEnv());
         }
         else
         {
-            axis2_svc_client_fire_and_forget(_wsf_service_client, getEnv(), payload->getAxiomNode());
+            axis2_svc_client_fire_and_forget(_wsf_service_client, Environment::getEnv(), payload->getAxiomNode());
         }
     }
     if (payload->getNamespace(false))
@@ -676,7 +677,7 @@ bool ServiceClient::setPolicy(NeethiPolicy * policy)
     }
     _policy = policy;
     axis2_status_t status =
-        axis2_svc_client_set_policy(_wsf_service_client, getEnv(), policy->getNeethiPolicy());
+        axis2_svc_client_set_policy(_wsf_service_client, Environment::getEnv(), policy->getNeethiPolicy());
     return (status == AXIS2_SUCCESS);
 }
 
@@ -686,7 +687,7 @@ bool ServiceClient::setPolicy(NeethiPolicy * policy)
   */
 void ServiceClient::removeAllHeaders()
 {
-    axis2_svc_client_remove_all_headers(_wsf_service_client, getEnv());
+    axis2_svc_client_remove_all_headers(_wsf_service_client, Environment::getEnv());
 }
 
 /** @brief addHeader
@@ -696,7 +697,7 @@ void ServiceClient::removeAllHeaders()
 bool ServiceClient::addHeader(OMElement * header)
 {
     axis2_status_t status =
-        axis2_svc_client_add_header(_wsf_service_client, getEnv(), header->getAxiomNode());
+        axis2_svc_client_add_header(_wsf_service_client, Environment::getEnv(), header->getAxiomNode());
     return (status == AXIS2_SUCCESS);
 }
 
@@ -707,7 +708,7 @@ bool ServiceClient::addHeader(OMElement * header)
 bool ServiceClient::disengageModule(std::string module_name)
 {
     axis2_status_t status =
-        axis2_svc_client_disengage_module(_wsf_service_client, getEnv(), module_name.c_str());
+        axis2_svc_client_disengage_module(_wsf_service_client, Environment::getEnv(), module_name.c_str());
     return (status == AXIS2_SUCCESS);
 }
 
@@ -718,7 +719,7 @@ bool ServiceClient::disengageModule(std::string module_name)
 bool ServiceClient::engageModule(std::string module_name)
 {
     axis2_status_t status =
-        axis2_svc_client_engage_module(_wsf_service_client, getEnv(), module_name.c_str());
+        axis2_svc_client_engage_module(_wsf_service_client, Environment::getEnv(), module_name.c_str());
     return (status == AXIS2_SUCCESS);
 }
 

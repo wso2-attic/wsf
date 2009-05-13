@@ -27,20 +27,20 @@ axiom_namespace_t * OMNamespace::getAxiomNamespace()
 
 OMNamespace::OMNamespace(std::string uri, std::string prefix)
 {
-    _wsf_axiom_namespace = axiom_namespace_create(getEnv(), uri.c_str(), prefix.c_str());
+    _wsf_axiom_namespace = axiom_namespace_create(Environment::getEnv(), uri.c_str(), prefix.c_str());
 }
 
 OMNamespace::OMNamespace(OMNamespace & ns)
 {
     _wsf_axiom_namespace = axiom_namespace_create(
-        getEnv(), (ns.getURI()).c_str(), (ns.getPrefix()).c_str());
+        Environment::getEnv(), (ns.getURI()).c_str(), (ns.getPrefix()).c_str());
 }
 
 OMNamespace::~OMNamespace()
 {
     if (_wsf_axiom_namespace)
     {
-        axiom_namespace_free(_wsf_axiom_namespace, getEnv());
+        axiom_namespace_free(_wsf_axiom_namespace, Environment::getEnv());
     }
 }
 
@@ -56,16 +56,16 @@ bool OMNamespace::equals(OMNamespace * ns)
 
 string OMNamespace::getURI()
 {
-    return axiom_namespace_get_uri(_wsf_axiom_namespace, getEnv());
+    return axiom_namespace_get_uri(_wsf_axiom_namespace, Environment::getEnv());
 }
 
 string OMNamespace::getPrefix()
 {
-    return axiom_namespace_get_prefix(_wsf_axiom_namespace, getEnv());
+    return axiom_namespace_get_prefix(_wsf_axiom_namespace, Environment::getEnv());
 }
 
 string OMNamespace::toString()
 {
-    return axiom_namespace_to_string(_wsf_axiom_namespace, getEnv());
+    return axiom_namespace_to_string(_wsf_axiom_namespace, Environment::getEnv());
 }
 

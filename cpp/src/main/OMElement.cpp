@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <WSFError.h>
 #include <OMElement.h>
+#include <Environment.h>
 #include <OMText.h>
 #include <typeinfo>
 using namespace std;
@@ -41,7 +42,7 @@ void OMElement::init(OMNode * parent, std::string localname, OMNamespace * ns)
         ns_c = ns->getAxiomNamespace();
     }
     
-    _wsf_axiom_element = axiom_element_create(getEnv(), parent_c, localname.c_str(), ns_c, &node);
+    _wsf_axiom_element = axiom_element_create(Environment::getEnv(), parent_c, localname.c_str(), ns_c, &node);
     
     if(_wsf_axiom_element)
     {
@@ -88,9 +89,9 @@ OMElement::OMElement(OMNode * parent, axiom_node_t * node)
     _namespace = NULL;
     _parent = NULL;
 
-    if (node && (axiom_node_get_node_type(node, getEnv()) == AXIOM_ELEMENT))
+    if (node && (axiom_node_get_node_type(node, Environment::getEnv()) == AXIOM_ELEMENT))
     {
-        _wsf_axiom_element = (axiom_element_t *)axiom_node_get_data_element(node, getEnv());
+        _wsf_axiom_element = (axiom_element_t *)axiom_node_get_data_element(node, Environment::getEnv());
     }
     if (_wsf_axiom_element)
     {
@@ -106,32 +107,32 @@ OMElement::OMElement(OMNode * parent, axiom_node_t * node)
             catch(bad_cast)
             {}
         }
-        axiom_namespace_t * ns = axiom_element_get_namespace(_wsf_axiom_element, getEnv(), node);
+        axiom_namespace_t * ns = axiom_element_get_namespace(_wsf_axiom_element, Environment::getEnv(), node);
         if (ns)
         {
-            _namespace = new OMNamespace(axiom_namespace_get_uri(ns, getEnv()),
-                axiom_namespace_get_prefix(ns, getEnv()));
+            _namespace = new OMNamespace(axiom_namespace_get_uri(ns, Environment::getEnv()),
+                axiom_namespace_get_prefix(ns, Environment::getEnv()));
         }
     }
 
     //Go through the children node and add them as child. 
     axiom_node_t * node_new = NULL;
     axiom_children_iterator_t * children_iterator = NULL;
-    children_iterator = axiom_element_get_children(_wsf_axiom_element, getEnv(), getAxiomNode());
+    children_iterator = axiom_element_get_children(_wsf_axiom_element, Environment::getEnv(), getAxiomNode());
     if (children_iterator)
     {
-        while (axiom_children_iterator_has_next(children_iterator, getEnv()))
+        while (axiom_children_iterator_has_next(children_iterator, Environment::getEnv()))
         {
-            node_new = axiom_children_iterator_next(children_iterator, getEnv());
+            node_new = axiom_children_iterator_next(children_iterator, Environment::getEnv());
             if(!node_new)
             {
                 continue;
             }
 
             //we need to add only AXIOM_ELEMENT and AXIOM_TEXT
-            if (axiom_node_get_node_type(node_new, getEnv()) == AXIOM_ELEMENT)
+            if (axiom_node_get_node_type(node_new, Environment::getEnv()) == AXIOM_ELEMENT)
             {
-                axiom_element_t * element = (axiom_element_t *)axiom_node_get_data_element(node_new, getEnv());
+                axiom_element_t * element = (axiom_element_t *)axiom_node_get_data_element(node_new, Environment::getEnv());
                 if(!element)
                 {
                     continue;
@@ -139,9 +140,9 @@ OMElement::OMElement(OMNode * parent, axiom_node_t * node)
                 OMElement* element_cpp = new OMElement(this, node_new);
                 _child_nodes.push_back(element_cpp);
             }
-            else if (axiom_node_get_node_type(node_new, getEnv()) == AXIOM_TEXT)
+            else if (axiom_node_get_node_type(node_new, Environment::getEnv()) == AXIOM_TEXT)
             {
-                axiom_text_t * text = (axiom_text_t *)axiom_node_get_data_element(node_new, getEnv());
+                axiom_text_t * text = (axiom_text_t *)axiom_node_get_data_element(node_new, Environment::getEnv());
                 if(!text)
                 {
                     continue;
@@ -193,7 +194,7 @@ OMElement::~OMElement()
 OMNamespace * OMElement::findNamespace(std::string uri, std::string prefix)
 {
     axiom_namespace_t * ns =axiom_element_find_namespace(
-        _wsf_axiom_element, getEnv(), getAxiomNode(), uri.c_str(), prefix.c_str());
+        _wsf_axiom_element, Environment::getEnv(), getAxiomNode(), uri.c_str(), prefix.c_str());
     if(!ns)
     {
         return NULL;
@@ -218,14 +219,14 @@ OMAttribute * OMElement::getAttribute(std::string name, OMNamespace * ns)
     axutil_qname_t * qn = NULL;
     if (ns)
     {
-        qn = axutil_qname_create(getEnv(), name.c_str(), ns->getURI().c_str(), ns->getPrefix().c_str());
+        qn = axutil_qname_create(Environment::getEnv(), name.c_str(), ns->getURI().c_str(), ns->getPrefix().c_str());
     }
     else
     {
-        qn = axutil_qname_create(getEnv(), name.c_str(), NULL, NULL);
+        qn = axutil_qname_create(Environment::getEnv(), name.c_str(), NULL, NULL);
     }
-    axiom_attribute_t * at = axiom_element_get_attribute(_wsf_axiom_element, getEnv(), qn);
-    axutil_qname_free(qn, getEnv());
+    axiom_attribute_t * at = axiom_element_get_attribute(_wsf_axiom_element, Environment::getEnv(), qn);
+    axutil_qname_free(qn, Environment::getEnv());
     if (!at)
     {
         return NULL;
@@ -240,7 +241,7 @@ OMAttribute * OMElement::getAttribute(std::string name, OMNamespace * ns)
             return *i;
         }
     }
-    OMAttribute * at_cpp = new OMAttribute(name, axiom_attribute_get_value(at, getEnv()), ns);
+    OMAttribute * at_cpp = new OMAttribute(name, axiom_attribute_get_value(at, Environment::getEnv()), ns);
     _added_attributes.push_back(at_cpp);
     return at_cpp;
 }
@@ -252,7 +253,7 @@ OMAttribute * OMElement::getAttribute(std::string name)
 
 bool OMElement::addAttribute(OMAttribute * attribute)
 {
-    axis2_status_t status = axiom_element_add_attribute(_wsf_axiom_element, getEnv(),
+    axis2_status_t status = axiom_element_add_attribute(_wsf_axiom_element, Environment::getEnv(),
         attribute->getAxiomAttribute(), getAxiomNode());
     if (status == AXIS2_SUCCESS)
     {
@@ -265,7 +266,7 @@ bool OMElement::addAttribute(OMAttribute * attribute)
 bool OMElement::declareDefaultNamespace(std::string uri)
 {
     axiom_namespace_t * ns =
-        axiom_element_declare_default_namespace(_wsf_axiom_element, getEnv(), const_cast<char *>(uri.c_str()));
+        axiom_element_declare_default_namespace(_wsf_axiom_element, Environment::getEnv(), const_cast<char *>(uri.c_str()));
     if (ns)
     {
         if (_default_namespace)
@@ -273,8 +274,8 @@ bool OMElement::declareDefaultNamespace(std::string uri)
             _default_namespace->setAxiomNamespace(NULL);
             delete _default_namespace;
         }
-        _default_namespace = new OMNamespace(axiom_namespace_get_uri(ns, getEnv()),
-            axiom_namespace_get_prefix(ns, getEnv()));
+        _default_namespace = new OMNamespace(axiom_namespace_get_uri(ns, Environment::getEnv()),
+            axiom_namespace_get_prefix(ns, Environment::getEnv()));
         return true;
     }
     return false;
@@ -387,15 +388,15 @@ OMNamespace * OMElement::getNamespace(bool is_default)
     if (is_default)
     {
         axiom_namespace_t * ns =
-            axiom_element_get_default_namespace(_wsf_axiom_element, getEnv(), getAxiomNode());
+            axiom_element_get_default_namespace(_wsf_axiom_element, Environment::getEnv(), getAxiomNode());
         if (!ns)
         {
             return NULL;
         }
         if (!_default_namespace)
         {
-            _default_namespace = new OMNamespace(axiom_namespace_get_uri(ns, getEnv()),
-                axiom_namespace_get_prefix(ns, getEnv()));
+            _default_namespace = new OMNamespace(axiom_namespace_get_uri(ns, Environment::getEnv()),
+                axiom_namespace_get_prefix(ns, Environment::getEnv()));
         }
         return _default_namespace;
     }
@@ -404,13 +405,13 @@ OMNamespace * OMElement::getNamespace(bool is_default)
         return _namespace;
     }
     axiom_namespace_t * ns =
-        axiom_element_get_namespace(_wsf_axiom_element, getEnv(), getAxiomNode());
+        axiom_element_get_namespace(_wsf_axiom_element, Environment::getEnv(), getAxiomNode());
     if(!ns)
     {
         return NULL;
     }
-    _namespace = new OMNamespace(axiom_namespace_get_uri(ns, getEnv()),
-        axiom_namespace_get_prefix(ns, getEnv()));
+    _namespace = new OMNamespace(axiom_namespace_get_uri(ns, Environment::getEnv()),
+        axiom_namespace_get_prefix(ns, Environment::getEnv()));
     return _namespace;
 }
 
@@ -429,7 +430,7 @@ bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
     if (no_find)
     {
         status = axiom_element_set_namespace_with_no_find_in_current_scope(
-            _wsf_axiom_element, getEnv(), ns->getAxiomNamespace());
+            _wsf_axiom_element, Environment::getEnv(), ns->getAxiomNamespace());
         if (status == AXIS2_SUCCESS)
         {
             _namespace = ns;
@@ -439,7 +440,7 @@ bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
     else
     {
         status = axiom_element_declare_namespace(
-            _wsf_axiom_element, getEnv(), getAxiomNode(), ns->getAxiomNamespace());
+            _wsf_axiom_element, Environment::getEnv(), getAxiomNode(), ns->getAxiomNamespace());
     }
     if (status == AXIS2_SUCCESS)
     {
@@ -454,7 +455,7 @@ OMNode * OMElement::detach()
     axiom_node_t * node = NULL;
     if (getAxiomNode())
     {
-        node = axiom_node_detach(getAxiomNode(), getEnv());
+        node = axiom_node_detach(getAxiomNode(), Environment::getEnv());
     }
     if (!node)
     {
@@ -481,7 +482,7 @@ void OMElement::freeTree()
     {
         detach();
     }
-    axiom_node_free_tree(getAxiomNode(), getEnv());
+    axiom_node_free_tree(getAxiomNode(), Environment::getEnv());
     setAxiomNode(NULL);
     if (_child_nodes.size() <= 0)
     {
@@ -522,7 +523,7 @@ bool OMElement::insertSiblingBefore(OMNode * to_insert)
 bool OMElement::build()
 {
     axis2_status_t status =
-        axiom_element_build(_wsf_axiom_element, getEnv(), getAxiomNode());
+        axiom_element_build(_wsf_axiom_element, Environment::getEnv(), getAxiomNode());
     return (status == AXIS2_SUCCESS);
 }
 
@@ -557,12 +558,12 @@ bool OMElement::addChild(OMNode * child)
         {
             axiom_node_t * node = NULL;
             axiom_children_iterator_t * children_iterator = NULL;
-            children_iterator = axiom_element_get_children(_wsf_axiom_element, getEnv(), getAxiomNode());
+            children_iterator = axiom_element_get_children(_wsf_axiom_element, Environment::getEnv(), getAxiomNode());
             if (children_iterator)
             {
-                while (axiom_children_iterator_has_next(children_iterator, getEnv()))
+                while (axiom_children_iterator_has_next(children_iterator, Environment::getEnv()))
                 {
-                    node = axiom_children_iterator_next(children_iterator, getEnv());
+                    node = axiom_children_iterator_next(children_iterator, Environment::getEnv());
                     if (node == child->getAxiomNode())
                     {
                         return false;
@@ -572,7 +573,7 @@ bool OMElement::addChild(OMNode * child)
         }
     }
     axis2_status_t status =
-        axiom_node_add_child(getAxiomNode(), getEnv(), child->getAxiomNode());
+        axiom_node_add_child(getAxiomNode(), Environment::getEnv(), child->getAxiomNode());
     if (status == AXIS2_SUCCESS)
     {
         addChildLocal(child);
@@ -610,19 +611,19 @@ void OMElement::addChildLocal(OMNode * child)
 
 string OMElement::getText()
 {
-    return axiom_element_get_text(_wsf_axiom_element, getEnv(), getAxiomNode());
+    return axiom_element_get_text(_wsf_axiom_element, Environment::getEnv(), getAxiomNode());
 }
 
 bool OMElement::setText(std::string text)
 {
     axis2_status_t status =
-        axiom_element_set_text(_wsf_axiom_element, getEnv(), text.c_str(), getAxiomNode());
+        axiom_element_set_text(_wsf_axiom_element, Environment::getEnv(), text.c_str(), getAxiomNode());
     return (status == AXIS2_SUCCESS);
 }
 
 string OMElement::getLocalname()
 {
-    return axiom_element_get_localname(_wsf_axiom_element, getEnv());
+    return axiom_element_get_localname(_wsf_axiom_element, Environment::getEnv());
 }
 
 bool OMElement::removeAttribute(OMAttribute * attribute)
@@ -632,7 +633,7 @@ bool OMElement::removeAttribute(OMAttribute * attribute)
     {
         if ((*i) == attribute)
         {
-            axis2_status_t status = axiom_element_remove_attribute(_wsf_axiom_element, getEnv(),
+            axis2_status_t status = axiom_element_remove_attribute(_wsf_axiom_element, Environment::getEnv(),
                 attribute->getAxiomAttribute());
             if (status == AXIS2_SUCCESS)
             {

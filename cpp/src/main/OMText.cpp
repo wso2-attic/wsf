@@ -88,7 +88,7 @@ OMNode * OMText::detach()
     axiom_node_t * node = NULL;
     if (getAxiomNode())
     {
-        node = axiom_node_detach(getAxiomNode(), getEnv());
+        node = axiom_node_detach(getAxiomNode(), Environment::getEnv());
     }
     if (!node)
     {
@@ -112,13 +112,13 @@ OMNode * OMText::detach()
 bool OMText::setContentId(std::string content_id)
 {
     axis2_status_t status =
-        axiom_text_set_content_id(_wsf_axiom_text, getEnv(), content_id.c_str());
+        axiom_text_set_content_id(_wsf_axiom_text, Environment::getEnv(), content_id.c_str());
     return (status == AXIS2_SUCCESS);
 }
 
 string OMText::getContentId()
 {
-    return axiom_text_get_content_id(_wsf_axiom_text, getEnv());
+    return axiom_text_get_content_id(_wsf_axiom_text, Environment::getEnv());
 }
 
 OMDataHandler * OMText::getDataHandler()
@@ -127,7 +127,7 @@ OMDataHandler * OMText::getDataHandler()
     {
         return _data_handler;
     }
-    axiom_data_handler_t * data_handler_c = axiom_text_get_data_handler(_wsf_axiom_text, getEnv());
+    axiom_data_handler_t * data_handler_c = axiom_text_get_data_handler(_wsf_axiom_text, Environment::getEnv());
     _data_handler = new OMDataHandler();
     _data_handler->setAxiomDataHandler(data_handler_c);
     return _data_handler;
@@ -135,28 +135,28 @@ OMDataHandler * OMText::getDataHandler()
 
 void OMText::isBinary(bool is_binary)
 {
-    axiom_text_set_is_binary(_wsf_axiom_text, getEnv(), is_binary ? AXIS2_TRUE : AXIS2_FALSE);
+    axiom_text_set_is_binary(_wsf_axiom_text, Environment::getEnv(), is_binary ? AXIS2_TRUE : AXIS2_FALSE);
 }
 
 void OMText::optimize(bool optimize)
 {
-    axiom_text_set_optimize(_wsf_axiom_text, getEnv(), optimize ? AXIS2_TRUE : AXIS2_FALSE);
+    axiom_text_set_optimize(_wsf_axiom_text, Environment::getEnv(), optimize ? AXIS2_TRUE : AXIS2_FALSE);
 }
 
 string OMText::getText()
 {
-    return axiom_text_get_text(_wsf_axiom_text, getEnv());
+    return axiom_text_get_text(_wsf_axiom_text, Environment::getEnv());
 }
 
 string OMText::getValue()
 {
-    return axiom_text_get_value(_wsf_axiom_text, getEnv());
+    return axiom_text_get_value(_wsf_axiom_text, Environment::getEnv());
 }
 
 bool OMText::setValue(std::string value)
 {
     axis2_status_t status =
-        axiom_text_set_value(_wsf_axiom_text, getEnv(), value.c_str());
+        axiom_text_set_value(_wsf_axiom_text, Environment::getEnv(), value.c_str());
     return (status == AXIS2_SUCCESS);
 }
 
@@ -175,9 +175,9 @@ OMText::OMText(OMNode * parent, axiom_node_t * node)
     _data_handler = NULL;
     _parent = NULL;
 
-    if (node && (axiom_node_get_node_type(node, getEnv()) == AXIOM_TEXT))
+    if (node && (axiom_node_get_node_type(node, Environment::getEnv()) == AXIOM_TEXT))
     {
-        _wsf_axiom_text = (axiom_text_t *)axiom_node_get_data_element(node, getEnv());
+        _wsf_axiom_text = (axiom_text_t *)axiom_node_get_data_element(node, Environment::getEnv());
     }
     if (_wsf_axiom_text)
     {
@@ -202,7 +202,7 @@ OMText::OMText()
     
     _data_handler = NULL;
     _parent = NULL;
-    _wsf_axiom_text = axiom_text_create(getEnv(), NULL, NULL, &node);
+    _wsf_axiom_text = axiom_text_create(Environment::getEnv(), NULL, NULL, &node);
     if (_wsf_axiom_text)
     {
         setAxiomNode(node);
@@ -221,7 +221,7 @@ OMText::OMText(OMDataHandler * data_handler)
     {
         data_handler_c = data_handler->getAxiomDataHandler();
     }
-    _wsf_axiom_text = axiom_text_create_with_data_handler(getEnv(), NULL, data_handler_c, &node);
+    _wsf_axiom_text = axiom_text_create_with_data_handler(Environment::getEnv(), NULL, data_handler_c, &node);
     if (_wsf_axiom_text)
     {
         setAxiomNode(node);
@@ -245,7 +245,7 @@ OMText::OMText(OMNode * parent, OMDataHandler * data_handler)
     {
         data_handler_c = data_handler->getAxiomDataHandler();
     }
-    _wsf_axiom_text = axiom_text_create_with_data_handler(getEnv(), parent_c, data_handler_c, &node);
+    _wsf_axiom_text = axiom_text_create_with_data_handler(Environment::getEnv(), parent_c, data_handler_c, &node);
     if (_wsf_axiom_text)
     {
         setAxiomNode(node);
@@ -271,11 +271,11 @@ OMText::OMText(std::string value)
     _parent = NULL;
     if (value == "")
     {
-        _wsf_axiom_text = axiom_text_create(getEnv(), NULL, NULL, &node);
+        _wsf_axiom_text = axiom_text_create(Environment::getEnv(), NULL, NULL, &node);
     }
     else
     {
-        _wsf_axiom_text = axiom_text_create(getEnv(), NULL, value.c_str(), &node);
+        _wsf_axiom_text = axiom_text_create(Environment::getEnv(), NULL, value.c_str(), &node);
     }
     if (_wsf_axiom_text)
     {
@@ -297,11 +297,11 @@ OMText::OMText(OMNode * parent, std::string value)
     }
     if (value == "")
     {
-        _wsf_axiom_text = axiom_text_create(getEnv(), parent_c, NULL, &node);
+        _wsf_axiom_text = axiom_text_create(Environment::getEnv(), parent_c, NULL, &node);
     }
     else
     {
-        _wsf_axiom_text = axiom_text_create(getEnv(), parent_c, value.c_str(), &node);
+        _wsf_axiom_text = axiom_text_create(Environment::getEnv(), parent_c, value.c_str(), &node);
     }
     if (_wsf_axiom_text)
     {

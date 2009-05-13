@@ -21,7 +21,7 @@ using namespace wso2wsf;
 
 DateTime::DateTime()
 {
-	_dateTime = axutil_date_time_create(getEnv());
+	_dateTime = axutil_date_time_create(Environment::getEnv());
 }
 
 //************************************
@@ -40,8 +40,8 @@ DateTime::DateTime()
 //************************************
 DateTime::DateTime(int year, int month, int date, int hour, int min, int second, int milliseconds)
 {
-	_dateTime = axutil_date_time_create(getEnv());
-	axutil_date_time_set_date_time(_dateTime, getEnv(), year, month, date, hour, min, second, milliseconds);
+	_dateTime = axutil_date_time_create(Environment::getEnv());
+	axutil_date_time_set_date_time(_dateTime, Environment::getEnv(), year, month, date, hour, min, second, milliseconds);
 }
 /**
 *                                                    
@@ -49,7 +49,7 @@ DateTime::DateTime(int year, int month, int date, int hour, int min, int second,
 */
 bool DateTime::deserializeDate(std::string timeStr)
 {	
-	return axutil_date_time_deserialize_date(_dateTime, getEnv(), timeStr.c_str()) ? true : false;
+	return axutil_date_time_deserialize_date(_dateTime, Environment::getEnv(), timeStr.c_str()) ? true : false;
 }
 /**
 *                                                    
@@ -64,35 +64,35 @@ bool DateTime::deserializeDate(std::string timeStr)
 //************************************
 bool DateTime::deserializeTime(string timeStr)
 {
-	return axutil_date_time_deserialize_time(_dateTime, getEnv(), timeStr.c_str()) ? true: false;
+	return axutil_date_time_deserialize_time(_dateTime, Environment::getEnv(), timeStr.c_str()) ? true: false;
 }
 
 string DateTime::serializeDate()
 {
-	return axutil_date_time_serialize_date(_dateTime, getEnv());
+	return axutil_date_time_serialize_date(_dateTime, Environment::getEnv());
 }
 
 string DateTime::serializeDateTime()
 {
-	return axutil_date_time_serialize_date_time(_dateTime, getEnv());
+	return axutil_date_time_serialize_date_time(_dateTime, Environment::getEnv());
 }
 
 int DateTime::getDate()
 {
-	return axutil_date_time_get_date(_dateTime, getEnv());
+	return axutil_date_time_get_date(_dateTime, Environment::getEnv());
 }
 
 int DateTime::getSecond()
 {
-	return axutil_date_time_get_second(_dateTime, getEnv());
+	return axutil_date_time_get_second(_dateTime, Environment::getEnv());
 }
 
 string DateTime::serializeDateTimeWithoutMillisecond()
 {
-	return axutil_date_time_serialize_date_time_without_millisecond(_dateTime, getEnv());
+	return axutil_date_time_serialize_date_time_without_millisecond(_dateTime, Environment::getEnv());
 }
 
 string DateTime::serializeTime()
 {
-	return axutil_date_time_serialize_time(_dateTime, getEnv());
+	return axutil_date_time_serialize_time(_dateTime, Environment::getEnv());
 }

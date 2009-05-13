@@ -51,10 +51,10 @@ axis2_msg_ctx_t* MessageContext::getAxis2MessageContext()
 WSF_EXTERN std::string WSF_CALL MessageContext::getFaultTo()
 {
 	axis2_endpoint_ref_t *faultTo = NULL;
-	faultTo = axis2_msg_ctx_get_fault_to(_msg_ctx, getEnv());
+	faultTo = axis2_msg_ctx_get_fault_to(_msg_ctx, Environment::getEnv());
 	if(faultTo)
 	{
-		return axis2_endpoint_ref_get_address(faultTo, getEnv());
+		return axis2_endpoint_ref_get_address(faultTo, Environment::getEnv());
 	}
 	else return NULL;
 }
@@ -66,10 +66,10 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getFaultTo()
 WSF_EXTERN std::string WSF_CALL MessageContext::getFrom()
 {
 	axis2_endpoint_ref_t *from = NULL;
-	from = axis2_msg_ctx_get_fault_to(_msg_ctx, getEnv());
+	from = axis2_msg_ctx_get_fault_to(_msg_ctx, Environment::getEnv());
 	if(from)
 	{
-		return axis2_endpoint_ref_get_address(from, getEnv());
+		return axis2_endpoint_ref_get_address(from, Environment::getEnv());
 	}
 	else return NULL;
 
@@ -81,7 +81,7 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getFrom()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::getInFaultFlow()
 {
-	if(axis2_msg_ctx_get_in_fault_flow(_msg_ctx, getEnv()))
+	if(axis2_msg_ctx_get_in_fault_flow(_msg_ctx, Environment::getEnv()))
 	{
 		return true;
 	}
@@ -97,10 +97,10 @@ WSF_EXTERN bool WSF_CALL MessageContext::getInFaultFlow()
 WSF_EXTERN OMElement *WSF_CALL MessageContext::getSoapEnvelope()
 {
 	axiom_soap_envelope_t *envlope = NULL;
-	envlope  = axis2_msg_ctx_get_soap_envelope(_msg_ctx, getEnv());
+	envlope  = axis2_msg_ctx_get_soap_envelope(_msg_ctx, Environment::getEnv());
 	if(envlope)
 	{	
-		axiom_node_t *envNode = axiom_soap_envelope_get_base_node(envlope, getEnv());
+		axiom_node_t *envNode = axiom_soap_envelope_get_base_node(envlope, Environment::getEnv());
 		if(envNode)
 		{
 			return new OMElement(NULL, envNode);
@@ -116,10 +116,10 @@ WSF_EXTERN OMElement *WSF_CALL MessageContext::getSoapEnvelope()
 WSF_EXTERN OMElement* WSF_CALL MessageContext::getResponseSoapEnvelope()
 {
 	axiom_soap_envelope_t *envlope = NULL;
-	envlope  = axis2_msg_ctx_get_response_soap_envelope(_msg_ctx, getEnv());
+	envlope  = axis2_msg_ctx_get_response_soap_envelope(_msg_ctx, Environment::getEnv());
 	if(envlope)
 	{	
-		axiom_node_t *envNode = axiom_soap_envelope_get_base_node(envlope, getEnv());
+		axiom_node_t *envNode = axiom_soap_envelope_get_base_node(envlope, Environment::getEnv());
 		if(envNode)
 		{
 			return new OMElement(NULL, envNode);
@@ -135,10 +135,10 @@ WSF_EXTERN OMElement* WSF_CALL MessageContext::getResponseSoapEnvelope()
 WSF_EXTERN OMElement* WSF_CALL MessageContext::getFaultSoapEnvelope()
 {
 	axiom_soap_envelope_t *envlope = NULL;
-	envlope  = axis2_msg_ctx_get_fault_soap_envelope(_msg_ctx, getEnv());
+	envlope  = axis2_msg_ctx_get_fault_soap_envelope(_msg_ctx, Environment::getEnv());
 	if(envlope)
 	{	
-		axiom_node_t *envNode = axiom_soap_envelope_get_base_node(envlope, getEnv());
+		axiom_node_t *envNode = axiom_soap_envelope_get_base_node(envlope, Environment::getEnv());
 		if(envNode)
 		{
 			return new OMElement(NULL, envNode);
@@ -154,7 +154,7 @@ WSF_EXTERN OMElement* WSF_CALL MessageContext::getFaultSoapEnvelope()
 
 WSF_EXTERN std::string WSF_CALL MessageContext::getMessageId()
 {
-	return axis2_msg_ctx_get_msg_id(_msg_ctx, getEnv());
+	return axis2_msg_ctx_get_msg_id(_msg_ctx, Environment::getEnv());
 }
 
 /**
@@ -165,9 +165,9 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getMessageId()
 WSF_EXTERN std::string WSF_CALL MessageContext::getReplyTo()
 {
 	axis2_endpoint_ref_t *endpoint = NULL;
-	endpoint = axis2_msg_ctx_get_reply_to(_msg_ctx, getEnv());
+	endpoint = axis2_msg_ctx_get_reply_to(_msg_ctx, Environment::getEnv());
 	if(endpoint)
-		return axis2_endpoint_ref_get_address(endpoint, getEnv());
+		return axis2_endpoint_ref_get_address(endpoint, Environment::getEnv());
 	return NULL;
 }
 
@@ -177,7 +177,7 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getReplyTo()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::getProcessFault()
 {
-	if(axis2_msg_ctx_get_process_fault(_msg_ctx, getEnv()))
+	if(axis2_msg_ctx_get_process_fault(_msg_ctx, Environment::getEnv()))
 		return true;
 	return false;
 }
@@ -189,7 +189,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::getProcessFault()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::getServerSide()
 {
-	if(axis2_msg_ctx_get_server_side(_msg_ctx,getEnv()))
+	if(axis2_msg_ctx_get_server_side(_msg_ctx,Environment::getEnv()))
 		return true;
 	return false;
 }
@@ -202,9 +202,9 @@ WSF_EXTERN bool WSF_CALL MessageContext::getServerSide()
 WSF_EXTERN std::string WSF_CALL MessageContext::getTo()
 {
 	axis2_endpoint_ref_t *endpoint = NULL;
-	endpoint = axis2_msg_ctx_get_reply_to(_msg_ctx, getEnv());
+	endpoint = axis2_msg_ctx_get_reply_to(_msg_ctx, Environment::getEnv());
 	if(endpoint)
-		return axis2_endpoint_ref_get_address(endpoint, getEnv());
+		return axis2_endpoint_ref_get_address(endpoint, Environment::getEnv());
 	return NULL;
 }
 
@@ -219,8 +219,8 @@ WSF_EXTERN bool WSF_CALL MessageContext::setFaultTo(std::string faultToUri)
 	axis2_endpoint_ref_t *endpoint = NULL;
 	if(!faultToUri.empty())
 	{
-		endpoint = axis2_endpoint_ref_create(getEnv(), faultToUri.c_str());
-		if(axis2_msg_ctx_set_fault_to(_msg_ctx, getEnv(), endpoint))
+		endpoint = axis2_endpoint_ref_create(Environment::getEnv(), faultToUri.c_str());
+		if(axis2_msg_ctx_set_fault_to(_msg_ctx, Environment::getEnv(), endpoint))
 			return true;
 	}
 	return false;
@@ -236,8 +236,8 @@ WSF_EXTERN bool WSF_CALL MessageContext::setFrom(std::string fromUri)
 	axis2_endpoint_ref_t *endpoint = NULL;
 	if(fromUri.c_str())
 	{
-		endpoint = axis2_endpoint_ref_create(getEnv(), fromUri.c_str());
-		if(axis2_msg_ctx_set_from(_msg_ctx, getEnv(), endpoint))
+		endpoint = axis2_endpoint_ref_create(Environment::getEnv(), fromUri.c_str());
+		if(axis2_msg_ctx_set_from(_msg_ctx, Environment::getEnv(), endpoint))
 			return true;
 	}
 	return false;
@@ -250,7 +250,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setFrom(std::string fromUri)
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setInFaultFlow(bool infault)
 {
-	if(axis2_msg_ctx_set_in_fault_flow(_msg_ctx,getEnv(), infault))
+	if(axis2_msg_ctx_set_in_fault_flow(_msg_ctx,Environment::getEnv(), infault))
 		return true;
 	return false;
 }
@@ -268,8 +268,8 @@ WSF_EXTERN bool WSF_CALL MessageContext::setReplyTo(std::string replyToUri)
 	axis2_endpoint_ref_t *endpoint = NULL;
 	if(!replyToUri.empty())
 	{
-		endpoint = axis2_endpoint_ref_create(getEnv(), replyToUri.c_str());
-		if(axis2_msg_ctx_set_from(_msg_ctx, getEnv(), endpoint))
+		endpoint = axis2_endpoint_ref_create(Environment::getEnv(), replyToUri.c_str());
+		if(axis2_msg_ctx_set_from(_msg_ctx, Environment::getEnv(), endpoint))
 			return true;
 	}
 	return false;
@@ -285,7 +285,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setReplyTo(std::string replyToUri)
 
 WSF_EXTERN bool WSF_CALL MessageContext::setServerSide(bool serverSide)
 {
-	if(axis2_msg_ctx_set_server_side(_msg_ctx, getEnv(), serverSide))
+	if(axis2_msg_ctx_set_server_side(_msg_ctx, Environment::getEnv(), serverSide))
 		return true;
 	return false;
 }
@@ -302,8 +302,8 @@ WSF_EXTERN bool WSF_CALL MessageContext::setTo(std::string toUri)
 	axis2_endpoint_ref_t *endpoint = NULL;
 	if(!toUri.empty())
 	{
-		endpoint = axis2_endpoint_ref_create(getEnv(), toUri.c_str());
-		if(axis2_msg_ctx_set_to(_msg_ctx, getEnv(), endpoint))
+		endpoint = axis2_endpoint_ref_create(Environment::getEnv(), toUri.c_str());
+		if(axis2_msg_ctx_set_to(_msg_ctx, Environment::getEnv(), endpoint))
 			return true;
 
 	}
@@ -319,7 +319,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setTo(std::string toUri)
 */
 WSF_EXTERN bool WSF_CALL MessageContext::getNewThread_required()
 {
-	if(axis2_msg_ctx_get_new_thread_required(_msg_ctx,getEnv()))
+	if(axis2_msg_ctx_get_new_thread_required(_msg_ctx,Environment::getEnv()))
 		return true;
 	return false;
 }
@@ -335,7 +335,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::getNewThread_required()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setNewThreadRequired(bool newThreadRequired)
 {
-	if(axis2_msg_ctx_set_new_thread_required(_msg_ctx, getEnv(), newThreadRequired))
+	if(axis2_msg_ctx_set_new_thread_required(_msg_ctx, Environment::getEnv(), newThreadRequired))
 		return true;
 	return false;
 }
@@ -349,7 +349,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setNewThreadRequired(bool newThreadRequ
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setWSAAction(std::string actionUri)
 {
-	if(axis2_msg_ctx_set_wsa_action(_msg_ctx, getEnv(), actionUri.c_str()))
+	if(axis2_msg_ctx_set_wsa_action(_msg_ctx, Environment::getEnv(), actionUri.c_str()))
 		return true;
 	return false;
 }
@@ -362,7 +362,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setWSAAction(std::string actionUri)
 */
 WSF_EXTERN std::string WSF_CALL MessageContext::getWSAAction()
 {
-	return axis2_msg_ctx_get_wsa_action(_msg_ctx, getEnv());
+	return axis2_msg_ctx_get_wsa_action(_msg_ctx, Environment::getEnv());
 }
 
 /**
@@ -374,7 +374,7 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getWSAAction()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setWSAMessageId(std::string messageId)
 {
-	if(axis2_msg_ctx_set_wsa_message_id(_msg_ctx, getEnv(), messageId.c_str()))
+	if(axis2_msg_ctx_set_wsa_message_id(_msg_ctx, Environment::getEnv(), messageId.c_str()))
 		return true;
 	return false;
 }
@@ -387,7 +387,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setWSAMessageId(std::string messageId)
 */
 WSF_EXTERN std::string WSF_CALL MessageContext::getWSAMessageId()
 {
-	return axis2_msg_ctx_get_msg_id(_msg_ctx, getEnv());
+	return axis2_msg_ctx_get_msg_id(_msg_ctx, Environment::getEnv());
 }
 
 /**
@@ -399,7 +399,7 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getWSAMessageId()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::isPaused()
 {
-	if(axis2_msg_ctx_is_paused(_msg_ctx, getEnv()))
+	if(axis2_msg_ctx_is_paused(_msg_ctx, Environment::getEnv()))
 		return true;
 	return false;
 }
@@ -412,7 +412,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::isPaused()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setPaused(bool paused)
 {
-	if(axis2_msg_ctx_set_paused(_msg_ctx, getEnv(), paused ? AXIS2_TRUE: AXIS2_FALSE))
+	if(axis2_msg_ctx_set_paused(_msg_ctx, Environment::getEnv(), paused ? AXIS2_TRUE: AXIS2_FALSE))
 		return true;
 	return false;
 }
@@ -428,7 +428,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setPaused(bool paused)
 
 WSF_EXTERN bool WSF_CALL MessageContext::isKeepAlive()
 {
-	if(axis2_msg_ctx_is_keep_alive(_msg_ctx, getEnv()))
+	if(axis2_msg_ctx_is_keep_alive(_msg_ctx, Environment::getEnv()))
 		return true;
 	return false;
 }
@@ -444,7 +444,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::isKeepAlive()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setKeepAlive(bool keepAlive)
 {
-	if(axis2_msg_ctx_set_keep_alive(_msg_ctx, getEnv(), keepAlive ? AXIS2_TRUE: AXIS2_FALSE))
+	if(axis2_msg_ctx_set_keep_alive(_msg_ctx, Environment::getEnv(), keepAlive ? AXIS2_TRUE: AXIS2_FALSE))
 		return true;
 	return false;
 }
@@ -456,7 +456,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setKeepAlive(bool keepAlive)
 */
 WSF_EXTERN bool WSF_CALL MessageContext::getOutputWritten()
 {
-	if(axis2_msg_ctx_get_output_written(_msg_ctx, getEnv()))
+	if(axis2_msg_ctx_get_output_written(_msg_ctx, Environment::getEnv()))
 		return true;
 	return false;
 }
@@ -469,7 +469,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::getOutputWritten()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setOutputWritten(bool outputWritten)
 {
-	if(axis2_msg_ctx_set_output_written(_msg_ctx, getEnv(), outputWritten ? AXIS2_TRUE : AXIS2_FALSE))
+	if(axis2_msg_ctx_set_output_written(_msg_ctx, Environment::getEnv(), outputWritten ? AXIS2_TRUE : AXIS2_FALSE))
 		return true;
 	return false;
 }
@@ -484,7 +484,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setOutputWritten(bool outputWritten)
 */
 WSF_EXTERN std::string WSF_CALL MessageContext::getRestHTTPMethod()
 {
-	return axis2_msg_ctx_get_rest_http_method(_msg_ctx, getEnv());
+	return axis2_msg_ctx_get_rest_http_method(_msg_ctx, Environment::getEnv());
 }
 
 /**
@@ -497,7 +497,7 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getRestHTTPMethod()
 */
 WSF_EXTERN axis2_status_t WSF_CALL MessageContext::setRESTHTTPMethod(std::string HTTPMethod)
 {
-	if(!HTTPMethod.empty() && axis2_msg_ctx_set_rest_http_method(_msg_ctx, getEnv(), HTTPMethod.c_str()))
+	if(!HTTPMethod.empty() && axis2_msg_ctx_set_rest_http_method(_msg_ctx, Environment::getEnv(), HTTPMethod.c_str()))
 		return true;
 	return false;
 }
@@ -524,12 +524,12 @@ WSF_EXTERN Parameter *WSF_CALL MessageContext::getParameter(std::string key)
 {
 	if(!key.empty())
 	{
-		axutil_param_t *param = axis2_msg_ctx_get_parameter(_msg_ctx, getEnv(), key.c_str());
+		axutil_param_t *param = axis2_msg_ctx_get_parameter(_msg_ctx, Environment::getEnv(), key.c_str());
 		if(param)
 		{
-			return new Parameter(axutil_param_get_name(param, getEnv()), 
-								 axutil_param_get_value(param, getEnv()),
-								 axutil_param_get_param_type(param, getEnv()));
+			return new Parameter(axutil_param_get_name(param, Environment::getEnv()), 
+								 axutil_param_get_value(param, Environment::getEnv()),
+								 axutil_param_get_param_type(param, Environment::getEnv()));
 		}
 	}
 	return NULL;
@@ -584,11 +584,11 @@ WSF_EXTERN Property *WSF_CALL MessageContext::getProperty(std::string key)
 	axutil_property_t *prop = NULL;
 	if(!key.empty())
 	{
-		prop = axis2_msg_ctx_get_property(_msg_ctx, getEnv(),key.c_str());
+		prop = axis2_msg_ctx_get_property(_msg_ctx, Environment::getEnv(),key.c_str());
 		if(prop)
 		{
 			void *value = NULL;
-			value = axutil_property_get_value(prop,getEnv());
+			value = axutil_property_get_value(prop,Environment::getEnv());
 			/** Add method to get the scope of property */
 			return new Property(key, value, AXIS2_SCOPE_REQUEST);
 		}
@@ -606,11 +606,11 @@ WSF_EXTERN void* WSF_CALL MessageContext::getPropertyValue(std::string propStr)
 	axutil_property_t *prop = NULL;
 	if(!propStr.empty())
 	{
-		prop = axis2_msg_ctx_get_property(_msg_ctx, getEnv(),propStr.c_str());
+		prop = axis2_msg_ctx_get_property(_msg_ctx, Environment::getEnv(),propStr.c_str());
 		if(prop)
 		{
 			void *value = NULL;
-			value = axutil_property_get_value(prop,getEnv());
+			value = axutil_property_get_value(prop,Environment::getEnv());
 			return value;
 		}
 	}
@@ -638,9 +638,9 @@ WSF_EXTERN bool WSF_CALL MessageContext::setProperty(std::string key, std::strin
 WSF_EXTERN std::string WSF_CALL MessageContext::getPausedHandlerName()
 {
 	const axutil_string_t *str = NULL;
-	str =  axis2_msg_ctx_get_paused_handler_name(_msg_ctx, getEnv());
+	str =  axis2_msg_ctx_get_paused_handler_name(_msg_ctx, Environment::getEnv());
 	if(str)
-		return axutil_string_get_buffer(str,getEnv());
+		return axutil_string_get_buffer(str,Environment::getEnv());
 	return NULL;
 }
 
@@ -650,7 +650,7 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getPausedHandlerName()
 */
 WSF_EXTERN std::string WSF_CALL MessageContext::getPausedPhaseName()
 {
-	return axis2_msg_ctx_get_paused_phase_name(_msg_ctx, getEnv());
+	return axis2_msg_ctx_get_paused_phase_name(_msg_ctx, Environment::getEnv());
 }
 
 /**
@@ -662,7 +662,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setPausedPhaseName(std::string pausedPh
 {
 	if(!pausedPhaseName.empty())
 	{
-		if(axis2_msg_ctx_set_paused_phase_name(_msg_ctx, getEnv(),pausedPhaseName.c_str()))
+		if(axis2_msg_ctx_set_paused_phase_name(_msg_ctx, Environment::getEnv(),pausedPhaseName.c_str()))
 			return true;
 	}
 	return false;
@@ -676,10 +676,10 @@ WSF_EXTERN bool WSF_CALL MessageContext::setPausedPhaseName(std::string pausedPh
 WSF_EXTERN std::string WSF_CALL MessageContext::getSOAPAction()
 {
 	axutil_string_t *action = NULL;
-	action = axis2_msg_ctx_get_soap_action(_msg_ctx,getEnv());
+	action = axis2_msg_ctx_get_soap_action(_msg_ctx,Environment::getEnv());
 	if(action)
 	{
-		return axutil_string_get_buffer(action, getEnv());
+		return axutil_string_get_buffer(action, Environment::getEnv());
 	}
 	return NULL;
 }
@@ -692,8 +692,8 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getSOAPAction()
 WSF_EXTERN bool WSF_CALL MessageContext::setSOAPAction(std::string action)
 {
 	if(!action.empty())
-		if(axis2_msg_ctx_set_soap_action(_msg_ctx, getEnv(), 
-			axutil_string_create(getEnv(), action.c_str())))
+		if(axis2_msg_ctx_set_soap_action(_msg_ctx, Environment::getEnv(), 
+			axutil_string_create(Environment::getEnv(), action.c_str())))
 		return true;
 	return false;
 }
@@ -704,7 +704,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setSOAPAction(std::string action)
 */
 WSF_EXTERN bool WSF_CALL MessageContext::getDoingMTOM()
 {
-	if(axis2_msg_ctx_get_doing_mtom(_msg_ctx, getEnv()))
+	if(axis2_msg_ctx_get_doing_mtom(_msg_ctx, Environment::getEnv()))
 		return true;
 	return false;
 }
@@ -716,7 +716,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::getDoingMTOM()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setDoingMTOM(bool doingMTOM)
 {
-	if(axis2_msg_ctx_set_doing_mtom(_msg_ctx, getEnv(), doingMTOM ? AXIS2_TRUE : AXIS2_FALSE))
+	if(axis2_msg_ctx_set_doing_mtom(_msg_ctx, Environment::getEnv(), doingMTOM ? AXIS2_TRUE : AXIS2_FALSE))
 		return true;
 	return false;
 }
@@ -727,7 +727,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setDoingMTOM(bool doingMTOM)
 */
 WSF_EXTERN bool WSF_CALL MessageContext::getDoingREST()
 { 
-	if(axis2_msg_ctx_get_doing_rest(_msg_ctx,getEnv()))
+	if(axis2_msg_ctx_get_doing_rest(_msg_ctx,Environment::getEnv()))
 		return true;
 	return false;
 }
@@ -739,7 +739,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::getDoingREST()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setDoingREST(bool doingREST)
 {
-	if(axis2_msg_ctx_set_doing_rest(_msg_ctx,getEnv(),doingREST ? AXIS2_TRUE : AXIS2_FALSE))
+	if(axis2_msg_ctx_set_doing_rest(_msg_ctx,Environment::getEnv(),doingREST ? AXIS2_TRUE : AXIS2_FALSE))
 		return true;
 	return false;
 }
@@ -753,7 +753,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setDoingREST(bool doingREST)
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setDoRESTThroughPOST(bool doREST)
 {
-	if(axis2_msg_ctx_set_do_rest_through_post(_msg_ctx,getEnv(),doREST ? AXIS2_TRUE : AXIS2_FALSE))
+	if(axis2_msg_ctx_set_do_rest_through_post(_msg_ctx,Environment::getEnv(),doREST ? AXIS2_TRUE : AXIS2_FALSE))
 		return true;
 	return false;
 }
@@ -766,7 +766,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setDoRESTThroughPOST(bool doREST)
 */
 WSF_EXTERN bool WSF_CALL MessageContext::getDoRESTThroughPOST()
 { 
-	if(axis2_msg_ctx_get_do_rest_through_post(_msg_ctx,getEnv()))
+	if(axis2_msg_ctx_get_do_rest_through_post(_msg_ctx,Environment::getEnv()))
 		return true;
 	return false;
 }
@@ -777,7 +777,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::getDoRESTThroughPOST()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::getManageSession()
 {
-	if(axis2_msg_ctx_get_manage_session(_msg_ctx,getEnv()))
+	if(axis2_msg_ctx_get_manage_session(_msg_ctx,Environment::getEnv()))
 		return true;
 	return false;
 }
@@ -789,7 +789,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::getManageSession()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setManageSession(bool manageSession)
 {
-	if(axis2_msg_ctx_set_manage_session(_msg_ctx,getEnv(),manageSession ? AXIS2_TRUE : AXIS2_FALSE))
+	if(axis2_msg_ctx_set_manage_session(_msg_ctx,Environment::getEnv(),manageSession ? AXIS2_TRUE : AXIS2_FALSE))
 		return true;
 	return false;
 }
@@ -803,7 +803,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setManageSession(bool manageSession)
 
 WSF_EXTERN bool WSF_CALL MessageContext::getIsSOAP11()
 {
-	if(axis2_msg_ctx_get_is_soap_11(_msg_ctx,getEnv()))
+	if(axis2_msg_ctx_get_is_soap_11(_msg_ctx,Environment::getEnv()))
 		return true;
 	return false;
 }
@@ -817,7 +817,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::getIsSOAP11()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setIsSOAP11(bool isSOAP11)
 {
-	if(axis2_msg_ctx_set_is_soap_11(_msg_ctx, getEnv(),isSOAP11? AXIS2_TRUE : AXIS2_FALSE))
+	if(axis2_msg_ctx_set_is_soap_11(_msg_ctx, Environment::getEnv(),isSOAP11? AXIS2_TRUE : AXIS2_FALSE))
 		return true;
 	return false;
 }
@@ -854,7 +854,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setOptions(Options options)
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setFlow(int flow)
 {
-	if(axis2_msg_ctx_set_flow(_msg_ctx,getEnv(),flow))
+	if(axis2_msg_ctx_set_flow(_msg_ctx,Environment::getEnv(),flow))
 		return true;
 	return false;
 }
@@ -865,7 +865,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setFlow(int flow)
 */
 WSF_EXTERN int WSF_CALL MessageContext::getFlow()
 {
-	return axis2_msg_ctx_get_flow(_msg_ctx, getEnv());
+	return axis2_msg_ctx_get_flow(_msg_ctx, Environment::getEnv());
 }
 
 
@@ -884,9 +884,9 @@ WSF_EXTERN bool WSF_CALL MessageContext::setSupportedRESTHTTPMethods(std::vector
 		axutil_array_list_t *methods_list = NULL;
 		for(std::vector<std::string>::iterator strIt = methods->begin();strIt != methods->end(); strIt++)
 		{
-			axutil_array_list_add(methods_list, getEnv(), (*strIt).c_str());
+			axutil_array_list_add(methods_list, Environment::getEnv(), (*strIt).c_str());
 		}
-		if(axis2_msg_ctx_set_supported_rest_http_methods(_msg_ctx, getEnv(), methods_list))
+		if(axis2_msg_ctx_set_supported_rest_http_methods(_msg_ctx, Environment::getEnv(), methods_list))
 		{
 			return true;
 		}
@@ -903,15 +903,15 @@ WSF_EXTERN bool WSF_CALL MessageContext::setSupportedRESTHTTPMethods(std::vector
 WSF_EXTERN  std::vector<std::string>* WSF_CALL MessageContext::getSupportedRESTHTTPMethods()
 {
 	axutil_array_list_t *methods_list = NULL;
-	methods_list = axis2_msg_ctx_get_supported_rest_http_methods(_msg_ctx, getEnv());
+	methods_list = axis2_msg_ctx_get_supported_rest_http_methods(_msg_ctx, Environment::getEnv());
 	if(methods_list)
 	{
 		int size =0;
 		std::vector<std::string> *methods = new std::vector<std::string>;
-		size = axutil_array_list_size(methods_list, getEnv());
+		size = axutil_array_list_size(methods_list, Environment::getEnv());
 		for(int i =0; i< size; i++)
 		{
-			char * value = (char*)axutil_array_list_get(methods_list, getEnv(),i);
+			char * value = (char*)axutil_array_list_get(methods_list, Environment::getEnv(),i);
 			methods->push_back(value);
 		}
 		return methods;
@@ -927,7 +927,7 @@ WSF_EXTERN  std::vector<std::string>* WSF_CALL MessageContext::getSupportedRESTH
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setCurrentHandlerIndex(int index)
 {
-	if(axis2_msg_ctx_set_current_handler_index(_msg_ctx,getEnv(),index))
+	if(axis2_msg_ctx_set_current_handler_index(_msg_ctx,Environment::getEnv(),index))
 	{
 		return true;
 	}
@@ -941,7 +941,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setCurrentHandlerIndex(int index)
 */
 WSF_EXTERN int WSF_CALL MessageContext::getCurrentHandlerIndex()
 {
-	return axis2_msg_ctx_get_current_handler_index(_msg_ctx,getEnv());
+	return axis2_msg_ctx_get_current_handler_index(_msg_ctx,Environment::getEnv());
 }
 
 /**
@@ -951,7 +951,7 @@ WSF_EXTERN int WSF_CALL MessageContext::getCurrentHandlerIndex()
 */
 WSF_EXTERN int WSF_CALL MessageContext::getPausedHandlerIndex()
 {
-	return axis2_msg_ctx_get_paused_handler_index(_msg_ctx,getEnv());
+	return axis2_msg_ctx_get_paused_handler_index(_msg_ctx,Environment::getEnv());
 }
 
 /**
@@ -961,7 +961,7 @@ WSF_EXTERN int WSF_CALL MessageContext::getPausedHandlerIndex()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setCurrentPhaseIndex(int index)
 {
-	if(axis2_msg_ctx_set_current_phase_index(_msg_ctx,getEnv(), index))
+	if(axis2_msg_ctx_set_current_phase_index(_msg_ctx,Environment::getEnv(), index))
 	{
 		return true;
 	}
@@ -974,7 +974,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setCurrentPhaseIndex(int index)
 */
 WSF_EXTERN int WSF_CALL MessageContext::getCurrentPhaseIndex()
 {
-	return axis2_msg_ctx_get_current_phase_index(_msg_ctx,getEnv());
+	return axis2_msg_ctx_get_current_phase_index(_msg_ctx,Environment::getEnv());
 }
 
 /**
@@ -983,7 +983,7 @@ WSF_EXTERN int WSF_CALL MessageContext::getCurrentPhaseIndex()
 */
 WSF_EXTERN int WSF_CALL MessageContext::getPausedPhaseIndex()
 {
-	return axis2_msg_ctx_get_paused_phase_index(_msg_ctx,getEnv());
+	return axis2_msg_ctx_get_paused_phase_index(_msg_ctx,Environment::getEnv());
 }
 
 /**
@@ -993,9 +993,9 @@ WSF_EXTERN int WSF_CALL MessageContext::getPausedPhaseIndex()
 WSF_EXTERN std::string WSF_CALL MessageContext::getCharsetEncoding()
 {
 	axutil_string_t *str = NULL;
-	str = axis2_msg_ctx_get_charset_encoding(_msg_ctx,getEnv());
+	str = axis2_msg_ctx_get_charset_encoding(_msg_ctx,Environment::getEnv());
 	if(str)
-		return axutil_string_get_buffer(str, getEnv());
+		return axutil_string_get_buffer(str, Environment::getEnv());
 	return NULL;
 }
 
@@ -1008,8 +1008,8 @@ WSF_EXTERN bool WSF_CALL MessageContext::setCharsetEncodingStng(std::string str)
 {
 	if(!str.empty())
 	{
-		if(axis2_msg_ctx_set_charset_encoding(_msg_ctx,getEnv(), 
-			axutil_string_create(getEnv(), str.c_str())))
+		if(axis2_msg_ctx_set_charset_encoding(_msg_ctx,Environment::getEnv(), 
+			axutil_string_create(Environment::getEnv(), str.c_str())))
 		{
 			return true;
 		}
@@ -1025,7 +1025,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setCharsetEncodingStng(std::string str)
 
 WSF_EXTERN int WSF_CALL MessageContext::getStatusCode()
 {
-	return axis2_msg_ctx_get_status_code(_msg_ctx,getEnv());
+	return axis2_msg_ctx_get_status_code(_msg_ctx,Environment::getEnv());
 }
 
 
@@ -1036,7 +1036,7 @@ WSF_EXTERN int WSF_CALL MessageContext::getStatusCode()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setStatusCode(int statusCode)
 {
-	if(axis2_msg_ctx_set_status_code(_msg_ctx,getEnv(), statusCode))
+	if(axis2_msg_ctx_set_status_code(_msg_ctx,Environment::getEnv(), statusCode))
 		return true;
 	return false;
 }
@@ -1049,15 +1049,15 @@ WSF_EXTERN bool WSF_CALL MessageContext::setStatusCode(int statusCode)
 WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::getHTTPAcceptCharsetRecordList()
 { 
 	axutil_array_list_t *record_list = NULL;
-	record_list = axis2_msg_ctx_get_http_accept_charset_record_list(_msg_ctx, getEnv());
+	record_list = axis2_msg_ctx_get_http_accept_charset_record_list(_msg_ctx, Environment::getEnv());
 	if(record_list)
 	{
 		int size =0;
 		std::vector<std::string> *methods = new std::vector<std::string>;
-		size = axutil_array_list_size(record_list, getEnv());
+		size = axutil_array_list_size(record_list, Environment::getEnv());
 		for(int i =0; i< size; i++)
 		{
-			char * value = (char*)axutil_array_list_get(record_list, getEnv(),i);
+			char * value = (char*)axutil_array_list_get(record_list, Environment::getEnv(),i);
 			methods->push_back(value);
 		}
 		return methods;
@@ -1073,15 +1073,15 @@ WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::getHTTPAcceptChars
 WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::extractHTTPAcceptCharsetRecordList()
 { 
 	axutil_array_list_t *record_list = NULL;
-	record_list = axis2_msg_ctx_extract_http_accept_charset_record_list(_msg_ctx, getEnv());
+	record_list = axis2_msg_ctx_extract_http_accept_charset_record_list(_msg_ctx, Environment::getEnv());
 	if(record_list)
 	{
 		int size =0;
 		std::vector<std::string> *methods = new std::vector<std::string>;
-		size = axutil_array_list_size(record_list, getEnv());
+		size = axutil_array_list_size(record_list, Environment::getEnv());
 		for(int i =0; i< size; i++)
 		{
-			char * value = (char*)axutil_array_list_get(record_list, getEnv(),i);
+			char * value = (char*)axutil_array_list_get(record_list, Environment::getEnv(),i);
 			methods->push_back(value);
 		}
 		return methods;
@@ -1102,9 +1102,9 @@ WSF_EXTERN bool WSF_CALL MessageContext::setHTTPAcceptCharsetRecordList(std::vec
 		axutil_array_list_t *methods_list = NULL;
 		for(std::vector<std::string>::iterator strIt = recordList->begin();strIt != recordList->end(); strIt++)
 		{
-			axutil_array_list_add(methods_list, getEnv(), (*strIt).c_str());
+			axutil_array_list_add(methods_list, Environment::getEnv(), (*strIt).c_str());
 		}
-		if(axis2_msg_ctx_set_http_accept_charset_record_list(_msg_ctx, getEnv(), methods_list))
+		if(axis2_msg_ctx_set_http_accept_charset_record_list(_msg_ctx, Environment::getEnv(), methods_list))
 		{
 			return true;
 		}
@@ -1119,15 +1119,15 @@ WSF_EXTERN bool WSF_CALL MessageContext::setHTTPAcceptCharsetRecordList(std::vec
 WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::getHTTPAcceptLanguageRecordList()
 { 
 	axutil_array_list_t *record_list = NULL;
-	record_list = axis2_msg_ctx_get_http_accept_language_record_list(_msg_ctx, getEnv());
+	record_list = axis2_msg_ctx_get_http_accept_language_record_list(_msg_ctx, Environment::getEnv());
 	if(record_list)
 	{
 		int size =0;
 		std::vector<std::string> *records = new std::vector<std::string>;
-		size = axutil_array_list_size(record_list, getEnv());
+		size = axutil_array_list_size(record_list, Environment::getEnv());
 		for(int i =0; i< size; i++)
 		{
-			char * value = (char*)axutil_array_list_get(record_list, getEnv(),i);
+			char * value = (char*)axutil_array_list_get(record_list, Environment::getEnv(),i);
 			records->push_back(value);
 		}
 		return records;
@@ -1143,15 +1143,15 @@ WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::getHTTPAcceptLangu
 WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::extractHTTPAcceptLanguageRecordList()
 { 
 	axutil_array_list_t *record_list = NULL;
-	record_list = axis2_msg_ctx_extract_http_accept_language_record_list(_msg_ctx, getEnv());
+	record_list = axis2_msg_ctx_extract_http_accept_language_record_list(_msg_ctx, Environment::getEnv());
 	if(record_list)
 	{
 		int size =0;
 		std::vector<std::string> *records = new std::vector<std::string>;
-		size = axutil_array_list_size(record_list, getEnv());
+		size = axutil_array_list_size(record_list, Environment::getEnv());
 		for(int i =0; i< size; i++)
 		{
-			char * value = (char*)axutil_array_list_get(record_list, getEnv(),i);
+			char * value = (char*)axutil_array_list_get(record_list, Environment::getEnv(),i);
 			records->push_back(value);
 		}
 		return records;
@@ -1172,9 +1172,9 @@ WSF_EXTERN bool WSF_CALL MessageContext::setHTTPAcceptLanguageRecordList(std::ve
 		axutil_array_list_t *methods_list = NULL;
 		for(std::vector<std::string>::iterator strIt = acceptLanguageRecordList->begin();strIt != acceptLanguageRecordList->end(); strIt++)
 		{
-			axutil_array_list_add(methods_list, getEnv(), (*strIt).c_str());
+			axutil_array_list_add(methods_list, Environment::getEnv(), (*strIt).c_str());
 		}
-		if(axis2_msg_ctx_set_http_accept_language_record_list(_msg_ctx, getEnv(), methods_list))
+		if(axis2_msg_ctx_set_http_accept_language_record_list(_msg_ctx, Environment::getEnv(), methods_list))
 		{
 			return true;
 		}
@@ -1188,7 +1188,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setHTTPAcceptLanguageRecordList(std::ve
 */
 WSF_EXTERN std::string WSF_CALL MessageContext::getContentLanguage()
 { 
-	return axis2_msg_ctx_get_content_language(_msg_ctx,getEnv());
+	return axis2_msg_ctx_get_content_language(_msg_ctx,Environment::getEnv());
 }
 
 /**
@@ -1199,7 +1199,7 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getContentLanguage()
 
 WSF_EXTERN bool WSF_CALL MessageContext::setContentLanguage(std::string langauge)
 { 
-	if(axis2_msg_ctx_set_content_language(_msg_ctx,getEnv(),(axis2_char_t*)langauge.c_str()))
+	if(axis2_msg_ctx_set_content_language(_msg_ctx,Environment::getEnv(),(axis2_char_t*)langauge.c_str()))
 		return true;
 	return false;
 }
@@ -1211,15 +1211,15 @@ WSF_EXTERN bool WSF_CALL MessageContext::setContentLanguage(std::string langauge
 WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::getHTTPAcceptRecordList()
 { 
 	axutil_array_list_t *record_list = NULL;
-	record_list = axis2_msg_ctx_get_http_accept_record_list(_msg_ctx, getEnv());
+	record_list = axis2_msg_ctx_get_http_accept_record_list(_msg_ctx, Environment::getEnv());
 	if(record_list)
 	{
 		int size =0;
 		std::vector<std::string> *records = new std::vector<std::string>;
-		size = axutil_array_list_size(record_list, getEnv());
+		size = axutil_array_list_size(record_list, Environment::getEnv());
 		for(int i =0; i< size; i++)
 		{
-			char * value = (char*)axutil_array_list_get(record_list, getEnv(),i);
+			char * value = (char*)axutil_array_list_get(record_list, Environment::getEnv(),i);
 			records->push_back(value);
 		}
 		return records;
@@ -1235,15 +1235,15 @@ WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::getHTTPAcceptRecor
 WSF_EXTERN std::vector<std::string>* WSF_CALL MessageContext::extractHTTPAcceptRecordList()
 { 
 	axutil_array_list_t *record_list = NULL;
-	record_list = axis2_msg_ctx_extract_http_accept_record_list(_msg_ctx, getEnv());
+	record_list = axis2_msg_ctx_extract_http_accept_record_list(_msg_ctx, Environment::getEnv());
 	if(record_list)
 	{
 		int size =0;
 		std::vector<std::string> *records = new std::vector<std::string>;
-		size = axutil_array_list_size(record_list, getEnv());
+		size = axutil_array_list_size(record_list, Environment::getEnv());
 		for(int i =0; i< size; i++)
 		{
-			char * value = (char*)axutil_array_list_get(record_list, getEnv(),i);
+			char * value = (char*)axutil_array_list_get(record_list, Environment::getEnv(),i);
 			records->push_back(value);
 		}
 		return records;
@@ -1264,9 +1264,9 @@ WSF_EXTERN bool WSF_CALL MessageContext::setHTTPAcceptRecordList(std::vector<std
 		axutil_array_list_t *methods_list = NULL;
 		for(std::vector<std::string>::iterator strIt = recordList->begin();strIt != recordList->end(); strIt++)
 		{
-			axutil_array_list_add(methods_list, getEnv(), (*strIt).c_str());
+			axutil_array_list_add(methods_list, Environment::getEnv(), (*strIt).c_str());
 		}
-		if(axis2_msg_ctx_set_http_accept_language_record_list(_msg_ctx, getEnv(), methods_list))
+		if(axis2_msg_ctx_set_http_accept_language_record_list(_msg_ctx, Environment::getEnv(), methods_list))
 		{
 			return true;
 		}
@@ -1280,7 +1280,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setHTTPAcceptRecordList(std::vector<std
 */
 WSF_EXTERN std::string WSF_CALL MessageContext::getTransferEncoding()
 { 
-	return axis2_msg_ctx_get_transfer_encoding(_msg_ctx,getEnv());
+	return axis2_msg_ctx_get_transfer_encoding(_msg_ctx,Environment::getEnv());
 }
 
 /**
@@ -1290,7 +1290,7 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getTransferEncoding()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setTransferEncoding(std::string encoding)
 { 
-	if(axis2_msg_ctx_set_transfer_encoding(_msg_ctx,getEnv(), (axis2_char_t*)encoding.c_str()))
+	if(axis2_msg_ctx_set_transfer_encoding(_msg_ctx,Environment::getEnv(), (axis2_char_t*)encoding.c_str()))
 		return true;
 	return false;
 }
@@ -1301,7 +1301,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setTransferEncoding(std::string encodin
 */
 WSF_EXTERN std::string WSF_CALL MessageContext::getTransportURL()
 { 
-	return axis2_msg_ctx_get_transport_url(_msg_ctx,getEnv());
+	return axis2_msg_ctx_get_transport_url(_msg_ctx,Environment::getEnv());
 }
 
 /**
@@ -1313,7 +1313,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setTransportURL(std::string transportUR
 { 
 	if(!transportURL.empty())
 	{
-		if(axis2_msg_ctx_set_transport_url(_msg_ctx,getEnv(), (axis2_char_t*)transportURL.c_str()))
+		if(axis2_msg_ctx_set_transport_url(_msg_ctx,Environment::getEnv(), (axis2_char_t*)transportURL.c_str()))
 			return true;
 	}
 	return false;
@@ -1329,7 +1329,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setTransportURL(std::string transportUR
 */
 WSF_EXTERN bool WSF_CALL MessageContext::getNoContent()
 {
-	if(axis2_msg_ctx_get_no_content(_msg_ctx,getEnv()))
+	if(axis2_msg_ctx_get_no_content(_msg_ctx,Environment::getEnv()))
 		return true;
 	return false;
 }
@@ -1342,7 +1342,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::getNoContent()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setNoContent(bool noContent)
 {
-	if(axis2_msg_ctx_set_no_content(_msg_ctx,getEnv(), noContent ? AXIS2_TRUE : AXIS2_FALSE))
+	if(axis2_msg_ctx_set_no_content(_msg_ctx,Environment::getEnv(), noContent ? AXIS2_TRUE : AXIS2_FALSE))
 		return true;
 	return false;
 }
@@ -1354,7 +1354,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setNoContent(bool noContent)
 */
 WSF_EXTERN bool WSF_CALL MessageContext::getAuthFailed()
 {
-	if(axis2_msg_ctx_get_auth_failed(_msg_ctx,getEnv()))
+	if(axis2_msg_ctx_get_auth_failed(_msg_ctx,Environment::getEnv()))
 		return true;
 	return false;
 }
@@ -1370,7 +1370,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::getAuthFailed()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setAuthFailed(bool status)
 {
-	if(axis2_msg_ctx_set_auth_failed(_msg_ctx,getEnv(), status ? AXIS2_TRUE : AXIS2_FALSE ))
+	if(axis2_msg_ctx_set_auth_failed(_msg_ctx,Environment::getEnv(), status ? AXIS2_TRUE : AXIS2_FALSE ))
 		return true;
 	return false;
 }
@@ -1385,7 +1385,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setAuthFailed(bool status)
 */
 WSF_EXTERN bool WSF_CALL MessageContext::getRequiredAuthIsHTTP()
 { 
-	if(axis2_msg_ctx_get_required_auth_is_http(_msg_ctx, getEnv()))
+	if(axis2_msg_ctx_get_required_auth_is_http(_msg_ctx, Environment::getEnv()))
 	{
 		return true;
 	}
@@ -1401,7 +1401,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::getRequiredAuthIsHTTP()
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setRequiredAuthIsHTTP(bool isHTTP)
 { 
-	if(axis2_msg_ctx_set_required_auth_is_http(_msg_ctx, getEnv(), isHTTP ? AXIS2_TRUE : AXIS2_FALSE))
+	if(axis2_msg_ctx_set_required_auth_is_http(_msg_ctx, Environment::getEnv(), isHTTP ? AXIS2_TRUE : AXIS2_FALSE))
 	{
 		return true;
 	}
@@ -1415,7 +1415,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setRequiredAuthIsHTTP(bool isHTTP)
 */
 WSF_EXTERN bool WSF_CALL MessageContext::setAuthType(std::string authType)
 {
-	if(axis2_msg_ctx_set_auth_type(_msg_ctx, getEnv(),authType.c_str()))
+	if(axis2_msg_ctx_set_auth_type(_msg_ctx, Environment::getEnv(),authType.c_str()))
 		return true;
 	return false;
 }
@@ -1426,7 +1426,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setAuthType(std::string authType)
 */
 WSF_EXTERN std::string WSF_CALL MessageContext::getAuthType()
 {
-	return axis2_msg_ctx_get_auth_type(_msg_ctx, getEnv());
+	return axis2_msg_ctx_get_auth_type(_msg_ctx, Environment::getEnv());
 }
 
 /*
@@ -1451,7 +1451,7 @@ axutil_array_list_t *mime_parts){}
 */
 WSF_EXTERN bool WSF_CALL MessageContext::incrementRef()
 {
-	if(axis2_msg_ctx_increment_ref(_msg_ctx, getEnv()))
+	if(axis2_msg_ctx_increment_ref(_msg_ctx, Environment::getEnv()))
 		return true;
 	return false;
 }

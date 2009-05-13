@@ -25,7 +25,7 @@ using namespace wso2wsf;
   */
 std::string Qname::getLocalPart()
 {
-    return axutil_qname_get_localpart(_qname, getEnv());
+    return axutil_qname_get_localpart(_qname, Environment::getEnv());
 }
 
 /** @brief getValue
@@ -34,7 +34,7 @@ std::string Qname::getLocalPart()
   */
 std::string Qname::getNamespaceURI()
 {
-    return axutil_qname_get_uri(_qname, getEnv());
+    return axutil_qname_get_uri(_qname, Environment::getEnv());
 }
 
 /** @brief getName
@@ -43,7 +43,7 @@ std::string Qname::getNamespaceURI()
   */
 std::string Qname::getPrefix()
 {
-    return axutil_qname_get_prefix(_qname,getEnv());
+    return axutil_qname_get_prefix(_qname,Environment::getEnv());
 }
 
 /** @brief 
@@ -57,7 +57,7 @@ Qname::Qname(axutil_qname_t *qname)
 
 Qname::Qname(std::string localPart)
 {
-	_qname = axutil_qname_create(getEnv(), localPart.c_str(), NULL, NULL);
+	_qname = axutil_qname_create(Environment::getEnv(), localPart.c_str(), NULL, NULL);
 }
 
 /** @brief 
@@ -66,17 +66,17 @@ Qname::Qname(std::string localPart)
   */
 Qname::Qname(std::string localpart, std::string namespaceURI, std::string prefix)
 {
-	_qname = axutil_qname_create(getEnv(), localpart.c_str(), namespaceURI.c_str() , prefix.c_str());
+	_qname = axutil_qname_create(Environment::getEnv(), localpart.c_str(), namespaceURI.c_str() , prefix.c_str());
 }
 
 Qname::Qname(std::string localpart, std::string namespaceURI)
 {
-	_qname = axutil_qname_create(getEnv(), localpart.c_str(), namespaceURI.c_str(), NULL);
+	_qname = axutil_qname_create(Environment::getEnv(), localpart.c_str(), namespaceURI.c_str(), NULL);
 }
 
 bool Qname::equals(Qname *qnameToTest)
 {
-	if(axutil_qname_equals(_qname, getEnv(), qnameToTest->_qname))
+	if(axutil_qname_equals(_qname, Environment::getEnv(), qnameToTest->_qname))
 		return true;
 	else	return false; 
 

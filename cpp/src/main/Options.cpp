@@ -25,7 +25,7 @@ using namespace wso2wsf;
   */
 void Options::setHTTPMethod(std::string http_method)
 {
-    axis2_options_set_http_method(_wsf_options, getEnv(), http_method.c_str());
+    axis2_options_set_http_method(_wsf_options, Environment::getEnv(), http_method.c_str());
 }
 
 
@@ -40,7 +40,7 @@ axis2_options_t* WSF_CALL Options::getAxis2Options()
   */
 bool Options::getEnableMTOM()
 {
-    axis2_bool_t enabled = axis2_options_get_enable_mtom(_wsf_options, getEnv());
+    axis2_bool_t enabled = axis2_options_get_enable_mtom(_wsf_options, Environment::getEnv());
     if (enabled)
     {
         return true;
@@ -56,11 +56,11 @@ void Options::setEnableMTOM(bool enable)
 {
     if (enable)
     {
-        axis2_options_set_enable_mtom(_wsf_options, getEnv(), AXIS2_TRUE);
+        axis2_options_set_enable_mtom(_wsf_options, Environment::getEnv(), AXIS2_TRUE);
     }
     else
     {
-        axis2_options_set_enable_mtom(_wsf_options, getEnv(), AXIS2_FALSE);
+        axis2_options_set_enable_mtom(_wsf_options, Environment::getEnv(), AXIS2_FALSE);
     }
 }
 
@@ -70,7 +70,7 @@ void Options::setEnableMTOM(bool enable)
   */
 void Options::setSoapVersion(soap_version version)
 {
-    axis2_options_set_soap_version(_wsf_options, getEnv(), static_cast<int>(version));
+    axis2_options_set_soap_version(_wsf_options, Environment::getEnv(), static_cast<int>(version));
 }
 
 /** @brief getSoapVersion
@@ -79,7 +79,7 @@ void Options::setSoapVersion(soap_version version)
   */
 soap_version Options::getSoapVersion()
 {
-    return static_cast<soap_version>(axis2_options_get_soap_version(_wsf_options, getEnv()));
+    return static_cast<soap_version>(axis2_options_get_soap_version(_wsf_options, Environment::getEnv()));
 }
 
 /** @brief addReferenceParameter
@@ -88,7 +88,7 @@ soap_version Options::getSoapVersion()
   */
 void Options::addReferenceParameter(OMElement * reference_parameter)
 {
-    axis2_options_add_reference_parameter(_wsf_options, getEnv(), reference_parameter->getAxiomNode());
+    axis2_options_add_reference_parameter(_wsf_options, Environment::getEnv(), reference_parameter->getAxiomNode());
 }
 
 /** @brief setTimeout
@@ -97,7 +97,7 @@ void Options::addReferenceParameter(OMElement * reference_parameter)
   */
 void Options::setTimeout(long timeout)
 {
-    axis2_options_set_timeout_in_milli_seconds(_wsf_options, getEnv(), timeout);
+    axis2_options_set_timeout_in_milli_seconds(_wsf_options, Environment::getEnv(), timeout);
 }
 
 /** @brief setReplyTo
@@ -106,8 +106,8 @@ void Options::setTimeout(long timeout)
   */
 void Options::setReplyTo(std::string reply_to)
 {
-    _reply_to =  axis2_endpoint_ref_create(getEnv(), reply_to.c_str());
-    axis2_options_set_reply_to(_wsf_options, getEnv(), _reply_to);
+    _reply_to =  axis2_endpoint_ref_create(Environment::getEnv(), reply_to.c_str());
+    axis2_options_set_reply_to(_wsf_options, Environment::getEnv(), _reply_to);
 }
 
 /** @brief setProperty
@@ -116,7 +116,7 @@ void Options::setReplyTo(std::string reply_to)
   */
 bool Options::setProperty(Property * property)
 {
-    axis2_status_t status = axis2_options_set_property(_wsf_options, getEnv(), property->getName().c_str(), property->getValue());
+    axis2_status_t status = axis2_options_set_property(_wsf_options, Environment::getEnv(), property->getName().c_str(), property->getValue());
     return (status == AXIS2_SUCCESS);
 }
 
@@ -126,7 +126,7 @@ bool Options::setProperty(Property * property)
   */
 void Options::setMessageId(std::string message_id)
 {
-    axis2_options_set_message_id(_wsf_options, getEnv(), message_id.c_str());
+    axis2_options_set_message_id(_wsf_options, Environment::getEnv(), message_id.c_str());
 }
 
 /** @brief setTo
@@ -135,8 +135,8 @@ void Options::setMessageId(std::string message_id)
   */
 void Options::setTo(std::string to)
 {
-    _to =  axis2_endpoint_ref_create(getEnv(), to.c_str());
-    axis2_options_set_to(_wsf_options, getEnv(), _to);
+    _to =  axis2_endpoint_ref_create(Environment::getEnv(), to.c_str());
+    axis2_options_set_to(_wsf_options, Environment::getEnv(), _to);
 }
 
 /** @brief setFrom
@@ -145,8 +145,8 @@ void Options::setTo(std::string to)
   */
 void Options::setFrom(std::string from)
 {
-    _from =  axis2_endpoint_ref_create(getEnv(), from.c_str());
-    axis2_options_set_from(_wsf_options, getEnv(), _from);
+    _from =  axis2_endpoint_ref_create(Environment::getEnv(), from.c_str());
+    axis2_options_set_from(_wsf_options, Environment::getEnv(), _from);
 }
 
 /** @brief setFaultTo
@@ -155,8 +155,8 @@ void Options::setFrom(std::string from)
   */
 void Options::setFaultTo(std::string fault_to)
 {
-    _fault_to =  axis2_endpoint_ref_create(getEnv(), fault_to.c_str());
-    axis2_options_set_fault_to(_wsf_options, getEnv(), _fault_to);
+    _fault_to =  axis2_endpoint_ref_create(Environment::getEnv(), fault_to.c_str());
+    axis2_options_set_fault_to(_wsf_options, Environment::getEnv(), _fault_to);
 }
 
 /** @brief getTo
@@ -165,7 +165,7 @@ void Options::setFaultTo(std::string fault_to)
   */
 string Options::getTo()
 {
-    return axis2_endpoint_ref_get_address(_to, getEnv());
+    return axis2_endpoint_ref_get_address(_to, Environment::getEnv());
 }
 
 /** @brief getTimeout
@@ -174,7 +174,7 @@ string Options::getTo()
   */
 long Options::getTimeout()
 {
-    return axis2_options_get_timeout_in_milli_seconds(_wsf_options, getEnv());
+    return axis2_options_get_timeout_in_milli_seconds(_wsf_options, Environment::getEnv());
 }
 
 /** @brief getReplyTo
@@ -183,7 +183,7 @@ long Options::getTimeout()
   */
 string Options::getReplyTo()
 {
-    return axis2_endpoint_ref_get_address(_reply_to, getEnv());
+    return axis2_endpoint_ref_get_address(_reply_to, Environment::getEnv());
 }
 
 /** @brief getMessageId
@@ -192,7 +192,7 @@ string Options::getReplyTo()
   */
 string Options::getMessageId()
 {
-    return axis2_options_get_message_id(_wsf_options, getEnv());
+    return axis2_options_get_message_id(_wsf_options, Environment::getEnv());
 }
 
 /** @brief getFrom
@@ -201,7 +201,7 @@ string Options::getMessageId()
   */
 string Options::getFrom()
 {
-    return axis2_endpoint_ref_get_address(_from, getEnv());
+    return axis2_endpoint_ref_get_address(_from, Environment::getEnv());
 }
 
 /** @brief getFaultTo
@@ -210,7 +210,7 @@ string Options::getFrom()
   */
 string Options::getFaultTo()
 {
-    return axis2_endpoint_ref_get_address(_fault_to, getEnv());
+    return axis2_endpoint_ref_get_address(_fault_to, Environment::getEnv());
 }
 
 /** @brief ~Options
@@ -221,7 +221,7 @@ string Options::getFaultTo()
 {
     if(_wsf_options)
     {
-        axis2_options_free(_wsf_options, getEnv());
+        axis2_options_free(_wsf_options, Environment::getEnv());
     }
 }
 
@@ -231,7 +231,7 @@ string Options::getFaultTo()
   */
  Options::Options()
 {
-    _wsf_options = axis2_options_create(getEnv());
+    _wsf_options = axis2_options_create(Environment::getEnv());
     _reply_to = NULL;
     _to = NULL;
     _from = NULL;
@@ -247,11 +247,11 @@ void Options::setEnableREST(bool enable)
 {
     if (enable)
     {
-        axis2_options_set_enable_rest(_wsf_options, getEnv(), AXIS2_TRUE);
+        axis2_options_set_enable_rest(_wsf_options, Environment::getEnv(), AXIS2_TRUE);
     }
     else
     {
-        axis2_options_set_enable_rest(_wsf_options, getEnv(), AXIS2_FALSE);
+        axis2_options_set_enable_rest(_wsf_options, Environment::getEnv(), AXIS2_FALSE);
     }
 }
 
@@ -263,11 +263,11 @@ void Options::setXMLParserReset(bool paser_reset)
 {
     if (paser_reset)
     {
-        axis2_options_set_xml_parser_reset(_wsf_options, getEnv(), AXIS2_TRUE);
+        axis2_options_set_xml_parser_reset(_wsf_options, Environment::getEnv(), AXIS2_TRUE);
     }
     else
     {
-        axis2_options_set_xml_parser_reset(_wsf_options, getEnv(), AXIS2_FALSE);
+        axis2_options_set_xml_parser_reset(_wsf_options, Environment::getEnv(), AXIS2_FALSE);
     }
 }
 
@@ -279,11 +279,11 @@ void Options::setUseSeparateListener(bool use_separate_listener)
 {
     if (use_separate_listener)
     {
-        axis2_options_set_use_separate_listener(_wsf_options, getEnv(), AXIS2_TRUE);
+        axis2_options_set_use_separate_listener(_wsf_options, Environment::getEnv(), AXIS2_TRUE);
     }
     else
     {
-        axis2_options_set_use_separate_listener(_wsf_options, getEnv(), AXIS2_FALSE);
+        axis2_options_set_use_separate_listener(_wsf_options, Environment::getEnv(), AXIS2_FALSE);
     }
 }
 

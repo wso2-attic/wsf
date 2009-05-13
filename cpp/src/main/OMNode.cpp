@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 #include <OMNode.h>
+#include <Environment.h>
 using namespace std;
 using namespace wso2wsf;
 
@@ -41,12 +42,12 @@ axiom_node_t * OMNode::getAxiomNode()
 
 string OMNode::toString()
 {
-    return axiom_node_to_string(_wsf_axiom_node, getEnv());
+    return axiom_node_to_string(_wsf_axiom_node, Environment::getEnv());
 }
 
 string OMNode::subTreeToString()
 {
-    return axiom_node_sub_tree_to_string(_wsf_axiom_node, getEnv());
+    return axiom_node_sub_tree_to_string(_wsf_axiom_node, Environment::getEnv());
 }
 
 void OMNode::freeTree()
@@ -55,27 +56,27 @@ void OMNode::freeTree()
     {
         return;
     }
-    axiom_node_free_tree(_wsf_axiom_node, getEnv());
+    axiom_node_free_tree(_wsf_axiom_node, Environment::getEnv());
     _wsf_axiom_node = NULL;
 }
 
 bool OMNode::insertSiblingAfter(OMNode * to_insert)
 {
     axis2_status_t status = axiom_node_insert_sibling_after(
-        _wsf_axiom_node, getEnv(), to_insert->_wsf_axiom_node);
+        _wsf_axiom_node, Environment::getEnv(), to_insert->_wsf_axiom_node);
     return (status == AXIS2_SUCCESS);
 }
 
 bool OMNode::insertSiblingBefore(OMNode * to_insert)
 {
     axis2_status_t status = axiom_node_insert_sibling_before(
-        _wsf_axiom_node, getEnv(), to_insert->_wsf_axiom_node);
+        _wsf_axiom_node, Environment::getEnv(), to_insert->_wsf_axiom_node);
     return (status == AXIS2_SUCCESS);
 }
 
 bool OMNode::isComplete()
 {
-    axis2_bool_t complete = axiom_node_is_complete(_wsf_axiom_node, getEnv());
+    axis2_bool_t complete = axiom_node_is_complete(_wsf_axiom_node, Environment::getEnv());
     if (complete)
     {
         return true;

@@ -32,7 +32,7 @@ bool OMDataHandler::setFileName(std::string file_name)
     }
 // TODO (senaka#4#): report bug 2 axis and remove const_cast
     axis2_status_t status =
-        axiom_data_handler_set_file_name(_wsf_axiom_data_handler, getEnv(), const_cast<char *>(file_name.c_str()));
+        axiom_data_handler_set_file_name(_wsf_axiom_data_handler, Environment::getEnv(), const_cast<char *>(file_name.c_str()));
     return (status == AXIS2_SUCCESS);
 }
 
@@ -47,7 +47,7 @@ bool OMDataHandler::write(axis2_byte_t * input_stream, int input_stream_length)
         return false;
     }
     axis2_status_t status =
-        axiom_data_handler_set_binary_data(_wsf_axiom_data_handler, getEnv(), input_stream, input_stream_length);
+        axiom_data_handler_set_binary_data(_wsf_axiom_data_handler, Environment::getEnv(), input_stream, input_stream_length);
     if (status != AXIS2_SUCCESS)
     {
         return false;
@@ -62,7 +62,7 @@ bool OMDataHandler::write(axis2_byte_t * input_stream, int input_stream_length)
 bool OMDataHandler::read(axis2_byte_t ** output_stream, int * output_stream_length)
 {
     axis2_status_t status =
-        axiom_data_handler_read_from(_wsf_axiom_data_handler, getEnv(), output_stream, output_stream_length);
+        axiom_data_handler_read_from(_wsf_axiom_data_handler, Environment::getEnv(), output_stream, output_stream_length);
     return (status == AXIS2_SUCCESS);
 }
 
@@ -72,7 +72,7 @@ bool OMDataHandler::read(axis2_byte_t ** output_stream, int * output_stream_leng
   */
 int OMDataHandler::getInputStreamLength()
 {
-    return axiom_data_handler_get_input_stream_len(_wsf_axiom_data_handler, getEnv());
+    return axiom_data_handler_get_input_stream_len(_wsf_axiom_data_handler, Environment::getEnv());
 }
 
 /** @brief getInputStream
@@ -81,7 +81,7 @@ int OMDataHandler::getInputStreamLength()
   */
 axis2_byte_t * OMDataHandler::getInputStream()
 {
-    return axiom_data_handler_get_input_stream(_wsf_axiom_data_handler, getEnv());
+    return axiom_data_handler_get_input_stream(_wsf_axiom_data_handler, Environment::getEnv());
 }
 
 /** @brief getContentType
@@ -90,7 +90,7 @@ axis2_byte_t * OMDataHandler::getInputStream()
   */
 string OMDataHandler::getContentType()
 {
-    return axiom_data_handler_get_content_type(_wsf_axiom_data_handler, getEnv());
+    return axiom_data_handler_get_content_type(_wsf_axiom_data_handler, Environment::getEnv());
 }
 
 /** @brief ~OMDataHandler
@@ -101,7 +101,7 @@ string OMDataHandler::getContentType()
 {
     if (_wsf_axiom_data_handler)
     {
-        axiom_data_handler_free(_wsf_axiom_data_handler, getEnv());
+        axiom_data_handler_free(_wsf_axiom_data_handler, Environment::getEnv());
     }
 }
 
@@ -111,7 +111,7 @@ string OMDataHandler::getContentType()
   */
  OMDataHandler::OMDataHandler()
 {
-    _wsf_axiom_data_handler = axiom_data_handler_create(getEnv(), NULL, NULL);
+    _wsf_axiom_data_handler = axiom_data_handler_create(Environment::getEnv(), NULL, NULL);
 }
 
 /** @brief OMDataHandler
@@ -120,7 +120,7 @@ string OMDataHandler::getContentType()
   */
  OMDataHandler::OMDataHandler(std::string mime_type)
 {
-    _wsf_axiom_data_handler = axiom_data_handler_create(getEnv(), NULL, mime_type.c_str());
+    _wsf_axiom_data_handler = axiom_data_handler_create(Environment::getEnv(), NULL, mime_type.c_str());
 }
 
 /** @brief OMDataHandler
@@ -129,7 +129,7 @@ string OMDataHandler::getContentType()
   */
  OMDataHandler::OMDataHandler(std::string file_name, std::string mime_type)
 {
-    _wsf_axiom_data_handler = axiom_data_handler_create(getEnv(), file_name.c_str(), mime_type.c_str());
+    _wsf_axiom_data_handler = axiom_data_handler_create(Environment::getEnv(), file_name.c_str(), mime_type.c_str());
 }
 
 /** @brief getAxiomDataHandler
@@ -152,7 +152,7 @@ void OMDataHandler::setAxiomDataHandler(axiom_data_handler_t * data_handler)
 
 bool OMDataHandler::isCached()
 {
-	if(axiom_data_handler_get_cached(_wsf_axiom_data_handler, getEnv()))
+	if(axiom_data_handler_get_cached(_wsf_axiom_data_handler, Environment::getEnv()))
 	{
 		return true;
 	}
@@ -161,8 +161,8 @@ bool OMDataHandler::isCached()
 
 bool OMDataHandler::writeTo(std::string filename)
 {
-	axiom_data_handler_set_file_name (_wsf_axiom_data_handler, getEnv(),(char *)filename.c_str());
-	if(axiom_data_handler_write_to(_wsf_axiom_data_handler, getEnv()))
+	axiom_data_handler_set_file_name (_wsf_axiom_data_handler, Environment::getEnv(),(char *)filename.c_str());
+	if(axiom_data_handler_write_to(_wsf_axiom_data_handler, Environment::getEnv()))
 	{
 		return true;
 	}
