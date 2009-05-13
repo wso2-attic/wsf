@@ -43,7 +43,7 @@ namespace wso2wsf
      * This class provides an abstraction to occurrences of attributes associated
      * with the XML model.
      */
-    class OMAttribute : public AxisObject
+    class OMAttribute 
     {
         /**
          * Overloaded insertion operator, is used for printing the attribute onto a console.
@@ -143,12 +143,6 @@ namespace wso2wsf
          * @param value attribute Value.
          */
         WSF_EXTERN void WSF_CALL setValue(std::string value);
-
-//        /**
-//         * Method to set name.
-//         * @param name attribute Name.
-//         */
-//        void setName(std::string name);
 
         /**
          * Converts this attribute to a string.

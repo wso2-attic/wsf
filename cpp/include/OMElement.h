@@ -42,7 +42,7 @@ namespace wso2wsf
      * children, attributes, and namespaces. In contrast with DOM, this
      * interface exposes namespaces separately from the attributes.
      */
-    class OMElement: public OMNode
+	class OMElement : public OMNode
     {
     private:
         /**
@@ -97,7 +97,7 @@ namespace wso2wsf
         OMNamespace * WSF_CALL findNamespace(std::string uri, std::string prefix);
 
         /**
-         * creates and Initialises om element.
+         * creates and Initializes om element.
          * @param parent parent element.
          * @param localname local name of the element. cannot be NULL.
          * @param ns namespace of the element. can be NULL.
@@ -302,7 +302,7 @@ namespace wso2wsf
         WSF_EXTERN bool WSF_CALL setText(std::string text);
 
         /**
-         * select all the text children and concat them to a single string.
+         * select all the text children and concatanate them to a single string.
          * @return the contaminated text of all text children text values
          * return null if no text children is available or on error.
          */
@@ -312,7 +312,7 @@ namespace wso2wsf
          * Adds given node as child to parent. child should not have a parent
          * if child has a parent it will be detached from existing parent
          * @param child child node.
-         * @return satus of the op. true on success else false.
+         * @return status of the op. true on success else false.
          */
         WSF_EXTERN bool WSF_CALL addChild(OMNode * child);
 
@@ -348,7 +348,7 @@ namespace wso2wsf
 
         /** get parent of node
          * @return pointer to parent node of node, return NULL if no parent exists or
-         * when an error occured.
+         * when an error occurred.
          */
         WSF_EXTERN OMNode * WSF_CALL getParent();
 
@@ -385,100 +385,6 @@ namespace wso2wsf
          * @return node type
          */
         WSF_EXTERN axiom_types_t WSF_CALL nodeType();
-
-//        /**
-//         * get  the attribute list of the element
-//         * @param om_element om element
-//         * @param env environment must not be null
-//         * @returns axutil_hash poiner to attributes hash
-//         * This hash table is read only
-//         */
-//        AXIS2_EXTERN axutil_hash_t *AXIS2_CALL
-//        axiom_element_get_all_attributes(
-//            axiom_element_t * om_element,
-//            const axutil_env_t * env);
-
-//        /**
-//         * get the namespace list of the element
-//         * @param om_element om element
-//         * @param env environment
-//         * @returns axutil_hash pointer to namespaces hash
-//         * this hash table is read only
-//         */
-//        AXIS2_EXTERN axutil_hash_t *AXIS2_CALL
-//        axiom_element_get_namespaces(
-//            axiom_element_t * om_element,
-//            const axutil_env_t * env);
-
-//        /**
-//         *@return qname of this element
-//         * the returned qname should not be externaly freed
-//         * when om_element struct is freed qname is also
-//         * freed
-//         * @returns axutil_qname_t struct , NULL on failure
-//         */
-//        AXIS2_EXTERN axutil_qname_t *AXIS2_CALL
-//        axiom_element_get_qname(
-//            axiom_element_t * om_element,
-//            const axutil_env_t * env,
-//            axiom_node_t * ele_node);
-
-//        /**
-//         *   returns a list of children iterator
-//         *   iterators free function must be called by user
-//         */
-//        AXIS2_EXTERN axiom_children_iterator_t *AXIS2_CALL
-//
-//        axiom_element_get_children(
-//            axiom_element_t * om_element,
-//            const axutil_env_t * env,
-//            axiom_node_t * element_node);
-
-//        /**
-//         *   returns a list of children iterator with qname
-//         *   returned iterator is freed when om element struct
-//         *  is freed
-//         * @param om_element
-//         * @param env
-//         * @param element_qname
-//         * @param element_node
-//         * @returns children qname iterator struct
-//         */
-//
-//        AXIS2_EXTERN axiom_children_qname_iterator_t *AXIS2_CALL
-//
-//        axiom_element_get_children_with_qname(
-//            axiom_element_t * om_element,
-//            const axutil_env_t * env,
-//            axutil_qname_t * element_qname,
-//            axiom_node_t * element_node);
-
-//        /**
-//         * returns an iterator with child elements of type AXIOM_ELEMENT
-//         * iterator is freed when om_element node is freed
-//         * @param om_element
-//         * @param element_node
-//         * @param env enviroment must not be null
-//         * @returns axiom_child_element_iterator_t , NULL on error
-//         */
-//        AXIS2_EXTERN axiom_child_element_iterator_t *AXIS2_CALL
-//
-//        axiom_element_get_child_elements(
-//            axiom_element_t * om_element,
-//            const axutil_env_t * env,
-//            axiom_node_t * element_node);
-
-
-
-//        /**
-//         *  Extract attributes , returns a clones hash table of attributes,
-//         *  if attributes are associated with a namespace it is also cloned
-//         */
-//        AXIS2_EXTERN axutil_hash_t *AXIS2_CALL
-//        axiom_element_extract_attributes(
-//            axiom_element_t * om_element,
-//            const axutil_env_t * env,
-//            axiom_node_t * ele_node);
 
     };
     /** @} */

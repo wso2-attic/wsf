@@ -23,7 +23,6 @@
 #include <axiom_node.h>
 #include <AxisFault.h>
 #include <string>
-#include <AxisObject.h>
 
 /**
  * @file OMNode.h
@@ -47,7 +46,7 @@ namespace wso2wsf
      * not a particular node has been fully parsed. A node may not be fully parsed, for
      * example, if all of the children of an element have not yet been parsed.
      */
-    class OMNode : public AxisObject
+    class OMNode 
     {
         /**
          * Overloaded insertion operator, is used for printing the node onto a console.

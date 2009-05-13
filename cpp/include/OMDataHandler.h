@@ -42,7 +42,7 @@ namespace wso2wsf
      * and writing to files etc. This class has a great deal of importance with respect
      * to attachments.
      */
-    class OMDataHandler : public AxisObject
+    class OMDataHandler 
     {
     private:
         /**

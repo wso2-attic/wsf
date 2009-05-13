@@ -51,7 +51,7 @@ namespace wso2wsf
       * of this class can be chained together for property inheritance, so that if
       * a property is not set in one instance it will check its parent for a setting.
       */
-    class Options : public AxisObject
+    class Options 
     {
     /**
      * The ServiceClient Class can access private resources of this class.

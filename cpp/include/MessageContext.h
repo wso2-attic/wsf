@@ -14,8 +14,8 @@
 * limitations under the License.
 */
 
-#ifndef MESSAGECONTEXT_H
-#define MESSAGECONTEXT_H
+#ifndef MESSAGE_CONTEXT_H
+#define MESSAGE_CONTEXT_H
 
 #include <WSFDefines.h>
 #include <OMElement.h>
@@ -25,6 +25,7 @@
 #include <Parameter.h>
 #include <Property.h>
 #include <Options.h>
+#include <Environment.h>
 
 /**
 * @file MessageContext.h
@@ -56,7 +57,7 @@ namespace wso2wsf
 	* storing user defined properties.
 	* @{
 	*/
-	class MessageContext: public AxisObject
+	class MessageContext
 	{
 	private:
 		/** pointer to the underlying axis2_msg_context */
@@ -757,4 +758,4 @@ namespace wso2wsf
 	/** @} */
 
 }
-#endif // MESSAGECONTEXT_H
+#endif // MESSAGE_CONTEXT_H

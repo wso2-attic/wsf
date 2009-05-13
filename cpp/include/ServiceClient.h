@@ -67,7 +67,7 @@ namespace wso2wsf
      * service and the result from the service are in XML, represented
      * in AXIOM.
      */
-    class ServiceClient : public AxisObject
+    class ServiceClient 
     {
 
 	friend class Stub;

@@ -40,7 +40,7 @@ namespace wso2wsf
     /**
      * @brief class Qname
 	 */
-	class DateTime: public AxisObject
+	class DateTime
     {
     
 	private:

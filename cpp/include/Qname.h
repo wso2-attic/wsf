@@ -40,7 +40,7 @@ namespace wso2wsf
     /**
      * @brief class Qname
 	 */
-	class Qname : public AxisObject
+	class Qname 
     {
     private:
         /**

@@ -21,7 +21,6 @@
 #include <stdio.h>
 #include <string>
 #include <axiom_namespace.h>
-#include <AxisObject.h>
 
 /**
  * @file OMNamespace.h
@@ -44,7 +43,7 @@ namespace wso2wsf
      * which identifies the particular occurrence. This class provides an abstraction to
      * namespace associated with the XML model.
      */
-    class OMNamespace : public AxisObject
+    class OMNamespace 
     {
         /**
          * Overloaded insertion operator, is used for printing the namespace onto a console.
