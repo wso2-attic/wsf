@@ -141,21 +141,21 @@ namespace wso2wsf
          * create a service client from the default repository.
          * @param endpoint_address endpoint address to be used.
          */
-        WSF_CALL ServiceClient(std::string endpoint_address);
+        WSF_EXTERN WSF_CALL ServiceClient(std::string endpoint_address);
 
         /**
          * create a service client from the repository.
          * @param repo_home location of the repository.
          * @param endpoint_address endpoint address to be used.
          */
-        WSF_CALL ServiceClient(std::string repo_home, std::string endpoint_address);
+        WSF_EXTERN WSF_CALL ServiceClient(std::string repo_home, std::string endpoint_address);
 
         /**
          * create a service client from a configuration context.
          * @param conf_ctx pointer to configuration context.
          * @param endpoint_address endpoint address to be used.
          */
-        WSF_CALL ServiceClient(const axis2_conf_ctx_t * conf_ctx, std::string endpoint_address);
+        WSF_EXTERN WSF_CALL ServiceClient(const axis2_conf_ctx_t * conf_ctx, std::string endpoint_address);
 
         /**
          * destructor frees resources.
@@ -167,7 +167,7 @@ namespace wso2wsf
 		* @param options pointer to options struct to be set.
 		* @return true on success or false on failure.
 		*/
-		bool WSF_CALL setOptions(Options * options);
+		WSF_EXTERN bool WSF_CALL setOptions(Options * options);
 
         /**
          * Method to retrieve the last SOAP fault that resulted after invoking
