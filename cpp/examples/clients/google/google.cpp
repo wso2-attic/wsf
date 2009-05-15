@@ -16,7 +16,7 @@
 
 
 #include <stdio.h>
-#include <WSSOAPClient.h>
+#include <ServiceClient.h>
 #include <OMElement.h>
 #include <iostream>
 #include <AxisFault.h>
@@ -31,7 +31,7 @@ int main()
 
 	Environment::initialize("google.log", AXIS2_LOG_LEVEL_TRACE);
 
-    WSSOAPClient sc("http://api.google.com/search/beta2");
+    ServiceClient sc("http://api.google.com/search/beta2");
     sc.engageModule(AXIS2_MODULE_ADDRESSING);
     
     Options * op = sc.getOptions();

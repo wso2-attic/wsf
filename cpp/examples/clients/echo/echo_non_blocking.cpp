@@ -16,7 +16,7 @@
 
 
 #include <stdio.h>
-#include <WSSOAPClient.h>
+#include <ServiceClient.h>
 #include <OMElement.h>
 #include <iostream>
 #include <AxisFault.h>
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
     if (argc > 2)
         end_point = argv[2];
 
-    WSSOAPClient sc(end_point);
+    ServiceClient sc(end_point);
 
     OMNamespace * ns = new OMNamespace("http://ws.apache.org/axis2/services/echo", "ns1");
     OMElement * payload = new OMElement(NULL,"echoString", ns);

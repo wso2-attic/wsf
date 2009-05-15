@@ -16,7 +16,7 @@
 
 
 #include <stdio.h>
-#include <WSSOAPClient.h>
+#include <ServiceClient.h>
 #include <OMElement.h>
 #include <iostream>
 #include <AxisFault.h>
@@ -58,7 +58,7 @@ int main()
 {
 	Environment::initialize("echo_non_blocking_dual.log", AXIS2_LOG_LEVEL_TRACE);
 
-    WSSOAPClient * sc = new WSSOAPClient("http://localhost:9090/axis2/services/echo");
+    ServiceClient * sc = new ServiceClient("http://localhost:9090/axis2/services/echo");
     sc->engageModule(AXIS2_MODULE_ADDRESSING);
     Options * op = sc->getOptions();
     op->setUseSeparateListener(true);

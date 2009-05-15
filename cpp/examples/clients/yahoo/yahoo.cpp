@@ -16,7 +16,7 @@
 
 
 #include <stdio.h>
-#include <WSRESTClient.h>
+#include <ServiceClient.h>
 #include <OMElement.h>
 #include <iostream>
 #include <AxisFault.h>
@@ -30,7 +30,7 @@ int main()
 {
     Environment::initialize("yahoo_rest_search.log", AXIS2_LOG_LEVEL_TRACE);
 
-    WSRESTClient sc("http://search.yahooapis.com/WebSearchService/V1/webSearch");
+    ServiceClient sc("http://search.yahooapis.com/WebSearchService/V1/webSearch");
     
     sc.engageModule(AXIS2_MODULE_ADDRESSING);
     Options * op = sc.getOptions();

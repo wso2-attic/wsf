@@ -16,7 +16,7 @@
 
 
 #include <stdio.h>
-#include <WSSOAPClient.h>
+#include <ServiceClient.h>
 #include <OMElement.h>
 #include <iostream>
 #include <AxisFault.h>
@@ -30,7 +30,7 @@ int main()
 {
 	Environment::initialize("echo_blocking.log", AXIS2_LOG_LEVEL_TRACE);
 
-	WSSOAPClient sc("http://localhost:9090/axis2/services/echo");
+	ServiceClient sc("http://localhost:9090/axis2/services/echo");
     
     OMNamespace * ns = new OMNamespace("http://ws.apache.org/axis2/services/echo", "ns1");
     OMElement * payload = new OMElement(NULL,"echoString", ns);

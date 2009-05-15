@@ -16,7 +16,7 @@
 
 
 #include <stdio.h>
-#include <WSRESTClient.h>
+#include <ServiceClient.h>
 #include <OMElement.h>
 #include <iostream>
 #include <AxisFault.h>
@@ -29,7 +29,7 @@ int main()
 {
 	Environment::initialize("echo_rest.log", AXIS2_LOG_LEVEL_TRACE);
 
-    WSRESTClient sc("http://localhost:9090/axis2/services/echo/echoString");
+    ServiceClient sc("http://localhost:9090/axis2/services/echo/echoString");
     Options * op = sc.getOptions();
     op->setHTTPMethod(AXIS2_HTTP_GET);
     

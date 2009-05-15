@@ -16,7 +16,7 @@
 
 
 #include <stdio.h>
-#include <WSSOAPClient.h>
+#include <ServiceClient.h>
 #include <OMElement.h>
 #include <iostream>
 #include <AxisFault.h>
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
     if (argc > 3)
         policy_file = argv[3];
 
-    WSSOAPClient sc(client_repo, end_point);
+    ServiceClient sc(client_repo, end_point);
     sc.engageModule(AXIS2_MODULE_ADDRESSING);
     sc.setPolicy(new NeethiPolicy(client_repo + "/" + policy_file));
 

@@ -15,7 +15,7 @@
 */
 
 #include <stdio.h>
-#include <WSSOAPClient.h>
+#include <ServiceClient.h>
 #include <OMElement.h>
 #include <iostream>
 #include <AxisFault.h>
@@ -29,7 +29,7 @@ int main()
 {
 	Environment::initialize("flicker.log", AXIS2_LOG_LEVEL_TRACE);
 
-    WSSOAPClient * sc = new WSSOAPClient("http://api.flickr.com/services/soap/");
+    ServiceClient * sc = new ServiceClient("http://api.flickr.com/services/soap/");
 
     OMNamespace * ns = new OMNamespace("urn:flickr", "x");
     OMElement * payload = new OMElement(NULL,"FlickrRequest", ns);
