@@ -21,13 +21,13 @@
     <parent>
         <groupId>org.wso2.wsf.javascript</groupId>
         <artifactId>wsf-javascript-rhino</artifactId>
-        <version>SNAPSHOT</version>
+        <version>2.0.0.SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>axiom-e4x</artifactId>
     <packaging>bundle</packaging>
-    <version>SNAPSHOT</version>
+    <version>2.0.0.SNAPSHOT</version>
     <name>WSO2 Javascript Web Service Framework- Rhino - AXIOM E4X implementation</name>
     <build>
         <sourceDirectory>src</sourceDirectory>
@@ -59,7 +59,6 @@
                     <instructions>
                         <Bundle-SymbolicName>${pom.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${pom.artifactId}</Bundle-Name>
-                        <Bundle-Version>1.0.0</Bundle-Version>
                         <Export-Package>
                             org.wso2.javascript.xmlimpl.*,
                         </Export-Package>
