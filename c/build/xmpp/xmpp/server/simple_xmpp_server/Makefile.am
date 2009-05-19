@@ -7,7 +7,6 @@ axis2_xmpp_server_SOURCES = xmpp_server_main.c
 axis2_xmpp_server_LDADD   =  $(LDFLAGS) \
                              $(top_builddir)/src/core/transport/http/util/libaxis2_http_util.la \
                              $(top_builddir)/src/core/transport/http/common/libaxis2_http_common.la \
-                             -L$(top_builddir)/src/wsdl \
                             -L$(top_builddir)/src/core/transport/xmpp/sender \
                             -L$(top_builddir)/src/core/transport/xmpp/receiver \
 			      $(top_builddir)/axiom/src/om/libaxis2_axiom.la \
