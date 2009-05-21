@@ -1,11 +1,12 @@
 @echo off
 @call vcvars32.bat /nologo
 
-@call clean.bat
+rem @call clean.bat
 
 rem Build WSO2 WSF/C
 @copy configure.in wsf_c\configure.in
 @cd wsf_c
+@call init.bat
 @call build.bat
 
 rem Uncomment line below for Fail-safe Install
@@ -15,7 +16,7 @@ rem Pack WSO2 WSF/C++
 :pack_wsfcpp
 @cd ..
 @set WSFCPP_SOURCE=%CD%
-@set WSFCPP_HOME=%CD%\wso2-wsf-cpp-bin-%WSFCPP_VERSION%-win32
+@set WSFCPP_HOME=%WSFCPP_SOURCE%\wso2-wsf-cpp-bin-%WSFCPP_VERSION%-win32
 rem @if exist "%WSFCPP_HOME%" rmdir /s /q "%WSFCPP_HOME%"
 @mkdir "%WSFCPP_HOME%"
 @cd "%WSFCPP_HOME%"
@@ -107,6 +108,7 @@ rem Deploy Sample Source
 @for /F "tokens=*" %%G in ('dir /B /S *.sh*') do del "%%G"
 @if not exist *.am echo > #.am
 @for /F "tokens=*" %%G in ('dir /B /S *.am*') do del "%%G"
+@del configure.in
 @cd "%WSFCPP_SOURCE%"
 
 :end
