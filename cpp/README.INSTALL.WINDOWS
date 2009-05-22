@@ -22,7 +22,7 @@ WSO2 Web Services Framework for C++ - Installation Guide (Microsoft Windows)
 ---------------
 
 The makefiles shipped with this version needs Microsoft Visual Studio Compiler (cl) and nmake build tool.
-(Note: You can download Microsoft VSExpress2005 edition and Platform SDK from Microsoft Web site. 
+(Note: You can download the latest Microsoft VSExpress edition and Platform SDK from Microsoft Web site. 
 You will need to add the path to Platform SDK Include and Lib folders to makefile)
 You also need have a look at and install the dependencies mentioned in section 1. above.
 
