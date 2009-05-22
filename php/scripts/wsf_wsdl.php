@@ -411,7 +411,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters,
         $policy_array = wsf_get_all_policies($wsdl_dom, $binding_node, $operation_name, FALSE);
     }
 
-    $operation = wsf_find_operation($sig_model_dom, $operation_name, $service, $port, $is_multiple_interfaces);
+    $operation = wsf_find_operation($sig_model_dom, $operation_name, $service, $endpoint_address, $port, $is_multiple_interfaces);
 
     if(!$operation) {
         ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "operation node not found");
@@ -690,7 +690,7 @@ function wsf_wsdl_process_in_msg($parameters)
     $endpoint_address = wsf_get_endpoint_address($sig_model_dom);
 
     $operation_node = wsf_find_operation($sig_model_dom, $operation_name,
-            $service_name, $port_name, $is_multiple_interfaces);
+            $service_name, $endpoint_address, $port_name, $is_multiple_interfaces);
 
     if(!$operation_node) {
         ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "$operation_name operaiton not found");
