@@ -258,7 +258,7 @@ function wsf_is_multiple_endpoints(DomDocument $sig_model_dom) {
  * @param string $endpoint_address service endpoint address
  * @return DomNode operation DomNode of the Sig model
  */
-function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $service_name, $port_name, $is_multiple) {
+function wsf_find_operation(DomDocument $sig_model_dom, $operation_name, $service_name, $endpoint_address , $port_name, $is_multiple) {
     require_once('wsf_wsdl_consts.php');
     require_once('wsf_wsdl_util.php');
 
