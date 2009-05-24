@@ -1,3 +1,22 @@
+WSO2 WSF/C++ 2.0.0
+==================
+On top of WSO2 WSF/C++ 1.0.0 following changes were  done.
+
+1. API for Providing and Consuming Web Services
+  	* Removed WSSOAPClient and WSRESTClient classes. Use ServiceClient
+	class instead.
+	* Added Environment class which wraps memory environment of WSFC
+	* ServiceSkeleton Class provide service implementation API.
+
+2. WS-Security
+	* WS-SecureConversation support added
+	* Replay detection support added.
+
+3. Code Genation tool
+        * Codegeneration support added.
+
+
+
 WSO2 WSF/C++ 1.0.0
 ==================
 
