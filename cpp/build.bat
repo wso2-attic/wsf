@@ -111,5 +111,10 @@ rem Deploy Sample Source
 @del configure.in
 @cd "%WSFCPP_SOURCE%"
 
+rem Copy the tools jar files and the script
+:copy_codegen_jars
+@if not exist %WSFCPP_HOME%\bin\tools\lib mkdir %WSFCPP_HOME%\bin\tools\lib
+@if exist %CODEGEN_JARS% copy %CODEGEN_JARS%\*.jar %WSFCPP_HOME%\bin\tools\lib
+
 :end
 @echo on
