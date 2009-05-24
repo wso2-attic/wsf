@@ -1,0 +1,27 @@
+WSDL2CPP.sh and WSDL2CPP.bat
+========================
+
+These scripts are provided to simplify the CPP code generation using WSDL2CPP Java tool that comes with WSO2 WSF/CPP. 
+
+How to use
+----------
+1. Run WSDL2C.sh giving WSDL2C command line arguments as the arguments to the shell script.
+
+Note: Do the same for the bat file on Windows. 
+
+
+Examples
+--------
+
+To generate a sevice skeleton in CPP:
+Linux:
+	sh WSDL2CPP.sh -uri interoptestdoclitparameters.wsdl -ss -sd -d adb -u
+Windows:
+      WSDL2CPP.bat -uri interoptestdoclitparameters.wsdl -ss -sd -d adb -u
+
+To generate a client stub in CPP: 
+Linux: 
+	sh WSDL2CPP.sh -uri interoptestdoclitparameters.wsdl -d adb -u 
+Windows
+      WSDL2CPP.bat -uri interoptestdoclitparameters.wsdl -d adb -u 
+
