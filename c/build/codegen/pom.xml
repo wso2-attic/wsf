@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements. See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership. The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied. See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>org.apache</groupId>
+        <artifactId>apache</artifactId>
+        <version>3</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.apache.axis2</groupId>
+    <artifactId>axis2</artifactId>
+    <version>SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Apache Axis2 - Root</name>
+    <modules>
+	    <!-- <module>modules/adb</module> -->
+        <module>modules/adb-codegen</module>
+        <module>modules/codegen</module>
+	<!--    <module>modules/kernel</module> -->
+   </modules>
+    <profiles>
+        <profile>
+            <id>transport</id>
+            <activation>
+      	        <file>
+                    <exists>../transport</exists>
+      	        </file>
+            </activation>
+            <modules>
+                <module>../transport/modules/parent</module>
+                <module>../transport/modules/base</module>
+                <module>../transport/modules/tcp</module>
+                <module>../transport/modules/xmpp</module>
+                <module>../transport/modules/mail</module>
+                <module>../transport/modules/jms</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>release</name>
+                </property>
+            </activation>
+            <modules>
+                <module>modules/distribution</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>java15</id>
+            <activation>
+                <jdk>1.5</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>axis2-jar</id>
+                                <phase>package</phase>
+                                <configuration>
+                                    <tasks>
+                                        <mkdir dir="target/lib"/>
+                                        <jar destfile="target/lib/axis2-${pom.version}.jar">
+                                            <fileset dir="modules/codegen/target/classes"/>
+                                            <fileset dir="modules/adb-codegen/target/classes"/>
+                                        </jar>
+                                    </tasks>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>java16</id>
+            <activation>
+                <jdk>1.6</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>axis2-jar</id>
+                                <phase>package</phase>
+                                <configuration>
+                                    <tasks>
+                                        <mkdir dir="target/lib"/>
+                                        <jar destfile="target/lib/axis2-${pom.version}.jar">
+                                            <fileset dir="modules/codegen/target/classes"/>
+                                            <fileset dir="modules/adb-codegen/target/classes"/>
+                                        </jar>
+                                    </tasks>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    <ciManagement>
+        <system>continuum</system>
+        <url>http://vmbuild.apache.org/continuum</url>
+        <notifiers>
+            <notifier>
+                <configuration>
+                    <ADDRESS>axis2-cvs@ws.apache.org</ADDRESS>
+                </configuration>
+            </notifier>
+        </notifiers>
+    </ciManagement>
+    <scm>
+        <connection>
+            scm:svn:http://svn.apache.org/repos/asf/webservices/axis2/trunk/java/
+        </connection>
+        <developerConnection>
+            scm:svn:https://svn.apache.org/repos/asf/webservices/axis2/trunk/java/
+        </developerConnection>
+        <url>http://svn.apache.org/viewvc/webservices/webservices/axis2/trunk/java/</url>
+    </scm>
+    <distributionManagement>
+        <repository>
+            <id>apache-repo</id>
+            <name>Maven Central Repository</name>
+            <url>
+                scpexe://people.apache.org//www/people.apache.org/repo/m2-ibiblio-rsync-repository
+            </url>
+        </repository>
+        <snapshotRepository>
+            <id>apache-snapshots</id>
+            <name>Apache Development Repository</name>
+            <url>scpexe://people.apache.org//www/people.apache.org/repo/m2-snapshot-repository</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <failOnError>false</failOnError>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>axis2-jar-package</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>target/lib/axis2-${pom.version}.jar</file>
+                                    <type>jar</type>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
