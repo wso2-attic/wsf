@@ -23,7 +23,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.apache.axis2</groupId>
+        <groupId>org.wso2.wsf</groupId>
         <artifactId>wsf-cpp-parent</artifactId>
         <version>1.0</version>
         <relativePath>../parent/pom.xml</relativePath>
@@ -33,7 +33,7 @@
     <description>Axis2 Code Generation module</description>
     <dependencies>
         <dependency>
-          <groupId>${project.groupId}</groupId>
+          <groupId>org.apache.axis2</groupId>
           <artifactId>axis2-kernel</artifactId>
           <version>${axis2.version}</version>
           <exclusions>
@@ -44,7 +44,7 @@
             </exclusions>
         </dependency>
       <dependency>
-        <groupId>${project.groupId}</groupId>
+        <groupId>org.apache.axis2</groupId>
         <artifactId>axis2-adb</artifactId>
         <version>${axis2.version}</version>
         <exclusions>
@@ -54,18 +54,18 @@
                 </exclusion>
         </exclusions>
       </dependency>
-<!--      <dependency>
-        <groupId>${project.groupId}</groupId>
+      <dependency>
+        <groupId>org.apache.axis2</groupId>
         <artifactId>axis2-transport-local</artifactId>
-        <version>${transport.local.version}</version>
+        <version>${axis2.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>${project.groupId}</groupId>
+        <groupId>org.apache.axis2</groupId>
         <artifactId>axis2-transport-http</artifactId>
-        <version>${transport.http.version}</version>
+        <version>${axis2.version}</version>
         <scope>test</scope>
-      </dependency> -->
+      </dependency>
     </dependencies>
     <build>
         <sourceDirectory>src</sourceDirectory>

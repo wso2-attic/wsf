@@ -28,7 +28,7 @@
         <version>3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.apache.axis2</groupId>
+    <groupId>org.wso2.wsf</groupId>
     <artifactId>wsf-cpp</artifactId>
     <version>1.0</version>
     <packaging>pom</packaging>
