@@ -24,25 +24,37 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.axis2</groupId>
-        <artifactId>axis2-parent</artifactId>
-        <version>SNAPSHOT</version>
+        <artifactId>wsf-cpp-parent</artifactId>
+        <version>1.0</version>
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
-    <artifactId>axis2-codegen</artifactId>
+    <artifactId>wsf-cpp-codegen</artifactId>
     <name>Apache Axis2 - Code Generation</name>
     <description>Axis2 Code Generation module</description>
     <dependencies>
         <dependency>
           <groupId>${project.groupId}</groupId>
           <artifactId>axis2-kernel</artifactId>
-          <version>${project.version}</version>
+          <version>${axis2.version}</version>
+          <exclusions>
+                <exclusion>
+                    <groupId>org.apache.axis2</groupId>
+                    <artifactId>axis2-parent</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>axis2-adb</artifactId>
-        <version>${project.version}</version>
+        <version>${axis2.version}</version>
+        <exclusions>
+                <exclusion>
+                    <groupId>org.apache.axis2</groupId>
+                    <artifactId>axis2-parent</artifactId>
+                </exclusion>
+        </exclusions>
       </dependency>
-      <dependency>
+<!--      <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>axis2-transport-local</artifactId>
         <version>${transport.local.version}</version>
@@ -53,7 +65,7 @@
         <artifactId>axis2-transport-http</artifactId>
         <version>${transport.http.version}</version>
         <scope>test</scope>
-      </dependency>
+      </dependency> -->
     </dependencies>
     <build>
         <sourceDirectory>src</sourceDirectory>

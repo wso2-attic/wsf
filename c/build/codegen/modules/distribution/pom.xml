@@ -24,8 +24,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.axis2</groupId>
-        <artifactId>axis2-parent</artifactId>
-        <version>SNAPSHOT</version>
+        <artifactId>wsf-cpp-parent</artifactId>
+        <version>1.0</version>
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
@@ -96,6 +96,14 @@
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-kernel</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-adb</artifactId>
+        </dependency> 
     </dependencies>
     <distributionManagement>
         <repository>
@@ -117,7 +125,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>${maven.assembly.version}</version>
+              <!--  <version>${maven.assembly.version}</version> -->
                 <executions>
                     <execution>
                         <id>distribution-package</id>
@@ -126,7 +134,7 @@
                             <goal>single</goal>
                         </goals>
                         <configuration>
-                            <finalName>axis2-${version}</finalName>
+                            <finalName>wsf-cpp-${version}</finalName>
                             <descriptors>
                                 <descriptor>src/main/assembly/bin-assembly.xml</descriptor>
                             </descriptors>

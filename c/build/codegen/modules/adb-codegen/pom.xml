@@ -24,28 +24,28 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.axis2</groupId>
-        <artifactId>axis2-parent</artifactId>
-        <version>SNAPSHOT</version>
+        <artifactId>wsf-cpp-parent</artifactId>
+        <version>1.0</version>
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
-    <artifactId>axis2-adb-codegen</artifactId>
+    <artifactId>wsf-cpp-adb-codegen</artifactId>
     <name>Apache Axis2 - ADB Codegen</name>
     <description>ADB code generation support for Axis2</description>
     <dependencies>
         <dependency>
             <groupId>org.apache.axis2</groupId>
             <artifactId>axis2-adb</artifactId>
-            <version>${version}</version>
+            <version>${axis2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-codegen</artifactId>
+            <artifactId>wsf-cpp-codegen</artifactId>
             <version>${version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.axis2</groupId>
             <artifactId>axis2-kernel</artifactId>
-            <version>${version}</version>
+            <version>${axis2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.ws.commons.schema</groupId>

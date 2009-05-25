@@ -29,8 +29,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.apache.axis2</groupId>
-    <artifactId>axis2-wsf-codegen</artifactId>
-    <version>SNAPSHOT</version>
+    <artifactId>wsf-cpp</artifactId>
+    <version>1.0</version>
     <packaging>pom</packaging>
     <name>Apache Axis2 - Root</name>
     <modules>
@@ -39,6 +39,7 @@
 
         <module>modules/adb-codegen</module>
 	<!--    <module>modules/kernel</module> -->
+        <module>modules/parent</module>
    </modules>
     <profiles>
         <profile>
@@ -52,7 +53,7 @@
                 <module>modules/distribution</module>
             </modules>
         </profile>
-        <profile>
+       <!-- <profile>
             <id>java15</id>
             <activation>
                 <jdk>1.5</jdk>
@@ -83,7 +84,7 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>
+        </profile> -->
         <profile>
             <id>java16</id>
             <activation>

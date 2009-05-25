@@ -20,7 +20,7 @@
 <assembly>
     <id>bin</id>
     <includeBaseDirectory>true</includeBaseDirectory> 
-    <baseDirectory>axis2-${version}</baseDirectory>
+    <baseDirectory>wsf-cpp-${version}</baseDirectory>
     <formats>
 	<!--<format>tar.gz</format>  //uncomment,if tar.gz archive needed-->
         <format>zip</format>
@@ -90,14 +90,14 @@
             <directory>../../modules/codegen/target</directory>
             <outputDirectory>lib</outputDirectory>
             <includes>
-                <include>axis2-codegen-${version}.jar</include>
+                <include>wsf-cpp-codegen-${version}.jar</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>../../modules/adb-codegen/target</directory>
             <outputDirectory>lib</outputDirectory>
             <includes>
-                <include>axis2-adb-codegen-${version}.jar</include>
+                <include>wsf-cpp-adb-codegen-${version}.jar</include>
             </includes>
         </fileSet>
 
