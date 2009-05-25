@@ -29,33 +29,18 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.apache.axis2</groupId>
-    <artifactId>axis2</artifactId>
+    <artifactId>axis2-wsf-codegen</artifactId>
     <version>SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Apache Axis2 - Root</name>
     <modules>
 	    <!-- <module>modules/adb</module> -->
-        <module>modules/adb-codegen</module>
         <module>modules/codegen</module>
+
+        <module>modules/adb-codegen</module>
 	<!--    <module>modules/kernel</module> -->
    </modules>
     <profiles>
-        <profile>
-            <id>transport</id>
-            <activation>
-      	        <file>
-                    <exists>../transport</exists>
-      	        </file>
-            </activation>
-            <modules>
-                <module>../transport/modules/parent</module>
-                <module>../transport/modules/base</module>
-                <module>../transport/modules/tcp</module>
-                <module>../transport/modules/xmpp</module>
-                <module>../transport/modules/mail</module>
-                <module>../transport/modules/jms</module>
-            </modules>
-        </profile>
         <profile>
             <id>release</id>
             <activation>
