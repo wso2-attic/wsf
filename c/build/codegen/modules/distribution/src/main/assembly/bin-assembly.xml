@@ -29,17 +29,17 @@
 
     <fileSets>
         <!--********************** creating the repository ********************** -->
-        <fileSet>
+<!--        <fileSet>
             <directory>target/tmp-repository</directory>
             <outputDirectory>repository</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>
-        </fileSet>
+        </fileSet> -->
 
         <!--********************** creating the bin ********************** -->
         <!-- Copy bin scripts -->
-        <fileSet>
+<!--        <fileSet>
             <directory>../../modules/tool/script</directory>
             <outputDirectory>bin</outputDirectory>
             <includes>
@@ -54,11 +54,11 @@
                 <include>*.sh</include>
             </includes>
             <fileMode>755</fileMode>
-        </fileSet>
+        </fileSet> -->
 
         <!--********************** creating the conf ********************** -->
         <!-- copy the axis2.xml into conf directoy -->
-        <fileSet>
+ <!--   <fileSet>
             <directory>../../modules/kernel/conf</directory>
             <outputDirectory>conf</outputDirectory>
             <includes>
@@ -85,7 +85,7 @@
             <includes>
                 <include>axis2-adb-${version}.jar</include>
             </includes>
-        </fileSet>
+        </fileSet> -->
         <fileSet>
             <directory>../../modules/codegen/target</directory>
             <outputDirectory>lib</outputDirectory>
@@ -101,7 +101,7 @@
             </includes>
         </fileSet>
 
-        <fileSet>
+<!--        <fileSet>
             <directory>../../modules/tool/target</directory>
             <outputDirectory>lib</outputDirectory>
             <includes>
@@ -135,7 +135,7 @@
             <includes>
                 <include>axis2-transport-local-${version}.jar</include>
             </includes>
-        </fileSet>
+        </fileSet> -->
 
         <fileSet>
             <directory>../../legal</directory>
@@ -143,10 +143,10 @@
             <includes>
                 <include>**/*.txt</include>
             </includes>
-        </fileSet>
+        </fileSet> 
 
 	<!-- TODO: Need to rename this file to INSTALL.txt -->
-	<fileSet>
+ <!--	<fileSet>
             <directory>target/tmp-doc-distro/docs</directory>
             <outputDirectory></outputDirectory>
             <includes>
@@ -172,10 +172,10 @@
                 <include>README.txt</include>
                 <include>release-notes.html</include>
             </includes>
-	</fileSet>
+	</fileSet> -->
 
         <!-- copy samples -->
-        <fileSet>
+    <!--    <fileSet>
             <directory>../../modules/samples</directory>
             <outputDirectory>samples</outputDirectory>
             <includes>
@@ -208,7 +208,7 @@
             <excludes>
                 <exclude>**/*.iml</exclude>
             </excludes>
-        </fileSet>
+        </fileSet> -->
     </fileSets>
     
       <dependencySets>
