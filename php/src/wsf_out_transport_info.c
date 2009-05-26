@@ -159,14 +159,21 @@ axis2_status_t WSF_CALL wsf_http_out_transport_info_set_content_type (
     info_impl = AXIS2_INTF_TO_IMPL (info);
 
     if (NULL != info_impl->encoding)
+    {
+	axis2_char_t *charset_pos = axutil_strcasestr(content_type,AXIS2_CHARSET);
+	if(!charset_pos)
 	{
-        tmp1 = axutil_stracat (env, content_type, ";charset=");
-        tmp2 = axutil_stracat (env, tmp1, info_impl->encoding);
-        info_impl->response->content_type = axutil_strdup (env, tmp2);
-        AXIS2_FREE (env->allocator, tmp1);
-        AXIS2_FREE (env->allocator, tmp2);
+        	tmp1 = axutil_stracat (env, content_type, ";charset=");
+        	tmp2 = axutil_stracat (env, tmp1, info_impl->encoding);
+        	info_impl->response->content_type = axutil_strdup (env, tmp2);
+        	AXIS2_FREE (env->allocator, tmp1);
+        	AXIS2_FREE (env->allocator, tmp2);
+	}else
+	{
+		info_impl->response->content_type = axutil_strdup (env, content_type);
+	}
     } else 
-	{
+    {
         info_impl->response->content_type = axutil_strdup (env, content_type);
     }
     return AXIS2_SUCCESS;
