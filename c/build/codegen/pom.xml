@@ -39,17 +39,6 @@
         <module>modules/parent</module>
         <module>modules/distribution</module>
    </modules>
-    <ciManagement>
-        <system>continuum</system>
-        <url>http://vmbuild.apache.org/continuum</url>
-        <notifiers>
-            <notifier>
-                <configuration>
-                    <ADDRESS>axis2-cvs@ws.apache.org</ADDRESS>
-                </configuration>
-            </notifier>
-        </notifiers>
-    </ciManagement>
     <scm>
         <connection>
             scm:svn:http://svn.apache.org/repos/asf/webservices/axis2/trunk/java/
