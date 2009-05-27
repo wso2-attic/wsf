@@ -17,7 +17,7 @@ cp build/axis2c/util/src/stomp/*.h axis2c/util/include
 cp -rf build/axis2c/util/src/stomp  axis2c/util/src/ 
 #end copying for stomp
 
-#cp build/rampartc/Makefile.am rampartc
+cp build/rampartc/Makefile.am rampartc
 #cp build/rampartc/src/Makefile.am rampartc/src
 cp build/rampartc/src/core/Makefile.am rampartc/src/core
 cp build/rampartc/src/util/Makefile.am rampartc/src/util
@@ -39,3 +39,5 @@ cp build/axis2c/tools/tcpmon/configure.ac axis2c/tools/tcpmon
 cp build/axis2c/xdocs/doxygenconf axis2c/xdocs/api
 cp build/axis2c/dist.sh axis2c
 
+
+cp build/savanc/Makefile.am savanc/
