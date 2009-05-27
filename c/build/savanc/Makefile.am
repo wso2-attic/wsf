@@ -1,6 +1,6 @@
-SUBDIRS = src samples
-includedir=$(prefix)/include/axis2-1.1
+SUBDIRS = src
+includedir=$(prefix)/include/savan-1.0
 include_HEADERS=$(top_builddir)/include/*.h
-EXTRA_DIST = build.sh autogen.sh build xdocs
+EXTRA_DIST = build.sh autogen.sh build xdocs samples LICENSE
 
 
