@@ -41,3 +41,4 @@ cp build/axis2c/dist.sh axis2c
 
 
 cp build/savanc/Makefile.am savanc/
+cp build/savanc/configure.ac savanc/
