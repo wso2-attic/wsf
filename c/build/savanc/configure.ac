@@ -2,11 +2,11 @@ dnl run autogen.sh to generate the configure script.
 
 AC_PREREQ(2.59)
 
-AC_INIT(rampartc-src, 0.93)
+AC_INIT(savanc-src, 1.0)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([tar-ustar])
-AC_PREFIX_DEFAULT(/usr/local/rampartc)
+AC_PREFIX_DEFAULT(/usr/local/savanc)
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -19,6 +19,10 @@ AC_PROG_MAKE_SET
 
 dnl Checks for libraries.
 AC_CHECK_LIB(dl, dlopen)
+
+if test -d $srcdir/samples; then
+    AC_CONFIG_SUBDIRS(samples)
+fi
 
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
@@ -41,7 +45,7 @@ dnl AC_FUNC_REALLOC
 abs_top_builddir=`pwd`
 AC_SUBST(abs_top_builddir)
 
-AC_MSG_CHECKING(path to use Axis2C . This is a compulsory to build Sandesha2C)
+AC_MSG_CHECKING(path to use Axis2C . This is a compulsory to build Savan/C)
 AC_ARG_WITH(axis2,
 [  --with-axis2[=PATH]      use axis2c.],
 [ case "$withval" in
@@ -53,7 +57,7 @@ AC_ARG_WITH(axis2,
     dnl Find axis2 include dir in the path
     if test -d $withval; then
         AXIS2INC="-I$withval"
-    dnl else find the axis2inc include dir in $(AXIS2C_HOME)/include
+    dnl else find the axis2inc include dir in $(WSFC_HOME)/include
     elif [ -d "$abs_top_builddir" ]; then
             AXIS2INC="-I$abs_top_builddir/../axis2c/include"
     else
@@ -65,17 +69,170 @@ AC_ARG_WITH(axis2,
   AC_MSG_RESULT(no)
 )
 
+AC_MSG_CHECKING(whether to build sqlite based subscription manager)
+AC_ARG_ENABLE(sqlite, [  --enable-sqlite
+                          build Sqlite based subscription manager (default=yes)],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    SAVAN_SUBS_MGR="sqlite"
+
+    ;;
+  esac ],
+  AC_MSG_RESULT(yes)
+  SAVAN_SUBS_MGR="sqlite"
+)
 
 
-AC_MSG_CHECKING(To Use Xml Schema. This is a compulsory module to build Woden C)
+AC_MSG_CHECKING(whether to build service based subscription manager)
+AC_ARG_ENABLE(service, [  --enable-service    
+                          build service based subscription manager (default=no)],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    SAVAN_SUBS_MGR=""
+    SVC_DIR=""
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    SAVAN_SUBS_MGR="service"
+    SVC_DIR="subs_mgr_svc"
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
+AC_MSG_CHECKING(To Use Registry based subscription manager. This is an optional module to build Savan C)
+AC_ARG_WITH(registry,
+[  --with-registry[=PATH]     Find the REGISTRY header files in 'PATH'.
+    'PATH' should point to REGISTRY include files location.
+    If you omit the '=PATH' part completely, the configure script will search
+    '$(WSFC_HOME)/include/registry-0.1.0' for REGISTRY headers.],
+[ case "$withval" in
+  no)
+    AC_MSG_RESULT(no)
+    SAVAN_SUBS_MGR=""
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    SAVAN_SUBS_MGR="registry"
+    dnl Find registry include dir in the path
+    if test -d $withval; then
+        registryinc="-I$withval"
+    dnl else find the registry include dir in $(WSFC_HOME)/include
+    elif test -d '$(WSFC_HOME)/include'; then
+        registryinc="-I$(WSFC_HOME)/include/registry-0.1.0"
+    else
+        AC_MSG_ERROR(could not find registry. stop)
+    fi
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
+AC_MSG_CHECKING(To Use XPath based filter . This is an optional module to build Savan C)
+AC_ARG_WITH(xpath,
+[  --with-xpath[=PATH]     Find the libxml2 header files in 'PATH'.
+    'PATH' should point to libxml2 include files location.
+    If you omit the '=PATH' part completely, the configure script will assume
+    libxml2 is installed in default paths.],
+[ case "$withval" in
+  no)
+    AC_MSG_RESULT(no)
+    SAVAN_FILTER=""
+    SAVAN_FILTER_LIB=""
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    SAVAN_FILTER="xpath"
+    SAVAN_FILTER_LIB=xpath/libsavan_filter_mod.la
+    dnl Find libxml2 include dir in the path
+    if test -d $withval; then
+        xpathinc="-I$withval"
+    dnl else find the libxml2 include dir in /usr/local/include
+    elif test -d '/usr/include/libxml2'; then
+        xpathinc="-I/usr/include/libxml2"
+    else
+        AC_MSG_ERROR(could not find libxml2. stop)
+    fi
+    PKG_CHECK_MODULES(XSLT, libxslt)
+    CFLAGS="$CFLAGS -DSAVAN_FILTERING $XSLT_CFLAGS"
+    LDFLAGS="$LDFLAGS -lxslt"
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
+#Default for savan publisher
+SAVAN_PUBLISHER="default"
+SAVAN_PUBLISHER_LIB="default/libsavan_publisher.la"
+
+AC_MSG_CHECKING(To Use esb based publisher . This is an optional module to build Savan C)
+AC_ARG_WITH(esbpub,
+[  --with-esbpub[=PATH]     Find the esbc header files in 'PATH'.
+    'PATH' should point to esbc include files location.
+    If you omit the '=PATH' part completely, the configure script will assume
+    esbc is installed in default paths.],
+[ case "$withval" in
+  no)
+    AC_MSG_RESULT(no)
+    SAVAN_PUBLISHER=""
+    SAVAN_PUBLISHER_LIB=""
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    SAVAN_PUBLISHER="esb"
+    SAVAN_PUBLISHER_LIB=esb/libsavan_publisher.la
+    dnl Find esbc include dir in the path
+    if test -d $withval; then
+        esbpubinc="-I$withval"
+    dnl else find the esbc include dir in /usr/local/include
+    elif test -d '/usr/local/include'; then
+        esbpubinc="-I/usr/local/include"
+    else
+        AC_MSG_ERROR(could not find esbc. stop)
+    fi
+    CFLAGS="$CFLAGS"
+    LDFLAGS="$LDFLAGS"
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
+AC_MSG_CHECKING(To Use Xml Schema.)
 AXIOMINC="-I$abs_top_builddir/../axis2c/axiom/include"
 UTILINC="-I$abs_top_builddir/../axis2c/util/include"
 NEETHIINC="-I$abs_top_builddir/../axis2c/neethi/include"
+CFLAGS="$CFLAGS $LIBXML2_CFLAGS"
+
+REGISTRYINC=$registryinc
+XPATHINC=$xpathinc
+ESBPUBINC=$esbpubinc
+
+AC_SUBST(REGISTRYINC)
+AC_SUBST(XPATHINC)
+AC_SUBST(ESBPUBINC)
 AC_SUBST(AXIS2INC)
 AC_SUBST(AXIOMINC)
 AC_SUBST(UTILINC)
 AC_SUBST(NEETHIINC)
 AC_SUBST(XMLSCHEMAINC)
+AC_SUBST(SAVAN_SUBS_MGR)
+AC_SUBST(SAVAN_FILTER)
+AC_SUBST(SAVAN_FILTER_LIB)
+AC_SUBST(SAVAN_PUBLISHER)
+AC_SUBST(SAVAN_PUBLISHER_LIB)
+AC_SUBST(SVC_DIR)
+
+export SAVAN_SUBS_MGR
+export SAVAN_FILTER
+export SAVAN_FILTER_LIB
+export SAVAN_PUBLISHER
+export SAVAN_PUBLISHER_LIB
+export SVC_DIR
 
 AC_CONFIG_FILES([Makefile \
     src/Makefile \
@@ -84,15 +241,22 @@ AC_CONFIG_FILES([Makefile \
     src/handlers/Makefile \
     src/msgreceivers/Makefile\
     src/subscribers/Makefile\
-    src/subs_mgr/Makefile\
+    src/subs_mgrs/Makefile\
+    src/subs_mgrs/common/Makefile\
+    src/subs_mgrs/sqlite/Makefile\
+    src/subs_mgrs/registry/Makefile\
+    src/subs_mgrs/registry/test/Makefile\
+    src/subs_mgrs/service/Makefile\
+    src/subs_mgrs/service/subs_mgr_svc/Makefile\
+    src/filters/Makefile\
+    src/filters/common/Makefile\
+    src/filters/xpath/Makefile\
+    src/publishers/Makefile\
+    src/publishers/common/Makefile\
+    src/publishers/esb/Makefile\
+    src/publishers/default/Makefile\
     src/data/Makefile\
-    src/util/Makefile\
-    samples/Makefile\
-    samples/client/Makefile\
-    samples/client/subscriber/Makefile\
-    samples/server/Makefile\
-    samples/server/publisher/Makefile\
-    samples/server/listener/Makefile\
+    src/util/Makefile
     ])
     
 AC_OUTPUT
