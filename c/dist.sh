@@ -1,10 +1,10 @@
 set -e
 cp dist.sh dist_hook.sh /tmp
-grep -rl AXIS2C_HOME *| xargs sed -i "s/AXIS2C_HOME/WSFC_HOME/g"
+grep -rl WSFC_HOME *| xargs sed -i "s/WSFC_HOME/WSFC_HOME/g"
 export WSFC_HOME=`pwd`/deploy
 find . -name "*configure.ac" | xargs sed -i "s/-Werror//g"
 make distclean
-./configure --prefix=`pwd`/deploy --enable-openssl=yes --with-xmpp=yes --enable-tests=yes --with-apache2=/usr/local/apache2/include --with-axis2=`pwd`/axis2c/include --enable-sandesha=yes --enable-rampart=yes --enable-wsclient=yes --enable-savan=yes --enable-tcp=yes --with-archive
+./configure --prefix=`pwd`/deploy --enable-openssl=yes --with-xmpp=yes --enable-tests=yes --with-apache2=/usr/local/apache2/include --with-axis2=`pwd`/axis2c/include --with-esbpub=$ESB_HOME/include --with-xpath=/usr/include/libxml2 --enable-sandesha=yes --enable-rampart=yes --enable-wsclient=yes --enable-savan=yes --enable-tcp=yes --with-archive --with-registry=$REGISTRY_HOME/include --enable-service
 make 
 make install
 make samples
