@@ -81,7 +81,7 @@
               as the maven-release-plugin will not update this value.
         -->
         <version>1.0</version>
-        <axis2.version>SNAPSHOT</axis2.version>
+        <axis2.version>1.5</axis2.version>
         <ant.version>1.7.0</ant.version>
         <antlr.version>2.7.7</antlr.version>
         <axiom.version>1.2.8</axiom.version>
