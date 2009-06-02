@@ -19,7 +19,9 @@
 #include <sstream>
 #include <Environment.h>
 #include <axis2_callback.h>
+#include <axis2_conf_init.h>
 #include <ServiceClient.h>
+
 using namespace std;
 using namespace wso2wsf;
 
