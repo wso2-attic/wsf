@@ -162,12 +162,12 @@ namespace wso2wsf
          */
         WSF_EXTERN virtual WSF_CALL ~ServiceClient();
 
-		/**
-		* Sets the options to be used by service client.
-		* @param options pointer to options struct to be set.
-		* @return true on success or false on failure.
-		*/
-		WSF_EXTERN bool WSF_CALL setOptions(Options * options);
+	/**
+	* Sets the options to be used by service client.
+	* @param options pointer to options struct to be set.
+	* @return true on success or false on failure.
+	*/
+	WSF_EXTERN bool WSF_CALL setOptions(Options * options);
 
         /**
          * Method to retrieve the last SOAP fault that resulted after invoking
@@ -351,10 +351,14 @@ namespace wso2wsf
          */
         WSF_EXTERN std::string WSF_CALL getLastResponseSoapEnvelopeString();
 
-		/**
-		* Returns the axis2_svc_client used within ServiceClient.
-		*/
-		WSF_EXTERN axis2_svc_client_t* WSF_CALL getAxis2SvcClient();
+	/**
+	* Returns the axis2_svc_client used within ServiceClient.
+	*/
+	WSF_EXTERN axis2_svc_client_t* WSF_CALL getAxis2SvcClient();
+	/** 
+	 * Returns the axis2_conf_ctx_t which can be used to create a confguration context once and pass it when creating multiple service clients.
+	 */
+	WSF_EXTERN axis2_conf_ctx_t* WSF_CALL getAxis2ConfCtx(std::string repositoryPath);
 
 
     };
