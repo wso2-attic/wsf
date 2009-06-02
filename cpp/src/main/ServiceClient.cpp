@@ -742,3 +742,10 @@ OMElement * ServiceClient::getLastSOAPFault()
     return _last_soap_fault;
 }
 
+axis2_conf_ctx_t* ServiceClient::getAxis2ConfCtx(std::string repositoryPath)
+{
+	axis2_conf_ctx_t* conf_ctx = NULL;
+	conf_ctx = axis2_build_conf_ctx(Environment::getEnv(), repositoryPath.c_str());
+	return conf_ctx;
+}
+
