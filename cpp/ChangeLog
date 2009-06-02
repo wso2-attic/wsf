@@ -1,4 +1,25 @@
-WSO2 WSF/C++ 2.0.0
+WSO2 WSF/C++ 2.0.0-alpha
+<<<<<<< .mine
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=======
 ==================
 On top of WSO2 WSF/C++ 1.0.0 following changes were  done.
 
@@ -18,18 +39,22 @@ On top of WSO2 WSF/C++ 1.0.0 following changes were  done.
 
 
 WSO2 WSF/C++ 1.0.0
+>>>>>>> .theirs
 ==================
 
 1. Client API to consume Web services
 
-	* WSSOAPClient class with one-way and two-way service invocation support
-	  for SOAP 1.1, and SOAP 1.2.
-	* WSRESTClient class with one-way and two-way service invocation support
+	* ServiceClient class with one-way and two-way service invocation support
+	  for SOAP 1.1, and SOAP 1.2, one-way and two-way service invocation support
 	  for REST style invocations.
 	* Options class for getting and setting generic service related options,
-	  for SOAP and REST clients. REST Clients ignore SOAP related options and
-	  vice versa.
+	  for SOAP and REST clients. 
 
+2. Service API to Implement Web Services
+    * ServiceSkeleton class provide the base class for implementing services.
+    * By implmenting the invoke method of the ServiceSkeleton class, services
+      can be implemented.
+      
 2. Attachments with MTOM
 
 	* Binary optimized
@@ -46,5 +71,11 @@ WSO2 WSF/C++ 1.0.0
 	* Encryption
 	* Signing
 	* WS-SecurityPolicy based configuration
+	* WS-SecureConversation
+	* Replay Detection
 
--- WSO2 WSF/C++ team <wsf-c-dev@wso2.org>  Tue, 22 Jan 2008
+5. Codegenaration tool
+    * Codegen tool will generate client and service code for a given wsdl.
+    
+
+-- WSO2 WSF/C++ team <wsf-c-dev@wso2.org>  25 May 2009
