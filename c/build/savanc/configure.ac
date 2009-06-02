@@ -78,11 +78,13 @@ AC_ARG_ENABLE(sqlite, [  --enable-sqlite
     ;;
   *)
     AC_MSG_RESULT(yes)
+    SAVAN_SUBS_MGR_SQLITE="sqlite"
     SAVAN_SUBS_MGR="sqlite"
 
     ;;
   esac ],
   AC_MSG_RESULT(yes)
+  SAVAN_SUBS_MGR_SQLITE="sqlite"
   SAVAN_SUBS_MGR="sqlite"
 )
 
@@ -93,13 +95,13 @@ AC_ARG_ENABLE(service, [  --enable-service
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
+    SAVAN_SUBS_MGR_SERVICE=""
     SAVAN_SUBS_MGR=""
-    SVC_DIR=""
     ;;
   *)
     AC_MSG_RESULT(yes)
+    SAVAN_SUBS_MGR_SERVICE="service"
     SAVAN_SUBS_MGR="service"
-    SVC_DIR="subs_mgr_svc"
     ;;
   esac ],
   AC_MSG_RESULT(no)
@@ -114,10 +116,12 @@ AC_ARG_WITH(registry,
 [ case "$withval" in
   no)
     AC_MSG_RESULT(no)
+    SAVAN_SUBS_MGR_REGISTRY=""
     SAVAN_SUBS_MGR=""
     ;;
   *)
     AC_MSG_RESULT(yes)
+    SAVAN_SUBS_MGR_REGISTRY="registry"
     SAVAN_SUBS_MGR="registry"
     dnl Find registry include dir in the path
     if test -d $withval; then
@@ -167,40 +171,8 @@ AC_ARG_WITH(xpath,
 )
 
 #Default for savan publisher
-SAVAN_PUBLISHER="default"
+SAVAN_PUBLISHER_XPATH="default"
 SAVAN_PUBLISHER_LIB="default/libsavan_publisher.la"
-
-AC_MSG_CHECKING(To Use esb based publisher . This is an optional module to build Savan C)
-AC_ARG_WITH(esbpub,
-[  --with-esbpub[=PATH]     Find the esbc header files in 'PATH'.
-    'PATH' should point to esbc include files location.
-    If you omit the '=PATH' part completely, the configure script will assume
-    esbc is installed in default paths.],
-[ case "$withval" in
-  no)
-    AC_MSG_RESULT(no)
-    SAVAN_PUBLISHER=""
-    SAVAN_PUBLISHER_LIB=""
-    ;;
-  *)
-    AC_MSG_RESULT(yes)
-    SAVAN_PUBLISHER="esb"
-    SAVAN_PUBLISHER_LIB=esb/libsavan_publisher.la
-    dnl Find esbc include dir in the path
-    if test -d $withval; then
-        esbpubinc="-I$withval"
-    dnl else find the esbc include dir in /usr/local/include
-    elif test -d '/usr/local/include'; then
-        esbpubinc="-I/usr/local/include"
-    else
-        AC_MSG_ERROR(could not find esbc. stop)
-    fi
-    CFLAGS="$CFLAGS"
-    LDFLAGS="$LDFLAGS"
-    ;;
-  esac ],
-  AC_MSG_RESULT(no)
-)
 
 AC_MSG_CHECKING(To Use Xml Schema.)
 AXIOMINC="-I$abs_top_builddir/../axis2c/axiom/include"
@@ -210,29 +182,33 @@ CFLAGS="$CFLAGS $LIBXML2_CFLAGS"
 
 REGISTRYINC=$registryinc
 XPATHINC=$xpathinc
-ESBPUBINC=$esbpubinc
 
 AC_SUBST(REGISTRYINC)
 AC_SUBST(XPATHINC)
-AC_SUBST(ESBPUBINC)
 AC_SUBST(AXIS2INC)
 AC_SUBST(AXIOMINC)
 AC_SUBST(UTILINC)
 AC_SUBST(NEETHIINC)
 AC_SUBST(XMLSCHEMAINC)
+AC_SUBST(SAVAN_SUBS_MGR_REGISTRY)
+AC_SUBST(SAVAN_SUBS_MGR_SERVICE)
+AC_SUBST(SAVAN_SUBS_MGR_SQLITE)
 AC_SUBST(SAVAN_SUBS_MGR)
 AC_SUBST(SAVAN_FILTER)
 AC_SUBST(SAVAN_FILTER_LIB)
-AC_SUBST(SAVAN_PUBLISHER)
+AC_SUBST(SAVAN_PUBLISHER_ESB)
+AC_SUBST(SAVAN_PUBLISHER_XPATH)
 AC_SUBST(SAVAN_PUBLISHER_LIB)
-AC_SUBST(SVC_DIR)
 
+export SAVAN_SUBS_MGR_REGISTRY
+export SAVAN_SUBS_MGR_SERVICE
+export SAVAN_SUBS_MGR_SQLITE
 export SAVAN_SUBS_MGR
 export SAVAN_FILTER
 export SAVAN_FILTER_LIB
-export SAVAN_PUBLISHER
+export SAVAN_PUBLISHER_ESB
+export SAVAN_PUBLISHER_XPATH
 export SAVAN_PUBLISHER_LIB
-export SVC_DIR
 
 AC_CONFIG_FILES([Makefile \
     src/Makefile \
@@ -245,7 +221,6 @@ AC_CONFIG_FILES([Makefile \
     src/subs_mgrs/common/Makefile\
     src/subs_mgrs/sqlite/Makefile\
     src/subs_mgrs/registry/Makefile\
-    src/subs_mgrs/registry/test/Makefile\
     src/subs_mgrs/service/Makefile\
     src/subs_mgrs/service/subs_mgr_svc/Makefile\
     src/filters/Makefile\
@@ -253,7 +228,6 @@ AC_CONFIG_FILES([Makefile \
     src/filters/xpath/Makefile\
     src/publishers/Makefile\
     src/publishers/common/Makefile\
-    src/publishers/esb/Makefile\
     src/publishers/default/Makefile\
     src/data/Makefile\
     src/util/Makefile
