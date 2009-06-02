@@ -49,5 +49,6 @@ cp -r rampartc/xdocs docs/rampartc
 cp -r ../rampartc/xdocs/api/html docs/rampartc/api
 cp -r wsclient/docs docs/wsclient
 
+cp -r build/codegen .
 grep -rl WSFC_HOME *| xargs sed -i "s/WSFC_HOME/WSFC_HOME/g"
 cd ..
