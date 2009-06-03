@@ -7,7 +7,6 @@ libwso2_wsf_la_SOURCES= AxisFault.cpp \
 			OMNode.cpp \
 			Options.cpp \
 			ServiceClient.cpp \
-			WSSOAPClient.cpp \
 			AxisObject.cpp \
 			OMDataHandler.cpp \
 			OMNamespace.cpp \
@@ -15,7 +14,6 @@ libwso2_wsf_la_SOURCES= AxisFault.cpp \
 			Property.cpp \
 			Parameter.cpp \
 			Environment.cpp \
-			WSRESTClient.cpp \
 			NeethiPolicy.cpp \
 			MessageContext.cpp
 
