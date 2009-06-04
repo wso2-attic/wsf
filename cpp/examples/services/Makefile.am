@@ -1,1 +1,1 @@
-SUBDIRS=echocpp
+SUBDIRS=echo mtom math version notify 
