@@ -2,9 +2,9 @@ prglibdir=$(prefix)/services/mtom
 prglib_LTLIBRARIES=libmtom.la
 prglib_DATA=services.xml
 EXTRA_DIST=services.xml 
-libechocpp_la_SOURCES= mtom.cpp
+libmtom_la_SOURCES= mtom.cpp
 
-libechocpp_la_LIBADD=../../../wsf_c/axis2c/src/core/description/libaxis2_description.la \
+libmtom_la_LIBADD=../../../wsf_c/axis2c/src/core/description/libaxis2_description.la \
 	             ../../../wsf_c/axis2c/src/core/deployment/libaxis2_deployment.la \
 		     ../../../wsf_c/axis2c/src/core/context/libaxis2_context.la \
 		     ../../../wsf_c/axis2c/util/src/libaxutil.la \
