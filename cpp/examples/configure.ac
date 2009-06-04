@@ -41,16 +41,18 @@ AC_CONFIG_FILES([Makefile \
     clients/mtom/Makefile \
     clients/mtom/resources/Makefile \
     clients/notify/Makefile \
-    clients/security/Makefile \
-    clients/security/sec_echo/Makefile \
     clients/yahoo/Makefile \
     clients/google/Makefile \
     services/Makefile \
-    services/echocpp/Makefile \
+    services/echo/Makefile \
+    services/math/Makefile \
+    services/mtom/Makefile \
+    services/notify/Makefile \
+    services/version/Makefile \
     callbacks/Makefile \
     callbacks/authentication_provider/Makefile \
     callbacks/password_callback/Makefile \
-    callbacks/replay_detect/Makefile \
+    callbacks/replay_detector/Makefile \
     callbacks/sct_provider/Makefile
     ])
     
