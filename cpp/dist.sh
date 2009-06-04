@@ -17,7 +17,6 @@ cp build/wsf_c/axis2c/neethi/src/Makefile.am wsf_c/axis2c/neethi/src/Makefile.am
 
 cd wsf_c
 ./build.sh
-cd ..
 
 export WSFCPP_BUILD_DIR='pwd'
 export WSFCPP_HOME='pwd'/wsf_c/deploy
@@ -30,6 +29,7 @@ make install
 cd $WSFCPP_BUILD_DIR
 fi
 
+cd ..
 ./build.sh
 cd wsf_c
 sh dist.sh
