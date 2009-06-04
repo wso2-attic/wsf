@@ -21,8 +21,8 @@ cd wsf_c
 
 # build registry dependency
 
-export WSFCPP_BUILD_DIR='pwd'
-export WSFCPP_HOME='pwd'/wsf_c/deploy
+export WSFCPP_BUILD_DIR=`pwd`
+export WSFCPP_HOME=`pwd`/deploy
 if [ -a $REGISTRY_HOME ] ; then 
 cd $REGISTRY_HOME;
 ./autogen.sh
@@ -49,12 +49,12 @@ cp *tar.gz ../dist
 cd ..
 mv /tmp/dist_cpp.sh dist.sh
 cd dist
-tar xf wso2-wsf-cpp-src-1.0.0.tar.gz
-rm wso2-wsf-cpp-src-1.0.0.tar.gz
-tar xf wso2-wsf-c-src-1.2.0.tar.gz
-rm wso2-wsf-c-src-1.2.0.tar.gz
-mv wso2-wsf-c-src-1.2.0 wso2-wsf-cpp-src-1.0.0/wsf_c
-cd wso2-wsf-cpp-src-1.0.0
+tar xf wso2-wsf-cpp-src-2.0.0-alpha.tar.gz
+rm wso2-wsf-cpp-src-2.0.0-alpha.tar.gz
+tar xf wso2-wsf-c-src-2.0.0.tar.gz
+rm wso2-wsf-c-src-2.0.0.tar.gz
+mv wso2-wsf-c-src-2.0.0 wso2-wsf-cpp-src-2.0.0-alpha/wsf_c
+cd wso2-wsf-cpp-src-2.0.0-alpha
 cp -r ../../include ../../build_samples.sh .
 mv /tmp/Makefile.am /tmp/Makefile.in .
 ./configure
@@ -70,10 +70,10 @@ rm -rf `find . -type f -name Makefile`
 rm -rf `find . -type d -name autom4te.cache`
 rm -rf `find . -type f -name stamp-h1`
 cd ..
-tar -pczf wso2-wsf-cpp-src-1.0.0.tar.gz wso2-wsf-cpp-src-1.0.0
+tar -pczf wso2-wsf-cpp-src-2.0.0-alpha.tar.gz wso2-wsf-cpp-src-2.0.0-alpha
 rm -rf `find . -type f -name config.log`
-zip -r wso2-wsf-cpp-src-1.0.0.zip wso2-wsf-cpp-src-1.0.0
-rm -rf wso2-wsf-cpp-src-1.0.0
+zip -r wso2-wsf-cpp-src-2.0.0-alpha.zip wso2-wsf-cpp-src-2.0.0-alpha
+rm -rf wso2-wsf-cpp-src-2.0.0-alpha
 mv *tar.gz ../../
 mv *zip ../../
 cd ../../
