@@ -18,6 +18,18 @@ cp build/wsf_c/axis2c/neethi/src/Makefile.am wsf_c/axis2c/neethi/src/Makefile.am
 cd wsf_c
 ./build.sh
 cd ..
+
+export WSFCPP_BUILD_DIR='pwd'
+export WSFCPP_HOME='pwd'/wsf_c/deploy
+if [ -a $REGISTRY_HOME ] ; then 
+cd $REGISTRY_HOME;
+./autogen.sh
+./configure --with-axis2=${WSFCPP_HOME}/include/axis2-1.6.0 --prefix=${WSFCPP_HOME} --enable-tests=yes --with-libcurl=/usr/include/curl
+make
+make install
+cd $WSFCPP_BUILD_DIR
+fi
+
 ./build.sh
 cd wsf_c
 sh dist.sh
