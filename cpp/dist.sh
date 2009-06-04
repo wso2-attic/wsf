@@ -8,15 +8,18 @@ grep -rl 'WSO2 Web Services Framework[/]' * | xargs sed -i "s/WSO2 Web Services 
 find . -name "*configure.ac" | xargs sed -i "s/-Werror//g"
 cp dist/link.sh dist/link_samples.sh wsf_c
 
-cp build/wsf_c/rampartc/configure.ac wsf_c/rampartc/configure.ac
-cp build/wsf_c/Makefile.am wsf_c/
-cp build/wsf_c/rampartc/src/Makefile.am  wsf_c/rampartc/src/Makefile.am
+#cp build/wsf_c/rampartc/configure.ac wsf_c/rampartc/configure.ac
+#cp build/wsf_c/Makefile.am wsf_c/
+#cp build/wsf_c/rampartc/src/Makefile.am  wsf_c/rampartc/src/Makefile.am
 cp build/wsf_c/rampartc/src/core/Makefile.am  wsf_c/rampartc/src/core/Makefile.am
 cp build/wsf_c/axis2c/neethi/configure.ac wsf_c/axis2c/neethi/configure.ac
 cp build/wsf_c/axis2c/neethi/src/Makefile.am wsf_c/axis2c/neethi/src/Makefile.am
 
+
 cd wsf_c
 ./build.sh
+
+# build registry dependency
 
 export WSFCPP_BUILD_DIR='pwd'
 export WSFCPP_HOME='pwd'/wsf_c/deploy
@@ -28,6 +31,7 @@ make
 make install
 cd $WSFCPP_BUILD_DIR
 fi
+# end registry building
 
 cd ..
 ./build.sh
