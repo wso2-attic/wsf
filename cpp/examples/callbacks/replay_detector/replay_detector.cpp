@@ -69,7 +69,7 @@ bool RDetect::isValid(MessageContext* msgctx)
     if(ite != psetReplay->end())
     {
         //above key is in the container, so this message is a replay
-		WSF_LOG_ERROR_MSG(Environment::getEnv()->log ,"Message is a replay");
+	WSF_LOG_ERROR_MSG(Environment::getEnv()->log, WSF_LOG_SI  ,"Message is a replay");
         return false;
     }
     
