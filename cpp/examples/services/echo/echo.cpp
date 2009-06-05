@@ -18,7 +18,7 @@
 #include <ServiceSkeleton.h>
 #include <stdio.h>
 #include <axutil_env.h>
-#include <Process.h>
+#include <Environment.h>
 #include "Echo.h"
 
 using namespace wso2wsf;
