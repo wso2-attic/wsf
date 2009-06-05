@@ -8,6 +8,7 @@ libpwcb_la_LIBADD=../../../wsf_c/axis2c/src/core/description/libaxis2_descriptio
 		     ../../../wsf_c/axis2c/util/src/libaxutil.la \
 		     ../../../wsf_c/axis2c/neethi/src/libneethi.la \
 		     ../../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
+                     ../../../wsf_c/rampartc/src/core/libmod_rampart.la \
 		     ../../../src/main/libwso2_wsf.la \
 			../../../src/security/libwso2_wsf_security.la
 			
@@ -16,6 +17,7 @@ INCLUDES =  -I ../../../wsf_c/axis2c/include \
             -I ../../../wsf_c/axis2c/util/include \
             -I ../../../wsf_c/axis2c/util/include/platforms \
             -I ../../../wsf_c/axis2c/axiom/include \
+            -I ../../../wsf_c/rampartc/include \
             -I ../../../include
 
 
