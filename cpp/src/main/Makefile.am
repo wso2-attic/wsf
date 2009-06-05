@@ -37,4 +37,4 @@ INCLUDES = -I ../../include \
 		-I ../../wsf_c/savanc/include 
 
 
-EXTRA_DIST=wsf.mk wsf.rc
+EXTRA_DIST=wsf.rc
