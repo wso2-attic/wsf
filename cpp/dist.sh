@@ -46,7 +46,7 @@ cd ..
 sh autogen.sh
 ./configure --prefix=`pwd`/wsf_c/deploy
 make -j 10
-make examples
+make samples
 make install
 
 
