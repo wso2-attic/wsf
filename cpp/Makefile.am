@@ -9,10 +9,10 @@ install-data-hook:
 	rm -rf $(prefix)/docs
 	mkdir $(prefix)/docs
 	mkdir $(prefix)/docs/wsf_c
-	mv -f $(prefix)/docs_temp $(prefix)/docs/wsf_c/docs
-	mv -f $(prefix)/docs/wsf_c/docs/wsclient $(prefix)/docs/wsf_c/wsclient
-	mkdir $(prefix)/docs/wsf_c/wsclient/docs
-	mv $(prefix)/docs/wsf_c/wsclient/index.html $(prefix)/docs/wsf_c/wsclient/docs/
+#	mv -f $(prefix)/docs_temp $(prefix)/docs/wsf_c/docs
+#	mv -f $(prefix)/docs/wsf_c/docs/wsclient $(prefix)/docs/wsf_c/wsclient
+#	mkdir $(prefix)/docs/wsf_c/wsclient/docs
+#	mv $(prefix)/docs/wsf_c/wsclient/index.html $(prefix)/docs/wsf_c/wsclient/docs/
 	rm -rf $(prefix)/docs/wsf_c/docs/rampartc
 	rm -rf $(prefix)/docs/wsf_c/docs/sandesha2c
 	rm -rf $(prefix)/docs/wsf_c/docs/axis2c
