@@ -1,3 +1,11 @@
+if [ -a ../dist_temp ]; then
+rm -rf ../dist_temp
+fi
+
+if [ -a dist_temp ]; then
+rm -rf dist_temp
+fi
+
 cp -r . ../dist_temp
 mv ../dist_temp .
 cd dist_temp
@@ -34,20 +42,28 @@ fi
 # end registry building
 
 cd ..
-./build.sh
-cd wsf_c
-sh dist.sh
-cd ..
+#build wsfcpp code
+sh autogen.sh
+./configure --prefix=`pwd`/wsf_c/deploy
+make -j 10
+make examples
+make install
+
+
 cp Makefile.am Makefile.in /tmp
 cp dist/Makefile.am .
 rm Makefile.in
 automake --no-force
 make dist
 cp *tar.gz dist
+
 cd wsf_c
+sh dist.sh
 cp *tar.gz ../dist
 cd ..
+
 mv /tmp/dist_cpp.sh dist.sh
+
 cd dist
 tar xf wso2-wsf-cpp-src-2.0.0-alpha.tar.gz
 rm wso2-wsf-cpp-src-2.0.0-alpha.tar.gz
