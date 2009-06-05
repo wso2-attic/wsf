@@ -22,7 +22,7 @@
 #include "NotifyService.h"
 #include <ServiceSkeleton.h>
 #include <OMText.h>
-
+#include <typeinfo>
 using namespace wso2wsf;
 using namespace std;
 
