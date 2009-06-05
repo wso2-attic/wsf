@@ -1,4 +1,4 @@
-SUBDIRS=src samples
+SUBDIRS=src examples
 datadir=$(prefix)
 data_DATA=README.INSTALL.LINUX README.SAMPLES README INSTALL COPYING NEWS NOTICE
 examples:
