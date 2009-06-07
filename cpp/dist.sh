@@ -55,6 +55,16 @@ cp dist/Makefile.am .
 rm Makefile.in
 automake --no-force
 make dist
+
+cd examples
+make dist
+tar xf wsfcpp-samples-src-2.0.0-alpha.tar.gz
+cd ..
+tar xf wso2-wsf-cpp-src-2.0.0-alpha.tar.gz
+mv examples/wsfcpp-samples-src-2.0.0-alpha wso2-wsf-cpp-src-2.0.0-alpha/examples
+rm wso2-wsf-cpp-src-2.0.0-alpha.tar.gz
+tar -pczf wso2-wsf-cpp-src-2.0.0-alpha.tar.gz wso2-wsf-cpp-src-2.0.0-alpha
+
 cp *tar.gz dist
 
 cd wsf_c
