@@ -263,6 +263,33 @@ secpolicy -
 
   * Read more on echo_security sample for further details.
 
+Sample Services
+---------------
+
+     These samples are found under the directory WSFCPP_INSTALL_DIR/examples/services directory
+    
+Echo Service
+-------------
+     - This is one of the simplest services possible. This service simply echos 
+       back the request received from the client.
+     - Sevice Endpoint http://localhost:9090/axis2/services/echo
+     - Log File
+
+Math Service
+-------------
+  This service consist of four mathamatical operations
+    - add: Addition
+    - sub: Subtraction
+    - mul: Multiplication
+    - div: Division
+    - default endpoint with simple axis2 server end_point http://localhost:9090/axis2/services/math
+
+MTOM Service
+-------------
+  This service receives and send a SOAP message with a MTOM optimized binary attachment.e
+    -  Default service endpoint http://localhost:9090/axis2/services/mtommm
+
+
 
 Monitoring Payload
 ------------------
