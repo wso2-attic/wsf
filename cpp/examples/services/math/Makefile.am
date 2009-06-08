@@ -1,7 +1,7 @@
 prglibdir=$(prefix)/services/math
 prglib_LTLIBRARIES=libmath.la
 prglib_DATA=services.xml
-EXTRA_DIST=services.xml 
+EXTRA_DIST=services.xml MATHService.h math.mk
 libmath_la_SOURCES= math.cpp
 
 libmath_la_LIBADD=../../../wsf_c/axis2c/src/core/description/libaxis2_description.la \
