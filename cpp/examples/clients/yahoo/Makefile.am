@@ -1,4 +1,4 @@
-prgbindir=$(prefix)/bin/samples/cpp/yahoo
+prgbindir=$(prefix)/samples/bin/cpp/yahoo
 prgbin_PROGRAMS = yahoo
 yahoo_SOURCES = yahoo.cpp
 
