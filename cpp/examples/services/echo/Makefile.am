@@ -1,7 +1,7 @@
 prglibdir=$(prefix)/services/echo
 prglib_LTLIBRARIES=libecho.la
 prglib_DATA=services.xml
-EXTRA_DIST=services.xml 
+EXTRA_DIST=services.xml Echo.h
 libecho_la_SOURCES= echo.cpp
 
 libecho_la_LIBADD=../../../wsf_c/axis2c/src/core/description/libaxis2_description.la \
