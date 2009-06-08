@@ -1,4 +1,4 @@
-prgbindir=$(prefix)/bin/samples/cpp/flickr
+prgbindir=$(prefix)/samples/bin/cpp/flickr
 prgbin_PROGRAMS = flickr
 flickr_SOURCES = flickr.cpp
 
