@@ -1,5 +1,7 @@
 SUBDIRS=src
 datadir=$(prefix)
+includedir=$(prefix)/include
+include_HEADERS=$(topbuilddir)/include/*.h
 data_DATA=README.INSTALL.LINUX README.SAMPLES README INSTALL COPYING NEWS NOTICE
 samples:
 	sh build_samples.sh $(prefix)
