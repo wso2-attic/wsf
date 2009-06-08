@@ -1,7 +1,7 @@
 prglibdir=$(prefix)/services/version
 prglib_LTLIBRARIES=libversion.la
 prglib_DATA=services.xml
-EXTRA_DIST=services.xml 
+EXTRA_DIST=services.xml version.h 
 libversion_la_SOURCES= version.cpp
 
 libversion_la_LIBADD=../../../wsf_c/axis2c/src/core/description/libaxis2_description.la \
