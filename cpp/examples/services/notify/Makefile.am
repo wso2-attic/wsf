@@ -1,7 +1,7 @@
 prglibdir=$(prefix)/services/notify
 prglib_LTLIBRARIES=libnotify.la
 prglib_DATA=services.xml
-EXTRA_DIST=services.xml 
+EXTRA_DIST=services.xml NotifyService.h notify.mk
 libnotify_la_SOURCES= notify.cpp
 
 libnotify_la_LIBADD=../../../wsf_c/axis2c/src/core/description/libaxis2_description.la \
