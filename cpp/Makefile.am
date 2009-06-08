@@ -1,5 +1,7 @@
 SUBDIRS=wsf_c src 
 datadir=$(prefix)
+includedir=$(prefix)/include
+include_HEADERS=$(top_builddir)/include/*.h
 data_DATA=README.INSTALL.LINUX README.SAMPLES README INSTALL COPYING NEWS NOTICE
 samples:
 	sh build_samples.sh $(prefix)
