@@ -6,9 +6,7 @@ WSO2 Web Services Framework for C++ - Installation Guide (Linux)
 
 1.1. Mandatory
 
-    * Libxml2 - http://www.xmlsoft.org/
-    * libiconv - http://www.gnu.org/software/libiconv/
-    * zlib - http://www.zlib.net/
+    None.
 
 1.2. Optional
 
@@ -16,6 +14,9 @@ WSO2 Web Services Framework for C++ - Installation Guide (Linux)
     * OpenSSL - http://www.openssl.org/ - Required for SSL client transport and WS-Security with Apache Rampart/C
     * Either SQLite - http://www.sqlite.org/ or MySQL - http://www.mysql.org/ - Required for WS-ReliableMessaging with Apache Sandesha2/C
     * iksemel - http://iksemel.jabberstudio.org/ - Required for XMPP transport
+    * Libxml2 - http://www.xmlsoft.org/
+    * libiconv = http://www.gnu.org/software/libiconv/
+    * zlib - http://www.zlib.net/
 
 
 2. Requirements
