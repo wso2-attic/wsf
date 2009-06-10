@@ -41,5 +41,5 @@ install-data-hook:
 	cp -rf docs $(prefix)/docs/cpp
 	cp -rf tools/codegen $(prefix)/bin/tools/
 
-EXTRA_DIST=README.INSTALL.LINUX README.INSTALL.WINDOWS README.SAMPLES build.bat clean.bat configure.in docs NOTICE LICENSE tools
+EXTRA_DIST=README.INSTALL.LINUX README.INSTALL.WINDOWS README.SAMPLES build.bat init.bat clean.bat configure.in docs NOTICE LICENSE tools
 
