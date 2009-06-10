@@ -19,7 +19,6 @@ cp dist/link.sh dist/link_samples.sh wsf_c
 #cp build/wsf_c/rampartc/configure.ac wsf_c/rampartc/configure.ac
 #cp build/wsf_c/Makefile.am wsf_c/
 #cp build/wsf_c/rampartc/src/Makefile.am  wsf_c/rampartc/src/Makefile.am
-cp build/wsf_c/rampartc/src/core/Makefile.am  wsf_c/rampartc/src/core/Makefile.am
 cp build/wsf_c/axis2c/neethi/configure.ac wsf_c/axis2c/neethi/configure.ac
 cp build/wsf_c/axis2c/neethi/src/Makefile.am wsf_c/axis2c/neethi/src/Makefile.am
 
@@ -82,6 +81,7 @@ rm wso2-wsf-c-src-2.0.0.tar.gz
 mv wso2-wsf-c-src-2.0.0 wso2-wsf-cpp-src-2.0.0-alpha/wsf_c
 cd wso2-wsf-cpp-src-2.0.0-alpha
 cp -r ../../include ../../build_samples.sh .
+cp ../../build_codegen.sh .
 mv /tmp/Makefile.am /tmp/Makefile.in .
 ./configure
 make maintainer-clean
@@ -103,4 +103,3 @@ rm -rf wso2-wsf-cpp-src-2.0.0-alpha
 mv *tar.gz ../../
 mv *zip ../../
 cd ../../
-rm -rf dist_temp
