@@ -7,7 +7,6 @@ libwso2_wsf_la_SOURCES= AxisFault.cpp \
 			OMNode.cpp \
 			Options.cpp \
 			ServiceClient.cpp \
-			AxisObject.cpp \
 			OMDataHandler.cpp \
 			OMNamespace.cpp \
 			OMText.cpp \
@@ -37,4 +36,4 @@ INCLUDES = -I ../../include \
 		-I ../../wsf_c/savanc/include 
 
 
-EXTRA_DIST=wsf.rc
+EXTRA_DIST=wsf.rc RWLock.cpp
