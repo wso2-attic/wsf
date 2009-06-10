@@ -5,9 +5,8 @@ rem @call clean.bat
 
 rem Build WSO2 WSF/C
 @copy configure.in wsf_c\configure.in
-@cd wsf_c\build
 @call init.bat
-@cd ..
+@cd wsf_c
 @call build.bat
 
 rem Uncomment line below for Fail-safe Install
