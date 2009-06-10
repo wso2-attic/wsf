@@ -39,6 +39,7 @@ install-data-hook:
 	rm -rf $(prefix)/docs/wsf_c/docs/sandesha2c
 	rm -rf $(prefix)/docs/wsf_c/docs/axis2c
 	cp -rf docs $(prefix)/docs/cpp
+	cp -rf tools/codegen $(prefix)/bin/tools/
 
 EXTRA_DIST=README.INSTALL.LINUX README.INSTALL.WINDOWS README.SAMPLES build.bat clean.bat configure.in docs NOTICE LICENSE tools
 
