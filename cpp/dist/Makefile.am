@@ -40,5 +40,5 @@ install-data-hook:
 	rm -rf $(prefix)/docs/wsf_c/docs/axis2c
 	cp -rf docs $(prefix)/docs/cpp
 
-EXTRA_DIST=README.INSTALL.LINUX README.INSTALL.WINDOWS README.SAMPLES build.bat clean.bat configure.in docs NOTICE LICENSE
+EXTRA_DIST=README.INSTALL.LINUX README.INSTALL.WINDOWS README.SAMPLES build.bat clean.bat configure.in docs NOTICE LICENSE tools
 
