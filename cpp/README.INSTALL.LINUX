@@ -45,7 +45,7 @@ on your system. By default, most Linux systems have this tool.
         $  ./configure --prefix=${WSFCPP_HOME}
         $ make
         $ make install
-        $ make examples
+        $ make samples
 
    5. Go to where you installed WSO2 WSF/C++. Start simple axis server
       * To start the simple axis server on port 9090 run the following commands
