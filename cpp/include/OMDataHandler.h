@@ -19,7 +19,6 @@
 
 #include <WSFDefines.h>
 #include <axiom_data_handler.h>
-#include <AxisObject.h>
 
 /**
  * @file OMDataHandler.h

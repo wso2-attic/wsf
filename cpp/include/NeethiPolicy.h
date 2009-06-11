@@ -18,7 +18,6 @@
 #define NEETHIPOLICY_H
 
 #include <WSFDefines.h>
-#include <AxisObject.h>
 #include <OMElement.h>
 #include <neethi_policy.h>
 #include <neethi_util.h>

@@ -20,7 +20,6 @@
 #include <WSFDefines.h>
 #include <axis2_options.h>
 #include <axis2_const.h>
-#include <AxisObject.h>
 #include <axiom_soap_const.h>
 #include <AxisFault.h>
 #include <OMElement.h>

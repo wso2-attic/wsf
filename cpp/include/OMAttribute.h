@@ -20,7 +20,6 @@
 #include <WSFDefines.h>
 #include <OMNamespace.h>
 #include <axiom_attribute.h>
-#include <AxisObject.h>
 
 /**
  * @file OMAttribute.h

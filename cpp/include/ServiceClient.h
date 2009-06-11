@@ -26,7 +26,6 @@
 #include <axis2_const.h>
 #include <axis2_http_transport.h>
 #include <platforms/axutil_platform_auto_sense.h>
-#include <AxisObject.h>
 #include <AxisFault.h>
 #include <ICallback.h>
 #include <Options.h>
