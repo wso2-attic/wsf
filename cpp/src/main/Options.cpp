@@ -16,6 +16,8 @@
 
 #include <stdio.h>
 #include <Options.h>
+#include <Environment.h>
+
 using namespace std;
 using namespace wso2wsf;
 
