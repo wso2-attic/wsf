@@ -16,9 +16,6 @@ grep -rl 'WSO2 Web Services Framework[/]' * | xargs sed -i "s/WSO2 Web Services 
 find . -name "*configure.ac" | xargs sed -i "s/-Werror//g"
 cp dist/link.sh dist/link_samples.sh wsf_c
 
-#cp build/wsf_c/rampartc/configure.ac wsf_c/rampartc/configure.ac
-#cp build/wsf_c/Makefile.am wsf_c/
-#cp build/wsf_c/rampartc/src/Makefile.am  wsf_c/rampartc/src/Makefile.am
 cp build/wsf_c/axis2c/neethi/configure.ac wsf_c/axis2c/neethi/configure.ac
 cp build/wsf_c/axis2c/neethi/src/Makefile.am wsf_c/axis2c/neethi/src/Makefile.am
 
@@ -95,6 +92,15 @@ rm -rf `find . -type d -name .libs`
 rm -rf `find . -type f -name Makefile`
 rm -rf `find . -type d -name autom4te.cache`
 rm -rf `find . -type f -name stamp-h1`
+
+if [ -a wsf_c/rampartc/samples/wso2-wsf-c-src-2.0.0 ]; then
+rm -rf wsf_c/rampartc/samples/wso2-wsf-c-src-2.0.0
+fi
+
+if [ -a wsf_c/savanc/samples/wso2-wsf-c-src-2.0.0 ]; then
+rm -rf wsf_c/savanc/samples/wso2-wsf-c-src-2.0.0
+fi
+
 cd ..
 tar -pczf wso2-wsf-cpp-src-2.0.0-alpha.tar.gz wso2-wsf-cpp-src-2.0.0-alpha
 rm -rf `find . -type f -name config.log`
