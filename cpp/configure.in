@@ -45,6 +45,9 @@ WITH_ARCHIVE = 0
 # libxml2 binary location ( WSF/C++ is built with libxml2 )
 LIBXML2_BIN_DIR = E:\libxml2-2.6.30.win32
 #
+# path to libxslt binary location
+LIBXSLT_BIN_DIR=E:\libxslt-1.1.17.win32
+#
 # iconv binary location
 ICONV_BIN_DIR = E:\iconv-1.9.2.win32
 #
