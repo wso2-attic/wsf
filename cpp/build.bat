@@ -61,6 +61,7 @@ move services services_c
 xcopy /E /I /Q /Y services_c\sec_echo services\sec_echo\
 xcopy /E /I /Q /Y services_c\secconv_echo services\secconv_echo\
 @rmdir /s /q services_c
+@if exist bin\tools\wsdl2c rmdir /s /q bin\tools\wsdl2c
 @cd %WSFCPP_SOURCE%
 
 rem Clean bin Folder
@@ -108,7 +109,6 @@ rem Deploy Sample Source
 @for /F "tokens=*" %%G in ('dir /B /S *.sh*') do del "%%G"
 @if not exist *.am echo > #.am
 @for /F "tokens=*" %%G in ('dir /B /S *.am*') do del "%%G"
-@del configure.in
 @cd "%WSFCPP_SOURCE%"
 
 :end
