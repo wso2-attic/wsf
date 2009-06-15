@@ -99,6 +99,12 @@ dnl AC_FUNC_REALLOC
 abs_top_builddir=`pwd`
 AC_SUBST(abs_top_builddir)
 
+AC_ARG_ENABLE(savan, [  --enable-savan  build savan. default=yes])
+AC_ARG_ENABLE(libxml2, [  --enable-libxml2      build Libxml2 XML parser library wrapper (default=no)])
+AC_ARG_ENABLE(sandesha, [  --enable-sandesha    build sandesha. default=yes])
+AC_ARG_ENABLE(openssl, [  --enable-openssl      enable OpenSSL support in client transport (default=no)])
+AC_ARG_ENABLE(wsclient, [  --enable-wsclient    build wsclient. default=yes])
+
 AC_MSG_CHECKING(path to use Axis2C . This is a compulsory to build Sandesha2C)
 AC_ARG_WITH(axis2,
 [  --with-axis2[=PATH]      use axis2c.],
