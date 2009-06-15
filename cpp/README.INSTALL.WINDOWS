@@ -7,17 +7,17 @@ WSO2 Web Services Framework for C++ - Installation Guide (Microsoft Windows)
 1.1. Mandatory
 
     * zlib - http://www.zlib.net/
+    * OpenSSL - http://www.openssl.org/ - Required for SSL client transport and WS-Security with Apache Rampart/C
 
 1.2. Optional
 
     * Libxml2 - http://www.xmlsoft.org/
     * libiconv - http://www.gnu.org/software/libiconv/
     * Apache2 httpd - http://httpd.apache.org/ - Required for deploying services with httpd
-    * OpenSSL - http://www.openssl.org/ - Required for SSL client transport and WS-Security with Apache Rampart/C
     * Either SQLite - http://www.sqlite.org/ or MySQL - http://www.mysql.org/ - Required for WS-ReliableMessaging with Apache Sandesha2/C 
     * iksemel - http://iksemel.jabberstudio.org/ - Required for XMPP transport
-
-
+    * libxslt - http://rpmfind.net/linux/rpm2html/search.php?query=libxslt 
+   
 2. Requirements
 ---------------
 
