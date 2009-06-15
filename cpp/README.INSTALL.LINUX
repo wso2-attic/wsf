@@ -6,7 +6,7 @@ WSO2 Web Services Framework for C++ - Installation Guide (Linux)
 
 1.1. Mandatory
 
-    None.
+    OpenSSL - http://www.openssl.org/ - Required for SSL client transport and WS-Security with Apache Rampart/C
 
 1.2. Optional
 
@@ -17,6 +17,7 @@ WSO2 Web Services Framework for C++ - Installation Guide (Linux)
     * Libxml2 - http://www.xmlsoft.org/
     * libiconv = http://www.gnu.org/software/libiconv/
     * zlib - http://www.zlib.net/
+    * libxslt - http://www.xmlsoft.org/
 
 
 2. Requirements
@@ -56,6 +57,7 @@ on your system. By default, most Linux systems have this tool.
       To see the possible command line options run ./axis2_http_server -h. If you run into shared library problems, try setting the LD_LIBRARY_PATH.
 
         $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${WSFCPP_HOME}/lib
+   
    6. Building the codegen tool. 
       You need to have apache maven2 tool installed on your machine inorder to build the WSDL2CPP codegen tool. 
       You can get the codegen tool from http://maven.apache.org/download.html.
