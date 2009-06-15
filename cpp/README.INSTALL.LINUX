@@ -56,6 +56,10 @@ on your system. By default, most Linux systems have this tool.
       To see the possible command line options run ./axis2_http_server -h. If you run into shared library problems, try setting the LD_LIBRARY_PATH.
 
         $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${WSFCPP_HOME}/lib
+   6. Building the codegen tool. 
+      You need to have apache maven2 tool installed on your machine inorder to build the WSDL2CPP codegen tool. 
+      You can get the codegen tool from http://maven.apache.org/download.html.
+      Then you can build the codegen tool by running the build_codegen.sh script. 
 
 Now you are ready to use WSO2 WSF/C++.
 
