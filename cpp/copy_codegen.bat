@@ -16,5 +16,5 @@ if not exist %DIL%\bin\tools\codegen mkdir  %DIL%\bin\tools\codegen
 xcopy /I /E /Q lib %DIL%\bin\tools\codegen\lib
 
 cd %WRD%
-xcopy /I /E /Q tools\codegen\wsdl2cpp %DIL%\bin\tools\codeden\wsdl2cpp
+xcopy /I /E /Q tools\codegen\wsdl2cpp %DIL%\bin\tools\codegen\wsdl2cpp
 cd %WRD%
