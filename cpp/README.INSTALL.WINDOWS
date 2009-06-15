@@ -78,6 +78,11 @@ You also need have a look at and install the dependencies mentioned in section 1
       If the server is running successfully you should see the message
       "Started Simple Axis2 HTTP Server..."
 
+   8. You can build the code generation tool from the source. For that, you need to have the apache maven2 installed. 
+      It can be downloaded from http://maven.apache.org/download.html. Then run the build_codegen.bat and copy_codegen.bat scripts. It should installed
+      the codegeneration jars and scripts to the wso2-wsf-cpp-x.y.z-win32/bin/tools/codegen directory.
+
+
 Now you are ready to use WSO2 WSF/C++.
 
 Notes:
