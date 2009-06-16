@@ -65,11 +65,24 @@ on your system. By default, most Linux systems have this tool.
 	$ ./axis2_http_server</pre>
       To see the possible command line options run <code>./axis2_http_server -h</code>.
       If you run into shared library problems, try setting the LD_LIBRARY_PATH
-    <pre>	$ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${WSFCPP_HOME}/lib</pre></li>
+    <pre>	$ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${WSFCPP_HOME}/lib
+
+</pre></li>
+<li>Build the codegeneration tool<br/>
+Inorder to build the codegeneration tool which is written in java,you will need to have the mavan2 installed. 
+Get apache maven from <a href="http://maven.apache.org/download.html">apache mavan download site</a>&nbsp;<br />
+Use the script build_codegen.sh to  build and install the tool to the proper location. </li>
+    <li>Usually, it will copy to the scripts to the default location which is `pwd'/deploy.
+        However you can give your preferred WSF/CPP installation location ( Which was provided
+        in configuring WSF/CPP ) as follows. <pre>sh copy_codegen.sh wso2-wsf-cpp</pre>It will copy the WSDL2CPP.sh and
+        WSDL2CPP.bat files to $(WSFCPP_HOME)/bin/tools/codegen/wsdl2cpp directory. 
+        </li>
 </ol>
+    <p>
 Now you are ready to use WSO2 WSF/C++.<br />
 <br />
 Notes:
+</p>
 <ul>
     <li>You may require super user privileges to run <code>make install</code> on your system.</li>
     <li>You may optionally specify the path in which the installation should be
