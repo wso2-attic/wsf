@@ -25,7 +25,7 @@ fi
 if ! test -d $1/samples/src/wsclient; then 
     mkdir $1/samples/src/wsclient;
     cp -r wsf_c/wsclient/samples/* $1/samples/src/wsclient;
-
+fi
 cd wsf_c/axis2c/samples
 if test -e ../../rampartc/Makefile; then
 cd ../../rampartc/samples; ./configure --prefix=$1  --with-axis2=$1/include/axis2-1.6.0; make; make install;
