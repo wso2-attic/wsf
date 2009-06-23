@@ -896,7 +896,7 @@
 
           <!-- qname specifc values -->
             <xsl:if test="property/@type='axutil_qname_t*'">
-        ` axis2_char_t *cp = NULL;
+         axis2_char_t *cp = NULL;
           bool prefix_found = false;
           axiom_namespace_t *qname_ns;
           </xsl:if>
@@ -1649,8 +1649,7 @@
                                       text_value = axiom_element_get_text(current_element, Environment::getEnv(), current_node);
                                       if(text_value != NULL)
                                       {
-                                            status = set<xsl:value-of select="$CName"/>(<xsl:value-of select="$name"/>, Environment::getEnv(),
-                                                                   atof(text_value));
+                                            status = set<xsl:value-of select="$CName"/>(atof(text_value));
                                       }
                                       <xsl:if test="not(@nillable)">
                                       else
@@ -1680,8 +1679,7 @@
                                       text_value = axiom_element_get_text(current_element, Environment::getEnv(), current_node);
                                       if(text_value != NULL)
                                       {
-                                            status = set<xsl:value-of select="$CName"/>(<xsl:value-of select="$name"/>, Environment::getEnv(),
-                                                                   axutil_strtol(text_value, (char**)NULL, 0));
+                                            status = set<xsl:value-of select="$CName"/>(axutil_strtol(text_value, (char**)NULL, 0));
                                       }
                                       <xsl:if test="not(@nillable)">
                                       else

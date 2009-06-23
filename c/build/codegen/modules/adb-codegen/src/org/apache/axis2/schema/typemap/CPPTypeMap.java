@@ -52,11 +52,11 @@ public class CPPTypeMap implements TypeMap{
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_LONG, "int64_t");
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_SHORT, "short");
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_BYTE, "byte");
-        CPPTypeMap.addTypemapping(SchemaConstants.XSD_ANY, "OMElement*");
+        CPPTypeMap.addTypemapping(SchemaConstants.XSD_ANY, "axiom_node_t*");
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_DECIMAL, "double");
 
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_ANYTYPE,
-                                 "OMElement*");
+                                 "axiom_node_t*");
                           // wrap axutil_qname to c++
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_QNAME,
                                  "axutil_qname_t*");
@@ -74,7 +74,7 @@ public class CPPTypeMap implements TypeMap{
                                  "axutil_base64_binary_t*");
 
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_HEXBIN,
-                                 "OMElement*");
+                                 "axiom_node_t*");
 
         // These are the g* types (gYearMonth, etc) which map to Axis types
         // These types are mapped to an integer
@@ -110,7 +110,7 @@ public class CPPTypeMap implements TypeMap{
 
         // a xsd:unsignedByte
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_UNSIGNEDBYTE,
-                                 "unsigned byte");
+                                 "axis2_unsigned_byte_t");
 
         // a xsd:nonNegativeInteger
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_NONNEGATIVEINTEGER,
@@ -156,10 +156,10 @@ public class CPPTypeMap implements TypeMap{
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_ENTITIES, "std::string");
 
         // a xsd:XSD_IDREF
-        CPPTypeMap.addTypemapping(SchemaConstants.XSD_IDREF, "std::string*");
+        CPPTypeMap.addTypemapping(SchemaConstants.XSD_IDREF, "std::string");
 
         // a xsd:XSD_XSD_IDREFS
-        CPPTypeMap.addTypemapping(SchemaConstants.XSD_IDREFS, "std::string*");
+        CPPTypeMap.addTypemapping(SchemaConstants.XSD_IDREFS, "std::string");
 
         // a xsd:Duration
         // wrap for c++
