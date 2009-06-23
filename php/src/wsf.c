@@ -127,7 +127,6 @@ PHP_METHOD (ws_client_proxy, get_location);
 /** Logging errors */
 PHP_FUNCTION (ws_log_write);
 
-static 
 ZEND_BEGIN_ARG_INFO ( ws_client_proxy_call_args, 0) 
 	ZEND_ARG_PASS_INFO (0) 
 	ZEND_ARG_PASS_INFO (0) 
@@ -2010,6 +2009,11 @@ PHP_METHOD (ws_security_token, __construct)
 		{
 			add_property_string (object, WSF_PASSWORD_CALLBACK, Z_STRVAL_PP (tmp), 1);
 		}
+		if (zend_hash_find (ht, WSF_PASSWORD_CALLBACK_ARGS,
+			sizeof (WSF_PASSWORD_CALLBACK_ARGS), (void **) &tmp) == SUCCESS) 
+		{
+			add_property_zval(object, WSF_PASSWORD_CALLBACK_ARGS, *tmp);
+		}
         if(zend_hash_find(ht, WSF_REPLAY_DETECT_CALLBACK, sizeof(WSF_REPLAY_DETECT_CALLBACK),
                 (void **)&tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING)
         {
@@ -2018,7 +2022,7 @@ PHP_METHOD (ws_security_token, __construct)
 		if(zend_hash_find(ht, WSF_REPLAY_DETECT_CALLBACK_ARGS, sizeof(WSF_REPLAY_DETECT_CALLBACK_ARGS),
 			(void **)&tmp) == SUCCESS)
 		{
-			add_property_zval(object, WSF_REPLAY_DETECT_CALLBACK_ARGS, *tmp);;
+			add_property_zval(object, WSF_REPLAY_DETECT_CALLBACK_ARGS, *tmp);
 		}
         if(zend_hash_find(ht, WSF_ENABLE_REPLAY_DETECT, sizeof(WSF_ENABLE_REPLAY_DETECT),
                 (void **)&tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_BOOL)
