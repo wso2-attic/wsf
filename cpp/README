@@ -39,6 +39,7 @@ FEATURES
 - Support WS-RM
 - Support WS-SecurityPolicy
 - Support for REST Style invocations
+- Support for MTOM/XOP attachments.
 
 
 THE LATEST VERSION
