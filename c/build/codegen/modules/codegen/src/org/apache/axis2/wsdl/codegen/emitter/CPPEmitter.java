@@ -251,7 +251,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
                             this.codeGenConfiguration.getOutputLanguage());
 
             writeFile(serviceXMLModel, serviceXmlWriter);
-            System.out.println("Service XML Model String"+DOM2Writer.nodeToString(serviceXMLModel));
+//            System.out.println("Service XML Model String"+DOM2Writer.nodeToString(serviceXMLModel));
         }
     }
 
@@ -264,7 +264,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
                                              codeGenConfiguration.getOutputLanguage());
 
         writeFile(callbackModel, writerCallback);
-         System.out.print(DOM2Writer.nodeToString(callbackModel));
+//         System.out.print(DOM2Writer.nodeToString(callbackModel));
        /*
         CPPStubSourceWriter writerCStub =
                 new CPPStubSourceWriter(getOutputDirectory(codeGenConfiguration.getOutputLocation(),
@@ -381,8 +381,8 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
         rootElement.appendChild(getUniqueListofFaults(doc));
 
         /////////////////////////////////////////////////////
-        System.out.print("Interface implementation document");
-         System.out.println(DOM2Writer.nodeToString(rootElement));
+//        System.out.print("Interface implementation document");
+//         System.out.println(DOM2Writer.nodeToString(rootElement));
         /////////////////////////////////////////////////////
 
 
@@ -417,7 +417,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
 
 
         /////////////////////////////////////////////////////
-         System.out.println(DOM2Writer.nodeToString(rootElement));
+//         System.out.println(DOM2Writer.nodeToString(rootElement));
         /////////////////////////////////////////////////////
 
         return doc;

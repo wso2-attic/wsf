@@ -452,8 +452,8 @@ public class CPPBeanWriter implements BeanWriter {
                     , modelHeader);
 
             /////////////////////////////////////////////////////
-             System.out.println(DOM2Writer.nodeToString(modelSource.getFirstChild()));
-            /////////////////////////////////////////////////////
+//             System.out.println(DOM2Writer.nodeToString(modelSource.getFirstChild()));
+            ///////////////////////////////////////////////////
 
         }
 

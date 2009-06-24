@@ -324,7 +324,7 @@ public class CEmitter extends AxisServiceBasedMultiLanguageEmitter {
         rootElement.appendChild(getUniqueListofFaults(doc));
 
         /////////////////////////////////////////////////////
-         System.out.println(DOM2Writer.nodeToString(rootElement));
+//         System.out.println(DOM2Writer.nodeToString(rootElement));
         /////////////////////////////////////////////////////
 
 
@@ -359,7 +359,7 @@ public class CEmitter extends AxisServiceBasedMultiLanguageEmitter {
 
 
         /////////////////////////////////////////////////////
-         System.out.println(DOM2Writer.nodeToString(rootElement));
+//         System.out.println(DOM2Writer.nodeToString(rootElement));
         /////////////////////////////////////////////////////
 
         return doc;
