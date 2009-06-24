@@ -38,13 +38,8 @@
         #include &lt;stdio.h&gt;
         #include &lt;OMElement.h&gt;
         #include &lt;ServiceClient.h&gt;
+        #include &lt;ADBDefines.h&gt;
 
-
-        #define ADB_DEFAULT_DIGIT_LIMIT 1024
-        #define ADB_DEFAULT_NAMESPACE_PREFIX_LIMIT 64
-        <xsl:if test="itemtype">
-        #define ADB_DEFAULT_LIST_SEPERATOR " "
-        </xsl:if>
 
         /**
         *  <xsl:value-of select="$axis2_name"/> wrapped class classes ( classes for CPP )
@@ -131,19 +126,10 @@
         #include &lt;stdio.h&gt;
         #include &lt;OMElement.h&gt;
         #include &lt;ServiceClient.h&gt;
-        #include &lt;ADBObject.h&gt;
+        #include &lt;ADBDefines.h&gt;
 
 namespace <xsl:value-of select="@cppNamespace"/>
 {
-
-        #define ADB_DEFAULT_DIGIT_LIMIT 1024
-        #define ADB_DEFAULT_NAMESPACE_PREFIX_LIMIT 64
-
-        <xsl:if test="itemtype">
-        #define ADB_DEFAULT_LIST_SEPERATOR " "
-        </xsl:if>
-
-
         <xsl:variable name="isEnum">
           <xsl:choose>
             <xsl:when test="count(property)=1 and property/enumFacet and property/@type='std::string'">1</xsl:when>
