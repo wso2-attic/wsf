@@ -27,7 +27,7 @@
 <xsl:variable name="targetsourcelocation"><xsl:value-of select="@targetsourcelocation"/></xsl:variable>
 <xsl:choose>
 <xsl:when test="$option = 1">
-gcc -g -shared -olib<xsl:value-of select="$servicename"/>.so -I $AXIS2C_HOME/include/axis2-1.5.0/ -I<xsl:value-of select="$targetsourcelocation"/> -L$AXIS2C_HOME/lib \
+gcc -g -shared -olib<xsl:value-of select="$servicename"/>.so -I $WSFCPP_HOME/include/ -I<xsl:value-of select="$targetsourcelocation"/> -L$WSFCPP_HOME/lib \
     -laxutil \
     -laxis2_axiom \
     -laxis2_engine \
@@ -36,10 +36,11 @@ gcc -g -shared -olib<xsl:value-of select="$servicename"/>.so -I $AXIS2C_HOME/inc
     -laxis2_http_sender \
     -laxis2_http_receiver \
     -lguththila \
-    *.c <xsl:value-of select="@targetsourcelocation"/>/*.c
+    -lwso2_wsf \
+    *.cpp <xsl:value-of select="@targetsourcelocation"/>/*.cpp
 </xsl:when>
 <xsl:otherwise>
-gcc -g -shared -olib<xsl:value-of select="$servicename"/>.so -I $AXIS2C_HOME/include/axis2-1.5.0/  -L$AXIS2C_HOME/lib \
+gcc -g -shared -olib<xsl:value-of select="$servicename"/>.so -I $WSFCPP_HOME/include/  -L$WSFCPP_HOME/lib \
     -laxutil \
     -laxis2_axiom \
     -laxis2_engine \
@@ -48,7 +49,8 @@ gcc -g -shared -olib<xsl:value-of select="$servicename"/>.so -I $AXIS2C_HOME/inc
     -laxis2_http_sender \
     -laxis2_http_receiver \
     -lguththila \
-    *.c 
+    -lwso2_wsf \
+    *.cpp 
 </xsl:otherwise>
 </xsl:choose>
 </xsl:template>
