@@ -1287,7 +1287,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
 		{
 		*/
 			sapi_add_header ("Content-Type:application/xml",
-				sizeof ("Content-Type:application/xml"), 1);
+				sizeof ("Content-Type:application/xml") -1, 1);
 		/*} */
 		
 		ZVAL_STRING(param, Z_STRVAL_PP(wsdl_location), 1);
@@ -1525,7 +1525,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
 					{
 					*/
 						sapi_add_header ("Content-Type:application/xml",
-                                     sizeof ("Content-Type:application/xml"), 1);
+                                     sizeof ("Content-Type:application/xml") -1, 1);
 					/* } */
                     php_write (val, len TSRMLS_CC);
                     if(val)
