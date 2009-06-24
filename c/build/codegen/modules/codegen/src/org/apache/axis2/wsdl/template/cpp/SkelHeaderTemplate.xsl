@@ -60,6 +60,10 @@ namespace <xsl:value-of select="$cppNamespace"/>{
         
 class <xsl:value-of select="$svc_name"/>
 {
+        public:
+            <xsl:value-of select="$svc_name"/>(){}
+
+
      <xsl:for-each select="method">
          <xsl:variable name="outputours"><xsl:value-of select="output/param/@ours"/></xsl:variable>
          <xsl:variable name="isUnwrapParameters" select="input/param[@location='body' and @type!='']/@unwrappParameters"/>
@@ -89,9 +93,9 @@ class <xsl:value-of select="$svc_name"/>
          </xsl:if>
 
 		 <!-- regardless of the sync or async status, the generated method signature would be just a usual
-	           c function-->
+	           cpp function-->
          public:
-           <xsl:value-of select="$svc_name"/>(){}
+
         /**
          * Auto generated method declaration
          * for "<xsl:value-of select="@qname"/>" operation.
