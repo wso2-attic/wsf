@@ -5057,7 +5057,7 @@
             /**
              * Get ith element of <xsl:value-of select="$propertyName"/>.
              */
-            WSF_EXTERN <xsl:value-of select="$nativePropertyType"/> WSF_CALL
+            <xsl:value-of select="$nativePropertyType"/> WSF_CALL
             <xsl:value-of select="$axis2_name"/>::get<xsl:value-of select="$CName"/>At(int i)
             {
                 <xsl:value-of select="$PropertyTypeArrayParam"/> ret_val;
