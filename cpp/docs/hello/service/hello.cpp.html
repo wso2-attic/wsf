@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>C++ code colored by C++2HTML</title>
+<meta name="generator" content="C++2HTML by Jasper Bedaux" />
+<!-- To generate your own colored code visit http://www.bedaux.net/cpp2html/ -->
+<style type="text/css"> 
+.comment { color: #999999; font-style: italic; }
+.pre { color: #000099; }
+.string { color: #009900; }
+.char { color: #009900; }
+.float { color: #996600; }
+.int { color: #999900; }
+.bool { color: #000000; font-weight: bold; }
+.type { color: #FF6633; }
+.flow { color: #FF0000; }
+.keyword { color: #990000; }
+.operator { color: #663300; font-weight: bold; }
+</style>
+</head>
+<body>
+<pre><span class="comment">/*
+* Copyright 2005-2009 WSO2, Inc. http://wso2.com
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/</span><span class="pre">
+ 
+ 
+#include &lt;ServiceSkeleton.h&gt;
+#include &lt;iostream&gt;
+#include &lt;stdio.h&gt;
+#include &lt;axutil_env.h&gt;
+#include &lt;Environment.h&gt;
+#include &lt;OMText.h&gt;
+#include "Hello.h"
+</span><span class="keyword">
+ 
+using namespace</span> wso2wsf<span class="operator">;</span><span class="keyword">
+using namespace</span> std<span class="operator">;</span><span class="comment">
+ 
+/** Load the service into axis2 engine */</span>
+WSF_SERVICE_INIT<span class="operator">(</span>Hello<span class="operator">)</span>
+ 
+OMElement<span class="operator">*</span> Hello<span class="operator">::</span>invoke<span class="operator">(</span>OMElement<span class="operator"> *</span>ele<span class="operator">,</span> MessageContext<span class="operator"> *</span>msgCtx<span class="operator">)
+{</span><span class="flow">
+	return</span> greet<span class="operator">(</span>ele<span class="operator">);
+}</span>
+ 
+OMElement<span class="operator">*</span> Hello<span class="operator">::</span>onFault<span class="operator">(</span>OMElement<span class="operator"> *</span>ele<span class="operator">)
+{</span>
+	OMElement<span class="operator"> *</span>responseEle<span class="operator"> =</span><span class="keyword"> new</span> OMElement<span class="operator">(</span><span class="string">"HelloServiceErrorResponse"</span><span class="operator">);</span>
+	responseEle<span class="operator">-&gt;</span>setText<span class="operator">(</span><span class="string">"Hello Service Failed"</span><span class="operator">);</span><span class="flow">
+	return</span> responseEle<span class="operator">;
+}</span><span class="type">
+ 
+void</span> Hello<span class="operator">::</span>init<span class="operator">()
+{
+ 
+}</span>
+ 
+OMElement<span class="operator">*</span> Hello<span class="operator">::</span>greet<span class="operator">(</span>OMElement<span class="operator">*</span> inMsg<span class="operator">)
+{</span>
+	string greet<span class="operator">;</span><span class="flow">
+	if</span><span class="operator">(</span>inMsg<span class="operator">)
+	{</span><span class="flow">	
+		try</span><span class="operator">
+		{</span><span class="flow">	
+			if</span><span class="operator">(</span>inMsg<span class="operator">-&gt;</span>getFirstChild<span class="operator">() &amp;&amp;</span> inMsg<span class="operator">-&gt;</span>getFirstChild<span class="operator">()-&gt;</span>nodeType<span class="operator">() ==</span> AXIOM_TEXT<span class="operator">)
+			{</span>
+				OMText<span class="operator"> *</span>text<span class="operator"> =</span><span class="keyword"> dynamic_cast</span><span class="operator">&lt;</span>OMText<span class="operator">*&gt;(</span>inMsg<span class="operator">-&gt;</span>getFirstChild<span class="operator">());</span>
+				greet<span class="operator"> =</span> text<span class="operator">-&gt;</span>getValue<span class="operator">();</span>
+				cout<span class="operator"> &lt;&lt;</span><span class="string"> "Client greeted Saying"</span><span class="operator"> &lt;&lt;</span> greet<span class="operator"> &lt;&lt;</span> endl<span class="operator">;				
+			}
+		}</span><span class="flow">catch</span><span class="operator"> (</span>bad_cast<span class="operator">) 
+		{</span><span class="flow">
+			return</span> NULL<span class="operator">;
+		}</span>
+		OMElement<span class="operator"> *</span>helloEle<span class="operator"> =</span><span class="keyword"> new</span> OMElement<span class="operator">(</span><span class="string">"greetResponse"</span><span class="operator">);</span>
+		OMElement<span class="operator"> *</span>text<span class="operator"> =</span><span class="keyword"> new</span> OMElement<span class="operator">(</span><span class="string">"text"</span><span class="operator">);</span>
+		helloEle<span class="operator">-&gt;</span>setText<span class="operator">(</span>greet<span class="operator">);</span><span class="flow">
+		return</span> helloEle<span class="operator">;
+	}</span><span class="flow">
+	return</span> NULL<span class="operator">;
+}</span>
+</pre>
+</body>
+</html>
