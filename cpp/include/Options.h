@@ -245,6 +245,51 @@ namespace wso2wsf
 		*
 		*/
 		WSF_EXTERN axis2_options_t* WSF_CALL getAxis2Options();
+
+		/**
+		* Sets the bool value indicating whether to test whether HTTP
+		* Authentication is required or not.
+		* @param testHTTPAuth bool value indicating whether to test
+		* or not, true to enable, false to disable
+		* @return true on success, false otherwise.
+		*/
+		WSF_EXTERN bool WSF_CALL
+		setTestHTTPAuth(bool testHTTPAuth);
+
+		/**
+		* Sets the bool value indicating whether to test whether Proxy
+		* Authentication is required or not.
+		* @param  testProxyAuth bool value indicating whether to test
+		* or not, true to enable, false to disable
+		* @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+		*/
+		WSF_EXTERN bool WSF_CALL
+		setTestProxyAuth(bool testProxyAuth);
+
+		/**
+		* Sets HTTP authentication information.
+		* @param username string representing username
+		* @param password string representing password
+		* @param auth_type use "Basic" to force basic authentication
+		* and "Digest" to force digest authentication or NULL for not
+		* forcing authentication
+		* @return true on success, else false
+		*/
+		WSF_EXTERN bool WSF_CALL
+		setHTTPAuthInfo(std::string username, std::string password, std::string authType);
+
+		/**
+		* Sets proxy authentication information.
+		* @param username string representing username
+		* @param password string representing password
+		* @param authType use "Basic" to force basic authentication
+		* and "Digest" to force digest authentication or NULL for not
+		* forcing authentication
+		* @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+		*/
+		WSF_EXTERN bool WSF_CALL 
+		setProxyAuthInfo(std::string username, std::string password, std::string authType);
+
     };
     /** @} */
 }
