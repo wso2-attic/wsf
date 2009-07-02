@@ -22,7 +22,7 @@ DEBUG = 1
 ### Build Details ###
 #############################################################################
 # enables https support 
-ENABLE_SSL = 0          
+ENABLE_SSL = 1          
 #
 # build libcurl transport 
 ENABLE_LIBCURL = 0
