@@ -1,0 +1,3726 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><title>WSO2 WSF/C++ - Manual</title></head>
+<body style="background-color: #ffffff">
+<p style="margin-bottom: 0in;"><br />
+</p>
+<div class="section"><a name="WSF_CPP_Manual_-_Contents"></a>
+<h2>WSF/C++ Manual - Contents</h2>
+<ol>
+<li><a href="#quick_start">Quick Start Guide</a></li>
+<li><a href="#repo_folder">Repository Folder</a></li>
+<li><a href="#svc_api">Service API</a></li>
+<li><a href="#client_api">Client API</a></li>
+<li><a href="#rest">REST</a></li>
+<li><a href="#mtom">MTOM</a></li>
+<li><a href="#engaging_module">Engaging a Module</a></li>
+<li><a href="#ws_addressing">WS-Addressing</a></li>
+<li><a href="#writing_module">Writing a Module</a></li>
+<li><a href="#simple_axis_server">Simple Axis
+Server</a></li>
+<li><a href="#mod_axis2">Deploying with Apache2
+HTTP Web Server</a></li>
+<li><a href="#IIS">Deploying with Microsoft IIS
+Server</a></li>
+<li><a href="#ssl_client">Using SSL Client</a></li>
+<li><a href="#proxy">Using Proxy Support</a></li>
+<li><a href="#proxy_auth">Using Proxy
+Authentication Support</a></li>
+<li><a href="#http_auth">Using HTTP Authentication
+Support</a></li>
+<li><a href="#wsdl2c">
+    WSDL2CPP Tool</a></li>
+<li><a href="#tcptrans">TCP Transport</a></li>
+<li><a href="#amqptrans">AMQP Transport</a></li>
+<li><a href="#archive">Archive Based Deployment</a></li>
+<li><a href="#tcpmon">TCPMon Tool</a></li>
+<li><a href="#appA">Appendix A - axis2.xml</a></li>
+<li><a href="#appB">Appendix B - services.xml</a></li>
+<li><a href="#appC">Appendix C - module.xml</a></li>
+<li><a href="#appD">Appendix D - service client
+options</a></li>
+</ol>
+<p style="margin-bottom: 0in;"><br />
+</p>
+<p><a name="quick_start"></a></p>
+</div>
+<div class="section"><a name="1__Quick_Start_Guide"></a>
+<h2>1. Quick Start Guide</h2>
+<p>This section is aimed to help you get a Web service running in
+a short
+time using WSF/C++, and consume that service using WSF/C++ client.</p>
+<p>First, <a href="http://ws.apache.org/axis2/c/download.cgi" class="externalLink" title="External Link">download</a>
+the latest binary release from WSO2 WSF/C++ homepage. Once you download the
+correct
+binary that suits your platform, all that you require to get it running
+is to
+extract the package to a folder of your choice, and set the WSFCPP_HOME
+environment variable to point to this extracted folder. For Linux, you
+may
+have to set the LD_LIBRARY_PATH environment variable to include the lib
+folder (e.g. add $WSFCPP_HOME/lib). For MS Windows, you will have to
+add the
+lib folder to your PATH variable to include the WSF/C++ DLLs to your
+path.</p>
+<p>Now you should be able to change the directory to the bin
+folder of the
+extracted folder, and run the simple axis server in one command shell.
+Then
+change the directory to samples/bin in another command shell and run
+any of
+the samples there (you may have to set the environment variables in
+this new
+shell as well). Please see the <a href="http://ws.apache.org/axis2/c/docs/installationguide.html" class="externalLink" title="External Link">installation
+guide</a> for more detailed explanation.</p>
+<p>Once you have WSF/C++ up and running successfully, you can
+start writing
+your own services and clients. The following sections explain how to
+write
+your first service and client with WSF/C++..</p>
+<a name="1_1_Hello_Service"></a>
+<h3 class="subsection">1.1 Hello Service</h3>
+<p class="subsection">Let's see how you can write your first Web Service with WSF/C++ and how to
+deploy it.</p>
+<p class="subsection">The first service that we are going to write is named<span style="color: #ff6666"> <span
+        style="color: #ff0066">"hello"</span></span> with a single operation named <span
+            style="color: #ff0066">"greet"</span> in the service. This <span style="color: #ff0066">
+                "greet"</span> operation,
+when
+invoked by the client, will expect the client to send a greeting in the
+request, and in turn send a greeting in the response. Following are
+examples
+of XML payloads exchanged between the client and the service:</p>
+<p class="subsection">Request:</p>
+<div class="source">
+<pre> &lt;greet&gt;<br /> Hello Service!<br /> &lt;greet&gt;<br /><br /></pre>
+</div>
+<p class="subsection">Response:</p>
+<div class="source">
+<pre> &lt;greetResponse&gt;<br /> Hello Client!<br /> &lt;greetResponse&gt;<br /></pre>
+</div><div class="subsection">
+        <br />
+        WSF/C++ provides a ServiceSkeleton based class which defines a set of methods which
+        should be implemented by the service classes.
+        <br />
+        The service class should extend from the base class ServiceSkeleton.
+                </div>
+<p class="subsection">The steps to be followed when implementing a service with WSF/CPP include</p><div class="subsection">
+<ol>
+<li><b>Define a class named Hello which extends the ServiceSkeleton class.</b>
+<br /> In this class we will implement our service since this is a very simple service. 
+</li>
+<li><b>Define the methods corresponding to the operations of the service</b>
+            <br />
+    The Hello class will have a method named greet() that implements the greet operation explained above. </li>
+<li><b>Implement the virtual methods defined by the ServiceSkeleton class.</b><br />
+<code>init(), invoke(), and onFault() are the methods that are</code> defined in the ServiceSkeleton class should be implemented
+by the service. Within the init() method, any service specific initialization can be done. Within the invoke method, the selection of which method should be 
+called is handled. onFault() should implement the logic for handling fault senarion in a service.<br />
+</li>
+<li><b>Add WSF_SERVICE_INIT macro</b><br />
+WSF_SERVICE_INIT macro defines the code that is used to load and unload services. The Class name should be passed as the argument to the macro.
+<br />
+</li>
+<li><b>Write the services.xml file for the service</b><br />
+The services.xml file acts as the deployment descriptor file for the
+service. As the bare minimum, we need to configure the service name,
+operations, and the shared library file name containing the service
+implementation in this file and the message receiver should be defined.
+As previously decided, we will name the service "hello", the operation
+"greet" and the shared library libhello.so on Linux and hello.dll on MS
+Windows.<br />
+</li>
+</ol>
+<div class="subsection"><a name="1_1_1_Operation_Implementation"></a>
+<h3>1.1.1 Operation Implementation</h3>
+<p>Look for the greet method in the <a href="hello/service/hello.cpp.html">
+    hello.cpp</a> source file.</p>
+<p>This method implements the business logic for the greet operation. We will be calling
+    this method from our implementation of the invoke method.
+Basically, this method
+    receives the request payload as an
+<code>OMElement.</code> process it to understand
+    the request string, and
+prepares the response as an <code>OMElement </code> and
+returns it back.</p>
+</div>
+<div class="subsection"><a name="1_1_2_Invoking_Operation_Implementation"></a>
+<h3>
+        1.1.2 Invoking Operation Implementation</h3>
+<p>The invoke method of the ServiceSkeleton is the point of
+entry for
+invoking the operations. Hence in our implementation of the invoke method,
+we have to define how the operations are to be called.</p>
+<p>Look for the <code>invoke</code> method in the <a href="hello/service/hello.cpp.html">hello.cpp</a> source file.</p>
+<p>In our implementation of the <code><strong>invoke</strong> method</code>, we call the greet method which implement the greet operation. As we have only one
+operation, the task is simple here. If we had multiple operations, we will have to look into the information in the MessageContext to map it to the exact
+operation. The WSF/CPP framework will call the invoke method with an OMElement, containing the request payload, and MessageContext
+<span style="font-size: 10pt; font-family: Courier New"> </span>instance, containing the MessageContext 
+information.We can use the MessageContext to extract whatever information we deem necessary that is related to the incoming message. The WSF/CPP framework
+expects the invoke method to return a pointer to an <code>OMElement</code>, representing the response payload.</p>
+</div>
+<div class="subsection"><a name="1_1_3_Full_Source"></a>
+<h3>1.1.3 Full Source</h3>
+<p>Here is the complete source code for the service : <a href="hello/service/hello.cpp.html">hello.cpp</a></p>
+</div>
+<div class="subsection"><a name="1_1_4_Service_Descriptor"></a>
+<h3>1.1.4 Service Descriptor</h3>
+<p>The services.xml file contains details on the service that
+would be read by the deployment engine during server start up time. The following shows the contents for the services.xml file for the hello service.</p>
+<div class="source">
+<pre>&lt;service name="<span style="color: #ff0066">hello</span>"&gt;<br /> &lt;parameter name="<span
+    style="color: #ff0066">ServiceClass</span>" locked="<span style="color: #ff0066">xsd:false</span>"&gt;hello&lt;/parameter&gt;<br /> &lt;description&gt;<br /> Quick start guide hello service sample.<br /> &lt;/description&gt;<br /> &lt;operation name="<span
+        style="color: #ff0066">greet</span>"&gt;
+	&lt;messageReceiver class="<span style="color: #ff0066">wsf_cpp_msg_recv</span>" /&gt;
+&lt;/operation&gt;
+<br />&lt;/service&gt;<br /><br /></pre>
+</div>
+<p>The service configuration shown above specifies that the name
+of the
+service is hello. <br />
+The value of the "<strong>ServiceClass</strong>", "<span style="color: #ff0066">hello</span>"
+    in this case, will be mapped
+to the
+service implementation by the deployment engine as<span style="color: #ff0066"> libhello.so</span> on Linux or <span style="color: #ff0066">
+        hello.dll</span> on MS Windows. The description element contains a brief
+description
+of the service. There can be one or more operation elements. For this sample, we
+    only have one operation, with the name "<span style="color: #ff0066">greet</span>".
+    It is important to specify the messageReceiver option as well. Message Recevier
+    is the handler which finds the correct service and calls the invoke method. Since
+    WSF/CPP is built on top of WSF/C, you are able to deploy services written in both
+    C and C++. Therefore , there exist message receivers for both C and C++. If you
+    do not specify the message Receiver option, it will pick the default message receiver,
+    which is the C one.
+    <br />
+</p>
+</div>
+<div class="subsection"><a name="1_1_5_Compiling_the_Service"></a>
+<h3>
+    1.1.5 Compiling the Service</h3>
+<p>You can compile the service sample as shown below.</p>
+<p>On Linux:</p>
+<div class="source">
+<pre>gcc -shared -olibhello.so -I$WSFCPP_HOME/include -I$WSFCPP_HOME/include/axis2-1.6.0/ -L$WSFCPP_HOME/lib -laxutil -laxis2_axiom -laxis2_parser -laxis2_engine -lwso2_wsf -lpthread -laxis2_http_sender -laxis2_http_receiver hello.cpp<br /></pre>
+</div>
+<p>On MS Windows:</p>
+<p>to compile,</p>
+        <p>
+            cl.exe /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT" /D "AXIS2_SVR_MULTI_THREADED" /w /nologo /I %WSFCPP_HOME%\include /c hello.cpp<br />
+        </p>
+        <p>
+            to link,</p>
+<div class="source">
+<pre>link.exe /nologo /LIBPATH:%WSFCPP_HOME%\lib axutil.lib axiom.lib axis2_parser.lib axis2_engine.lib wso2_wsf.lib /DLL /OUT:hello.dll *.obj
+
+Make sure to run the vcvars32.bat file before running the compilation commands. vcvars32.bat file set the correct environment settings.<br /><br /></pre>
+</div>
+</div>
+<div class="subsection"><a name="1_1_7_Deploying_the_Service"></a>
+<h3>
+    &nbsp;</h3>
+    <h3>
+    1.1.6 Deploying the Service</h3>
+<p>To make the service available to be consumed by the clients,
+we have to
+deploy the service. To deploy the service, you have to create a folder
+named
+'hello' in the WSFCPP_HOME/services folder, and copy the services.xml
+file
+and the shared library file (libhello.so on Linux or hello.dll on MS
+Windows)
+into that folder.</p>
+<p>To verify that your service has been correctly deployed, you
+can start the
+simple axis server and then browse the list of deployed services using
+a Web
+browser. To start the simple axis server, you can go to the WSFCPP_HOME/bin
+folder and run the executable axis2_http_server. The default URL that
+you can
+test the service list with is <a href="http://localhost:9090/axis2/services" class="externalLink" title="External Link">http://localhost:9090/axis2/services</a>.
+You should get an entry for the hello service on the page that is
+displayed.</p>
+</div>
+<div class="subsection"><a name="1_1_8_Providing_a_WSDL_for_the_Service"></a>
+<h3>1.1.7 Providing a WSDL for the Service</h3>
+<p>
+    WSF/CPP does not support dynamic WSDL generation. However, it
+is possible to attach the contract you used to generate the service
+skeleton, to the respective service. This can be done in two ways.</p>
+<ol>
+<li>Adding the WSDL file to the folder in which the service DLL
+is found.
+</li>
+<li>Providing the path of the WSDL file in the services.xml.
+</li>
+</ol>
+<p>If you choose the first option, you will have to copy the WSDL
+file to the folder in which the service DLL is found. The name of the
+WSDL file should be the name of the service. And, if you choose the
+second option, you will have to make use of the <b><code>wsdl_path</code></b>
+parameter in the services.xml file. More info on how this can be done
+is found under the <a href="#appB">services.xml</a>
+section.</p>
+<p>An example of the second option can be found the services.xml
+of the <b>echo</b> sample service, which is commented. An
+example of the first option in use is seen in the <b>Calculator</b>
+sample service.</p>
+<p>The static WSDL file can be accessed by appending <code>?wsdl</code>
+to the service end-point. You can view the WSDL provided for the
+Calculator sample, by pointing to <a href="http://localhost:9090/axis2/services/Calculator?wsdl" class="externalLink" title="External Link">http://localhost:9090/axis2/services/Calculator?wsdl</a>.</p>
+</div>
+<div class="subsection"><a name="1_2_Hello_Client"></a>
+<h3>1.2 Hello Client</h3>
+<p>Now that you know how to write a service with WSF/CPP , let's
+see how to
+write a client to consume that service. The request payload that the
+client
+will be sending to the service was described in the above section.
+The
+client has to prepare the payload, send it to the service, and then
+receive
+and process the response.</p>
+<p>The steps to be followed when implementing a client with WSF/CPP:</p>
+<ol>
+<li><b>
+    Initialize the Environment.</b>
+<br />
+Each function in WSF/C takes a pointer to the environment instance
+that encapsulates the memory allocator, error handler, and logging and
+threading mechanisms. Since
+    WSF/CPP is build on top of this infrustructure, you need to initialize the Environment
+    at the top of the code. The Environment class has an static method initialize()
+    which takes the parameters log file name and the LOG LEVEL.<br />
+</li>
+<li><b>Create an Options instance, and set options</b>.<br />
+The<code> Options class provide
+      methods for configuring the client. </code> For example, you can use setTo() method
+      in the Options classs to set the
+endpoint address of the service to be consumed by the client.</li>
+<li><b>Create a ServiceClient &nbsp;instance, giving the
+client repository folder as a parameter.</b><br />
+The<code> ServiceClient class<span style="font-size: 12pt;
+          font-family: Times New Roman"> provides the basic client </span></code> API for
+      consuming Web services. It provides a simplified&nbsp; and easy to use API. ServiceClient
+      takes has 3 different constructors. A ServiceClient instance can be created by providing
+      the repository location. For the purpose of our sample, you can use the WSFCPP_HOME
+      as the repository. The concept of <a href="#repo_folder">repository</a>
+is explained in detail in a later section.<br />
+</li>
+<li><b>Set Options to ServiceClient instance</b><br />
+The Options instance created in the earlier step have to be set on the ServiceClient
+      , indicating the options that are meant to be used by the service
+client.<br />
+</li>
+<li><b>Send the request and receive the response</b><br />
+      sendReceive method of the ServiceClient can be used to invoke a request response
+      operation on the service
+client instance.<br />
+The <strong>request</strong> operation takes the request payload as an OMElement<span style="font-size: 10pt;
+          font-family: Courier New"> </span>and returns the response payload as an OMElement.</li><li><b>Process the response</b><br />
+Process the response in line with the client business logic.</li>
+</ol>
+</div>
+<div class="subsection"><a name="1_2_1_Creating_and_Setting_Options"></a>
+<h3>1.2.1 Creating and Setting Options</h3>
+<div class="source">
+<pre> options = new Options();<br /> address = "http://localhost:9090/axis2/services/hello";<br /> options-&gt;setTo(address);<br /><br /></pre>
+</div>
+<p>In the above section of code, an <span style="font-size: 10pt; font-family: Courier New">
+         <strong>Options</strong></span>
+instance is
+created first. You can specify the
+     Then an endpoint reference instance is created with the
+address of the location of the service. Finally, the created endpoint
+is set
+as the "to" address of the options. The "to" address indicates where
+the
+request should be sent to.</p>
+</div>
+<div class="subsection"><a name="1_2_2_Using_Service_Client"></a>
+<h3>1.2.2 Using Service Client</h3>
+<div class="source">
+<pre> svcClient = new ServiceClient(clientHome);<br /> svcClient-&gt;setOptions(options);<br /> payload = buildRequest();<br /> response = svcClient-&gt;request(payload);<br /><br /></pre>
+</div>
+<p>After creating and preparing the options, the next step is to
+create a
+service client instance and use it to send the request and receive the
+response. The code fragment given above shows how options can be set on
+top
+of the ServiceClient and how to
+     invoke the request operation with
+a
+request payload. Once the response is received, the response payload
+will be
+stored in the <strong>response</strong>, which is a
+     pointer to an OMElement that can be used to process the
+response further.</p>
+</div>
+<div class="subsection"><a name="1_2_3_Full_Source"></a>
+<h3>1.2.3 Full Source</h3>
+<p>Here is the complete source code for the client : <a href="hello/client/hello.cpp.html">hello.cpp</a></p>
+</div>
+<div class="subsection"><a name="1_2_4_Compiling_the_Client"></a>
+<h3>1.2.4 Compiling the Client</h3>
+<p>You can compile the client sample as shown below.</p>
+<p>On Linux:</p>
+<div class="source">
+<pre>gcc -o hello -I$WSFCPP_HOME/include/axis2-1.6.0/ -L$WSFCPP_HOME/lib -laxutil -laxis2_axiom -laxis2_parser -laxis2_engine -lpthread -laxis2_http_sender -laxis2_http_receiver -lwso2_wsf hello.c -ldl -Wl,--rpath -Wl,$AXIS2C_HOME/lib<br /><br /></pre>
+</div>
+<p>On MS Windows:</p>
+<p>to compile,</p>
+<div class="source">
+<pre>cl.exe /nologo /D "WIN32" /D "_WINDOWS" /D "_MBCS" /I %WSFCPP_HOME%\include /c hello.c<br /><br /></pre>
+</div>
+<p>to link,</p>
+<div class="source">
+<pre>link.exe /LIBPATH:%WSFCPP_HOME%\lib axutil.lib axiom.lib axis2_parser.lib axis2_engine.lib wso2_wsf.lib /OUT:hello.exe *.obj<br /><br /></pre>
+</div>
+</div>
+<div class="subsection"><a name="1_2_5_Running_the_Client"></a>
+<h3>1.2.5 Running the Client</h3>
+<p>To run the client, make sure you start the simple axis server
+and then run
+the hello executable.</p>
+<p style="margin-bottom: 0in;"><br />
+</p>
+<p><a name="repo_folder"></a></p>
+</div>
+</div>
+<div class="section"><a name="2__Repository_Folder"></a>
+<h2>2. Repository Folder</h2>
+<p>
+              WSF/C++ uses the same repository structure used by WSF/C. Therefore the following
+              description of Repository folder is valid for WSF/C++ as well.
+          </p>
+              <p>
+                  Repository is a folder where all Axis2/C related
+configurations as well as
+services and modules are located. The following shows the folder
+structure of
+the repository:</p>
+<img src="images/repo.jpg" alt="" style="font-family: Times New Roman" />
+<p>Here the name of the repository folder is axis2c_repo. In your
+system, you
+can specify any folder name of your choice. There are three sub folders
+available in the repository. In addition to that, the axis2.xml
+configuration
+file is also located in the repository. The following table describes
+the
+purpose of the repository contents.</p>
+<table class="bodyTable" style="font-family: Times New Roman">
+<caption>Axis2/C Repository Contents</caption><tbody>
+<tr class="b">
+<th>Folder/File Name</th>
+<th>Description</th>
+</tr>
+<tr class="a">
+<td>
+<p>lib</p>
+</td>
+<td>
+<p>The lib folder contains the libraries required to run
+the Axis2/C engine. While you can afford to have the shared libs of
+Axis2/C in a location of your choice, the dynamically loaded shared
+libs, parser, transport receiver and transport sender has to be in the
+repository lib folder. It is mandatory that the lib folder is there
+    in the repository. In addition to WSF/C libraries, lib folder contains WSF/C++ specific
+    library files which include C++bindings to WSF/C and Rampart Security Library</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p>modules [optional]</p>
+</td>
+<td>
+<p>The modules folder contains the modules deployed with
+Axis2/C. Each module deployed will have its own sub folder inside the
+modules folder. For example, if the addressing module is deployed, then
+there will be a sub folder named addressing inside the modules folder
+of the repository. At deployment, the Axis2/C deployment engine would
+      traverse the modules folders to find out what modules are available.
+The modules folder is optional. If it is empty or non-existent, that
+means that there are no deployed modules.</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p>services [optional]</p>
+</td>
+<td>
+<p>The services folder contains the services deployed with
+Axis2/C. Each service deployed will have its own sub folder inside the
+services folder, or live inside one of the sub folders. At deployment, the Axis2/C deployment engine will traverse the services
+          folders to find out what services are available.
+The services folder is optional. If it is empty or non-existent, that
+means that there are no deployed services.</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p>axis2.xml</p>
+</td>
+<td>
+<p>The axis2.xml file is the configuration file of Axis2/C.<br />
+The configuration file is mandatory and must have the name axis2.xml.
+It is safe to consider your Axis2/C repository to be the folder in
+which you have the axis2.xml file.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Both clients as well as the services written using WSF/C++ can
+use the
+same repository. However you can use one repository for the server side
+and
+another one for the client side. The services folder is used only when
+the
+repository is used by the server side. When the repository is used by
+the
+client, the services folder, if present, will not be used.</p>
+<p>The WSF/C++ binary distribution, when extracted, can be
+considered as
+ready for use as your repository folder. If you are building WSF/C++
+from the
+source distribution, when you build the source, including the samples,
+the
+installation destination will be ready for use as your repository
+folder. The simple axis server (that is axis2_http_server binary), the
+client
+samples, and the HTTPD module (Axis2 Apache2 module) require the
+repository
+folder to be specified in order to run correctly.</p>
+<p></p>
+<div class="subsection"><a name="2_1_Module_Folders"></a>
+<h3>2.1 Module Folders</h3>
+<p>As described earlier, all the modules are placed inside the
+modules folder
+of the repository, and each module will have its own sub folder within
+the
+modules folder.<br />
+The folder in which a module is placed must have the same name as the
+module
+name. For example, the addressing module will be placed in a sub folder
+named
+addressing.<br />
+</p>
+<p>Inside the folder corresponding to a module, the shared
+library
+implementing the module and the module configuration file, module.xml,
+is
+placed. It is a must that these two files are present inside each
+folder
+representing a module. The module.xml file will be processed by the
+deployment engine to find out module specific information such as the
+module
+name, set of handlers, the flows into which those handlers are to be
+added,
+etc.</p>
+</div>
+<div class="subsection"><a name="2_2_Service_Folders"></a>
+<h3>2.2 Service Folders</h3>
+<p>All the services are placed inside the services folder of the
+repository,
+and each service will be in one of the sub folders within the services
+folder. Axis2/C has a concept called service groups, where there can be
+one
+or more services inside a service group. A single stand alone service
+is
+assigned a service group with the same name as that of the service by
+the
+Axis2/C engine for the purpose of easy handling. Therefore the sub
+folders in
+the services folder correspond to the service groups.</p>
+<p>A service, if deployed as a stand alone service, will reside
+inside a
+folder with the same name as that of the service. For example, the echo
+service will be placed in a sub folder named echo. The shared library
+implementing the service and the service configuration file, the
+services.xml, will be placed inside the folder corresponding to a
+service.
+Given the fact that the engine treats the folders to represent service
+groups
+and not a single service, the configuration file is called
+services.xml.
+However, you can always place a single service inside a single folder,
+which
+is the most common use case.</p>
+<p>Each sub folder within the services folder should have at
+least one shared
+lib implementing a service and a services.xml file. If it is a real
+service
+group, there will be multiple shared libs, yet there is only one
+services.xml
+file configuring all those services. The services.xml file is processed
+by
+the deployment engine to find out the service group and the service
+specific
+information such as the service group name, service name, the set of
+operations for each service, etc.</p>
+<p style="margin-bottom: 0in;"><br />
+</p>
+<p><a name="svc_api"></a></p>
+</div>
+</div>
+<div class="section"><a name="3__Service_API"></a>
+<h2>3. Service API</h2>
+<p>We have already seen how to write a service in the Quick Start
+Guide
+section of this manual. This section covers the service API of WSF/C++
+in
+more detail.</p>
+<p><code><span style="font-size: 12pt; font-family: Times New Roman">ServiceSkeleton<span
+              style="font-size: 10pt; font-family: Courier New"> class</span></span></code>
+          is an interface for implementing services. WSF/C++ does not provide
+any concrete implementation of this interface. It is the responsibility
+of
+the service implementers
+          to implement this interface. To implement the interface, you should implement the
+          virtual functions defined in the ServiceSkeleton class. Then, include the WSF_SERVICE_INIT
+          macro which preforms the service loading and unloading work.</p>
+          <p>
+              The following table details the signatures of the virtual methods defined in the
+              ServiceSkeleton class that should be implemeneted by a service implementation.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Function Signature</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>
+<pre>virtual void WSF_CALL init();</pre>
+</td>
+<td>Initializes the Service object instance. This method is called from the engine once per
+deployed service, during the first request made to the service.</td>
+</tr>
+<tr class="a">
+<td width="410">
+<pre>virtual OMElement* invoke(OMElement *inMsg,<br /> MessageContext *msgCtx);</pre>
+</td>
+<td>Invokes the service implementation. You have to
+implement the logic to call the correct functions in this method based
+on the name of the operation being invoked.</td>
+</tr>
+<tr class="b">
+<td>
+<pre>virtual OMElement*  onFault();</pre>
+</td>
+<td style="font-size: 12pt; font-family: Times New Roman">This method is called by the engine if a fault is
+detected.</td>
+</tr>
+<tr class="a" style="font-size: 12pt; font-family: Times New Roman">
+<td>
+<pre>virtual ~ServiceSkeleton();</pre>
+</td>
+<td>
+    Implement the service specific destructor for freeing resources allocated by the
+    service.
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<p>
+    Include the WSF_SERVICE_INIT(&lt;Service Class Name&gt;) within your service code.
+    This macro takes the service constructor name as the agrument which is used to instantiate
+    an instance of the service class. This instantiated object is loaded to the system
+    and is used for services invocations their after.</p>
+              <p>
+                  Note that service object instantiation happens once per
+service. When the
+first request is received by the service, a service&nbsp; instance
+is
+created and initialized. The same object instance will be re-used by
+the
+subsequent requests.</p>
+<p>You can find an example on how to implement the service
+skeleton interface
+in the <a href="hello/service/hello.cpp.html">
+    hello.cpp</a>
+source file,
+which is the example used in the <a href="#quick_start">Quick
+Start
+Guide</a>. More advanced samples can be found in the samples
+folder of the WSF/CPP distribution.</p>
+<p style="margin-bottom: 0in;"><br />
+</p>
+<p><a name="client_api"></a></p>
+</div>
+<div class="section"><a name="4__Client_API"></a>
+<h2>4. Client API</h2>
+<p>The primary client API to be used with WSF/CPP is ServiceClient API. This
+is meant to be an
+easy to use API for consuming services. If you want to do more complex
+tasks,
+such as invoking a client inside a module, or wrap the client API with
+another interface, you may need to use <code>axis2_op_client API which would require writing
+        some C code.</code></p>
+        <p>
+            The behavior of the ServiceClient can be fine tuned with the Options instance passed
+            to the ServiceClient. You can set the options by creating an Options instance. The bare minimum that
+you need to set is
+the endpoint URI to which the request is to be sent. An example of this
+was
+given in the <a href="#quick_start">Quick Start Guide
+section</a>.</p>
+<p>The ServiceClient interface serves as the primary client
+interface for
+consuming services. You can set the options to be used by the service
+client
+and then invoke an operation on a given service. There are several ways
+of
+invoking a service operation. The method of invoking an operation
+depends on
+3 things. They are,</p>
+<ol>
+<li>The Message Exchange Pattern (MEP)</li>
+<li>Synchronous/Asynchronous behavior (Blocking/Non-Blocking)</li>
+<li>Two-way or one-way transport</li>
+</ol>
+<p>Many service operation invocation scenarios can be obtained by
+combining
+the above three factors. The ServiceClient provides the
+necessary
+API calls to achieve this.</p>
+<p>Deciding the Message Exchange Pattern (MEP)</p>
+<p>There are 2 message exchange patterns.</p>
+<ol>
+<li>Out-Only</li>
+<li>Out-In</li>
+</ol>
+<p>In the Out-Only MEP, the client doesn't expect a reply from
+the server.
+The service client provides two methods of using the Out-Only MEP.</p>
+<p></p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th style="width: 597px">
+    Service Client Method Signatures</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td style="width: 597px">
+<pre>WSF_EXTERN bool WSF_CALL send(OMElement * payload, 
+std::string action) throw (AxisFault);
+
+WSF_EXTERN bool WSF_CALL send(OMElement * payload, std::string operation, 
+std::string action) throw (AxisFault);</pre>
+</td>
+<td>
+    &nbsp;These methods are used to interact with a service operation whose MEP is Robust
+    Out-Only. If an error happenes , it will be reported back to the client. Also client
+    side errors will be reported such as host unknown</td>
+</tr>
+    <tr class="b">
+        <td style="width: 597px">
+        </td>
+        <td>
+        </td>
+    </tr>
+<tr class="a">
+<td style="width: 597px">
+<pre> WSF_EXTERN bool WSF_CALL send(OMElement * payload, bool robust, 
+std::string operation, std::string action) throw (AxisFault);
+ 
+ WSF_EXTERN bool WSF_CALL send(OMElement * payload, bool robust, 
+std::string action) throw (AxisFault);</pre>
+</td>
+<td>
+    These methods are used to interact with a service operation whose MEP is Out-Only.
+    When the robust option is set to <strong>true,</strong>t his method reports any
+    errors &nbsp;back to the caller if a fault triggers
+on the server side.&nbsp; When
+    robust options is set to <strong>false, </strong>the server side errors will not
+    be reported, however the client errors will be reported.
+    <br />
+</td>
+</tr>
+<tr class="b">
+<td style="width: 597px">
+<pre> WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, 
+std::string action) throw (AxisFault); 
+ WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, 
+std::string operation, std::string action) throw (AxisFault); </pre>
+</td>
+<td>
+    These methods are used to interact with a service
+operation whose MEP is In-Out. It sends an XML request and receives an
+XML response.
+Returns a pointer to the OMElement
+    representing the XML response. This
+method blocks the client until the response arrives.</td>
+</tr>
+<tr class="a">
+<td style="width: 597px; height: 59px;">
+<pre> WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, 
+ICallback * callback, std::string action) throw (AxisFault);
+
+WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, 
+ICallback * callback, std::string action) throw (AxisFault); 
+</pre>
+</td>
+<td style="height: 59px">
+    These methods&nbsp; are used to interact with a service operation whose MEP is In-Out.
+    It sends an XML request and receives an XML response. By specifying the callback,&nbsp;
+    the methods allows aysnchrnous invocations.&nbsp; In this case, the method return
+    after sending the request, and the callback will be invoked, when the response is
+    received.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<p>Please have a look at the ServiceClient<code>.h</code>
+header file for
+more information on the above mentioned functions, as well as other methods which allowed different
+        configuration options..</p>
+<div class="subsection"><a name="4_1_Synchronous_vs__Asynchronous_Behavior__Blocking_Non-Blocking_"></a>
+<h3>4.1 Synchronous vs. Asynchronous Behavior
+(Blocking/Non-Blocking)</h3>
+<p>This will determine whether the client would block for the
+response
+(synchronous) or return immediately expecting the response to be
+handled by a
+callback (asynchronous, in other words non-blocking) in an Out-In MEP
+scenario.<br />
+<code>
+    Request method can be used for both Synchonous and Asynchnonous mode of invocations.
+    The paremeters passed will determine the behaviour of the method as described above.</code></p>
+</div>
+<div class="subsection"><a name="4_2_Two-Way_or_One-Way_Transport"></a>
+<h3>4.2 Two-Way or One-Way Transport</h3>
+<p>If the transport is two-way, then only one channel is used,
+which means
+the request is sent and the response is received on the same channel.
+If the
+transport is one-way, then the request is sent on one channel and the
+response is received on a separate channel.<br />
+If we want to use a separate channel for the response, a separate
+listener
+has to be started to receive the response, This can be done by setting
+the
+separate listener option to true using the
+<code>setUseSeparateListener</code> method in above the
+options.</p>
+<p>Please have a look at the <code>echo_blocking_dual</code>
+sample to see
+how to set the separate channel option.</p>
+<p>Please see <a href="#appD">Appendix D</a>
+for further details on setting
+options.</p>
+<p style="margin-bottom: 0in;"><br />
+</p>
+<p><a name="rest"></a></p>
+</div>
+</div>
+<div class="section"><a name="5__REST"></a>
+<h2>5. REST</h2>
+<p>
+    WSF/CPP comes with plain old XML (POX) like REST support. A
+given service
+can be exposed both as a SOAP service as well as a REST service. By
+default,
+your service will support SOAP as well as REST, however, your service
+operations
+will only be available for SOAP. In order to enable REST for your
+operations you
+need to add one or more parameters under your operation, in the <a href="#appB">services.xml</a>.
+If you want to consume Web services using REST style calls, you can use
+the HTTP
+POST method, the HTTP GET method, the HTTP HEAD method, the HTTP PUT
+method or
+the HTTP DELETE method.<br />
+</p>
+</div>
+<div class="subsection"><a name="5_1_REST_client"></a>
+<h3>5.1 REST on Client Side</h3>
+<p>The following example code fragment shows how to set up a
+client enabling a REST style
+invocation.</p>
+<div class="source">
+<pre>Use the setEnableREST method to configure the client for a REST Style invocation.<br /></pre>
+</div>
+<p>You can use the same code that you use with a SOAP call, and
+do REST style
+invocation by just enabling REST using the option setting shown above.</p>
+<p>The default HTTP method used with REST is HTTP POST. If you
+need to change
+it to the HTTP GET method, the following needs to be done.</p>
+<div class="source">
+<pre>options-&gt;setHTTPMethod(AXIS2_HTTP_GET);<br /><br /></pre>
+</div>
+<p>Similarly you can use AXIX2_HTTP_HEAD to change it to the HTTP
+HEAD method,
+or AXIX2_HTTP_PUT to change it to the HTTP PUT method, or
+AXIX2_HTTP_DELETE to change it
+to the HTTP DELETE method. </p>
+<p>Please have a look at the <code>echo_rest</code>
+sample for a complete
+source code on how to use REST.<br />
+</p>
+</div>
+<div class="subsection"><a name="5_2_REST_server"></a>
+<h3>5.2 REST on Server Side</h3>
+<p>You basically need to add the REST Location, and the REST
+Method parameters to the <a href="#appB">services.xml</a>
+to enable REST in a service operation. The REST location is the
+template that needs to be matched
+to find your operation, and the REST Method is the HTTP Method
+associated with the service.
+Note that the REST Method is optional for each operation. If no REST
+Method is specified, POST,
+will be assumed. Optionally you may specify the default REST Method for
+all operations at the service
+level. Then, if you haven't specified a REST Method for your operation,
+the default REST Method
+specified will be assumed instead of POST. Please have a look at the <code>echo</code>
+sample
+service for a complete source code on how to set up REST. Shown below
+is an example, on how to
+configure the <code>locate</code> operation to work with
+HTTP GET on REST.<br />
+</p>
+<div class="source">
+<pre>&lt;operation name="locate"&gt;<br /> &lt;parameter name="RESTMethod"&gt;GET&lt;/parameter&gt;<br /> &lt;parameter name="RESTLocation"&gt;location/{lat}/{long}&lt;/parameter&gt;<br />&lt;/operation&gt;<br /><br /></pre>
+</div>
+<p>The corresponding request would look like, <code>http://www.sample.org/service/location/34N/118W</code>,
+which would return Los Angeles, California. In here, the portion <code>location</code>
+is fixed and <code>lat</code> and <code>long</code>
+are optional parameters which will be captured to the payload.
+<br />
+</p>
+</div>
+<div class="subsection"><a name="5_3_REST_and_SOAP_for_same_operation"></a>
+<h3>5.3 REST and SOAP for Same Operation</h3>
+<p>It is also possible to enable a single service operation for
+SOAP as well as REST. This can be done by specifying a REST Location
+that does not contain the operation name. The <code>locate</code>
+operation is an example to such a case. Thus, for a SOAP invocation,
+you need to use <code>http://www.sample.org/service/locate</code>,
+as the end point or WS-Addressing Action.</p>
+<p style="margin-bottom: 0in;"><br />
+</p>
+<p><a name="mtom"></a></p>
+</div>
+<div class="section"><a name="6__MTOM"></a>
+<h2>6. MTOM</h2>
+<p>
+    WSF/CPP allows you to send and receive binary data with SOAP
+messages
+using MTOM/XOP conventions. When sending and receiving attachments, you
+have
+to use the ServiceClient
+API to perform the
+send and receive operations, and provide or consume binary data in
+relation
+to the AXIOM payloads.</p>
+<p>In order to send a binary attachment, you need to build the
+AXIOM payload
+and attach the data handler with binary content to the payload.</p>
+<div class="source">
+<pre>&lt;soapenv:Body&gt;<br /> &lt;ns1:mtomSample xmlns:ns1="http://ws.apache.org/axis2/c/samples/mtom"&gt;<br /> &lt;ns1:fileName&gt;test.jpg&lt;/ns1:fileName&gt;<br /> &lt;ns1:image&gt;<br /> &lt;xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" <br /> href="cid:1.f399248e-8b39-1db1-3124-0015c53de2e5@apache.org"&gt;&lt;/xop:Include&gt;<br /> &lt;/ns1:image&gt;<br /> &lt;/ns1:mtomSample&gt;<br />&lt;/soapenv:Body&gt;<br /><br /></pre>
+</div>
+<p>In the above sample payload shown, we place our image file as
+text within
+an image element</p>
+<div class="source">
+<pre>imageEle = new OMElement("image");
+dataHandler = new OMDataHandler(filename,"image/jpeg");
+dataText = OMText(imageEle, dataHandler);
+
+When sending attachments, you can configure the client either to send the attachment in the optimized format or non-optimized format.</pre>
+</div>
+<p>To do this, set the option options-&gt;setEnableMTOM<code>(true); </code>or the setting
+<code>&lt;enableMtom&gt;true&lt;/enableMtom&gt; </code>in
+axis2.xml</p>
+<p>If enableMTOM is set to True, the attachment is sent as it is,
+out of the
+SOAP body, using MIME headers. Also the payload will have an
+XOP:Include
+element, referring to the MIME part that contains the binary
+attachment.
+Sending the attachment as it is, in pure binary format, is called
+binary
+optimized format. In the case of binary non-optimized format, where
+enableMTOM is False, the attachment content is sent in the payload
+itself, as
+a base64 encoded string.</p>
+</div>
+<div class="section"><a name="7__Engaging_a_Module"></a>
+<h2>7. Engaging a Module</h2>
+<p>A module is a set of handlers that helps to extend the message
+processing
+behavior of the engine. Modules have the concepts of being
+Available
+and Engaged associated with them. Available means modules are deployed
+in the
+system but not activated. They will be activated only after being
+engaged.
+Every module comes with its own module.xml file . This module.xml file
+specifies the module specific handlers and the phases into which the
+handlers
+are to be placed in the handler chain. Some of the module specific
+handlers
+may be put into system predefined phases. In that case, the module.xml
+file
+should specify where to put the handlers relative to the others in that
+phase. Sometimes a module may define its own phase. In that case, some
+of the
+module specific handlers may be put into that phase. The handlers added
+to
+the system predefined phases (global handlers) are invoked for every
+message
+that comes to or goes out from the system. The handlers in the module
+specific phase are invoked only for the messages invoking the
+operations that
+engage that module. Engaging a module means correctly adding the
+handlers of
+a particular module to one or more phases. Once the module is engaged,
+the
+handlers and the operations defined in the module are added to the
+entity
+that engaged them.</p>
+<p>Before engaging a module, the following steps have to be
+followed.</p>
+<ol>
+<li>Write the module.xml file</li>
+<li>Package the module libraries and the module.xml into a
+folder which has the same name as the module</li>
+<li>Deploy the folder in AXIS2C_INSTALL_DIR/modules</li>
+<li>Add the module specific phases in the axis2.xml file</li>
+</ol>
+<p>The following is an example of engaging a sample module called
+the logging
+module with Axis2/C:</p>
+<div class="subsection"><a name="7_1_Writing_the_module_xml_File"></a>
+<h3>7.1 Writing the module.xml File</h3>
+<p>In the module.xml file, the handlers of the module and the
+phases to which
+they are to be added have to be specified. Below is the module.xml file
+of
+the sample logging module.</p>
+<div class="source">
+<pre> &lt;module name="logging" class="axis2_mod_log"&gt;<br /> &lt;inflow&gt;<br /> &lt;handler name="LoggingInHandler" class="axis2_mod_log"&gt;<br /> &lt;order phase="PreDispatch"/&gt;<br /> &lt;/handler&gt;<br /> &lt;/inflow&gt;<br /> &lt;outflow&gt;<br /> &lt;handler name="LoggingOutHandler" class="axis2_mod_log"&gt;<br /> &lt;order phase="MessageOut"/&gt;<br /> &lt;/handler&gt;<br /> &lt;/outflow&gt;<br /> &lt;Outfaultflow&gt;<br /> &lt;handler name="LoggingOutHandler" class="axis2_mod_log"&gt;<br /> &lt;order phase="MessageOut"/&gt;<br /> &lt;/handler&gt;<br /> &lt;/Outfaultflow&gt;<br /> &lt;/module&gt;<br /><br /></pre>
+</div>
+<p>In the above shown module configuration file, the name of the
+module is
+logging. There are two handlers in this module, the LoggingInHandler
+and the
+LoggingOutHandler. The LoggingInHandler is placed into the PreDispatch
+phase
+of the in flow. The LoggingOutHandler is placed into the MessageOut
+phase of
+both the out flow and the fault out flow.</p>
+</div>
+<div class="subsection"><a name="7_2_Packaging_and_Deploying_the_Module"></a>
+<h3>7.2 Packaging and Deploying the Module</h3>
+<p>The above module.xml file should be copied to a folder named
+"logging"
+(because the module name is "logging") inside the
+AXIS2C_INSTALL_DIR/modules
+folder. The module libraries containing the handler implementation
+should
+also be copied to the same folder. According to the module.xml file
+shown
+above, the name of the shared library file should be
+libaxis2_mod_log.so on
+Linux and axis2_mod_log.dll on MS Windows.</p>
+</div>
+<div class="subsection"><a name="7_3_Adding_Module_Specific_Phases_to_the_axis2_xml_File"></a>
+<h3>7.3 Adding Module Specific Phases to the axis2.xml File</h3>
+<p>Module specific phases have to be added after the system
+predefined
+phases. The following example shows where to add the module specific
+phases.
+Look for the <code>phaseOrder</code> elements in the
+axis2.xml file. Note the
+comment lines:</p>
+<div class="source">
+<pre> &lt;!-- User defined phases could be added here --&gt;</pre>
+</div>
+<p>You can add user defined phases after the above comment line
+into any of the
+flows. The <code>type</code> attribute of the <code>phaseOrder</code>
+element
+indicates the flow.
+</p>
+<p>For the logging module example, user defined phases are not
+required. All
+the module specific handlers are added to system predefined phases as
+specified in the module.xml file.</p>
+</div>
+<div class="subsection"><a name="7_4_Engaging_a_Module_to_a_Services"></a>
+<h3>7.4 Engaging a Module to a Services</h3>
+<p>The following is an example of engaging the logging module to
+the echo
+service. This can be done by simply adding <code>&lt;module
+ref
+="logging"/&gt;</code> in the services.xml file of the echo
+service. This
+informs the Axis2/C engine that the module "logging" should be engaged
+for
+this service. The handlers inside the module will be executed in their
+respective phases as described by the module.xml.</p>
+<div class="source">
+<pre> &lt;service name="echo"&gt;<br /> &lt;module ref ="logging"/&gt;<br /> &lt;parameter name="ServiceClass" locked="xsd:false"&gt;echo&lt;/parameter&gt;<br /> &lt;description&gt;<br /> This is a testing service, to test if the system is working or not.<br /> &lt;/description&gt;<br /> &lt;operation name="echoString"&gt;<br /> &lt;!--messageReceiver class="axis2_receivers" /--&gt;<br /> &lt;parameter name="wsamapping" &gt;<br /> http://ws.apache.org/axis2/c/samples/echoString<br /> &lt;/parameter&gt;<br /> &lt;/operation&gt;<br /> &lt;/service&gt;<br /><br /></pre>
+</div>
+<p>One important thing to note here is that because the logging
+module's
+handlers are placed into the global phases, even though the logging
+module is
+engaged only to the echo service, the module will be engaged globally.
+This
+is a feature of the Axis2 architecture, not a bug. When invoked, the
+handlers
+in a module can check whether the module has been engaged to a
+particular
+service, and act accordingly.</p>
+</div>
+<div class="subsection"><a name="7_4_1_Engaging_a_Module_Globally"></a>
+<h3>7.4.1 Engaging a Module Globally</h3>
+<p>If we want to engage a module for every service deployed in
+the Axis2/C
+system, we can add the <code>&lt;module ref
+="logging"/&gt;</code> entry in
+the axis2.xml file. This will inform the Axis2/C engine to invoke the
+handlers associated with the module for every message coming in or
+going out
+for all the services deployed.</p>
+</div>
+<div class="subsection"><a name="7_5_Engaging_a_Module_on_the_Client_Side"></a>
+<h3>7.5 Engaging a Module on the Client Side</h3>
+<p>On the client side, if <code>&lt;module ref
+="logging"/&gt;</code> is
+added in the axis2.xml, the handlers specific to the logging module
+will be
+invoked for every request the client sends and every response the
+client
+receives. If only a particular client wants to engage the module, it
+can be
+done by engaging the module programmatically. This can be done by
+adding the
+following line in the client code after setting the options.</p>
+<div class="source">
+<pre>svcClient-&gt;engageModule("module-name");<br /><br /></pre>
+</div>
+<p>Remember to replace "module-name" with the name of the module
+you want to
+engage. For example to engage the addressing module you can use:</p>
+<div class="source">
+<pre>svcClient-&gt;engageModule(AXIS2_MODULE_ADDRESSING);<br /><br /></pre>
+</div>
+<p style="margin-bottom: 0in;"><br />
+</p>
+<p><a name="ws_addressing"></a></p>
+</div>
+</div>
+<div class="section"><a name="8__WS-Addressing"></a>
+<h2>8. WS-Addressing</h2>
+<p><a href="http://www.w3.org/2002/ws/addr/" class="externalLink" title="External Link">WS-Addressing</a>
+provides
+mechanisms to address Web services and messages. With WSF/CPP, you can
+use
+both WS-Addressing <a href="http://www.w3.org/TR/ws-addr-core/" class="externalLink" title="External Link">version
+1.0</a> as well as the <a href="http://www.w3.org/Submission/ws-addressing/" class="externalLink" title="External Link">submission
+version</a>.</p>
+<p>WS-Addressing is implemented as a module. Hence as
+explained in
+the previous section, the addressing module can be engaged both on the
+client
+side as well as on the server side.</p>
+<p>The WS-Addressing module can be globally engaged by adding the
+<code>&lt;module ref="addressing"/&gt;</code> line
+to the axis2.xml file.</p>
+<p>The WS-Addressing module can also be programmatically engaged
+using the
+following line of code with the service client API <br />
+</p>
+<div class="source">
+<pre>engageModule(AXIS2_MODULE_ADDRESSING);<br /><br /></pre>
+</div>
+<p>WS-Addressing related options can be set using the <code>methods in Options class.</code>If the
+addressing module is engaged, there are no options to be set on the
+server
+side. The server will employ WS-Addressing if the incoming requests
+have
+WS-Addressing headers.</p>
+<p>There is a mandatory requirement for using WS-Addressing on
+the client
+side with WSF/CPP. That is to set a WS-Addressing action that
+represents the
+operation to be specified in the <strong>request</strong> or <strong>send</strong> method</p>
+<div class="source">
+<pre>svcClient-&gt;request(payload, "http://ws.apache.org/axis2/c/samples/echoString");<br /><br /></pre>
+</div>
+<p>In addition to the action, which is mandatory, there are other
+WS-Addressing related headers that can be sent in a message. WSF/CPP
+supports
+to set those headers as options at the client level. The following
+functions
+are used to set them.</p>
+<div class="source">
+<pre>SetReplyTo(&lt;Reply to URI&gt;);<br />
+Sets the <code>wsa:ReplyTo</code> header. The ReplyTo header contains the endpoint to send reply messages. The ReplyTo header is required when the response comes in a separate channel (when using a dual channel).</pre>
+</div>
+<div class="source">
+<pre>SetFaultTo(&lt;Fault to URI&gt;)
+<br /><br /></pre>
+</div>
+<p>Sets the <code>wsa:FaultTo</code> header. This
+contains the endpoint to
+direct fault messages.<br /><br /></p>
+</div>
+<div class="section"><a name="10__Simple_Axis2_HTTP__Server"></a>
+<h2>
+    9. Simple Axis2 HTTP Server</h2>
+<p>Simple Axis2 HTTP Server is the inbuilt HTTP server of Axis2/C which comes with
+    WSF/CPP.<br />
+</p>
+<div class="subsection"><a name="10_1_Linux_Based_Systems"></a>
+<h3>
+        9.1 Linux Based Systems</h3>
+<p>Synopsis :</p>
+<div class="source">
+<pre> axis2_http_server [-p PORT] [-t TIMEOUT] [-r REPO_PATH] [-l LOG_LEVEL] [-f LOG_FILE] [-s LOG_FILE_SIZE]<br /><br /></pre>
+</div>
+<p>You can use the following options with simple axis HTTP server.</p>
+<div class="source">
+<pre> -p PORT port number to use, default port is 9090<br /> -r REPO_PATH repository path, default is ../<br /> -t TIMEOUT socket read timeout, default is 30 seconds<br /> -l LOG_LEVEL log level, available log levels:<br /> 0 - critical 1 - errors 2 - warnings<br /> 3 - information 4 - debug 5- user 6 - trace<br /> Default log level is 4(debug).<br /> -f LOG_FILE log file, default is $AXIS2C_HOME/logs/axis2.log<br /> or axis2.log in current folder if AXIS2C_HOME not set<br /> -s LOG_FILE_SIZE Maximum log file size in mega bytes, default maximum size is 1MB.<br /> -h display the help screen.<br /><br /></pre>
+</div>
+<p>Example :</p>
+<div class="source">
+<pre> axis2_http_server -l 3 -p 8080 -r $AXIS2C_HOME -f /dev/stderr<br /><br /></pre>
+</div>
+</div>
+<div class="subsection"><a name="10_2_MS_Windows_Based_Systems"></a>
+<h3>
+    9.2 MS Windows Based Systems</h3>
+<p>Synopsis :</p>
+<div class="source">
+<pre> axis2_http_server.exe [-p PORT] [-t TIMEOUT] [-r REPO_PATH] [-l LOG_LEVEL] [-f LOG_FILE] [-s LOG_FILE_SIZE]<br /><br /></pre>
+</div>
+<p>You can use the following options with simple axis HTTP server.</p>
+<div class="source">
+<pre> -p PORT port number to use, default port is 9090<br /> -r REPO_PATH repository path, default is ../<br /> -t TIMEOUT socket read timeout, default is 30 seconds<br /> -l LOG_LEVEL log level, available log levels:<br /> 0 - critical 1 - errors 2 - warnings<br /> 3 - information 4 - debug 5- user 6 - trace<br /> Default log level is 4(debug).<br /> -f LOG_FILE log file, default is %AXIS2C_HOME%\logs\axis2.log<br /> or axis2.log in current folder if AXIS2C_HOME not set<br /> -s LOG_FILE_SIZE Maximum log file size in mega bytes, default maximum size is 1MB.<br /> -h display the help screen.<br /><br /></pre>
+</div>
+<p>Example :</p>
+<div class="source">
+<pre> axis2_http_server.exe -l 3 -p 8080 -r %AXIS2C_HOME% -f C:\logs\error.log<br /><br /></pre>
+</div>
+<p style="margin-bottom: 0in;"><br />
+</p>
+<p><a name="mod_axis2"></a></p>
+</div>
+</div>
+<div class="section"><a name="11__Deploying_with_Apache_HTTP_Server_Version_2_x"></a>
+<h2>10. Deploying with Apache HTTP Server Version 2.x</h2>
+<div class="subsection"><a name="11_1_Linux_Platform"></a>
+<h3>10.1 Linux Platform</h3>
+<p>To build WSF/CPP with the Apache HTTP server module, also
+called
+mod_axis2, you need to provide the following configuration options on
+the
+Linux platform:</p>
+<div class="source">
+<pre>
+./configure --with-apache2=[path to Apache2 include directory] [other configure options]
+<font color="#666666">NOTE: Some Apache2distributions, specially development versions, install APR (Apache Portable Run-time) include files in a separate location. In that case, to build mod_axis2, use:
+</font>
+./configure --with-apache2=[path to Apache2 include directory] --with-apr=[path to APR include directory]<br /> [other configure options]<br />
+<span style="font-size: 12pt; font-family: Times New Roman">When building WSF/CPP, you
+    will already have installed mod_axis2.so file to your install directory.</span><br /></pre>
+</div>
+</div>
+<div class="subsection"><a name="11_2_MS_Windows_Platform"></a>
+<h3>
+    10.2 MS Windows Platform</h3>
+<p>On the MS Windows platform, you have to provide the Apache2
+install
+location in the configure.in file with the setting APACHE_BIN_DIR.
+Example:</p>
+<div class="source">
+<pre>APACHE_BIN_DIR = "C:\Program Files\Apache Software Foundation\Apache2.2"<br /><br /></pre>
+</div>
+<p>Based on the Apache HTTP server version you are using, you
+also need to
+set the setting APACHE_VERSION_2_0_X in the configure.in file. If
+you are
+using Apache 2.2 family, this setting should be set to 0,else set it to
+1.</p>
+<div class="source">
+<pre>
+APACHE_VERSION_2_0_X = 0<br />
+You will find the mod_axis2.dll in &lt;WSFCPP_INSTALL_DIR&gt;\lib directory when  you have build the source.</pre>
+</div>
+</div>
+<div class="subsection"><a name="11_3_Deploying_mod_axis2"></a>
+<h3>
+    10.3 Deploying mod_axis2</h3>
+<p><font color="#666666">NOTE: To execute some of
+the commands given below,
+you might require super user privileges on your machine. If you are
+using the binary release of Axis2/C, please note that it is built with
+Apache 2.2.</font></p>
+<p>Copy the mod_axis2 shared library <font color="#4169e1">(libmod_axis2.so.0.6.0
+on Linux and mod_axis2.dll on MS
+Windows)</font> to the Apache2 modules directory as mod_axis2.so</p>
+<p>On Linux</p>
+<div class="source">
+<pre>
+	cp $WSFCPP_HOME/lib/libmod_axis2.so.0.6.0 /usr/lib/apache2/modules/mod_axis2.so<br /></pre>
+</div>
+<p>On MS Windows</p>
+<div class="source">
+<pre>
+	copy /Y "%WSFCPP_HOME%\lib\mod_axis2.dll" C:\Apache2\modules\mod_axis2.so<br /><br /></pre>
+</div>
+<p>Edit the Apache2's configuration file (generally httpd.conf)
+and add the
+following directives at the end of the file.</p>
+<div class="source">
+<pre>LoadModule axis2_module MOD_AXIS2_SO_PATH<br />Axis2RepoPath AXIS2C_INSTALL_DIR<br />Axis2LogFile PATH_TO_LOG_FILE<br />Axis2LogLevel LOG_LEVEL<br />Axis2ServiceURLPrefix PREFIX<br />Axis2MaxLogFileSize SIZE_IN_MB<br />&lt;Location /axis2&gt;<br /> SetHandler axis2_module<br />&lt;/Location&gt;<br /><br /></pre>
+</div>
+<p>Please note that you have to fine tune the above settings to
+mach your
+system.<br />
+<br />
+MOD_AXIS2_SO_PATH&nbsp; has to be replaced with the full path to
+mod_axis2.so,
+for example, <code>/usr/lib/apache2/modules/mod_axis2.so</code>
+on Linux, or <code>C:\Apache2\modules\mod_axis2.so</code>
+on MS Windows<br />
+<br />
+AXIS2C_INSTALL_DIR has to be replaced with the full path to Axis2/C
+repository, for example, <code>/usr/local/axis2</code> on
+Linux, or <code>c:\axis2c</code> on MS Windows. Note that
+repository path should
+have read access to the daemon user account under which the Apache2
+HTTPD
+process is run.<br />
+<br />
+PATH_TO_LOG_FILE has to be replaced with the full path to where you
+wish to
+have the Axis2/C log file, for example, <code>/tmp/axis2.log</code>
+on Linux, or <code>C:\Apache2\logs\axis2.log</code> on MS
+Windows. Note that the log
+file path should have write access to the daemon user account under
+which the
+Apache2 HTTPD process is run.<br />
+<br />
+LOG_LEVEL has to be replaced with one of the following values: crit,
+error,
+warn, info, debug, trace. These log levels have the following meanings:</p>
+<ul>
+<li>crit - log critical errors</li>
+<li>error - log errors and above</li>
+<li>warn - log warnings and above</li>
+<li>info - log information and above</li>
+<li>debug - log debug information and above, this is the
+default log level used</li>
+<li>user - log user level messages and above</li>
+<li>trace - log trace messages and above</li>
+</ul>
+<p>SIZE_IN_MB must be replaced by the size of the particular
+resource in MB, rounded to
+the nearest whole value.<br />
+<br />
+PREFIX has to be replaced with the prefix to be used with the service
+endpoints. This is optional and defaults to "services".
+As an example, if you have "web_services" as the prefix, then all the
+services hosted would have the endpoint prefix of : <br />
+http://localhost/axis2/web_services <br />
+If you wish, you can also change the location as well by replacing
+"/axis2" in &lt;Location /axis2&gt; setting with whatever you
+wish.
+</p>
+<p><font color="#666666">NOTE: If you want to use a
+Shared Global Pool with Apache
+you have to give another entry called Axis2GlobalPoolSize.You have to
+give the
+size of the shared global pool in MB.If you doesn't set the value or if
+you set a
+negative value Apache module doesn't create shared global pool.</font></p>
+<div class="source">
+<pre>Axis2GlobalPoolSize SIZE_IN_MB<br /><br /></pre>
+</div>
+<p>To ensure that everything works fine, start Apache2 (restart
+if it is
+already running) and test whether the mod_axis2 module is loaded
+correctly by
+accessing the URL: <a href="http://localhost/axis2/services" class="externalLink" title="External Link">http://localhost/axis2/services</a>.<br />
+</p>
+<p>This should show the list of services deployed with Axis2/C.
+Then you
+should be able to run clients against this endpoint. Example:</p>
+<div class="source">
+<pre>echo http://localhost/axis2/services/echo<br /><br /></pre>
+</div>
+<p>In case things are not working as expected, here are some tips
+on how to
+troubleshoot:</p>
+<ul>
+<li>Double check the steps you followed in installing and
+configuring mod_axis2. Check if the locations given in httpd.conf are
+correct, and also check the folder permissions.</li>
+<li>Have a look at the axis2.log file for clues as to what is
+going wrong. You can set the log level to debug, user or trace to
+gather more information</li>
+<li>In case the axis2.log file is not written at all, there is
+a good chance that mod_axis2 is crashing. You can have a look at the
+error.log file of Apache2 to get an idea on what is going wrong. This
+file is usually placed in the APACHE_INSTALL_DIR/logs folder.</li>
+</ul>
+<p style="margin-bottom: 0in;"><br />
+</p>
+<p><a name="IIS"></a></p>
+</div>
+</div>
+<div class="section"><a name="12__Deploying_with_Microsoft_IIS_Server"></a>
+<h2>12. Deploying with Microsoft IIS Server</h2>
+<p>
+        When you have nmake axis2_iis_module</p>
+<p>In this document I assume that the mod_axis2_IIS.dll
+is in the directory <code>c:\axis2c\lib</code> and
+AXIS2C_HOME
+is <code>c:\axis2c</code></p>
+<p>Add the following key to the
+registery.</p>
+<p><code>HKEY_LOCAL_MACHINE\SOFTWARE\Apache Axis2c\IIS
+ISAPI
+Redirector</code></p>
+<p>Add a string value with the name <code>AXIS2C_HOME</code>
+and a
+value of <code>c:\axis2c</code></p>
+<p>Add a string value with the name <code>log_file</code>
+and a value
+of <code>c:\axis2c\logs\axis2.log</code></p>
+<p>Add a string value with the name <code>log_level</code>.
+The value
+can be either <code>trace</code>, <code>error</code>,
+<code>info</code>, <code>critical</code>, <code>user</code>,
+<code>debug</code>, or <code>warning</code>.</p>
+<p>
+You can add a string value with the name <code>services_url_prefix</code>. This is optional and defaults to "/services".
+As an example, if you have "/web_services" as the prefix, then all the
+services hosted would have the endpoint prefix of : <br />
+http://localhost/axis2/web_services.<br />Note: don't forget the / at the begining.<br />
+</p>
+<p>
+If you wish, you can also change the location as well by adding a string value with the name <code>axis2_location</code>. This is also optional and defaults to /axis2.
+If you have /myserser as the value you can access your web services with a url like http://localhost/myserver/services. <br />Note: Don't forget the / at the beginning.</p>
+<p>
+
+</p><p>Now you can do all the registry editing using the JScript file
+axis2_iis_regedit.js provided with the distribution. When you build
+axis2/C with the IIS module the file is copied to the root directory of
+the binary distribution. Just double click it and everything will be
+set to the defaults. The axis2c_home is taken as the current directory,
+so make sure you run the file in the Axis2/C repository location (or
+root of the binary distribution). If you want to change the values you
+can manually edit the the .js file or give it as command line arguments
+to the script when running the script. To run the jscript from the
+command line use the command <code>:\cscript axis2_iis_regedit.js optional arguments</code>. We recomend the manual editing as it is the easiest way to specify the values.</p>
+<p><b>IIS 5.1 or Below</b></p>
+Using the IIS management console, add a new virtual
+directory to your IIS/PWS web site. The name of the virtual directory
+must be <code>axis2</code>. Its
+physical path should be the directory in which you placed
+mod_axis2_IIS.dll (in our example it is
+c:\axis2c\lib). When creating this new virtual directory, <b>assign
+execute access to it</b>.
+<p>By using the IIS management console, add
+mod_axis2_IIS.dll as a filter in your IIS/PWS web site and restart the
+IIS
+admin service.</p>
+<p><b>IIS 6 &amp; 7</b></p>
+Using the IIS management console, add the mod_axis2_IIS.dll as a
+Wildcard Script Map.
+<ul>
+<li>Executable should be the complete path to the
+mod_axis2_IIS.dll</li>
+<li>You can put any name as the name of the Wildcard Script Map</li>
+</ul>
+<p>Please don't add the mod_axis2_IIS.dll as a filter to IIS as
+in the IIS 5.1 case.</p>
+<p>Note: If the Axis2/C failed to load, verify that Axis2/C and
+its dependent DLLs are in the System Path (not the user path). </p>
+<p style="margin-bottom: 0in;"><br />
+</p>
+<p><a name="ssl_client"></a></p>
+</div>
+<div class="section"><a name="13__Using_SSL_Client"></a>
+<h2>13. Using SSL Client</h2>
+<div class="subsection"><a name="13_1_Building_and_Configuring_the_Client"></a>
+<h3>13.1 Building and Configuring the Client</h3>
+<p>In order to allow an Web Service client to communicate with an SSL
+enabled
+server, we need to compile WSF/CPP with SSL support enabled. This is enabled by default.</p>
+<p>To build with SSL client support, first of all, make sure you
+have
+installed <a href="http://www.openssl.org/" class="externalLink" title="External Link">OpenSSL</a>
+on your machine. Then
+you can start building with SSL client support. This can be achieved on
+Linux
+by configuring with the <code><strong>--enable-openssl=yes</strong></code>
+option.</p>
+<p>Example <code><br />
+%./configure --enable-openssl=yes --prefix=${WSFCPP_HOME}/deploy<br />
+%make<br />
+%make install<br />
+</code></p>
+<p>On MS Windows, set <code><strong>ENABLE_SSL=1</strong></code> in
+the
+<code>configure.in</code> file and run the <code>build.bat file</code>.</p>
+<p><a name="client_chain"></a></p>
+</div>
+<div class="subsection"><a name="13_1_1_Creating_the_Client_Certificate_Chain_File"></a>
+<h3>13.1.1 Creating the Client Certificate Chain File</h3>
+<p>If you need SSL client authentication, WSF/CPP requires you to
+provide the
+client certificate and the private key file in a single file. Such a
+file
+which contains both the certificate and relevant private key is called
+a
+certificate chain file. Creating such a file is very easy. Assume that
+the
+client certificate is stored in a file named <code>client.crt</code>
+and the
+private key is stored in a file named <code>client.key</code>.
+Then the
+certificate chain file can be created by concatenating the certificate
+file
+and the private key file in that order, in to another file, say
+<code>client.pem</code>.</p>
+<p>On Linux you can do this as follows: <code>%cat
+client.crt client.key &gt;
+client.pem</code></p>
+<p>On MS Windows, you can do this by copying the contents of
+client.crt and
+client.key files and saving them in a file named client.pem using
+Notepad.</p>
+</div>
+<div class="subsection"><a name="13_1_2_Configuration"></a>
+<h3>13.1.2 Configuration</h3>
+<p>Uncomment the following in <code>axis2.xml</code>
+to enable https transport receiver and https transport sender.
+Axis2/C will then be able to recognize the "https" sheme in a given end
+point reference (EPR) and use SSL transport.
+</p>
+<div class="source">
+<pre>&lt;transportReceiver name="https" class="axis2_http_receiver"&gt;<br /> &lt;parameter name="port" locked="false"&gt;6060&lt;/parameter&gt;<br /> &lt;parameter name="exposeHeaders" locked="true"&gt;false&lt;/parameter&gt;<br />&lt;/transportReceiver&gt;<br /></pre>
+</div>
+<div class="source">
+<pre>&lt;transportSender name="https" class="axis2_http_sender"&gt;<br /> &lt;parameter name="PROTOCOL" locked="false"&gt;HTTP/1.1&lt;/parameter&gt;<br />&lt;/transportSender&gt;<br /></pre>
+</div>
+<p>For the SSL client to work, the file containing the CA
+certificate should
+be given as <code>SERVER_CERT</code> parameter in the
+axis2.xml file. If you
+need client authentication, you can also set the parameters in the
+axis2.xml
+file to specify the client certificate, private key, and the passphrase
+for
+the client private key. Parameter names for these are:</p>
+<p><code>KEY_FILE</code> - certificate chain file
+containing the client's
+certificate and the private key (Please refer to the <a href="#client_chain">creating the client certificate chain
+file</a>
+section)<br />
+<code>SSL_PASSPHRASE</code> - passphrase used to encrypt
+the private key
+file.</p>
+<p>Example:</p>
+<p><code>&lt;parameter
+name="SERVER_CERT"&gt;/path/to/ca/certificate&lt;/parameter&gt;</code><br />
+<code>&lt;parameter
+name="KEY_FILE"&gt;/path/to/client/certificate/chain/file&lt;/parameter&gt;</code><br />
+<code>&lt;</code><code><code>parameter
+name="SSL_</code>PASSPHRASE"&gt;passphrase&lt;/parameter&gt;</code></p>
+<p>For testing purposes, you can use the server's certificate
+instead of the
+CA certificate. You can obtain this by running the command <code>openssl
+s_client -connect &lt;servername&gt;:&lt;port&gt;</code>
+and copying the
+portion of the output bounded by and including:</p>
+<div class="source">
+<pre>-----BEGIN CERTIFICATE-----<br />-----END CERTIFICATE-----<br /><br /></pre>
+</div>
+<p>On Linux, if you run the following piece of code, the server
+certificate
+will be saved to a file <code>cert.pem</code>:</p>
+<div class="source">
+<pre>echo |\<br />openssl s_client -connect &lt;servername&gt;:&lt;port&gt; 2&gt;&amp;1 |\<br />sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' &gt; cert.pem<br /><br /></pre>
+</div>
+<p><font color="#666666">NOTE: Instead of setting
+these parameters in the <code>axis2.xml</code>
+file, you can also set these parameters programmatically in your client
+code.</font></p>
+</div>
+<div class="subsection"><a name="13_2_Configuring_the_Server"></a>
+<h3>13.2 Configuring the Server</h3>
+<p>Here we will only look at the configuration of the Apache HTTP
+Web server.
+Refer to the '<a href="#mod_axis2">Deploying with Apache
+HTTP Server Version2.x</a>' section for information on deploying
+Axis2/C as an Apache
+module.</p>
+<p>For more detailed information on SSL configuration, please
+refer to <a href="http://httpd.apache.org/docs/2.0/ssl/#documentation" class="externalLink" title="External Link">Apache2
+SSL/TLS
+documentation</a>.</p>
+<p>In the <code>httpd.conf</code> file, add the
+following configuration
+statements (in addition to other necessary configuration):</p>
+<p><code>SSLEngine on<br />
+SSLCertificateFile /path/to/server/certificate/file<br />
+SSLCertificateKeyFile /path/to/private/key/file<br />
+SSLCACertificateFile /path/to/CA/certificate/file<br />
+SSLVerifyClient require<br />
+SSLVerifyDepth 1</code></p>
+<p><font color="#666666">NOTE: The last two lines, <code>SSLVerifyClient</code>
+and
+<code>SSLVerifyDepth</code> are only needed when you need
+client
+authentication.</font></p>
+<p style="margin-bottom: 0in;"><br />
+</p>
+<p><a name="proxy"></a></p>
+</div>
+</div>
+<div class="section"><a name="14__Using_Proxy_Support"></a>
+<h2>14. Using Proxy Support</h2>
+<p>When using a proxy, there are two methods for specifying proxy
+settings:</p>
+<ol>
+<li>Specify proxy settings in axis2.xml</li>
+<li>Provide proxy settings using service client API</li>
+</ol>
+<div class="subsection"><a name="14_1_Specifying_Proxy_Settings_in_axis2_xml"></a>
+<h3>14.1 Specifying Proxy Settings in axis2.xml</h3>
+<div class="source">
+<pre>&lt;transportSender name="http" class="axis2_http_sender"&gt;<br /> &lt;parameter name="PROTOCOL" locked="false"&gt;HTTP/1.1&lt;/parameter&gt;<br /> &lt;parameter name="PROXY" proxy_host="127.0.0.1" proxy_port="8080" locked="true"/&gt;<br />&lt;/transportSender&gt;<br /><br /></pre>
+</div>
+</div>
+<div class="subsection"><a name="14_2_Providing_Proxy_Settings_Using_Service_Client_API"></a>
+<h3>14.2 Providing Proxy Settings Using Service Client API</h3>
+<p>You can specify proxy settings using the following function
+with the ServiceClient.</p>
+    <p>
+        bool setProxy(std::string proxyHost, std::string proxyPort);<br /> 
+    </p>
+</div>
+</div>
+<div class="section"><a name="15__Using_Proxy_Authentication_Support"></a>
+<h2>15. Using Proxy Authentication Support</h2>
+<p>When using proxy authentication, there are three methods for
+specifying proxy
+authentication settings:</p>
+<ol>
+<li>Specify proxy settings with authentication in axis2.xml</li>
+<li>Provide proxy settings with authentication using service
+client API</li>
+<li>Provide proxy authentication settings using service client
+options</li>
+</ol>
+<div class="subsection"><a name="15_1_Specifying_Proxy_Settings_with_Authentication_in_axis2_xml"></a>
+<h3>15.1 Specifying Proxy Settings with Authentication in
+axis2.xml</h3>
+<div class="source">
+<pre>&lt;transportSender name="http" class="axis2_http_sender"&gt;<br /> &lt;parameter name="PROTOCOL" locked="false"&gt;HTTP/1.1&lt;/parameter&gt;<br /> &lt;parameter name="PROXY" proxy_host="127.0.0.1" proxy_port="8080" proxy_username="" proxy_password="" locked="true"/&gt;<br />&lt;/transportSender&gt;<br /><br /></pre>
+</div>
+</div>
+<div class="subsection"><a name="15_2_Providing_Proxy_Settings_with_Authentication_Using_Service_Client_API"></a>
+<h3>15.2 Providing Proxy Settings with Authentication Using
+Service Client API</h3>
+<p>You can specify proxy authentication settings using the
+following function with the ServiceClient:</p>
+<div class="source">
+<pre>
+bool <span style="font-size: 12pt; font-family: Times New Roman">ServiceClient::</span>setProxyWithAuth(std::string proxyHost, std::string proxyPort, std::string username, std::string password);<br /></pre>
+</div>
+</div>
+<div class="subsection"><a name="15_3_Providing_Proxy_Authentication_Settings_Using_Service_Client_Options"></a>
+<h3>15.3 Providing Proxy Authentication Settings Using Service
+Client Options</h3>
+<p>You can specify proxy authentication settings using the
+following function with the Options object.</p>
+<div class="source">
+<pre>
+bool Options::setProxyAuthInfo(std::string username, std::string password, std::string authType);<br /></pre>
+</div>
+<p>In <code>auth_type</code>, use <b>Basic</b>
+to force Basic Authentication or <b>Digest</b> to force
+Digest
+Authentication. Leave this field NULL if you are not forcing
+authentication.</p>
+<div class="subsection"><a name="15_4_Predetermining_Proxy_Authentication_Details"></a>
+<h3>15.4 Predetermining Proxy Authentication Details</h3>
+<p>You can also predetermine whether proxy authentication is
+required. This can be done by calling the function below: First enable the proxy authentication testing
+    option on the Options instance.</p>
+<div class="source">
+<pre>
+bool ServiceClient::setTestProxyAuth(bool testProxyAuth);<br />
+Set <code>testProxyAuth</code> to <b><code>true</code></b> to enable testing.When testing is enabled, the request will be sent without without adding authentication information. If it fails, and requests Authentication Information, the request type of authentication will be saved. This information can be obtained in the following manner:</pre>
+</div>
+<div class="source">
+<pre>
+bool ServiceClient::getAuthType();</pre>
+</div>
+<p> This will return either <b>Basic</b>, <b>Digest</b>
+or <b>NULL</b> according to the type of authentiation
+requested. In addition to that, after each request made through the
+service client, you can check whether authentication was required.</p>
+<div class="source">
+<pre>
+bool ServiceClient::getProxyAuthRequired();<br /></pre>
+</div>
+<p>Please take a look at the <code>echo_blocking_auth</code>
+sample for more information on how to use these methods to identify
+proxy Authentication requirements.</p>
+</div>
+</div>
+<div class="section"><a name="16__Using_HTTP_Authentication_Support"></a>
+<h2>16. Using HTTP Authentication Support</h2>
+<p>When using HTTP authentication, there are two methods for
+specifying proxy
+authentication settings:</p>
+<ol>
+<li>Specify HTTP authentication settings in axis2.xml</li>
+<li>Provide HTTP authentication settings using service client
+options</li>
+</ol>
+<div class="subsection"><a name="16_1_Specifying_HTTP_Authentication_Settings_in_axis2_xml"></a>
+<h3>16.1 Specifying HTTP Authentication Settings in axis2.xml</h3>
+<div class="source">
+<pre>&lt;transportSender name="http" class="axis2_http_sender"&gt;<br /> &lt;parameter name="PROTOCOL" locked="false"&gt;HTTP/1.1&lt;/parameter&gt;<br /> &lt;parameter name="HTTP-Authentication" username="your username" password="your password" locked="true"/&gt;<br />&lt;/transportSender&gt;<br /><br /></pre>
+</div>
+</div>
+<div class="subsection"><a name="16_2_Providing_HTTP_Authentication_Settings_Using_Service_Client_Options"></a>
+<h3>16.2 Providing HTTP Authentication Settings Using Service
+Client Options</h3>
+<p>You can specify HTTP authentication settings using the
+following function with an
+    Options class instance:</p>
+<div class="source">
+<pre>
+bool Options::setHTTPAuthInfo(std::string username, std::string password, std::string authType);</pre>
+</div>
+<p>In <code>
+    authType</code>, use <b>Basic</b>
+to force HTTP Basic Authentication or <b>Digest</b> to
+force HTTP Digest
+Authentication. Leave this field NULL if you are not forcing
+authentication.</p>
+<div class="subsection"><a name="16_3_Predetermining_HTTP_Authentication_Details"></a>
+<h3>16.3 Predetermining HTTP Authentication Details</h3>
+<p>You can also predetermine whether HTTP authentication is
+required. This can be done by calling the function below:</p>
+<div class="source">
+<pre>
+bool Options::setTestHTTPAuth(bool testHTTPAuth);</pre>
+</div>
+<p>Set <code>testHTTPAuth</code> to <strong>true</strong>
+to enable testing.When testing is enabled, the request will be sent
+without without adding authentication information. If it fails, and
+requests Authentication Information, the request type of authentication
+will be saved. This information can be obtained in the following manner:</p>
+<div class="source">
+<pre>
+bool ServiceClient::getAuthType();<br /></pre>
+</div>
+<p> This will return either <b>Basic</b>, <b>Digest</b>
+or <b>NULL</b> according to the type of authentiation
+requested. In addition to that, after each request made through the
+service client, you can check whether authentication was required.</p>
+<div class="source">
+<pre>
+bool ServiceClient::getHTTPAuthRequired();<br />
+</pre>
+</div>
+</div>
+</div>
+<div class="section"><a name="17__WSDL2C_Tool"></a>
+<h2>17. WSDL2CPP Tool</h2>
+<p>
+    WSDL2CPP tool that comes with WSF/CPP based on Axis2/Java Codegeneration tool. This
+    is a Java tool that can be used to generate C++ code that works with WSF/CPP API.&nbsp;</p>
+    <p>
+        Once&nbsp; you have build the codegen tool and installed it, you will find it located
+        in &lt;WSFCPP_INSTALL_DIR&gt;\bin\tools\wsdl2cpp directory. You can run the tool
+        by going to the wsdl2cpp directory and running either wsdl2cpp.bat&nbsp; or wsdl2cpp.sh.</p>
+<div class="subsection">
+    <h3>
+        17.1 Generating Service Skeletons</h3>
+<p>The tool can be run with the following parameters and generate
+the service
+skeleton and other required files with ADB (Axis Data Binding) support.</p>
+<div class="source">
+<pre>java org.apache.axis2.wsdl.WSDL2C -uri interoptestdoclitparameters.wsdl -ss -sd -d adb -u <br /><br /></pre>
+</div>
+<p>To understand the meanings of the options used with the tool,
+please have
+a look at the <a href="http://ws.apache.org/axis2/1_4_1/reference.html#wsdl2java" class="externalLink" title="External Link"> Java tool
+documentation</a>.</p>
+<p>If you need an XML in/out programming model, you can just
+ignore the data
+binding support. To generate code with no data binding support, just
+replace
+<code>-d adb -u</code>, that was used in a previous
+command, with <code>-d
+none</code>.</p>
+<div class="source">
+<pre>java org.apache.axis2.wsdl.WSDL2C -uri interoptestdoclitparameters.wsdl -ss -sd -d none<br /><br /></pre>
+</div>
+<p>The WSDL file, <code>interoptestdoclitparameters.wsdl</code>,
+used in the
+above command examples can be found in
+&lt;axis2_src_dir&gt;/test/resources
+directory.</p>
+<p>Once the code is generated, you have to implement the business
+logic for
+the service. For this, locate the skeleton source file from the
+generated
+files. To identify the locations where you can place your business
+logic in
+line with the operations defined in the WSDL file that you used to
+generate
+code, look for the comment lines:</p>
+<div class="source">
+<pre>/* Todo fill this with the necessary business logic */</pre>
+</div>
+<p>You can also go through the generated header files and
+understand the API in
+line with the WSDL file that you used to generate the code.
+</p>
+</div>
+<div class="subsection"><a name="17_2_Generating_Client_Stubs"></a>
+<h3>17.2 Generating Client Stubs</h3>
+<p>The WSDL2C code generator tool provides support for generating
+client
+stubs as well. You can generate the required stubs from a given WSDL
+with the
+other supporting files. Use following parameters to generate the
+Axis2/C
+client stub code with ADB support.</p>
+<div class="source">
+<pre>java WSDL2C -uri interoptestdoclitparameters.wsdl -d adb -u<br /><br /></pre>
+</div>
+<p>In order to ignore the data binding support and use a raw XML
+in/out
+model, just use the following parameters.</p>
+<div class="source">
+<pre>java WSDL2C -uri interoptestdoclitparameters.wsdl -d none<br /><br /></pre>
+</div>
+<p>Like in the case of service skeletons, you have to fill in the
+business
+logic as required in the client stubs as well. To do this, go through
+the
+header files generated and understand the API in line with the WSDL
+file that
+you used to generate the code.</p>
+<p style="margin-bottom: 0in;"><br />
+</p>
+<p><a name="tcptrans"></a></p>
+</div>
+</div>
+<div class="section"><a name="18__TCP_Transport"></a>
+<h2>18. TCP Transport</h2>
+<div class="subsection"><a name="18_1_Building_AXIS2C_enabling_TCP"></a>
+<h3>18.1 Building AXIS2C enabling TCP</h3>
+<p>This section will guide you through installing Axis2C with tcp
+enabled, and this also includes how to test it by running samples.
+Please note that both the Server and the Client must be built with TCP
+enabled.</p>
+</div>
+<div class="subsection"><a name="18_1_1_Linux_Based_Systems"></a>
+<h3>18.1.1 Linux Based Systems</h3>
+<ol>
+<li>When you are installing, you have to use the configure
+command with
+the option to enable tcp by providing the following argument:
+<pre>	./configure --enable-tcp=yes<br />	make<br />	make install</pre>
+</li>
+<li>Then to confirm that you have successfully built the source
+with tcp enabled you can check in your $AXIS2C_HOME/lib folder for
+following files:
+<pre>	libaxis2_tcp_sender.so<br />	libaxis2_tcp_reciever.so</pre>
+</li>
+<li>To setup the tcp transport sender, you have to edit the
+axis2.xml by uncommenting following entry:
+<pre>	&lt;transportSender name="tcp" class="axis2_tcp_sender"&gt;<br /> &lt;parameter name="PROTOCOL" locked="false"&gt;TCP&lt;/parameter&gt;<br /> &lt;/transportSender&gt;</pre>
+</li>
+</ol>
+</div>
+<div class="subsection"><a name="18_1_2_MS_Windows_Based_Systems"></a>
+<h3>18.1.2 MS Windows Based Systems</h3>
+<ol>
+<li>When you are installing, you have to set the configure
+option to enable tcp
+by specifying in <code>configure.in</code>:
+<pre> WITH_TCP = 1</pre>
+</li>
+<li>Then to confirm that you have successfully built the source
+with tcp enabled you can check in your %AXIS2C_HOME%\lib folder for
+following files:
+<pre>	axis2_tcp_sender.dll<br /> axis2_tcp_reciever.dll</pre>
+</li>
+<li>To setup the tcp transport sender, you have to edit the
+axis2.xml by uncommenting following entry:
+<pre> &lt;transportSender name="tcp" class="axis2_tcp_sender"&gt;<br /> &lt;parameter name="PROTOCOL" locked="false"&gt;TCP&lt;/parameter&gt;<br /> &lt;/transportSender&gt;</pre>
+</li>
+</ol>
+</div>
+<div class="subsection"><a name="18_2_Server_Side"></a>
+<h3>18.2 Server Side</h3>
+<ul>
+<li>To run the tcp server on Linux based systems, you have to
+start the tcp
+server which runs in 9091 as its default port.
+<pre>	cd $AXIS2C_HOME/bin/<br />	./axis2_tcp_server</pre>
+</li>
+<li>To run the tcp server on MS Windows based systems, you have
+to start the tcp server as,
+<pre> cd %AXIS2C_HOME%\bin<br /> axis2_tcp_server.exe</pre>
+</li>
+</ul>
+</div>
+<div class="subsection"><a name="18_2_1_Simple_Axis2_TCP_Server"></a>
+<h3>18.2.1 Simple Axis2 TCP Server</h3>
+<p>Simple Axis2 TCP Server is the inbuilt TCP server of Axis2/C.<br />
+</p>
+</div>
+<div class="subsection"><a name="18_2_1_1_Linux_Based_Systems"></a>
+<h3>18.2.1.1 Linux Based Systems</h3>
+<p>Synopsis :</p>
+<div class="source">
+<pre> axis2_tcp_server [-p PORT] [-t TIMEOUT] [-r REPO_PATH] [-l LOG_LEVEL] [-f LOG_FILE] [-s LOG_FILE_SIZE]<br /><br /></pre>
+</div>
+<p>You can use the following options with simple axis TCP server.</p>
+<div class="source">
+<pre> -p PORT port number to use, default port is 9091<br /> -r REPO_PATH repository path, default is ../<br /> -t TIMEOUT socket read timeout, default is 30 seconds<br /> -l LOG_LEVEL log level, available log levels:<br /> 0 - critical 1 - errors 2 - warnings<br /> 3 - information 4 - debug 5- user 6 - trace<br /> Default log level is 4(debug).<br /> -f LOG_FILE log file, default is $AXIS2C_HOME/logs/axis2.log<br /> or axis2.log in current folder if AXIS2C_HOME not set<br /> -s LOG_FILE_SIZE Maximum log file size in mega bytes, default maximum size is 1MB.<br /> -h display the help screen.<br /><br /></pre>
+</div>
+<p>Example :</p>
+<div class="source">
+<pre> axis2_tcp_server -l 3 -p 8080 -r $AXIS2C_HOME -f /dev/stderr<br /><br /></pre>
+</div>
+</div>
+<div class="subsection"><a name="18_2_1_2_MS_Windows_Based_Systems"></a>
+<h3>18.2.1.2 MS Windows Based Systems</h3>
+<p>Synopsis :</p>
+<div class="source">
+<pre> axis2_tcp_server.exe [-p PORT] [-t TIMEOUT] [-r REPO_PATH] [-l LOG_LEVEL] [-f LOG_FILE] [-s LOG_FILE_SIZE]<br /><br /></pre>
+</div>
+<p>You can use the following options with simple axis TCP server.</p>
+<div class="source">
+<pre> -p PORT port number to use, default port is 9091<br /> -r REPO_PATH repository path, default is ../<br /> -t TIMEOUT socket read timeout, default is 30 seconds<br /> -l LOG_LEVEL log level, available log levels:<br /> 0 - critical 1 - errors 2 - warnings<br /> 3 - information 4 - debug 5- user 6 - trace<br /> Default log level is 4(debug).<br /> -f LOG_FILE log file, default is %AXIS2C_HOME%\logs\axis2.log<br /> or axis2.log in current folder if AXIS2C_HOME not set<br /> -s LOG_FILE_SIZE Maximum log file size in mega bytes, default maximum size is 1MB.<br /> -h display the help screen.<br /><br /></pre>
+</div>
+<p>Example :</p>
+<div class="source">
+<pre> axis2_tcp_server.exe -l 3 -p 8080 -r %AXIS2C_HOME% -f C:\logs\error.log<br /><br /></pre>
+</div>
+</div>
+<div class="subsection"><a name="18_3_Client_Side"></a>
+<h3>18.3 Client Side</h3>
+<ul>
+<li>In your service client you have to give the end point
+address adding tcp as the URI Schema name in the client's code.
+<pre>tcp://[service_hostname]:[service_port]/axis2/services/your_service_name</pre>
+</li>
+<li>You can use TCPMon to figure out how the message is
+transferred (without having it's http headers) after you've built
+Axis2C enabling tcp.</li>
+</ul>
+<p style="margin-bottom: 0in;"><br />
+</p>
+<p><a name="amqptrans"></a></p>
+</div>
+</div>
+<div class="section">
+<h2>19. AMQP Transport</h2>
+<div class="subsection">
+<h3>19.1 Building AXIS2C enabling AMQP</h3>
+<p>This section will guide you through installing Axis2C with
+AMQP
+enabled, and this also includes how to test it by running samples.
+Please note that both the Server and the Client must be built with AMQP
+enabled.</p>
+</div>
+<div class="subsection">
+<h3>19.1.1 Linux Based Systems</h3>
+<ol>
+<li>When you are installing, you have to use the configure
+command with
+the option --with-qpid as follows
+<pre> ./configure --with-qpid=path/to/qpid home<br /> make<br /> make install</pre>
+</li>
+<li>Then to confirm that you have successfully built the source
+with AMQP enabled you can check in your $AXIS2C_HOME/lib folder for
+following files:
+<pre> libaxis2_qmqp_sender.so<br /> libaxis2_amqp_reciever.so</pre>
+</li>
+<li>To setup the AMQP transport, you have to edit the
+axis2.xml and add the following entries:
+<pre> &lt;transportReceiver name="amqp" class="axis2_amqp_receiver"&gt;<br /> &lt;parameter name="qpid_broker_ip" locked="false"&gt;127.0.0.1&lt;/parameter&gt;<br /> &lt;parameter name="qpid_broker_port" locked="false"&gt;5672&lt;/parameter&gt;<br /> &lt;/transportReceiver&gt;<br /><br /> &lt;transportSender name="amqp" class="axis2_amqp_sender"/&gt;</pre>
+</li>
+</ol>
+</div>
+<div class="subsection">
+<h3>19.1.2 MS Windows Based Systems</h3>
+Axis2/C does not support AMQP transport on Windows.
+<ol>
+</ol>
+</div>
+<div class="subsection">
+<h3>19.2 Server Side<span style="font-family: monospace;"></span></h3>
+Start the Qpid broker as follows.<br />
+<br />
+<pre>$ cd ${QPID_HOME}/sbin<br />$ ./qpidd --data-dir ./</pre>
+<br />
+Start the axis2_amqp_server as follows.<br />
+<br />
+<pre>$ cd ${AXIS2C_HOME}/bin<br />$ ./axis2_amqp_server<br /> </pre>
+You should see the message<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Started
+Simple Axis2 AMQP Server...<br />
+<br />
+This will connect to the Qpid broker listening on 127.0.0.1:5672. <br />
+To see the possible command line options run<br />
+<br />
+<pre>$ ./axis2_amqp_server -h<br /></pre>
+<br />
+NOTE : You have the flexibility of starting the Qpid broker first and
+then axis2_amqp_server or vise versa.<br />
+<div class="subsection">
+<div style="text-align: left;"></div>
+<h3>19.2.1 Simple Axis2 AMQP Server</h3>
+<p>Simple Axis2 AMQP Server is the inbuilt AMQP server of Axis2/C.<br />
+</p>
+</div>
+<div class="subsection">
+<h3>19.2.1.1 Linux Based Systems</h3>
+<p>Synopsis :</p>
+<div class="source">
+<pre> axis2_amqp_server [-i QPID_BROKER_IP] [-p QPID_BROKER_PORT] [-r REPO_PATH] [-l LOG_LEVEL] [-f LOG_FILE] [-s LOG_FILE_SIZE]<br /><br /></pre>
+</div>
+<p>You can use the following options with simple axis AMQP server.</p>
+<div class="source">
+<pre> -i IP where the Qpid broker is running, default IP is 127.0.0.1<br /> -p PORT port number the Qpid broker listens on, default port is 5672<br /> -r REPO_PATH repository path, default is ../<br /> -l LOG_LEVEL log level, available log levels:<br /> 0 - critical <br />	1 - errors <br />	2 - warnings<br /> 3 - information <br />	4 - debug <br />	5- user <br />	6 - trace<br /> Default log level is 4(debug).<br /> -f LOG_FILE log file, default is $AXIS2C_HOME/logs/axis2.log or axis2.log in current folder if AXIS2C_HOME not set<br /> -s LOG_FILE_SIZE Maximum log file size in mega bytes, default maximum size is 1MB.<br /> -h display the help screen.<br /><br /></pre>
+</div>
+<p>Example :</p>
+<div class="source">
+<pre> axis2_amqp_server -i 127.0.0.1 -p 5050 -r $AXIS2C_HOME -f /dev/stderr<br /><br /></pre>
+</div>
+</div>
+<div class="subsection">
+<h3>19.3 Client Side</h3>
+<ul>
+</ul>
+<p style="margin-bottom: 0in;">
+When the axis2_amqp_server is up and running, you can run the sample
+clients in a new shell as follows.<br />
+<br />
+</p>
+<pre>$ cd ${AXIS2C_HOME}/samples/bin/amqp<br /><br />$ ./echo_blocking<br /></pre>
+This will invoke the echo service.<br />
+<br />
+To see the possible command line options for sample clients run them
+with '-h' option<br />
+<p><a name="archive"></a></p>
+</div>
+</div>
+<div class="section"><a name="19__Archive_Based_Deployment"></a>
+<h2>20. Archive Based Deployment</h2>
+<p>Axis2/C supports two main deployment models,<br />
+</p>
+<ol>
+<li>Directory Based Deployment</li>
+<li>Archive Based Deployment</li>
+</ol>
+Our discussion in this section focuses on how to setup and use archive
+based deployment in Axis2/C. By default, Axis2/C may be built without
+enabling archive based deployment. Therefore, first and foremost you
+will have to most probably rebuild from source.
+<p>Also, it is requirement that you have zlib. Most Linux systems
+do have zlib by default, but would require zlib development packages.
+More information can be found <a href="http://www.zlib.net/">here</a>.
+For MS Windows systems, you can download it from <a href="http://www.zlatkovic.com/pub/libxml">here</a>.</p>
+<p>Next, you will have to build Axis2/C enabling Archive Based
+Deployment. On Linux, you need to set the <code>--with-archive=[path_to_zlib_headers]</code></p>
+<p>Example: <code><br />
+%./configure --with-archive=/usr/include/ --prefix=${AXIS2C_HOME}/deploy<br />
+%make<br />
+%make install<br />
+</code></p>
+<p>On MS Windows, set <code>WITH_ARCHIVE = 1</code>
+in the
+<code>configure.in</code> file and run the <code>nmake
+all</code> command. Please note that you have to specify the
+directory where you can find the zlib binary, for a MS Windows system.
+This can be done by setting the <code>ZLIB_BIN_DIR</code>
+in the
+<code>configure.in</code> file.</p>
+</div>
+<div class="subsection"><a name="19_1_Deploying_Services"></a>
+<h3>20.1 Deploying Services</h3>
+<p>Once you have successfully completed the installation, you
+will have to deploy services as archives in order to make use of this
+deployment model. Please note that directory based deployment can
+coexist with the archive based deployment model. Therefore, you can
+alternatively use either of the two.</p>
+<p></p>
+<p>You will merely have to add your existing service libraries
+and the services.xml file into an archive. For example, in order to
+deploy the sample echo service as an archive, you can zip the echo
+folder found in the <code>AXIS2C_BIN_DIR/services</code>
+directory. You can optionally rename your zip file, to have the <code>.aar</code>
+extension.</p>
+<p>Please note that all such services deployed as archives should
+also be placed inside the <code>AXIS2C_BIN_DIR/services</code>
+directory. Now, when ever you start your Simple Axis2 Server, or any
+Axis2/C module attached to any other server, your services deployed as
+archives, will also get loaded.
+</p>
+</div>
+<div class="subsection"><a name="19_2_Deploying_Modules"></a>
+<h3>20.2 Deploying Modules</h3>
+<p>Similar to services, you also can deploy modules as archives.
+You also can optionally rename your zip files to have the extension, <code>.mar</code>
+as in service archives.</p>
+<p>Your module archives must be placed in the <code>AXIS2C_BIN_DIR/modules</code>
+directory.</p>
+</div>
+<div class="subsection"><a name="19_3_Known_Issues"></a>
+<h3>20.3 Known Issues</h3>
+<p>Please note that there are a few known issues when running
+archive based deployment, mainly on Linux based systems.<br />
+</p>
+<ul>
+<li>If you want to run both client and server from same
+respository, assign super-user privilideges for your server in order to
+prevent un-zipped files getting overwritten, which will in return cause
+a segmentation fault on your server.
+<p></p>
+</li>
+<li>Please make sure that the application you choose to create
+archives preserves executable rights, and symbolic links of libraries
+that are found inside the archive, once unzipped.</li>
+</ul>
+<p style="margin-bottom: 0in;"><br />
+</p>
+<p><a name="tcpmon"></a></p>
+</div>
+</div>
+<div class="section"><a name="20__TCPMon_Tool"></a>
+<h2>21. TCPMon Tool</h2>
+<p>TCPMon is a TCP Monitor tool provided by Axis2/C for
+monitoring payloads exchanged between client and server. If you are
+using a source distribution, this may or may not be built for you by
+default. Thus, to get started, you may require building it from source.</p>
+<p>On Linux</p>
+<div class="source">
+<pre>	./configure --prefix=${AXIS2C_HOME} --enable-tests=no<br />	make<br /></pre>
+</div>
+<p>On MS Windows</p>
+<div class="source">
+<pre>	nmake tcpmon<br /></pre>
+</div>
+<p>Please note that in most Linux based installations, this will
+most probably be built for you. Once you've done with the building
+process, you can find the executable at <code>${AXIS2C_HOME}/bin/tools</code>
+on Linux, or at <code>%AXIS2C_HOME%\bin\tools</code> on MS
+Windows.</p>
+<p>By default, the TCPMon tool will listen on port <b><code>9090</code></b>
+and reply to port <b><code>8080</code></b>.
+The default target host will be <b><code>localhost</code></b>
+and <b><code>tcpmon_traffic.log</code></b>
+will be the default log_file. If you want to change any of these
+settings run ./<code>tcpmon -h</code> on Linux, or <code>tcpmon.exe
+-h</code> on MS Windows for more information.</p>
+<p>The TCPMon tool does depend on the Axis2/C Util, Axis2/C AXIOM
+and Axis2/C Parser libraries. Thus, if you want to use TCPMon to
+monitor payloads in any other message transfer, independant of the
+Axis2/C engine, you will have to build those dependant libraries too.
+In addition to that, TCPMon does not depend on the Axis2/C Core and
+installing the Axis2/C engine is not always a pre-requisite to run
+TCPMon.
+</p>
+<p style="margin-bottom: 0in;"><br />
+</p>
+<p><a name="appA"></a></p>
+</div>
+</div>
+<div class="section"><a name="Appendix_A_-_axis2_xml"></a>
+<h2>Appendix A - axis2.xml</h2>
+<p>The axis2.xml file is the configuration file for Axis2/C. It
+has 6 top
+level elements. They are <em>parameter, transportReceiver,
+transportSender,
+module, phaseOrder</em> and <em>messageReceiver</em>.
+The following sections
+describe these elements, their sub elements, element attributes,
+possible
+values, and their purpose.</p>
+<p><em><strong>axisconfig</strong></em>
+is the root element of axis2.xml
+file.</p>
+<table class="bodyTable">
+<tbody>
+<tr class="b">
+<th>Attribute</th>
+<th>Possible Values</th>
+</tr>
+<tr class="a">
+<td>name</td>
+<td>Axis2/C</td>
+</tr>
+</tbody>
+</table>
+<div class="subsection"><a name="parameter"></a>
+<h3>parameter</h3>
+<p>In Axis2/C, a parameter is a name value pair. Each and every
+top level
+parameter available in the axis2.xml (direct sub elements of the root
+element) will be stored as parameters as <code>axis2_conf</code>.
+Therefore,
+the top level parameters set in the configuration file can be accessed
+via
+the <code>axis2_conf</code> instance in the running system.</p>
+<p>Sub elements :- none</p>
+<p>Attributes :- name, locked</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+<tr class="a">
+<td>name</td>
+<td>Name of the parameter. The table below shows possible
+values of the name attribute and their description.
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Value</th>
+<th>Description</th>
+<th>Possible Text of Parameter Element</th>
+</tr>
+<tr class="a">
+<td>enableMTOM</td>
+<td>Enable MTOM support when sending binary
+attachments</td>
+<td>true or false</td>
+</tr>
+<tr class="b">
+<td>enableREST</td>
+<td>Enable REST support</td>
+<td>true or false</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr class="a">
+<td>locked</td>
+<td>Indicates whether the parameter can be changed from the
+code. Following are the possible values for the locked attribute.
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Value</th>
+<th>Description</th>
+</tr>
+<tr class="a">
+<td>true</td>
+<td>The parameter cannot be changed from the code</td>
+</tr>
+<tr class="b">
+<td>false</td>
+<td>The parameter can be changed from the code.</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="subsection"><a name="transportReceiver"></a>
+<h3>transportReceiver</h3>
+<p>This element specifies the transport receiver details in an
+IN-OUT message
+exchange scenario. The users can change the transport receiver port as
+they
+wish.</p>
+<p>Attributes :- name, class</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Attribute</th>
+<th>Description</th>
+<th>Possible Values</th>
+</tr>
+<tr class="b">
+<td>name</td>
+<td>Specifies which transport protocol is used</td>
+<td>http (when using HTTP)</td>
+</tr>
+<tr class="a">
+<td>class</td>
+<td>Specifies the shared library which implements the
+transport interface</td>
+<td>Name of the shared library.
+<p>Example:- On Linux if the value is given as <em>foo</em>
+then shared library is libfoo.so.</p>
+<p>On MS Windows, <em>foo.dll</em>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>Sub elements :- can have zero or more parameter elements.</p>
+<p><br />
+The following table shows possible parameter values.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+<tr class="a">
+<td>name</td>
+<td>Name of the parameter.
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Value</th>
+<th>Description</th>
+<th>Possible Text of Parameter Element</th>
+</tr>
+<tr class="a">
+<td>port</td>
+<td>Transport listener port</td>
+<td>Integer specifying the port number</td>
+</tr>
+<tr class="a">
+<td>exposeHeaders</td>
+<td>Whether Transport Headers are exposed to a Service</td>
+<td>true/false</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr class="b">
+<td>locked</td>
+<td>whether the parameter can be changed from the code
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Value</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>true</td>
+<td>Parameter cannot be changed from the code</td>
+</tr>
+<tr class="a">
+<td>false</td>
+<td>The parameter can be changed from the code.</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p></p>
+</div>
+<div class="subsection"><a name="transportSender"></a>
+<h3>transportSender</h3>
+<p>This element specifies the transport senders used to send
+messages.</p>
+<p>Attributes :- name, class</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Attribute</th>
+<th>Description</th>
+<th>Possible Values</th>
+</tr>
+<tr class="a">
+<td>name</td>
+<td>Specifies which transport protocol is used when sending
+messages</td>
+<td>http(when using http)</td>
+</tr>
+<tr class="b">
+<td>class</td>
+<td>Specifies the shared library which implements the
+transport interface</td>
+<td>
+<p>Name of the shared library.</p>
+<p>Example:- On Linux if the value is given as <em>foo</em>
+then the shared library is libfoo.so.</p>
+<p>On MS Windows, <em>foo.dll</em>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>Sub elements : can have zero or more parameter elements.</p>
+<p><br />
+The following table shows possible parameter values.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>name</td>
+<td>The name of the parameter.
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Value</th>
+<th>Description</th>
+<th>Possible text of parameter element</th>
+</tr>
+<tr class="b">
+<td>PROTOCOL</td>
+<td>Transport protocol used</td>
+<td>Protocol version. Example:- HTTP /1.1, HTTP/1.0</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr class="a">
+<td>locked</td>
+<td>Indicates whether the parameter can be changed from the
+code.
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Value</th>
+<th>Description</th>
+</tr>
+<tr class="a">
+<td>true</td>
+<td>The parameter cannot be changed from the code</td>
+</tr>
+<tr class="b">
+<td>false</td>
+<td>The parameter can be changed from the code.</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+</div>
+<div class="subsection"><a name="module"></a>
+<h3>module</h3>
+<p>This element is optional. It is used when a particular module
+needs to be
+engaged globally for every service deployed with Axis2/C.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Attributes</th>
+<th>Description</th>
+<th>Possible Values</th>
+</tr>
+<tr class="b">
+<td>ref</td>
+<td>The name of the module which is to be engaged globally.</td>
+<td>Name of the module.
+<p>Example : addressing</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+</div>
+<div class="subsection"><a name="phaseOrder"></a>
+<h3>phaseOrder</h3>
+<p>The order of phases in a particular execution chain has to be
+configured
+using phaseOrder element.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Attribute</th>
+<th>Description</th>
+<th>Possible Values</th>
+</tr>
+<tr class="b">
+<td>type</td>
+<td>The flow to which the phase belongs</td>
+<td>inflow
+<p>outflow</p>
+<p>INfaultflow</p>
+<p>Outfaultflow</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>A flow is a collection of handlers which is invoked for a
+particular
+message. The types of flows are described below.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Flow</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>inflow</td>
+<td>Collection of handlers invoked for a message coming in
+to the system.</td>
+</tr>
+<tr class="a">
+<td>outflow</td>
+<td>Collection of handlers invoked for a message going out
+of the system.</td>
+</tr>
+<tr class="b">
+<td>INfaultflow</td>
+<td>Collection of handlers invoked for an incoming fault
+message.</td>
+</tr>
+<tr class="a">
+<td>Outfaultflow</td>
+<td>Collection of handlers invoked for an outgoing fault
+message.</td>
+</tr>
+</tbody>
+</table>
+<p>Sub elements : <em>phase</em>: represents the
+available phases in the
+execution chain</p>
+<p>The system predefined phases cannot be changed.</p>
+<p>The system predefined phases are,</p>
+<ul>
+<li>Transport</li>
+<li>PreDispatch</li>
+<li>Dispatch</li>
+<li>PostDispatch</li>
+<li>MessageOut</li>
+</ul>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Attribute</th>
+<th>Description</th>
+<th>Possible Values</th>
+</tr>
+<tr class="a">
+<td>name</td>
+<td>Specifies the name of the phase</td>
+<td>Transport, Dispatch, PreDispatch, PostDispatch,
+MessageOut
+<p>User defined phases (can have a user defined name)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Sub elements of phase element: <em>handler</em></p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Attribute</th>
+<th>Description</th>
+<th>Possible Values</th>
+</tr>
+<tr class="a">
+<td>name</td>
+<td>Specifies the handler name. Phase may contain zero or
+more handlers.</td>
+<td>Based on the handler name.
+<p>Example: AddressingbasedDispatcher,
+RequestURIbaseddispatcher</p>
+</td>
+</tr>
+<tr class="b">
+<td>class</td>
+<td>Specifies the shared library which implements the
+handler</td>
+<td>
+<p>Name of the shared library.</p>
+<p>Example: On Linux, if the value is given as <em>foo,</em>
+then the shared library is libfoo.so.</p>
+<p>On MS Windows, <em>foo.dll</em>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="subsection"><a name="messageReceiver"></a>
+<h3>messageReceiver</h3>
+<p></p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Attribute</th>
+<th>Description</th>
+<th>Possible Values</th>
+</tr>
+<tr class="b">
+<td>mep</td>
+<td>Message Exchange Pattern</td>
+<td>IN-OUT, IN-ONLY</td>
+</tr>
+<tr class="a">
+<td>class</td>
+<td>Specify the shared library which implements the
+transport interface.
+<p>If not specified, the Axis2/C default message receiver
+is used.</p>
+</td>
+<td>Name of the shared library.
+<p>Example: On Linux, if the value is given as <em>foo,</em>
+then the shared library is libfoo.so.</p>
+<p>On MS Windows, <em>foo.dll</em>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-bottom: 0in;"><br />
+</p>
+<p><a name="appB"></a></p>
+</div>
+</div>
+<div class="section"><a name="Appendix_B_-_services_xml"></a>
+<h2>Appendix B - services.xml</h2>
+<p>Configuration of a service is specified using a services.xml.
+Each service
+or service archive file needs to have a services.xml in order to be a
+valid
+service. The following sections describe the elements of the
+services.xml
+file.</p>
+<p>If services.xml describes a single service, the root element
+is
+<em>service</em>. If it is describing a service group, then
+the root element
+is <em>serviceGroup</em>. The<em> service</em>
+element will be a child
+element of serviceGroup if there are multiple services specified in
+services.xml.</p>
+<div class="subsection">
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Attributes</th>
+<th>Description</th>
+<th>Possible Values</th>
+</tr>
+<tr class="a">
+<td>name</td>
+<td>Name of the service or service group.</td>
+<td>Depends on the service or the service group.<br />
+Examples: echo, sg_math</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+</div>
+<div class="subsection">
+<p>This is optional. This element can be used to describe the
+service in a
+human readable format.</p>
+<p></p>
+</div>
+<div class="subsection">
+<p>This is optional. Can be used to engage modules at service
+level.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Attributes</th>
+<th>Description</th>
+<th>Possible Values</th>
+</tr>
+<tr class="a">
+<td>ref</td>
+<td>Name of the module which is to be engaged for the
+service</td>
+<td>Name of the module which is to be engaged at service
+level.</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p></p>
+</div>
+<div class="subsection">
+<p>The service element can have any number of parameters as sub
+elements.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Attribute</th>
+<th>Detail</th>
+</tr>
+<tr class="b">
+<td>name</td>
+<td>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Description</th>
+<th>Possible Value</th>
+<th>Parameter Value</th>
+</tr>
+<tr class="a">
+<td>Specifies the name of the shared library that
+holds the service implementation</td>
+<td>serviceClass</td>
+<td>the service name. Example: echo</td>
+</tr>
+<tr class="a">
+<td>Path of static WSDL to be attached with service</td>
+<td>wsdl_path</td>
+<td>Absolute path or path relative to AXIS2C_HOME/bin</td>
+</tr>
+<tr class="a">
+<td>Default HTTP Method used in a REST invocation</td>
+<td>defaultRESTMethod</td>
+<td>One of GET, POST, HEAD, PUT or DELETE</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr class="b">
+<td>locked</td>
+<td>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Description</th>
+<th>Possible Value</th>
+</tr>
+<tr class="a">
+<td>Indicates whether the parameter can be changed
+from the code</td>
+<td>true/false</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+</div>
+<div class="subsection">
+<p>The operations of the service are specified using operation
+elements.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Attributes</th>
+<th>Description</th>
+<th>Possible Values</th>
+</tr>
+<tr class="b">
+<td>name</td>
+<td>name of the operation</td>
+<td>Example: echoString</td>
+</tr>
+<tr class="b">
+<td>mep</td>
+<td>message exchange pattern uri. <p>This is defaulted to in-out MEP. For other MEPs, You need to specify the MEP.</p></td>
+<td>Example: "http://www.w3.org/2004/08/wsdl/in-only"</td>
+
+</tr>
+</tbody>
+</table>
+<p>Sub elements of <em>operation</em>: <em>parameter</em>
+elements can be
+present as sub elements. Zero or more parameters may be present.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Attribute</th>
+<th>Detail</th>
+</tr>
+<tr class="b">
+<td>name</td>
+<td>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Description</th>
+<th>Possible Value</th>
+<th>Parameter Value</th>
+</tr>
+<tr class="a">
+<td>WS-Addressing action mapping to the operation</td>
+<td>wsamapping</td>
+<td>A URL representing the WS-Addressing action
+corresponding to the operation</td>
+</tr>
+<tr class="a">
+<td>REST template mapping to the operation</td>
+<td>RESTLocation</td>
+<td>A template of the expected URL for the operation,
+with compulsary parts and optional parts, well defined</td>
+</tr>
+<tr class="a">
+<td>HTTP Method used in a REST invocation</td>
+<td>RESTMethod</td>
+<td>One of GET, POST, HEAD, PUT or DELETE</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Also, an <em>operation</em> element can have one
+or more <em>actionMapping</em> element as sub elements.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Description</th>
+<th>Possible Values</th>
+</tr>
+<tr class="b">
+<td>Action mapping or an alias to an operation</td>
+<td>Example: echoString</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+</div>
+<div class="subsection">
+<p>An operation specific message receiver is specified from this.
+This is
+optional.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Attributes</th>
+<th>Description</th>
+<th>Possible Values</th>
+</tr>
+<tr class="b">
+<td>class</td>
+<td>Shared library with the message receiver implementation</td>
+<td>Name of the shared library.
+<p>Example: On Linux, if the value is given as <em>foo</em>,
+then the shared library is libfoo.so.</p>
+<p>On MS Windows, <em>foo.dll</em>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-bottom: 0in;"><br />
+</p>
+<p><a name="appC"></a></p>
+</div>
+</div>
+<div class="section"><a name="Appendix_C_-_module_xml"></a>
+<h2>Appendix C - module.xml</h2>
+<p>The module.xml file provides the configuration details for a
+particular
+module in Axis2/C. The top level element is <em>module</em>.</p>
+<div class="subsection"><a name="module"></a>
+<h3>module</h3>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Attributes</th>
+<th>Description</th>
+<th>Possible Values</th>
+</tr>
+<tr class="b">
+<td>name</td>
+<td>Name of the module</td>
+<td>Example- addressing</td>
+</tr>
+<tr class="a">
+<td>class</td>
+<td>Specifies the shared library which implements the
+module.</td>
+<td>Name of the shared library.
+<p>Example- On Linux, if the value is given as <em>foo</em>,
+then the shared library is libfoo.so.</p>
+<p>On MS Windows, <em>foo.dll</em>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>Other elements are child elements of <em>module</em>.</p>
+<p></p>
+</div>
+<div class="subsection"><a name="parameter"></a>
+<h3>parameter</h3>
+<p>Any number of parameters can be present, depending on the
+module.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Attributes</th>
+<th>Description</th>
+<th>Possible Values</th>
+</tr>
+<tr class="a">
+<td>name</td>
+<td>Name of the parameter</td>
+<td>Depends on the module</td>
+</tr>
+<tr class="b">
+<td>locked</td>
+<td>Indicates whether the parameter can be changed from the
+code</td>
+<td>true - cannot be changed
+<p>false - can be changed</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+</div>
+<div class="subsection"><a name="Description"></a>
+<h3>Description</h3>
+<p>Describes the behavior of the module. This element is optional
+and has no
+attributes or sub elements.</p>
+</div>
+<div class="subsection"><a name="inflow"></a>
+<h3>inflow</h3>
+<p>Encapsulates details added to the in-flow by the module. Zero
+or one
+element is possible and does not have any attributes.</p>
+<p>Sub elements of <em>inflow</em> : <em>handler</em>,
+contains details about
+the module specific handlers added to a particular flow. Zero or more
+handlers can be added.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Attributes</th>
+<th>Description</th>
+<th>Possible Values</th>
+</tr>
+<tr class="b">
+<td>name</td>
+<td>Name of the handler</td>
+<td>Depends on the handlers in the module.</td>
+</tr>
+<tr class="a">
+<td>class</td>
+<td>Specifies the shared library which implements the
+handler</td>
+<td>
+<p>Name of the shared library.</p>
+<p>Example: On Linux, if the value is given as <em>foo,</em>
+then the shared library is libfoo.so.</p>
+<p>On MS Windows, <em>foo.dll</em>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>sub elements of <em>handler</em> : <em>order</em>,
+specifies where to put
+a handler in a particular phase.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Attribute</th>
+<th>Description</th>
+<th>Possible Values</th>
+</tr>
+<tr class="a">
+<td>phase</td>
+<td>The name of the phase the handler belongs to</td>
+<td>depends on the handler</td>
+</tr>
+<tr class="b">
+<td>phaseLast</td>
+<td>Indicates that the handler is the last handler of the
+phase</td>
+<td>true</td>
+</tr>
+<tr class="a">
+<td>phaseFirst</td>
+<td>Indicates that the handler is the first handler of the
+phase.</td>
+<td>true</td>
+</tr>
+<tr class="b">
+<td>before</td>
+<td>Handler should be invoked before the handler, which is
+specified by the before handler</td>
+<td>handler name</td>
+</tr>
+<tr class="a">
+<td>after</td>
+<td>Handler should be invoked after the handler, which is
+specified by the after handler</td>
+<td>handler name</td>
+</tr>
+</tbody>
+</table>
+<p>From the above attributes, phase is compulsory. Given below
+are
+combinations possible from the other four attributes.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Combination</th>
+<th>Description</th>
+</tr>
+<tr class="a">
+<td>phaseLast</td>
+<td>Indicates that the handler is the last handler of the
+phase</td>
+</tr>
+<tr class="b">
+<td>phasefirst</td>
+<td>Indicates that the handler is the first handler of the
+phase.</td>
+</tr>
+<tr class="a">
+<td>before</td>
+<td>Handler should be invoked before the handler, which is
+specified by the before handler</td>
+</tr>
+<tr class="b">
+<td>after</td>
+<td>Handler should be invoked after the handler, which is
+specified by the after handler</td>
+</tr>
+<tr class="a">
+<td>before &amp; after</td>
+<td>Handler should be invoked before the handler specified
+by the before handler, and
+<p>after the handler specified by the after handler.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><em>outflow</em>, <em>INfaultflow</em>,
+<em>OUTfaultflow</em> elements
+have the same syntax as that of <em>inflow</em>.</p>
+</div>
+<div class="subsection"><a name="operation"></a>
+<h3>operation</h3>
+<p>This is used when a module wants to add operations to a
+service that
+engages the module.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Attributes</th>
+<th>Description</th>
+<th>Possible Values</th>
+</tr>
+<tr class="a">
+<td>name</td>
+<td>Name of the operation (compulsory)</td>
+<td>Depends on the module</td>
+</tr>
+<tr class="b">
+<td>mep</td>
+<td>Message Exchange Pattern</td>
+<td>IN-OUT, IN-ONLY</td>
+</tr>
+</tbody>
+</table>
+<p>Sub elements of <em>operation</em> : Any number
+of parameters can be
+included as sub elements in the operation element.</p>
+<p>The <em>messageReceiver</em> parameter specifies
+the message receiver the
+message is intended for. If it is not set, the default message receiver
+is
+used.</p>
+<p style="margin-bottom: 0in;"><br />
+</p>
+<p><a name="appD"></a></p>
+</div>
+</div>
+<div class="section"><a name="Appendix_D_-_axis2_options"></a>
+<h2>Appendix D - axis2_options</h2>
+<p>This section describes various types of options that can be
+set with
+<code>axis2_options</code>. These options are used by the
+service client
+before sending messages.</p>
+<p><strong>axis2_options_set_action(options, env, action)</strong></p>
+<p>Sets the WS-Addressing action that is to be set in the
+addressing SOAP
+headers.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct</td>
+</tr>
+<tr class="b">
+<td>const axis2_char_t *action</td>
+<td>Pointer to the action string</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><strong>axis2_options_set_fault_to(options, env,
+fault_to)</strong></p>
+<p>Sets the end point reference which may receive the message in
+a case of a
+SOAP fault.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>axis2_endpoint_ref_t *fault_to</td>
+<td>Pointer to the endpoint reference struct representing
+the fault to address.</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><strong>axis2_options_set_from(options, env, from)</strong></p>
+<p>Some services need to know the source from which the message
+comes. This
+option sets the from endpoint</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>axis2_endpoint_ref_t *from</td>
+<td>Pointer to the endpoint reference struct representing
+the from address.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>axis2_options_set_to(options, env, to)</strong></p>
+<p>Sets the endpoint reference the message is destined to.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>axis2_endpoint_ref_t *to</td>
+<td>Pointer to the endpoint reference struct representing
+the to address.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>axis2_options_set_transport_receiver(options,
+env,
+receiver)</strong></p>
+<p>Sets the transport receiver in an OUT-IN message exchange
+scenario.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>axis2_transport_receiver_t *receiver</td>
+<td>Pointer to the transport receiver struct.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>axis2_options_set_transport_in(options, env,
+transport_in)</strong></p>
+<p>Sets the transport-in description.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>axis2_transport_in_desc_t *transport_in</td>
+<td>Pointer to the transport_in struct.</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><strong>axis2_options_set_transport_in_protocol(options,
+env,
+transport_in_protocol)</strong></p>
+<p>Sets the transport-in protocol.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>const AXIS2_TRANSPORT_ENUMS transport_in_protocol</td>
+<td>The value indicating the transport protocol.</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><strong>axis2_options_set_message_id(options, env,
+message_id)</strong></p>
+<p>Sets the message ID.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>The pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>The pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>const axis2_char_t *message_id</td>
+<td>The message ID string.</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><strong>axis2_options_set_properties(options, env,
+properties)</strong></p>
+<p>Sets the properties hash map.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>axis2_hash_t *properties</td>
+<td>Pointer to the properties hash map.</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><strong>axis2_options_set_property(options, env, key,
+property)</strong></p>
+<p>Sets a property with a given key value.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>const axis2_char_t *property_key</td>
+<td>The property key string.</td>
+</tr>
+<tr class="a">
+<td>const void *property</td>
+<td>Pointer to the property to be set.</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><strong>axis2_options_set_relates_to(options, env,
+relates_to)</strong></p>
+<p>Sets the relates-to message information.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="a">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="b">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="a">
+<td>axis2_relates_to_t *relates_to</td>
+<td>Pointer to the relates_to struct.</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><strong>axis2_options_set_reply_to(options, env,
+reply_to)</strong></p>
+<p>Sets the reply-to address, when the client wants a reply to be
+sent to a
+different end point.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="a">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="b">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="a">
+<td>axis2_endpoint_ref_t *reply_to</td>
+<td>Pointer to the endpoint reference struct representing
+the reply-to address.</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><strong>axis2_options_set_transport_out(options, env,
+transport_out)</strong></p>
+<p>Sets the transport-out description.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="a">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="b">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="a">
+<td>axis2_transport_out_desc_t *transport_out</td>
+<td>Pointer to the transport-out description struct.</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><strong>axis2_options_set_sender_transport(options, env,
+sender_transport,
+conf)</strong></p>
+<p>Sets the sender transport.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="b">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="a">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="b">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="a">
+<td>const AXIS2_TRANSPORT_ENUMS sender_transport</td>
+<td>The name of the sender transport to be set.</td>
+</tr>
+<tr class="b">
+<td>axis2_conf_t *conf</td>
+<td>Pointer to the conf struct. It is from the conf that
+the transport is picked with the given name.</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><strong>axis2_options_set_soap_version_uri(options, env,
+soap_version_uri)</strong></p>
+<p>Sets the SOAP version URI.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>const axis2_char_t *soap_version_uri</td>
+<td>URI of the SOAP version to be set.</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><strong>axis2_options_set_timeout_in_milli_seconds(options,
+env,
+timeout_in_milli_seconds)</strong></p>
+<p>Sets the time out in milli seconds. This is used in
+asynchronous message
+exchange scenarios to specify how long the call back object is to wait
+for
+the response.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>const long timeout_in_milli_seconds</td>
+<td>Timeout in milli seconds.</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><strong>axis2_options_set_transport_info(options, env,
+sender_transport,
+receiver_transport, user_separate_listener)</strong></p>
+<p>Sets the transport information. Transport information includes
+the name of
+the sender transport, name of the receiver transport, and whether a
+separate
+listener is to be used to receive a response.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>const AXIS2_TRANSPORT_ENUMS sender_transport</td>
+<td>Name of the sender transport to be used.</td>
+</tr>
+<tr class="a">
+<td>const AXIS2_TRANSPORT_ENUMS receiver_transport</td>
+<td>Name of the receiver transport to be used.</td>
+</tr>
+<tr class="b">
+<td>const axis2_bool_t use_separate_listener</td>
+<td>bool value indicating whether to use a separate
+listener or not.</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><strong>axis2_options_set_use_separate_listener(options,
+env,
+use_separate_listener)</strong></p>
+<p>Sets the bool value indicating whether to use a separate
+listener or not.
+A separate listener is used when the transport is a one-way transport
+and the
+message exchange pattern is two way.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>const axis2_bool_t use_separate_listener</td>
+<td>bool value indicating whether to use a separate
+listener or not</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><strong>axis2_options_set_soap_version(options, env,
+soap_version)</strong></p>
+<p>Sets the SOAP version.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>const int soap_version</td>
+<td>SOAP version, either AXIOM_SOAP11 or AXIOM_SOAP12.</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><strong>axis2_options_set_enable_mtom(options, env,
+enable_mtom)</strong></p>
+<p>Enable or disable MTOM handling when sending binary
+attachments.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>axis2_bool_t enable_mtom</td>
+<td>AXIS2_TRUE if MTOM is to be enabled, else AXIS2_FALSE</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p><strong>axis2_options_set_enable_rest(options, env,
+enable_rest)</strong></p>
+<p>Enable or disable REST support.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>axis2_bool_t enable_rest</td>
+<td>AXIS2_TRUE if REST is to be enabled, else AXIS2_FALSE</td>
+</tr>
+</tbody>
+</table>
+<p><strong>axis2_options_set_http_auth_info(options, env,
+username, password, auth_type)</strong></p>
+<p>Sets HTTP Authentication information.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>const axis2_char_t *username</td>
+<td>String representing username</td>
+</tr>
+<tr class="a">
+<td>const axis2_char_t *password</td>
+<td>String representing password.</td>
+</tr>
+<tr class="b">
+<td>const axis2_char_t *auth_type</td>
+<td>use "Basic" to force basic authentication and "Digest"
+to force digest authentication or NULL for not forcing authentication</td>
+</tr>
+</tbody>
+</table>
+<p><strong>axis2_options_set_proxy_auth_info(options, env,
+username, password, auth_type)</strong></p>
+<p>Sets Proxy Authentication information.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>const axis2_char_t *username</td>
+<td>String representing username</td>
+</tr>
+<tr class="a">
+<td>const axis2_char_t *password</td>
+<td>String representing password.</td>
+</tr>
+<tr class="b">
+<td>const axis2_char_t *auth_type</td>
+<td>use "Basic" to force basic authentication and "Digest"
+to force digest authentication or NULL for not forcing authentication</td>
+</tr>
+</tbody>
+</table>
+<p><strong>axis2_options_set_test_http_auth(options, env,
+test_http_auth)</strong></p>
+<p>Enables testing of HTTP Authentication information.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>const axis2_bool_t test_http_auth</td>
+<td>bool value indicating whether to test or not,
+AXIS2_TRUE to enable, AXIS2_FALSE to disable</td>
+</tr>
+</tbody>
+</table>
+<p><strong>axis2_options_set_test_proxy_auth(options, env,
+test_proxy_auth)</strong></p>
+<p>Enables testing of proxy Authentication information.</p>
+<table class="bodyTable">
+<caption></caption><tbody>
+<tr class="a">
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+<tr class="b">
+<td>axis2_options_t *options</td>
+<td>Pointer to the options struct.</td>
+</tr>
+<tr class="a">
+<td>const axutil_env_t *env</td>
+<td>Pointer to the environment struct.</td>
+</tr>
+<tr class="b">
+<td>const axis2_bool_t test_proxy_auth</td>
+<td>bool value indicating whether to test or not,
+AXIS2_TRUE to enable, AXIS2_FALSE to disable</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="clear">
+<hr /></div>
+</div>
+
+</body></html>
