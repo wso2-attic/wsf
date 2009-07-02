@@ -355,10 +355,41 @@ namespace wso2wsf
 	*/
 	WSF_EXTERN axis2_svc_client_t* WSF_CALL getAxis2SvcClient();
 	/** 
-	 * Returns the axis2_conf_ctx_t which can be used to create a confguration context once and pass it when creating multiple service clients.
+	 * Returns the axis2_conf_ctx_t which can be used to create a configuration context once and pass it when creating multiple service clients.
 	 */
 	WSF_EXTERN axis2_conf_ctx_t* WSF_CALL getAxis2ConfCtx(std::string repositoryPath);
 
+	/**
+	* Configure Service client with a proxy.
+	* @param proxyHost proxy host
+	* @param proxyPort proxy port
+	*
+	*/
+	WSF_EXTERN bool WSF_CALL setProxy(std::string proxyHost, std::string proxyPort);
+
+	/**
+	* Set proxy with authentication                                                   
+	* @param proxyHost Proxy host
+	* @param porxyPort proxy port
+	* @param username  username required for proxy authentication
+	* @param password  password required for proxy authentication
+	*/
+	WSF_EXTERN bool WSF_CALL setProxyWithAuth(std::string proxyHost,
+		std::string proxyPort, std::string username, std::string password);
+
+	/**
+	* Gets the boolean value indicating whether HTTP Authentication
+	* is required.
+	* @return true if HTTP authentication is required, false otherwise.
+	*/
+	WSF_EXTERN bool WSF_CALL getHttpAuthRequired();
+
+	/**
+	* Gets the boolean value indicating whether Proxy Authentication
+	* is required.
+	* @return true if proxy authentication is required and false otherwise.
+	*/
+	WSF_EXTERN bool WSF_CALL getProxyAuthRequired();
 
     };
     /** @} */
