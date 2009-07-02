@@ -751,3 +751,26 @@ axis2_conf_ctx_t* ServiceClient::getAxis2ConfCtx(std::string repositoryPath)
 	return conf_ctx;
 }
 
+bool ServiceClient::getProxyAuthRequired()
+{
+	axis2_bool_t status  = AXIS2_FALSE;
+	status = axis2_svc_client_get_proxy_auth_required(_wsf_service_client, Environment::getEnv());
+	return status ? true : false;
+}
+
+bool ServiceClient::setProxy(string proxyHost, string proxyPort)
+{
+	axis2_status_t status = AXIS2_SUCCESS;
+	status = axis2_svc_client_set_proxy(_wsf_service_client, Environment::getEnv(), 
+		(axis2_char_t *)proxyPort.c_str(), (axis2_char_t *)proxyPort.c_str());
+	return status ? true : false;
+}
+
+bool ServiceClient::setProxyWithAuth(string proxyHost, string proxyPort, string username, string password)
+{
+	axis2_status_t status = AXIS2_SUCCESS;
+	status = axis2_svc_client_set_proxy_with_auth(_wsf_service_client, Environment::getEnv(), 
+		(axis2_char_t *)proxyHost.c_str(), (axis2_char_t *)proxyPort.c_str(), (axis2_char_t *)username.c_str(), 
+		(axis2_char_t *)password.c_str());
+	return status ? true: false;
+}
