@@ -289,3 +289,32 @@ void Options::setUseSeparateListener(bool use_separate_listener)
     }
 }
 
+bool Options::setHTTPAuthInfo(string username, string password, string authType)
+{
+	axis2_status_t status = AXIS2_FAILURE;
+	status = axis2_options_set_http_auth_info(_wsf_options, Environment::getEnv(),(axis2_char_t*)username.c_str(), 
+		(axis2_char_t*)password.c_str(), (axis2_char_t*)authType.c_str());
+	return status ? true : false;
+}
+
+bool Options::setProxyAuthInfo(string username, string password, string authType)
+{
+	axis2_status_t status = AXIS2_FAILURE;
+	status = axis2_options_set_proxy_auth_info(_wsf_options, Environment::getEnv(), 
+		(axis2_char_t*)username.c_str(), (axis2_char_t*)password.c_str(), (axis2_char_t*)authType.c_str());
+	return status ? true : false;
+}
+
+bool Options::setTestHTTPAuth(bool testHTTPAuth)
+{
+	axis2_status_t status = AXIS2_FAILURE;
+	status = axis2_options_set_test_http_auth(_wsf_options, Environment::getEnv(),(testHTTPAuth ? AXIS2_TRUE : AXIS2_FALSE));
+	return status ? true : false;
+}
+
+bool Options::setTestProxyAuth(bool testProxyAuth)
+{
+	axis2_status_t status = AXIS2_FAILURE;
+	status = axis2_options_set_test_proxy_auth(_wsf_options, Environment::getEnv(), testProxyAuth ? AXIS2_TRUE : AXIS2_FALSE);
+	return status ? true : false;
+}
