@@ -54,12 +54,12 @@ make dist
 
 cd examples
 make dist
-tar xf wsfcpp-samples-src-2.0.0-alpha.tar.gz
+tar xf wsfcpp-samples-src-2.0.0.tar.gz
 cd ..
-tar xf wso2-wsf-cpp-src-2.0.0-alpha.tar.gz
-mv examples/wsfcpp-samples-src-2.0.0-alpha wso2-wsf-cpp-src-2.0.0-alpha/examples
-rm wso2-wsf-cpp-src-2.0.0-alpha.tar.gz
-tar -pczf wso2-wsf-cpp-src-2.0.0-alpha.tar.gz wso2-wsf-cpp-src-2.0.0-alpha
+tar xf wso2-wsf-cpp-src-2.0.0.tar.gz
+mv examples/wsfcpp-samples-src-2.0.0 wso2-wsf-cpp-src-2.0.0/examples
+rm wso2-wsf-cpp-src-2.0.0.tar.gz
+tar -pczf wso2-wsf-cpp-src-2.0.0.tar.gz wso2-wsf-cpp-src-2.0.0
 
 cp *tar.gz dist
 
@@ -71,12 +71,12 @@ cd ..
 mv /tmp/dist_cpp.sh dist.sh
 
 cd dist
-tar xf wso2-wsf-cpp-src-2.0.0-alpha.tar.gz
-rm wso2-wsf-cpp-src-2.0.0-alpha.tar.gz
+tar xf wso2-wsf-cpp-src-2.0.0.tar.gz
+rm wso2-wsf-cpp-src-2.0.0.tar.gz
 tar xf wso2-wsf-c-src-2.0.0.tar.gz
 rm wso2-wsf-c-src-2.0.0.tar.gz
-mv wso2-wsf-c-src-2.0.0 wso2-wsf-cpp-src-2.0.0-alpha/wsf_c
-cd wso2-wsf-cpp-src-2.0.0-alpha
+mv wso2-wsf-c-src-2.0.0 wso2-wsf-cpp-src-2.0.0/wsf_c
+cd wso2-wsf-cpp-src-2.0.0
 cp -r ../../include ../../build_samples.sh .
 cp ../../build_codegen.sh .
 mv /tmp/Makefile.am /tmp/Makefile.in .
@@ -102,10 +102,10 @@ rm -rf wsf_c/savanc/samples/wso2-wsf-c-src-2.0.0
 fi
 
 cd ..
-tar -pczf wso2-wsf-cpp-src-2.0.0-alpha.tar.gz wso2-wsf-cpp-src-2.0.0-alpha
+tar -pczf wso2-wsf-cpp-src-2.0.0.tar.gz wso2-wsf-cpp-src-2.0.0
 rm -rf `find . -type f -name config.log`
-zip -r wso2-wsf-cpp-src-2.0.0-alpha.zip wso2-wsf-cpp-src-2.0.0-alpha
-rm -rf wso2-wsf-cpp-src-2.0.0-alpha
+zip -r wso2-wsf-cpp-src-2.0.0.zip wso2-wsf-cpp-src-2.0.0
+rm -rf wso2-wsf-cpp-src-2.0.0
 mv *tar.gz ../../
 mv *zip ../../
 cd ../../
