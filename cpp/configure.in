@@ -2,7 +2,7 @@
 ### Release Details
 #############################################################################
 #
-WSFCPP_VERSION=2.0.0-alpha
+WSFCPP_VERSION=2.0.0
 #
 #############################################################################
 ### Compiler Options ###
@@ -16,7 +16,7 @@ EMBED_MANIFEST = 1
 #
 # debug symbols
 # To build with debug symbols use DEBUG = 1
-DEBUG = 1
+DEBUG = 0
 #
 #############################################################################
 ### Build Details ###
