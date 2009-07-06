@@ -36,16 +36,16 @@
 
     <xsl:for-each select="method">
     <xsl:for-each select="input/param[@type!='' and @ours]">
-     <xsl:variable name="inputtype" select="substring-after(@type,'::')"/>
-     #include "<xsl:value-of select="$inputtype"/>.h"
+     <xsl:variable name="inputtype1" select="substring-after(@type,'::')"/>
+     #include "<xsl:value-of select="$inputtype1"/>.h"
     </xsl:for-each>
     <xsl:for-each select="output/param[@type!='' and @ours]">
-     <xsl:variable name="outputtype" select="substring-after(@type,'::')"/>
-     #include "<xsl:value-of select="$outputtype"/>.h"
+     <xsl:variable name="outputtype1" select="substring-after(@type,'::')"/>
+     #include "<xsl:value-of select="$outputtype1"/>.h"
     </xsl:for-each>
     <xsl:for-each select="fault/param[@type!='']">
-     <xsl:variable name="faulttype" select="substring-after(@type,'::')"/>
-     #include "<xsl:value-of select="$faulttype"/>.h"
+     <xsl:variable name="faulttype1" select="substring-after(@type,'::')"/>
+     #include "<xsl:value-of select="$faulttype1"/>.h"
     </xsl:for-each>
    </xsl:for-each>
 
@@ -60,7 +60,7 @@
          <xsl:variable name="outputtype">
             <xsl:choose>
                 <xsl:when test="$isUnwrapParameters">
-                    <xsl:value-of select="output/param/param/@type"/><xsl:if test="output/param/param/@ours"><xsl:text>*</xsl:text></xsl:if><xsl:text> _</xsl:text><xsl:value-of select="@name"/>
+                    <xsl:value-of select="output/param/param/@type"/><xsl:if test="output/param/param/@ours"><xsl:text>*</xsl:text></xsl:if>
                 </xsl:when>
                 <xsl:otherwise><xsl:value-of select="output/param/@type"/><xsl:if test="output/param/@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
             </xsl:choose>

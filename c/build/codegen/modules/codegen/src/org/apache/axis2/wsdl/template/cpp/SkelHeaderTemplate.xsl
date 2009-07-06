@@ -40,16 +40,16 @@
 
    <xsl:for-each select="method">
     <xsl:for-each select="input/param[@type!='' and @ours]">
-     <xsl:variable name="inputtype" select="substring-after(@type,'::')"/>
-     #include "<xsl:value-of select="$inputtype"/>.h"
+     <xsl:variable name="inputtype1" select="substring-after(@type,'::')"/>
+     #include "<xsl:value-of select="$inputtype1"/>.h"
     </xsl:for-each>
     <xsl:for-each select="output/param[@type!='' and @ours]">
-     <xsl:variable name="outputtype" select="substring-after(@type,'::')"/>
-     #include "<xsl:value-of select="$outputtype"/>.h"
+     <xsl:variable name="outputtype1" select="substring-after(@type,'::')"/>
+     #include "<xsl:value-of select="$outputtype1"/>.h"
     </xsl:for-each>
     <xsl:for-each select="fault/param[@type!='']">
-     <xsl:variable name="faulttype" select="substring-after(@type,'::')"/>
-     #include "<xsl:value-of select="$faulttype"/>.h"
+     <xsl:variable name="faulttype1" select="substring-after(@type,'::')"/>
+     #include "<xsl:value-of select="$faulttype1"/>.h"
     </xsl:for-each>
    </xsl:for-each>
 
@@ -99,7 +99,7 @@ class <xsl:value-of select="$svc_name"/>
         /**
          * Auto generated method declaration
          * for "<xsl:value-of select="@qname"/>" operation.
-         * @param env environment ( mandatory)<xsl:if test="not($isUnwrapParameters)"><xsl:for-each select="input/param[@type!='']"><xsl:text>
+         * <xsl:if test="not($isUnwrapParameters)"><xsl:for-each select="input/param[@type!='']"><xsl:text>
          </xsl:text>* @param _<xsl:value-of select="@name"/> of the <xsl:value-of select="@type"/></xsl:for-each></xsl:if>
          <xsl:if test="$isUnwrapParameters"><xsl:for-each select="input/param/param[@type!='']"><xsl:text>
          </xsl:text>* @param _<xsl:value-of select="@name"/> of the <xsl:value-of select="@type"/></xsl:for-each></xsl:if>
