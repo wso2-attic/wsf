@@ -116,7 +116,7 @@
         <xsl:for-each select="property">
             <xsl:variable name="CName"><xsl:value-of select="@cname"></xsl:value-of></xsl:variable>
             <xsl:choose>
-              <xsl:when test="@ours or @type='axutil_qname_t*' or @type='axutil_duration_t*' or @type='axutil_uri_t*' or @type='axutil_date_time_t*' or @type='axutil_base64_binary_t*'">
+              <xsl:when test="@isarray or @ours or @type='axutil_qname_t*' or @type='axutil_duration_t*' or @type='axutil_uri_t*' or @type='axutil_date_time_t*' or @type='axutil_base64_binary_t*'">
                 property_<xsl:value-of select="$CName"/>  = NULL;
               </xsl:when>
                 <xsl:when test="@type='std::string'">
@@ -175,7 +175,7 @@
             <xsl:for-each select="property">
             <xsl:variable name="CName"><xsl:value-of select="@cname"></xsl:value-of></xsl:variable>
             <xsl:choose>
-             <xsl:when test="@ours or @type='axutil_qname_t*' or @type='axutil_duration_t*' or @type='axutil_uri_t*' or @type='axutil_date_time_t*' or @type='axutil_base64_binary_t*'">
+             <xsl:when test="@isarray or @ours or @type='axutil_qname_t*' or @type='axutil_duration_t*' or @type='axutil_uri_t*' or @type='axutil_date_time_t*' or @type='axutil_base64_binary_t*'">
                property_<xsl:value-of select="$CName"/>  = NULL;
              </xsl:when>
              <xsl:when test="@type='std::string'">
@@ -4418,7 +4418,7 @@
                         <xsl:when test="$nativePropertyType='int'">
                            <xsl:choose>
                              <xsl:when test="@isarray">
-                               sprintf (text_value_<xsl:value-of select="$position"/>, AXIS2_PRINTF_INT32_FORMAT_SPECIFIER, element);
+                               sprintf (text_value_<xsl:value-of select="$position"/>, AXIS2_PRINTF_INT32_FORMAT_SPECIFIER, *element);
                              </xsl:when>
                              <xsl:otherwise>
                                sprintf (text_value_<xsl:value-of select="$position"/>, AXIS2_PRINTF_INT32_FORMAT_SPECIFIER, <xsl:value-of select="$propertyInstanceName"/>);
@@ -4436,7 +4436,7 @@
                         <xsl:when test="$nativePropertyType='unsigned int'">
                            <xsl:choose>
                              <xsl:when test="@isarray">
-                               sprintf (text_value_<xsl:value-of select="$position"/>, AXIS2_PRINTF_UINT32_FORMAT_SPECIFIER, element);
+                               sprintf (text_value_<xsl:value-of select="$position"/>, AXIS2_PRINTF_UINT32_FORMAT_SPECIFIER, *element);
                              </xsl:when>
                              <xsl:otherwise>
                                sprintf (text_value_<xsl:value-of select="$position"/>, AXIS2_PRINTF_UINT32_FORMAT_SPECIFIER, <xsl:value-of select="$propertyInstanceName"/>);
@@ -4510,7 +4510,7 @@
                         <xsl:when test="$nativePropertyType='short'">
                            <xsl:choose>
                              <xsl:when test="@isarray">
-                               sprintf (text_value_<xsl:value-of select="$position"/>, "%d", element);
+                               sprintf (text_value_<xsl:value-of select="$position"/>, "%d", *element);
                              </xsl:when>
                              <xsl:otherwise>
                                sprintf (text_value_<xsl:value-of select="$position"/>, "%d", <xsl:value-of select="$propertyInstanceName"/>);
@@ -4528,7 +4528,7 @@
                         <xsl:when test="$nativePropertyType='unsigned short'">
                            <xsl:choose>
                              <xsl:when test="@isarray">
-                               sprintf (text_value_<xsl:value-of select="$position"/>, "%hu", element);
+                               sprintf (text_value_<xsl:value-of select="$position"/>, "%hu", *element);
                              </xsl:when>
                              <xsl:otherwise>
                                sprintf (text_value_<xsl:value-of select="$position"/>, "%hu", <xsl:value-of select="$propertyInstanceName"/>);
@@ -4549,7 +4549,7 @@
                         <xsl:when test="$nativePropertyType='int64_t'">
                            <xsl:choose>
                              <xsl:when test="@isarray">
-                               sprintf (text_value_<xsl:value-of select="$position"/>, AXIS2_PRINTF_INT64_FORMAT_SPECIFIER, element);
+                               sprintf (text_value_<xsl:value-of select="$position"/>, AXIS2_PRINTF_INT64_FORMAT_SPECIFIER, *element);
                              </xsl:when>
                              <xsl:otherwise>
                                sprintf (text_value_<xsl:value-of select="$position"/>, AXIS2_PRINTF_INT64_FORMAT_SPECIFIER, (int64_t) <xsl:value-of select="$propertyInstanceName"/>);
@@ -4568,7 +4568,7 @@
                         <xsl:when test="$nativePropertyType='uint64_t'">
                            <xsl:choose>
                              <xsl:when test="@isarray">
-                               sprintf (text_value_<xsl:value-of select="$position"/>, AXIS2_PRINTF_UINT64_FORMAT_SPECIFIER, element);
+                               sprintf (text_value_<xsl:value-of select="$position"/>, AXIS2_PRINTF_UINT64_FORMAT_SPECIFIER, *element);
                              </xsl:when>
                              <xsl:otherwise>
                                sprintf (text_value_<xsl:value-of select="$position"/>, AXIS2_PRINTF_UINT64_FORMAT_SPECIFIER, (uint64_t)<xsl:value-of select="$propertyInstanceName"/>);
@@ -4587,7 +4587,7 @@
                         <xsl:when test="$nativePropertyType='float'">
                            <xsl:choose>
                              <xsl:when test="@isarray">
-                               sprintf (text_value_<xsl:value-of select="$position"/>, "%f", element);
+                               sprintf (text_value_<xsl:value-of select="$position"/>, "%f", *element);
                              </xsl:when>
                              <xsl:otherwise>
                                sprintf (text_value_<xsl:value-of select="$position"/>, "%f", (float)<xsl:value-of select="$propertyInstanceName"/>);
@@ -4606,7 +4606,7 @@
                         <xsl:when test="$nativePropertyType='double'">
                            <xsl:choose>
                              <xsl:when test="@isarray">
-                               sprintf (text_value_<xsl:value-of select="$position"/>, "%f", element);
+                               sprintf (text_value_<xsl:value-of select="$position"/>, "%f", *element);
                              </xsl:when>
                              <xsl:otherwise>
                                sprintf (text_value_<xsl:value-of select="$position"/>, "%f", (double)<xsl:value-of select="$propertyInstanceName"/>);
@@ -5434,6 +5434,7 @@
                 </xsl:if>
                </xsl:if> <!--close for test of primitive types -->
                 <xsl:if test="@isarray">
+                    if(NULL != property_<xsl:value-of select="$CName"/>)
                  delete property_<xsl:value-of select="$CName"/>;
                 </xsl:if>
                isValid<xsl:value-of select="$CName"/> = false; 
