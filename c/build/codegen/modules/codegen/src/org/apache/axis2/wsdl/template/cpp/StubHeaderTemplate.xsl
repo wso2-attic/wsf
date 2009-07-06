@@ -235,7 +235,7 @@ class <xsl:value-of select="@name"/> : public wso2wsf::Stub
          * Auto generated function for asynchronous invocations
          * for "<xsl:value-of select="@qname"/><xsl:text>" operation.
          * @param stub The stub
-         * @param env environment ( mandatory)</xsl:text>
+         * </xsl:text>
          <!--  select only the body parameters  -->
          <xsl:if test="not($isUnwrapParameters)"><xsl:for-each select="input/param[@type!='']"><xsl:text>
          * @param _</xsl:text><xsl:value-of select="@name"/> of the <xsl:value-of select="@type"/></xsl:for-each></xsl:if>
