@@ -459,7 +459,7 @@
                                 </xsl:otherwise>
                             </xsl:choose>
                         </xsl:variable>
-                        <xsl:variable name="outputparam_types" select="output/param/param/@type"/>
+                        <xsl:variable name="outputparam_types"><xsl:value-of select="output/param/param/@type"/><xsl:if test="output/param/param/@ours">*</xsl:if></xsl:variable>
                         {
                             <xsl:value-of select="$svcop-prefix"/> skel;
                            <xsl:value-of select="$outputparam_types"/> ret_unwrapped = skel.<xsl:value-of select="$method-name"/><xsl:text>(</xsl:text>
@@ -474,7 +474,7 @@
                                             new <xsl:value-of select="output/param/@complextype"/>(ret_unwrapped));
                                 </xsl:when>
                                 <xsl:otherwise>
-                                    ret_val<xsl:value-of select="$position"/> = <xsl:value-of select="output/param/@type"/>(ret_unwrapped);
+                                    ret_val<xsl:value-of select="$position"/> =new <xsl:value-of select="output/param/@type"/>(ret_unwrapped);
                                 </xsl:otherwise>
                             </xsl:choose>
                             
