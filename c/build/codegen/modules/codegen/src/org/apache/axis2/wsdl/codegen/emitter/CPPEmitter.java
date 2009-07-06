@@ -742,7 +742,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
         boolean isOurs = true;
 
         if (typeMappingStr.length() != 0 && !typeMappingStr.equals("void") &&
-                !typeMappingStr.equals(CPP_DEFAULT_TYPE)) {
+                !typeMappingStr.equals(CPP_DEFAULT_TYPE) && typeMappingStr.contains("::")) {
             addAttribute(doc, "ours", "yes", paramElement);
 
 
