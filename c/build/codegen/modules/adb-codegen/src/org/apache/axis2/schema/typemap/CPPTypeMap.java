@@ -51,7 +51,7 @@ public class CPPTypeMap implements TypeMap{
                                  "int");
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_LONG, "int64_t");
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_SHORT, "short");
-        CPPTypeMap.addTypemapping(SchemaConstants.XSD_BYTE, "byte");
+        CPPTypeMap.addTypemapping(SchemaConstants.XSD_BYTE, "axis2_byte_t");
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_ANY, "axiom_node_t*");
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_DECIMAL, "double");
 
@@ -147,7 +147,7 @@ public class CPPTypeMap implements TypeMap{
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_NMTOKENS, "std::string");
 
         // a xsd:NOTATION
-        CPPTypeMap.addTypemapping(SchemaConstants.XSD_NOTATION, "OMElement*");
+        CPPTypeMap.addTypemapping(SchemaConstants.XSD_NOTATION, "axiom_node_t*");
 
         // a xsd:XSD_ENTITY
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_ENTITY, "std::string");
