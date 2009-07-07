@@ -179,6 +179,7 @@ axis2_xmpp_transport_sender_invoke(
     
     if (!is_server)
     {
+        axutil_allocator_switch_to_global_pool(env->allocator);
         transport_out = axis2_msg_ctx_get_transport_out_desc (msg_ctx, env);
         xmpp_session = axis2_transport_out_desc_get_param (transport_out, 
                                                            env, 
@@ -186,12 +187,12 @@ axis2_xmpp_transport_sender_invoke(
         if (xmpp_session)
         {
             session = (axis2_xmpp_session_data_t *)axutil_param_get_value (xmpp_session, env);
+            session->env = (axutil_env_t *)env;
             axis2_xmpp_session_reset (session, env);
             AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, "[xmpp]session reuse ");
         }
         else
         {
-
             session = axis2_xmpp_session_create (env);
             session->id_str = (axis2_char_t *)axis2_msg_ctx_get_property_value (msg_ctx, 
                                                   env, 
@@ -264,6 +265,7 @@ axis2_xmpp_transport_sender_invoke(
                                  "[xmpp]Failed to connect to server %s,"
                                  "error code %d",
                                  session->server, ret);
+                axutil_allocator_switch_to_local_pool(env->allocator);
                 return AXIS2_FAILURE;
             }
             
@@ -275,8 +277,10 @@ axis2_xmpp_transport_sender_invoke(
             axutil_param_set_value_free (xmpp_session, env, 
                                          axis2_xmpp_session_free_void_arg);
             axis2_transport_out_desc_add_param (transport_out, env, 
-                                                xmpp_session);
+                                               xmpp_session);
+
         }
+        axutil_allocator_switch_to_local_pool(env->allocator);
 
         xmpp_parser = session->parser;
         to = axis2_msg_ctx_get_to (msg_ctx, env);
