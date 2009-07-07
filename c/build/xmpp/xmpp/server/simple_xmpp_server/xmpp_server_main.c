@@ -129,7 +129,6 @@ int main(
     }
 
     env = init_syetem_env(allocator, log_file);
-    env->log->level = log_level;
 
     axutil_error_init();
     system_env = env;
@@ -182,6 +181,8 @@ int main(
                 return -1;
         }
     }
+
+    env->log->level = log_level;
 
 #ifndef WIN32
     signal(SIGINT, sig_handler);
