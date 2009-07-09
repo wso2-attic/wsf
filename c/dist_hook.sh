@@ -39,13 +39,13 @@ doxygen doxygenconf
 cd ../../../
 
 cd wso2-wsf-c-src-2.0.0
-cp -r axis2c/xdocs docs/axis2c
+cp -r ../axis2c/xdocs docs/axis2c
 cp -r ../axis2c/xdocs/api/html docs/axis2c/api
-cp -r savanc/xdocs/docs docs/savanc
+cp -r ../savanc/xdocs/docs docs/savanc
 cp -r ../savanc/xdocs/api/html docs/savanc/api
-cp -r sandesha2c/xdocs docs/sandesha2c
+cp -r ../sandesha2c/xdocs docs/sandesha2c
 cp -r ../sandesha2c/xdocs/api/html docs/sandesha2c/api
-cp -r rampartc/xdocs docs/rampartc
+cp -r ../rampartc/xdocs docs/rampartc
 cp -r ../rampartc/xdocs/api/html docs/rampartc/api
 cp -r wsclient/docs docs/wsclient
 
