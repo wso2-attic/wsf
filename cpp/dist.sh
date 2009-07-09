@@ -1,3 +1,8 @@
+#create WSFCPP_HOME variable to point to the <build location>/deploy directory to workaround savan registry build issue
+
+#!bin/bash
+set -e
+
 if [ -a ../dist_temp ]; then
 rm -rf ../dist_temp
 fi
