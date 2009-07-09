@@ -1,5 +1,3 @@
-#create WSFCPP_HOME variable to point to the <build location>/deploy directory to workaround savan registry build issue
-
 #!bin/bash
 set -e
 
@@ -47,8 +45,8 @@ cd ..
 sh autogen.sh
 ./configure --prefix=`pwd`/wsf_c/deploy
 make -j 10
-make samples
 make install
+make samples
 
 
 cp Makefile.am Makefile.in /tmp
