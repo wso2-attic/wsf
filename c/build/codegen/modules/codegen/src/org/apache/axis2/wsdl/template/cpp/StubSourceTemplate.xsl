@@ -983,8 +983,8 @@
           */
 
          void WSF_CALL
-        <xsl:value-of select="$className"/>::start_<xsl:value-of select="@name"/>(<xsl:if test="$inputparams != ''"><xsl:value-of select="$inputparams"/>
-                                </xsl:if>,<xsl:value-of select="$callbackName"/>* cb)
+        <xsl:value-of select="$className"/>::start_<xsl:value-of select="@name"/>(<xsl:if test="$inputparams != ''"><xsl:value-of select="$inputparams"/>,
+                                </xsl:if><xsl:value-of select="$callbackName"/>* cb)
          {
 
             axis2_callback_t *callback = NULL;
