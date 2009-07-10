@@ -188,7 +188,7 @@ public class CPPTypeMap implements TypeMap{
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_ARRAY,
                 "std::vector<void*>*");
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_STRUCT,
-                "OMElement*");
+                "axiom_node_t*");
         // wrap for C++
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_BASE64,
                 "axutil_base64_binary_t*");
@@ -198,7 +198,7 @@ public class CPPTypeMap implements TypeMap{
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_DATETIME,
                 "axutil_date_time_t*");
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_NOTATION,
-                "OMElement*");
+                "axiom_node_t*");
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_TIME,
                 "axutil_date_time_t*");
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_DATE,
@@ -218,7 +218,7 @@ public class CPPTypeMap implements TypeMap{
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_BASE64BINARY,
                 "axutil_base64_binary_t*");
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_HEXBINARY,
-                "OMElement*");
+                "axiom_node_t*");
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_FLOAT,
                 "float");
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_DOUBLE,
