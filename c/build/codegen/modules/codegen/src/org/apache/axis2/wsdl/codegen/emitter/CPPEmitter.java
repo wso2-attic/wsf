@@ -59,7 +59,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
     protected static final String CPP_SVC_SKEL_SUFFIX = "";
 
     protected static final String JAVA_DEFAULT_TYPE = "org.apache.axiom.om.OMElement";
-    protected static final String CPP_DEFAULT_TYPE = "OMELement*";
+    protected static final String CPP_DEFAULT_TYPE = "axiom_node_t*";
 
     protected static final String CPP_OUR_TYPE_PREFIX = "";
     protected static final String CPP_OUR_TYPE_SUFFIX = "";
@@ -796,7 +796,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
         addAttribute(doc, "caps-type", paramType.toUpperCase(), param);
 
         if (!paramType.equals("") && !paramType.equals("void") &&
-                !typeMappingStr.equals(CPP_DEFAULT_TYPE) ) {
+                !typeMappingStr.equals(CPP_DEFAULT_TYPE) && typeMappingStr.contains("::") ) {
             addAttribute(doc, "ours", "yes", param);
         }
 
@@ -889,7 +889,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
                 boolean isOurs = true;
 
                 if (typeMappingStr.length() != 0 && !typeMappingStr.equals("void") &&
-                        !typeMappingStr.equals(CPP_DEFAULT_TYPE)) {
+                        !typeMappingStr.equals(CPP_DEFAULT_TYPE) && typeMappingStr.contains("::")) {
                     addAttribute(doc, "ours", "yes", param);
                     isOurs = true;
                 } else {
