@@ -116,7 +116,7 @@
         <xsl:for-each select="memberType">
           <xsl:if test="@ours">
           <xsl:variable name="propertyType" select="@type"/>
-        #include "<xsl:value-of select="$propertyType"/>.h"
+        #include "<xsl:value-of select="substring-after($propertyType,'::')"/>.h"
           </xsl:if>
         </xsl:for-each>
         <xsl:if test="not($istype)">
