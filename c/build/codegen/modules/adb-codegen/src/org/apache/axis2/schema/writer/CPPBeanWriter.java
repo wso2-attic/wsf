@@ -83,7 +83,7 @@ public class CPPBeanWriter implements BeanWriter {
     private Map modelMap = new HashMap();
     private static final String ADB_CLASS_PREFIX = "";
     private static final String ADB_CLASS_POSTFIX = "";
-    private static final String DEFAULT_CPP_CLASS_NAME = "OMElement*";
+    private static final String DEFAULT_CPP_CLASS_NAME = "axiom_node_t*";
 
     private Map baseTypeMap = new JavaTypeMap().getTypeMap();
 
@@ -98,11 +98,11 @@ public class CPPBeanWriter implements BeanWriter {
     // a list of externally identified QNames to be processed. This becomes
     // useful when  only a list of external elements need to be processed
 
-    public static final String DEFAULT_CLASS_NAME = "OMElement*";
-    public static final String DEFAULT_CLASS_ARRAY_NAME = "OMElement*";
+    public static final String DEFAULT_CLASS_NAME = "axiom_node_t*";
+    public static final String DEFAULT_CLASS_ARRAY_NAME = "axiom_node_t*";
 
-    public static final String DEFAULT_ATTRIB_CLASS_NAME = "OMAttribute*";
-    public static final String DEFAULT_ATTRIB_ARRAY_CLASS_NAME = "OMAttribute*";
+    public static final String DEFAULT_ATTRIB_CLASS_NAME = "axiom_attribute_t*";
+    public static final String DEFAULT_ATTRIB_ARRAY_CLASS_NAME = "axiom_attribute_t*";
 
     public static final String DEFAULT_TYPE_NS = "http://www.w3.org/2001/XMLSchema";
 
@@ -1096,12 +1096,12 @@ public class CPPBeanWriter implements BeanWriter {
      * @return Returns String.
      */
     private String makeUniqueCPPClassName(List listOfNames, String xmlName) {
-        String cName;
+        String cName="";
         if (CUtils.isCKeyword(xmlName)) {
             cName = CUtils.makeNonCKeyword(xmlName);
         } else {
-            //javaName = ;
-            cName = JavaUtils.capitalizeFirstChar(JavaUtils.xmlNameToJava(xmlName));
+             cName = xmlName.replace('-','_');
+            cName = JavaUtils.capitalizeFirstChar(JavaUtils.xmlNameToJava(cName));
         }
 
         cName = cName.replace('.','_');
