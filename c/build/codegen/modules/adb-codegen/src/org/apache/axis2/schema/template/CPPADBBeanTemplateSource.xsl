@@ -3406,7 +3406,6 @@
                 axis2_char_t *qname_uri = NULL;
                 axis2_char_t *qname_prefix = NULL;
                 axis2_char_t *p_prefix = NULL;
-                bool ns_already_defined;
             <xsl:for-each select="property/@isarray">
              <xsl:if test="position()=1">
                int i = 0;
@@ -4351,7 +4350,7 @@
                          count = property_<xsl:value-of select="$CName"/>->size();
                          for(i = 0; i &lt; count; i++)
                          {
-                            <xsl:value-of select="@type"/>* element = (*property_<xsl:value-of select="$CName"/>)[i];
+                            <xsl:value-of select="@type"/><xsl:choose><xsl:when test="contains(@type,'*')"> </xsl:when><xsl:otherwise>*</xsl:otherwise></xsl:choose> element = (*property_<xsl:value-of select="$CName"/>)[i];
 
                             if(NULL == element) <!--validty of individual -->
                             {
