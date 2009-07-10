@@ -4905,7 +4905,7 @@
                  <xsl:if test="not(@unbound)">
                      if (size &gt; <xsl:value-of select="@maxOccurs"/>)
                      {
-                         WSF_LOG_ERROR_MSG("Environment::getEnv()->log,WSF_LOG_SI,<xsl:value-of select="$propertyName"/> has exceed the maxOccurs(<xsl:value-of select="@maxOccurs"/>)");
+                         WSF_LOG_ERROR_MSG(Environment::getEnv()->log,WSF_LOG_SI,"<xsl:value-of select="$propertyName"/> has exceed the maxOccurs(<xsl:value-of select="@maxOccurs"/>)");
                          return false;
                      }
                  </xsl:if>
