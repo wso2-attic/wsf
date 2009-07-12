@@ -49,18 +49,22 @@
 
         using namespace wso2wsf;
 
+<xsl:if test="@cppNamespace">
+    using namespace <xsl:value-of select="@cppNamespace"/>;
+</xsl:if>
+          
         class <xsl:value-of select="@name"/> : public ServiceSkeleton
         {
             public:
-            <!--
+
                union {
                      <xsl:for-each select="method">
                          <xsl:if test="count(fault/*)">
-                         <xsl:value-of select="$servicename"/>_<xsl:value-of select="@name"/><xsl:text>_fault </xsl:text> <xsl:value-of select="@name"/>_fault;
+                         <xsl:value-of select="$servicename"/>_<xsl:value-of select="@name"/><xsl:text>_fault </xsl:text> *<xsl:value-of select="@name"/>_fault;
                          </xsl:if>
                      </xsl:for-each>
                } fault;
-               -->
+
 
               WSF_EXTERN WSF_CALL <xsl:value-of select="@name"/>(){};
 

@@ -57,7 +57,39 @@
 namespace <xsl:value-of select="$cppNamespace"/>{
     </xsl:if>
 
-        
+   /** we have to reserve some error codes for adb and for custom messages */
+    #define <xsl:value-of select="$caps_svc_name"/>_ERROR_CODES_START (AXIS2_ERROR_LAST + 2500)
+
+    typedef enum
+    {
+        <xsl:value-of select="$caps_svc_name"/>_ERROR_NONE = <xsl:value-of select="$caps_svc_name"/>_ERROR_CODES_START,
+
+        <xsl:for-each select="method">
+            <xsl:variable name="caps_method_name" select="@caps-name"/>
+            <xsl:for-each select="fault/param">
+                <xsl:value-of select="$caps_svc_name"/>_<xsl:value-of select="$caps_method_name"/>_FAULT_<xsl:value-of select="@caps-localname"/>,
+            </xsl:for-each>
+        </xsl:for-each>
+        <xsl:value-of select="$caps_svc_name"/>_ERROR_LAST
+    } <xsl:value-of select="$method-prefix"/>_error_codes;
+
+    <xsl:for-each select="method">
+         <xsl:if test="count(fault/*)">
+            /**
+             * the generated fault union for operation "<xsl:value-of select="@qname"/>",
+             * in a case you want to return a fault, put the appropriate adb object for
+             * the union variable pointer comes as the last parameter of the method
+             */
+            typedef union
+            {
+                <xsl:for-each select="fault/param">
+                    <xsl:value-of select="@type"/><xsl:text> *</xsl:text><xsl:value-of select="@shorttype"/>;
+                </xsl:for-each>
+            } <xsl:value-of select="$method-prefix"/>_<xsl:value-of select="@name"/><xsl:text>_fault</xsl:text>;
+         </xsl:if>
+    </xsl:for-each>
+
+
 class <xsl:value-of select="$svc_name"/>
 {
         public:
@@ -78,19 +110,7 @@ class <xsl:value-of select="$svc_name"/>
          <xsl:variable name="count"><xsl:value-of select="count(output/param)"/></xsl:variable>
 
 
-         <xsl:if test="count(fault/*)">
-            /**
-             * the generated fault union for operation "<xsl:value-of select="@qname"/>",
-             * in a case you want to return a fault, put the appropriate adb object for
-             * the union variable pointer comes as the last parameter of the method
-             */
-            typedef union
-            {
-                <xsl:for-each select="fault/param">
-                    <xsl:value-of select="@type"/><xsl:text> </xsl:text><xsl:value-of select="@shorttype"/>;
-                </xsl:for-each>
-            } <xsl:value-of select="$method-prefix"/>_<xsl:value-of select="@name"/><xsl:text>_fault</xsl:text>;
-         </xsl:if>
+
 
 		 <!-- regardless of the sync or async status, the generated method signature would be just a usual
 	           cpp function-->
@@ -152,21 +172,7 @@ class <xsl:value-of select="$svc_name"/>
 }
 </xsl:if>
 
-   /** we have to reserve some error codes for adb and for custom messages */
-    #define <xsl:value-of select="$caps_svc_name"/>_ERROR_CODES_START (AXIS2_ERROR_LAST + 2500)
 
-    typedef enum
-    {
-        <xsl:value-of select="$caps_svc_name"/>_ERROR_NONE = <xsl:value-of select="$caps_svc_name"/>_ERROR_CODES_START,
-
-        <xsl:for-each select="method">
-            <xsl:variable name="caps_method_name" select="@caps-name"/>
-            <xsl:for-each select="fault/param">
-                <xsl:value-of select="$caps_svc_name"/>_<xsl:value-of select="$caps_method_name"/>_FAULT_<xsl:value-of select="@caps-localname"/>,
-            </xsl:for-each>
-        </xsl:for-each>
-        <xsl:value-of select="$caps_svc_name"/>_ERROR_LAST
-    } <xsl:value-of select="$method-prefix"/>_error_codes;
         
 #endif // <xsl:value-of select="$caps_svc_name"/>_H
     </xsl:template>

@@ -368,7 +368,7 @@
                             <xsl:value-of select="substring-before(input/param/@type, '_t*')"/>_free(input_val<xsl:value-of select="$position"/>, env);
                                             -->
                             AXIS2_ERROR_SET(Environment::getEnv()->error, AXIS2_ERROR_DATA_ELEMENT_IS_NULL, AXIS2_FAILURE);
-                            AXIS2_LOG_ERROR( Environment::getEnv()->log, AXIS2_LOG_SI, "NULL returnted from the <xsl:value-of select="input/param/@type"/>_deserialize: "
+                            AXIS2_LOG_ERROR( Environment::getEnv()->log, AXIS2_LOG_SI, "NULL returned from the <xsl:value-of select="input/param/@type"/>_deserialize: "
                                         "This should be due to an invalid XML");
                             return NULL;      
                         }
@@ -467,7 +467,7 @@
                                                 <xsl:for-each select="output/param[@location='soap_header']">,
                                                     <xsl:text>&amp;_</xsl:text><xsl:value-of select="@name"/><xsl:value-of select="$position"/>
                                                 </xsl:for-each><xsl:if test="count(fault/*)">,
-                                                (<xsl:value-of select="$servicename"/>_<xsl:value-of select="@name"/><xsl:text>_fault*</xsl:text>)&amp;(svc_skeleton_wrapper->fault)</xsl:if>);
+                                                (<xsl:value-of select="$servicename"/>_<xsl:value-of select="@name"/><xsl:text>_fault*</xsl:text>)&amp;(this->fault)</xsl:if>);
                             <xsl:choose>
                                 <xsl:when test="output/param/@complextype">
                                     ret_val<xsl:value-of select="$position"/> = new <xsl:value-of select="output/param/@type"/>(
@@ -501,7 +501,7 @@
                                                 <xsl:value-of select="$inputparam_values"/><xsl:for-each select="output/param[@location='soap_header']">,
                                                     <xsl:text>&amp;_</xsl:text><xsl:value-of select="@name"/><xsl:value-of select="$position"/>
                                                 </xsl:for-each><xsl:if test="count(fault/*)">,
-                                                (<xsl:value-of select="$servicename"/>_<xsl:value-of select="@name"/><xsl:text>_fault*</xsl:text>)&amp;(svc_skeleton_wrapper->fault)</xsl:if>);
+                                                (<xsl:value-of select="$servicename"/>_<xsl:value-of select="@name"/><xsl:text>_fault*</xsl:text>)&amp;(this->fault)</xsl:if>);
                     </xsl:otherwise>
                     </xsl:choose>
                     <xsl:choose>
@@ -657,13 +657,13 @@
                 else if(error_code == <xsl:value-of select="$fault-caps-name"/>)
                 {
                     /* found which error code */
-                    <xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if> adb_obj = NULL;
+                    <xsl:value-of select="@type"/><xsl:text> *</xsl:text>adb_obj = NULL;
                    
-                    adb_obj = (<xsl:value-of select="@type"/>)svc_skeleton_wrapper->fault.<xsl:value-of select="$method_name"/>_fault.<xsl:value-of select="@shorttype"/>;
+                    adb_obj = (<xsl:value-of select="@type"/>*)this->fault.<xsl:value-of select="$method_name"/>_fault-><xsl:value-of select="@shorttype"/>;
                     if(adb_obj)
                     {
                         error_node = adb_obj->serialize(NULL, NULL, AXIS2_TRUE, NULL, NULL);
-                        //<xsl:value-of select="substring-before(@type, '_t*')"/>_free(adb_obj, Environment::getEnv());
+                        delete adb_obj;
                     }
 
                 }
