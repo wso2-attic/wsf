@@ -47,6 +47,7 @@
       #include &lt;neethi_engine.h&gt;
       #include &lt;Stub.h&gt;
       #include &lt;Environment.h&gt;
+      #include &lt;WSFError.h&gt;
       
       using namespace std;
       using namespace wso2wsf;
@@ -294,7 +295,7 @@
                 axiom_node_t *output_header = NULL;
             </xsl:if>
             <xsl:for-each select="output/param[@location='soap_header']">
-                <xsl:value-of select="@type"/><xsl:text> _</xsl:text><xsl:value-of select="@name"/> = NULL;
+                <xsl:value-of select="@type"/><xsl:text> *_</xsl:text><xsl:value-of select="@name"/> = NULL;
             </xsl:for-each>
 
             <!-- for service client the 1st input param is the payload -->
@@ -507,7 +508,7 @@
                 res_soap_env = axis2_msg_ctx_get_response_soap_envelope(msg_ctx, Environment::getEnv());
                 if(!res_soap_env)
                 {
-                    AXIS2_LOG_ERROR( env->log, AXIS2_LOG_SI, "response evelope is NULL");
+                    AXIS2_LOG_ERROR(Environment::getEnv()->log, AXIS2_LOG_SI, "response evelope is NULL");
                     return (<xsl:value-of select="$outputtype"/>)NULL;
                 }
                 res_soap_header = axiom_soap_envelope_get_header(res_soap_env, Environment::getEnv());
@@ -548,9 +549,10 @@
                 {
                     AXIS2_LOG_ERROR( Environment::getEnv()->log, AXIS2_LOG_SI, "Response header <xsl:value-of select="@name"/> is NULL");
                     /* you can't have a response header NULL, just free things and exit */
-                    axis2_stub_op_<xsl:value-of select="$servicename"/>_<xsl:value-of select="$method-name"/>_free_output_headers(Environment::getEnv(), <xsl:for-each select="../../output/param[@location='soap_header']"><xsl:if test="position()!=1">,</xsl:if>
-                                                 <xsl:text> _</xsl:text><xsl:value-of select="@name"/>
-                                                 </xsl:for-each>);
+                    <xsl:for-each select="../../output/param[@location='soap_header']">
+                         if(<xsl:text> _</xsl:text><xsl:value-of select="@name"/>)
+                             delete <xsl:text> _</xsl:text><xsl:value-of select="@name"/>;
+                    </xsl:for-each>
                     <xsl:choose>
                     <xsl:when test="$outputtype=''">
                       return;
@@ -576,9 +578,10 @@
                         }-->
                         AXIS2_LOG_ERROR( Environment::getEnv()->log, AXIS2_LOG_SI, "NULL returnted from the <xsl:value-of select="@type"/>_deserialize: "
                                                                 "This should be due to an invalid output header");
-                        axis2_stub_op_<xsl:value-of select="$servicename"/>_<xsl:value-of select="$method-name"/>_free_output_headers(Environment::getEnv(), <xsl:for-each select="../../output/param[@location='soap_header']"><xsl:if test="position()!=1">,</xsl:if>
-                                                     <xsl:text> _</xsl:text><xsl:value-of select="@name"/>
-                                                     </xsl:for-each>);
+                            <xsl:for-each select="../../output/param[@location='soap_header']">
+                                          if(<xsl:text> _</xsl:text><xsl:value-of select="@name"/>)
+                                                delete    <xsl:text> _</xsl:text><xsl:value-of select="@name"/>;
+                             </xsl:for-each>
                         <xsl:choose>
                         <xsl:when test="$outputtype=''">
                           return;
@@ -627,8 +630,8 @@
                        <!-- generate for unwrapped mode -->
                        <xsl:when test="$isUnwrapParameters">
                             return <xsl:if test="output/param/@complextype">
-                              <xsl:value-of select="substring-before(output/param/@complextype, '_t*')"/>_free_popping_value(
-                              </xsl:if><xsl:value-of select="substring-before(output/param/@type, '_t*')"/>_free_popping_value(ret_val, Environment::getEnv())<xsl:if test="output/param/@complextype">, Environment::getEnv())</xsl:if>;
+                              //<xsl:value-of select="substring-before(output/param/@complextype, '_t*')"/>_free_popping_value(
+                              //</xsl:if><xsl:value-of select="substring-before(output/param/@type, '_t*')"/>_free_popping_value(ret_val, Environment::getEnv())<xsl:if test="output/param/@complextype">, Environment::getEnv())</xsl:if>;
                        </xsl:when>
                        <xsl:otherwise>
                             return ret_val;
@@ -734,7 +737,7 @@
                 axiom_node_t *output_header = NULL;
             </xsl:if>
             <xsl:for-each select="output/param[@location='soap_header']">
-                <xsl:value-of select="@type"/><xsl:text> _</xsl:text><xsl:value-of select="@name"/> = NULL;
+                <xsl:value-of select="@type"/><xsl:text> *_</xsl:text><xsl:value-of select="@name"/> = NULL;
             </xsl:for-each>
 
             I<xsl:value-of select="$servicename"/>Callback *callback = NULL;
@@ -879,14 +882,14 @@
                             {
                                 <xsl:value-of select="substring-before(@type, '_t*')"/>_free(<xsl:value-of select="$header_var"/>, Environment::getEnv());
                             }-->
-                            WSF_LOG_ERROR( Environment::getEnv()->log, AXIS2_LOG_SI, "NULL returnted from the <xsl:value-of select="@type"/>_deserialize: "
+                            WSF_LOG_ERROR_MSG( Environment::getEnv()->log, AXIS2_LOG_SI, "NULL returnted from the <xsl:value-of select="@type"/>_deserialize: "
                                                                     "This should be due to an invalid output header");
-                            /*
-                            axis2_stub_op_<xsl:value-of select="$servicename"/>_<xsl:value-of select="$method-name"/>_free_output_headers(Environment::getEnv(), <xsl:for-each select="../../output/param[@location='soap_header']"><xsl:if test="position()!=1">,</xsl:if>
-                                                         <xsl:text> _</xsl:text><xsl:value-of select="@name"/>
-                                                         </xsl:for-each>);
-                            */
-                            status = AXIS2_FAILURE;        
+                                <xsl:for-each select="../../output/param[@location='soap_header']">
+                                        if(<xsl:text> _</xsl:text><xsl:value-of select="@name"/>)
+                                                         delete <xsl:text> _</xsl:text><xsl:value-of select="@name"/>;
+                                     </xsl:for-each>
+
+                            status = AXIS2_FAILURE;
                         }
                     </xsl:when>
                     <xsl:otherwise>
@@ -917,11 +920,9 @@
      
                         if(ret_val->deserialize(&amp;ret_node, NULL, AXIS2_FALSE ) == AXIS2_FAILURE)
                         {
-                            AXIS2_LOG_ERROR( Environment::getEnv()->log, AXIS2_LOG_SI, "NULL returned from the LendResponse_deserialize: "
+                            WSF_LOG_ERROR_MSG( Environment::getEnv()->log, AXIS2_LOG_SI, "NULL returned from the LendResponse_deserialize: "
                                                                     "This should be due to an invalid XML");
-                            /*
-                            <xsl:value-of select="substring-before(output/param/@type, '_t*')"/>_free(ret_val, Environment::getEnv());
-                            */
+                            delete ret_val;
                             ret_val = NULL;
                         }
                      }
@@ -1072,7 +1073,7 @@
                        }
                       </xsl:when>
                       <xsl:otherwise>
-                          input_header = _<xsl:value-of select="@name"/>->serialize(, Environment::getEnv(), NULL, NULL, AXIS2_TRUE, NULL, NULL);
+                          input_header = _<xsl:value-of select="@name"/>->serialize(NULL, NULL, AXIS2_TRUE, NULL, NULL);
                       </xsl:otherwise>
                   </xsl:choose>
                 </xsl:when>
@@ -1269,68 +1270,8 @@
      </xsl:for-each>   <!-- close of for-each select = "method" -->
 
 
-    <xsl:if test="method/input/param[@location='soap_header']">
-     /**
-      * function to free any soap input headers 
-      */
-    </xsl:if>
-     <xsl:for-each select="method">
-        <xsl:if test="input/param[@location='soap_header']">
-         void AXIS2_CALL
-         axis2_stub_op_<xsl:value-of select="$servicename"/>_<xsl:value-of select="@name"/>_free_input_headers(const axutil_env_t *env, <xsl:for-each select="input/param[@location='soap_header']"><xsl:if test="position()!=1">,</xsl:if>
-                                                 <xsl:variable name="inputtype"><xsl:value-of select="@type"/></xsl:variable>
-                                                 <xsl:value-of select="$inputtype"/><xsl:text> _</xsl:text><xsl:value-of select="@name"/>
-                                                 </xsl:for-each>)
-         {
-            <xsl:for-each select="input/param[@location='soap_header']">
-               <xsl:variable name="header_var"><xsl:text>_</xsl:text><xsl:value-of select="@name"/></xsl:variable>
-               <xsl:choose>
-                <xsl:when test="@ours">
-                    if(<xsl:value-of select="$header_var"/>)
-                    {
-                        //<xsl:value-of select="substring-before(@type, '_t*')"/>_free(<xsl:value-of select="$header_var"/>, Environment::getEnv());
-                    }
-                </xsl:when>
-                <xsl:otherwise>
-                    /* we don't have anything to free on <xsl:value-of select="$header_var"/> */
-                </xsl:otherwise>
-               </xsl:choose>
-            </xsl:for-each>
-         }
-        </xsl:if>
-     </xsl:for-each>
 
 
-    <xsl:if test="method/output/param[@location='soap_header']">
-     /**
-      * function to free any soap output headers 
-      */
-    </xsl:if>
-     <xsl:for-each select="method">
-        <xsl:if test="output/param[@location='soap_header']">
-         void AXIS2_CALL
-         axis2_stub_op_<xsl:value-of select="$servicename"/>_<xsl:value-of select="@name"/>_free_output_headers(const axutil_env_t *env, <xsl:for-each select="output/param[@location='soap_header']"><xsl:if test="position()!=1">,</xsl:if>
-                                                 <xsl:variable name="outputtype"><xsl:value-of select="@type"/></xsl:variable>
-                                                 <xsl:value-of select="$outputtype"/><xsl:text> _</xsl:text><xsl:value-of select="@name"/>
-                                                 </xsl:for-each>)
-         {
-            <xsl:for-each select="output/param[@location='soap_header']">
-               <xsl:variable name="header_var"><xsl:text>_</xsl:text><xsl:value-of select="@name"/></xsl:variable>
-               <xsl:choose>
-                <xsl:when test="@ours">
-                    if(<xsl:value-of select="$header_var"/>)
-                    {
-                        //<xsl:value-of select="substring-before(@type, '_t*')"/>_free(<xsl:value-of select="$header_var"/>, Environment::getEnv());
-                    }
-                </xsl:when>
-                <xsl:otherwise>
-                    /* we don't have anything to free on <xsl:value-of select="$header_var"/> */
-                </xsl:otherwise>
-               </xsl:choose>
-            </xsl:for-each>
-         }
-        </xsl:if>
-     </xsl:for-each>
 
    </xsl:template>
 </xsl:stylesheet>
