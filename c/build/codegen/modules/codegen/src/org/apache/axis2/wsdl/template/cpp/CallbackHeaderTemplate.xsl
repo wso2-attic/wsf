@@ -48,7 +48,8 @@
            </xsl:if>
        </xsl:for-each>
     </xsl:for-each>
-#include "<xsl:value-of select="$servicename"/>Stub.h" 
+
+#include "<xsl:value-of select="substring-before(substring-after(@name,'I'),'Callback')"/>Stub.h" 
 
  namespace <xsl:value-of select="@cppNamespace"/>
    {
