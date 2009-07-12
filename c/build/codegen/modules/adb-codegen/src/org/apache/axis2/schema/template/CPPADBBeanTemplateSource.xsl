@@ -158,9 +158,9 @@
                     <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                 </xsl:choose>
                 </xsl:variable>
-                <xsl:variable name="CName">_<xsl:value-of select="@cname"></xsl:value-of></xsl:variable>
+                <xsl:variable name="CName"><xsl:value-of select="@cname"></xsl:value-of></xsl:variable>
                 <xsl:if test="position() > 1"><xsl:text>,</xsl:text></xsl:if>
-                <xsl:value-of select="$propertyType"/><xsl:text> </xsl:text><xsl:value-of select="$CName"/>
+                <xsl:value-of select="$propertyType"/><xsl:text> arg_</xsl:text><xsl:value-of select="$CName"/>
             </xsl:for-each>
         </xsl:variable>
 
@@ -209,8 +209,8 @@
 
 
             <xsl:for-each select="property">
-              <xsl:variable name="CName">_<xsl:value-of select="@cname"></xsl:value-of></xsl:variable>
-                    property_<xsl:value-of select="@cname"/> = <xsl:value-of select="$CName"/>;
+              <xsl:variable name="CName"><xsl:value-of select="@cname"></xsl:value-of></xsl:variable>
+                    property_<xsl:value-of select="@cname"/> = arg_<xsl:value-of select="$CName"/>;
             </xsl:for-each>
 
             <xsl:if test="@isUnion">

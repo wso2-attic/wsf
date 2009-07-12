@@ -284,7 +284,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
                 </xsl:variable>
                 <xsl:variable name="CName"><xsl:value-of select="@cname"></xsl:value-of></xsl:variable>
                 <xsl:if test="position() > 1"><xsl:text>,</xsl:text></xsl:if>
-                <xsl:value-of select="$propertyType"/><xsl:text> _</xsl:text><xsl:value-of select="$CName"/>
+                <xsl:value-of select="$propertyType"/><xsl:text> arg_</xsl:text><xsl:value-of select="$CName"/>
             </xsl:for-each>
         </xsl:variable>
         <xsl:variable name="arg_list_comment">
