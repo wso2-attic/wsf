@@ -1093,7 +1093,7 @@
 
                        char *seperator = NULL;
                        axis2_char_t *uri = NULL;
-                       axiom_namespace_t *namespace = NULL;
+                       axiom_namespace_t *ns = NULL;
 
                        axiom_attribute_t *new_attrib = NULL;
 
@@ -1101,7 +1101,7 @@
                        {
                            axutil_hash_this(hi, &amp;key, NULL, &amp;val);
                           
-                           dup_key = axutil_strdup(Environment::getEnv(), key);
+                           dup_key = (axis2_char_t*)axutil_strdup(Environment::getEnv(), key);
                            seperator = strstr(dup_key, "|");
                           
                            uri = NULL;
@@ -1112,15 +1112,12 @@
                              uri = seperator;
                            }
 
-                           namespace  = axiom_namespace_create(Environment::getEnv(), uri, NULL);
+                           ns  = axiom_namespace_create(Environment::getEnv(), uri, NULL);
                            parent_attri = (axiom_attribute_t*)val;
                            attrib_text = axiom_attribute_get_value(parent_attri, Environment::getEnv());
 
-                           new_attrib = axiom_attribute_create(Environment::getEnv(), dup_key, attrib_text, namespace);
-
-
-                           <xsl:value-of select="$axis2_name"/>_add_<xsl:value-of select="$CName"/>(<xsl:value-of select="$name"/>,
-                                                          Environment::getEnv(), new_attrib);
+                           new_attrib = axiom_attribute_create(Environment::getEnv(), dup_key, attrib_text, ns);
+                           add<xsl:value-of select="$CName"/>(new_attrib);
                            AXIS2_FREE(Environment::getEnv()->allocator, dup_key);
                        }
                   }
