@@ -13,13 +13,13 @@ mvn clean install -Drelease
 cd modules/distribution/target/ 
 unzip wsf-cpp-1.0-bin.zip
 cd wsf-cpp-1.0
-if [ -a $DIL/bin/codegen ] ; then
+if [ -d $DIL/bin/codegen ] ; then
 	cp -rf lib $DIL/bin/codegen
 else
-	if test ! -a $DIL/bin  ; then 
+	if test ! -d $DIL/bin  ; then 
 		mkdir $DIL/bin
 	fi
-	if test ! -a $DIL/bin/codegen ; then
+	if test ! -d $DIL/bin/codegen ; then
 		mkdir $DIL/bin/codegen
 	fi
 	cp -rf lib $DIL/bin/codegen/lib
