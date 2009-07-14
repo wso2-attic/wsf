@@ -114,7 +114,7 @@ class <xsl:value-of select="$svc_name"/>
 
 		 <!-- regardless of the sync or async status, the generated method signature would be just a usual
 	           cpp function-->
-         public:
+
 
         /**
          * Auto generated method declaration
@@ -148,6 +148,7 @@ class <xsl:value-of select="$svc_name"/>
             </xsl:choose>
         </xsl:variable>
 
+         virtual 
         <xsl:choose>
         <xsl:when test="$outputtype=''">bool </xsl:when>
         <xsl:when test="$outputtype!=''"><xsl:value-of select="$outputtype"/></xsl:when>
