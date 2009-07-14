@@ -154,7 +154,7 @@
                 <xsl:variable name="propertyType">
                 <xsl:choose>
                     <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
-                    <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                    <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                     <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                 </xsl:choose>
                 </xsl:variable>
@@ -342,13 +342,13 @@
                   <xsl:variable name="propertyType">
                      <xsl:choose>
                        <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
-                       <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                       <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                        <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours">*</xsl:if></xsl:otherwise>
                      </xsl:choose>
                   </xsl:variable>
                   <xsl:variable name="nativePropertyType"> <!--these are used in arrays to take the native type-->
                      <xsl:choose>
-                       <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                       <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                        <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
                      </xsl:choose>
                   </xsl:variable>
@@ -495,13 +495,13 @@
 
                 <xsl:variable name="nativePropertyType"> <!--these are used in arrays to take the native type-->
                    <xsl:choose>
-                     <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                     <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                      <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
                    </xsl:choose>
                 </xsl:variable>
                   <xsl:variable name="PropertyTypeArrayParam"> <!--these are used in arrays to take the type stored in the arraylist-->
                      <xsl:choose>
-                       <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                       <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                        <xsl:when test="@type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:value-of select="@type"/></xsl:when>
                        <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                      </xsl:choose>
@@ -1050,13 +1050,13 @@
               <xsl:variable name="propertyType">
                  <xsl:choose>
                    <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if>&gt;</xsl:when>
-                   <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                   <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                    <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                  </xsl:choose>
               </xsl:variable>
               <xsl:variable name="nativePropertyType"> <!--these are used in arrays to take the native type-->
                  <xsl:choose>
-                   <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                   <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                    <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
                  </xsl:choose>
               </xsl:variable>
@@ -1080,7 +1080,7 @@
                 <xsl:when test="@attribute">
                 <!-- here we have two options, either it can be axiom_attribute_t* which happens in anyAttribute case -->
                 <xsl:choose>
-                <xsl:when test="$nativePropertyType='axiom_attribute_t*' and @isarray">
+                <xsl:when test="$nativePropertyType='wso2wsf::OMAttribute*' and @isarray">
                   parent_attri = NULL;
                   attrib_text = NULL;
                   if(attribute_hash)
@@ -1111,14 +1111,23 @@
                              seperator ++; /* represent the namespace */
                              uri = seperator;
                            }
-
+                           <!--
                            ns  = axiom_namespace_create(Environment::getEnv(), uri, NULL);
                            parent_attri = (axiom_attribute_t*)val;
                            attrib_text = axiom_attribute_get_value(parent_attri, Environment::getEnv());
 
                            new_attrib = axiom_attribute_create(Environment::getEnv(), dup_key, attrib_text, ns);
-                           add<xsl:value-of select="$CName"/>(new_attrib);
+                           add<xsl:value-of select="$CName"/>(new OMAttribute(new_attrib));
                            AXIS2_FREE(Environment::getEnv()->allocator, dup_key);
+                           -->
+                            wso2wsf::OMNamespace *ns1  = new wso2wsf::OMNamespace(uri);
+                            parent_attri = (axiom_attribute_t*)val;
+                            attrib_text = axiom_attribute_get_value(parent_attri, Environment::getEnv());
+
+                            wso2wsf::OMAttribute *new_attrib1 = new wso2wsf::OMAttribute( dup_key, attrib_text, ns1);
+                            add<xsl:value-of select="$CName"/>(new_attrib1);
+                            AXIS2_FREE(Environment::getEnv()->allocator, dup_key);
+
                        }
                   }
                 </xsl:when>
@@ -1700,7 +1709,7 @@
                                       }
                                       </xsl:if>
                                     </xsl:when>
-                                    <xsl:when test="$nativePropertyType='axiom_node_t*'">
+                                    <xsl:when test="$nativePropertyType='wso2wsf::OMElement*'">
                                       text_value = NULL; /* just to avoid warning */
                                       <xsl:choose>
                                         <xsl:when test="@any">
@@ -1708,7 +1717,7 @@
                                           axiom_node_t *current_property_node = current_node;
                                           current_node = axiom_node_get_next_sibling(current_node, Environment::getEnv());
                                           axiom_node_detach(current_property_node, Environment::getEnv());
-                                          status = set<xsl:value-of select="$CName"/>(current_property_node);
+                                          status = set<xsl:value-of select="$CName"/>(new OMElement(NULL,current_property_node));
                                         }
                                         </xsl:when>
                                         <xsl:otherwise>
@@ -1716,11 +1725,11 @@
                                           {
                                               axiom_node_t *current_property_node = axiom_node_get_first_child(current_node, Environment::getEnv());
                                               axiom_node_detach(current_property_node, Environment::getEnv());
-                                              status = set<xsl:value-of select="$CName"/>( current_property_node);
+                                              status = set<xsl:value-of select="$CName"/>(new OMElement(NULL,current_property_node));
                                           }
                                           else
                                           {
-                                              status = set<xsl:value-of select="$CName"/>( NULL);
+                                              status = set<xsl:value-of select="$CName"/>(NULL);
                                           }
                                         </xsl:otherwise>
                                       </xsl:choose>
@@ -2164,7 +2173,7 @@
                                           }
                                           </xsl:if>
                                         </xsl:when>
-                                        <xsl:when test="$nativePropertyType='axiom_node_t*'">
+                                        <xsl:when test="$nativePropertyType='wso2wsf::OMElement*'">
                                           text_value = NULL; /* just to avoid warning */
                                           <xsl:choose>
                                             <xsl:when test="@any">
@@ -2172,7 +2181,7 @@
                                               axiom_node_t *current_property_node = current_node;
                                               current_node = axiom_node_get_next_sibling(current_node, Environment::getEnv());
                                               axiom_node_detach(current_property_node, Environment::getEnv());
-                                              arr_list->push_back(current_property_node);
+                                              arr_list->push_back(new OMElement(NULL, current_property_node));
                                             }
                                             </xsl:when>
                                             <xsl:otherwise>
@@ -2180,7 +2189,7 @@
                                               {
                                                   axiom_node_t *current_property_node = axiom_node_get_first_child(current_node, Environment::getEnv());
                                                   axiom_node_detach(current_property_node, Environment::getEnv());
-                                                  arr_list->push_back(current_property_node);
+                                                  arr_list->push_back(new OMElement(NULL,current_property_node));
                                               }
                                               else
                                               {
@@ -2270,7 +2279,7 @@
                                         </xsl:when>
                                         <xsl:otherwise>
                                           <!-- TODO: add other types here -->
-                                          /* impossible  test  to handle the request type - so please do it manually */
+                                          /* The request handling failed,for the request type - so please do it manually */
                                           text_value = NULL;
                                         </xsl:otherwise>
                                      </xsl:choose>
@@ -2658,7 +2667,7 @@
                                           }
                                           </xsl:if>
                                         </xsl:when>
-                                        <xsl:when test="$nativePropertyType='axiom_node_t*'">
+                                        <xsl:when test="$nativePropertyType='wso2wsf::OMElement*'">
                                           text_value = NULL; /* just to avoid warning */
                                           <xsl:choose>
                                             <xsl:when test="@any">
@@ -2666,7 +2675,7 @@
                                               axiom_node_t *current_property_node = current_node;
                                               current_node = axiom_node_get_next_sibling(current_node, Environment::getEnv());
                                               axiom_node_detach(current_property_node, Environment::getEnv());
-                                              arr_list->push_back(current_property_node);
+                                              arr_list->push_back(new OMElement(NULL,current_property_node));
                                             }
                                             </xsl:when>
                                             <xsl:otherwise>
@@ -2674,7 +2683,7 @@
                                               {
                                                   axiom_node_t *current_property_node = axiom_node_get_first_child(current_node, Environment::getEnv());
                                                   axiom_node_detach(current_property_node, Environment::getEnv());
-                                                  arr_list->push_back(current_property_node);
+                                                  arr_list->push_back(new OMElement(NULL,current_property_node));
                                               }
                                             </xsl:otherwise>
                                           </xsl:choose>
@@ -2756,7 +2765,7 @@
                                         </xsl:when>
                                         <xsl:otherwise>
                                           <!-- TODO: add other types here -->
-                                          /* imposible test1 to handle the request type - so please do it manually */
+                                          /* The request handling failed.  - so please do it manually */
                                           text_value = NULL;
                                         </xsl:otherwise>
                                      </xsl:choose>
@@ -2837,7 +2846,7 @@
                 <xsl:for-each select="property">
                   <xsl:variable name="nativePropertyType"> <!--these are used in arrays to take the native type-->
                      <xsl:choose>
-                       <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                       <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                        <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
                      </xsl:choose>
                   </xsl:variable>
@@ -2895,13 +2904,13 @@
                     <xsl:variable name="propertyType">
                        <xsl:choose>
                          <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
-                         <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                         <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                          <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                        </xsl:choose>
                     </xsl:variable>
                     <xsl:variable name="nativePropertyType"> <!--these are used in arrays to take the native type-->
                        <xsl:choose>
-                         <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                         <xsl:when test="not(@type)">wso2wsf::OMelement*</xsl:when> <!-- these are anonymous -->
                          <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                        </xsl:choose>
                     </xsl:variable>
@@ -3058,13 +3067,13 @@
  
                 <xsl:variable name="nativePropertyType"> <!--these are used in arrays to take the native type-->
                    <xsl:choose>
-                     <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                     <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                      <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours">*</xsl:if></xsl:otherwise>
                    </xsl:choose>
                 </xsl:variable>
                   <xsl:variable name="PropertyTypeArrayParam"> <!--these are used in arrays to take the type stored in the arraylist-->
                      <xsl:choose>
-                       <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                       <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                        <xsl:when test="@type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:value-of select="@type"/></xsl:when>
                        <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                      </xsl:choose>
@@ -3413,7 +3422,7 @@
             <xsl:for-each select="property">
                 <xsl:variable name="position"><xsl:value-of select="position()"/></xsl:variable>
                 <xsl:choose>
-                    <xsl:when test="not(@type) or (@ours='yes' and (@type='uri' or @type='qname' or @type='date_time' or @type='base64_binary' or @type='char')) or @type='char' or @type='std::string' or @type='axutil_base64_binary_t*' or @type='axutil_date_time_t*' or @type='axiom_node_t*' or @type='axutil_duration_t*' or @type='axutil_uri_t*' or @type='axutil_qname_t*'">
+                    <xsl:when test="not(@type) or (@ours='yes' and (@type='uri' or @type='qname' or @type='date_time' or @type='base64_binary' or @type='char')) or @type='char' or @type='std::string' or @type='axutil_base64_binary_t*' or @type='axutil_date_time_t*' or @type='wso2wsf::OMElement*' or @type='axutil_duration_t*' or @type='axutil_uri_t*' or @type='axutil_qname_t*'">
                     axis2_char_t *text_value_<xsl:value-of select="$position"/>;
                     axis2_char_t *text_value_<xsl:value-of select="$position"/>_temp;
                     </xsl:when>
@@ -3495,13 +3504,13 @@
               <xsl:variable name="propertyType">
                  <xsl:choose>
                    <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
-                   <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                   <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                    <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                  </xsl:choose>
               </xsl:variable>
               <xsl:variable name="nativePropertyType"> <!--these are used in arrays to take the native type-->
                  <xsl:choose>
-                   <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                   <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                    <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
                  </xsl:choose>
               </xsl:variable>
@@ -3535,19 +3544,20 @@
                 if(isValid<xsl:value-of select="$CName"/>)
                 {
                 <xsl:choose>
-                <xsl:when test="$nativePropertyType='axiom_attribute_t*' and @isarray"><!-- for anyAttribute -->
+                <xsl:when test="$nativePropertyType='wso2wsf::OMAttribute*' and @isarray"><!-- for anyAttribute -->
                     int i = 0;
                     for( i = 0; i &lt; <xsl:value-of select="$parentPropertyInstanceName"/>->size(); i ++)
                     {
                         axiom_attribute_t *the_attrib = NULL;
                         axiom_attribute_t *dup_attrib = NULL;
+                        wso2wsf::OMAttribute * attrib = NULL;
                         axis2_char_t *uri = NULL;
                         axis2_char_t *p_prefix = NULL;
                         axutil_qname_t *qname = NULL;
                         axis2_char_t *value = NULL;
                         axis2_char_t *local_name = NULL;
-
-                        the_attrib = (*<xsl:value-of select="$parentPropertyInstanceName"/>)[i];
+                        attrib =  (*<xsl:value-of select="$parentPropertyInstanceName"/>)[i];
+                        the_attrib =  attrib->getAxiomAttribute();
                         qname = axiom_attribute_get_qname(the_attrib, Environment::getEnv());
                         uri = axutil_qname_get_uri(qname, Environment::getEnv());
                         value = axiom_attribute_get_value(the_attrib, Environment::getEnv());
@@ -3827,7 +3837,7 @@
                 </xsl:choose>
                    }
                    <xsl:if test="not(@optional)">
-                   <xsl:if test="not($nativePropertyType='axiom_attribute_t*' and @isarray)"><!-- for anyAttribute -->
+                   <xsl:if test="not($nativePropertyType='wso2wsf::OMAttribute*' and @isarray)"><!-- for anyAttribute -->
                    else
                    {
                       WSF_LOG_ERROR_MSG( Environment::getEnv()->log,WSF_LOG_SI,"Nil value found in non-optional attribute <xsl:value-of select="$propertyName"/>");
@@ -3949,13 +3959,13 @@
               <xsl:variable name="propertyType">
                  <xsl:choose>
                    <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
-                   <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                   <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                    <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours">*</xsl:if></xsl:otherwise>
                  </xsl:choose>
               </xsl:variable>
               <xsl:variable name="nativePropertyType"> <!--these are used in arrays to take the native type-->
                  <xsl:choose>
-                   <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                   <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                    <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
                  </xsl:choose>
               </xsl:variable>
@@ -3991,20 +4001,21 @@
                        if(isValid<xsl:value-of select="$CName"/>)
                        {
                        <xsl:choose>
-                       <xsl:when test="$nativePropertyType='axiom_attribute_t*' and @isarray"><!-- for anyAttribute -->
+                       <xsl:when test="$nativePropertyType='wso2wsf::OMAttribute*' and @isarray"><!-- for anyAttribute -->
                         int i = 0;
                         for( i = 0; i &lt;<xsl:value-of select="$parentPropertyInstanceName"/>->size();i++)
                         {
                             axiom_attribute_t *the_attrib = NULL;
                             axiom_attribute_t *dup_attrib = NULL;
+                            wso2wsf::OMAttribute *attrib = NULL;
                             axis2_char_t *uri = NULL;
                             axis2_char_t *p_prefix = NULL;
                             axutil_qname_t *qname = NULL;
                             axis2_char_t *value = NULL;
                             axis2_char_t *local_name = NULL;
                             axiom_namespace_t *ns1 = NULL;
-
-                            the_attrib = (*<xsl:value-of select="$parentPropertyInstanceName"/>)[i];
+                            attrib =  (*<xsl:value-of select="$parentPropertyInstanceName"/>)[i];
+                            the_attrib = attrib->getAxiomAttribute();
                             qname = axiom_attribute_get_qname(the_attrib, Environment::getEnv());
                             uri = axutil_qname_get_uri(qname, Environment::getEnv());
                             value = axiom_attribute_get_value(the_attrib, Environment::getEnv());
@@ -4228,7 +4239,7 @@
                        </xsl:choose>
                       }
                       <xsl:if test="not(@optional)">
-                      <xsl:if test="not($nativePropertyType='axiom_attribute_t*' and @isarray)"><!-- for anyAttribute -->
+                      <xsl:if test="not($nativePropertyType='wso2wsf::OMAttribute*' and @isarray)"><!-- for anyAttribute -->
                       else
                       {
                          WSF_LOG_ERROR_MSG( Environment::getEnv()->log,WSF_LOG_SI,"Nil value found in non-optional attribute <xsl:value-of select="$propertyName"/>");
@@ -4718,10 +4729,11 @@
                         </xsl:when>
 
                         <!-- add nodes -->
-                        <xsl:when test="$nativePropertyType='axiom_node_t*'">
+                        <xsl:when test="$nativePropertyType='wso2wsf::OMElement*'">
                            <xsl:choose>
                               <xsl:when test="$anon or $istype">
-                                text_value_<xsl:value-of select="$position"/> = axiom_node_to_string(<xsl:value-of select="$propertyInstanceName"/>, Environment::getEnv());
+                                std::string s = <xsl:value-of select="$propertyInstanceName"/>->toString();
+                                text_value_<xsl:value-of select="$position"/> = (axis2_char_t*)(s.c_str());
                                 <xsl:if test="not(@any)">
                                 axutil_stream_write(stream, Environment::getEnv(), start_input_str, start_input_str_len);
                                 </xsl:if>
@@ -4732,7 +4744,7 @@
                               </xsl:when>
                               <xsl:otherwise>
                                 text_value_<xsl:value-of select="$position"/> = NULL; /* just to bypass the warning unused variable */
-                                axiom_node_add_child(parent, Environment::getEnv(), <xsl:value-of select="$propertyInstanceName"/>);
+                                axiom_node_add_child(parent, Environment::getEnv(), <xsl:value-of select="$propertyInstanceName"/>->getAxiomNode());
                               </xsl:otherwise>
                            </xsl:choose>
                         </xsl:when>
@@ -4809,7 +4821,7 @@
             <xsl:variable name="propertyType">
                <xsl:choose>
                     <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
-                    <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                    <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                     <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                </xsl:choose>
             </xsl:variable>
@@ -4818,7 +4830,7 @@
            
            <xsl:variable name="nativePropertyType"> <!--these are used in arrays to take the native type-->
                  <xsl:choose>
-                   <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                   <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                    <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                  </xsl:choose>
               </xsl:variable>
@@ -4827,7 +4839,7 @@
               <!-- Simmilar to native property type except for shor, tint, float, double -->
               <xsl:variable name="PropertyTypeArrayParam"> <!--these are used in arrays to take the native type-->
                  <xsl:choose>
-                   <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                   <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                    <xsl:when test="@type='unsigned short'or @type='std::string' or @type='unsigned char' or @type='unsigned int' or @type='uint64_t' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t' or @type='axis2_unsigned_byte_t' or @type='axis2_byte_t' or @type='bool'">
                     <xsl:value-of select="@type"/><xsl:text>*</xsl:text>
                    </xsl:when>
@@ -5140,7 +5152,7 @@
                         <xsl:if test="not(@nillabe) and not(@minOccurs='0')"> <!-- if minOccurs=0 then no need to have error messages -->
                             if( non_nil_count &lt; <xsl:value-of select="@minOccurs"/>)
                             {
-                                   WSF_LOG_ERROR_MSG( Environment::getEnv()->log,WSF_LOG_SI,"Size of the array of <xsl:value-of select="$propertyName"/> is beinng set to be smaller than the specificed number of minOccurs(<xsl:value-of select="@minOccurs"/>)");
+                                   WSF_LOG_ERROR_MSG( Environment::getEnv()->log,WSF_LOG_SI,"Size of the array of <xsl:value-of select="$propertyName"/> is being set to be smaller than the specificed number of minOccurs(<xsl:value-of select="@minOccurs"/>)");
                                    return AXIS2_FAILURE;
                             }
                         </xsl:if>
@@ -5182,9 +5194,9 @@
 
 
                              <!-- free nodes -->
-                             <xsl:when test="$nativePropertyType='axiom_node_t*'">
+                             <xsl:when test="$nativePropertyType='wso2wsf::OMElement*'">
                                  // TODO Clear om Element
-                                 axiom_node_free_tree (<xsl:value-of select="$propertyInstanceName"/>, Environment::getEnv());
+                                 delete <xsl:value-of select="$propertyInstanceName"/>;
                              </xsl:when>
 
                              <xsl:when test="$nativePropertyType='axutil_qname_t*'">
@@ -5379,8 +5391,8 @@
                          delete <xsl:value-of select="$propertyInstanceName"/>;
                      </xsl:when>
                      <!-- free nodes -->
-                     <xsl:when test="$nativePropertyType='axiom_node_t*'">
-                      axiom_node_free_tree (<xsl:value-of select="$propertyInstanceName"/>, Environment::getEnv());
+                     <xsl:when test="$nativePropertyType='wso2wsf::OMElement*'">
+                        delete <xsl:value-of select="$propertyInstanceName"/>;
                          <xsl:value-of select="$justPropertyInstanceName"/> = NULL;
                      </xsl:when>
 
@@ -5538,8 +5550,8 @@
             
                      <!-- free axis2_char_t s -->
                      <!-- free nodes -->
-                     <xsl:when test="$nativePropertyType='axiom_node_t*'">
-                      axiom_node_free_tree (<xsl:value-of select="$propertyInstanceName"/>, Environment::getEnv());
+                     <xsl:when test="$nativePropertyType='wso2wsf::OMElement*'">
+                     delete <xsl:value-of select="$propertyInstanceName"/>;
                      </xsl:when>
             
                      <xsl:when test="$nativePropertyType='axutil_qname_t*'">
@@ -5602,13 +5614,13 @@
 
             <xsl:variable name="nativePropertyType"> <!--these are used in arrays to take the native type-->
                <xsl:choose>
-                 <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                 <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                  <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                </xsl:choose>
             </xsl:variable>
               <xsl:variable name="PropertyTypeArrayParam"> <!--these are used in arrays to take the type stored in the arraylist-->
                  <xsl:choose>
-                   <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                   <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                    <xsl:when test="@type='unsigned short' or @type='std::string' or @type='uint64_t' or @type='unsigned int' or @type='unsigned char' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:value-of select="@type"/><xsl:text>*</xsl:text></xsl:when>
                    <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                  </xsl:choose>
@@ -5709,8 +5721,8 @@
                      </xsl:when>
                      -->
                      <!-- free nodes -->
-                     <xsl:when test="$nativePropertyType='axiom_node_t*'">
-                      axiom_node_free_tree (<xsl:value-of select="$propertyInstanceName"/>, Environment::getEnv());
+                     <xsl:when test="$nativePropertyType='wso2wsf::OMElement*'">
+                      delete <xsl:value-of select="$propertyInstanceName"/>;
                      </xsl:when>
             
                      <xsl:when test="$nativePropertyType='axutil_qname_t*'">
@@ -5869,8 +5881,8 @@
                      </xsl:when>
             
                      <!-- free nodes -->
-                     <xsl:when test="$nativePropertyType='axiom_node_t*'">
-                      axiom_node_free_tree (<xsl:value-of select="$propertyInstanceName"/>, Environment::getEnv());
+                     <xsl:when test="$nativePropertyType='wso2wsf::OMElement*'">
+                      delete <xsl:value-of select="$propertyInstanceName"/>;
                      </xsl:when>
             
                      <xsl:when test="$nativePropertyType='axutil_qname_t*'">
@@ -5985,8 +5997,8 @@
                                  </xsl:when>
 
                                  <!-- free nodes -->
-                                 <xsl:when test="$nativePropertyType='axiom_node_t*'">
-                                          // Check how to  free  in case of an OMElement
+                                 <xsl:when test="$nativePropertyType='wso2wsf::OMElement*'">
+                                     delete  <xsl:value-of select="$propertyInstanceName"/>;
                                  </xsl:when>
 
                                  <xsl:when test="$nativePropertyType='axutil_qname_t*'">

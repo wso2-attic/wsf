@@ -165,7 +165,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
                 <xsl:variable name="propertyType">
                    <xsl:choose>                                                               <!-- <xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if> -->
                      <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
-                     <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                     <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                      <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                    </xsl:choose>
                 </xsl:variable>
@@ -215,7 +215,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
             <xsl:variable name="propertyType">
             <xsl:choose>
                 <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
-                <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                 <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
             </xsl:choose>
             </xsl:variable>
@@ -224,13 +224,13 @@ namespace <xsl:value-of select="@cppNamespace"/>
 
             <xsl:variable name="nativePropertyType"> <!--these are used in arrays to take the native type-->
                <xsl:choose>
-                 <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                 <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                  <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                </xsl:choose>
             </xsl:variable>
               <xsl:variable name="PropertyTypeArrayParam"> <!--these are used in arrays to take the type stored in the arraylist-->
                  <xsl:choose>
-                   <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                   <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                    <xsl:when test="@type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:value-of select="@type"/><xsl:text>*</xsl:text></xsl:when>
                    <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                  </xsl:choose>
@@ -278,7 +278,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
                 <xsl:variable name="propertyType">
                 <xsl:choose>
                     <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
-                    <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                    <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                     <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                 </xsl:choose>
                 </xsl:variable>
@@ -292,7 +292,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
                 <xsl:variable name="propertyType">
                 <xsl:choose>
                     <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
-                    <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                    <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                     <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                 </xsl:choose>
                 </xsl:variable>
@@ -364,7 +364,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
             <xsl:variable name="propertyType">
             <xsl:choose>
                 <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
-                <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                 <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
             </xsl:choose>
             </xsl:variable>
@@ -373,13 +373,13 @@ namespace <xsl:value-of select="@cppNamespace"/>
 
             <xsl:variable name="nativePropertyType"> <!--these are used in arrays to take the native type-->
                <xsl:choose>
-                 <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                 <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                  <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                </xsl:choose>
             </xsl:variable>
               <xsl:variable name="PropertyTypeArrayParam"> <!--these are used in arrays to take the type stored in the arraylist-->
                  <xsl:choose>
-                   <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                   <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                    <xsl:when test="@type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='unsigned char' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:value-of select="@type"/><xsl:text>*</xsl:text></xsl:when>
                    <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                  </xsl:choose>
@@ -431,14 +431,14 @@ namespace <xsl:value-of select="@cppNamespace"/>
 
             <xsl:variable name="nativePropertyType"> <!--these are used in arrays to take the native type-->
                <xsl:choose>
-                 <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                 <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                  <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if>
                 </xsl:otherwise>
                </xsl:choose>
             </xsl:variable>
               <xsl:variable name="PropertyTypeArrayParam"> <!--these are used in arrays to take the type stored in the arraylist-->
                  <xsl:choose>
-                   <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                   <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                    <xsl:when test="@type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='unsigned char' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:value-of select="@type"/><xsl:text>*</xsl:text></xsl:when>
                    <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if>
                     </xsl:otherwise>
@@ -508,7 +508,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
             <xsl:variable name="propertyType">
             <xsl:choose>
                 <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
-                <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                 <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
             </xsl:choose>
             </xsl:variable>
@@ -517,13 +517,13 @@ namespace <xsl:value-of select="@cppNamespace"/>
 
             <xsl:variable name="nativePropertyType"> <!--these are used in arrays to take the native type-->
                <xsl:choose>
-                 <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                 <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                  <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
                </xsl:choose>
             </xsl:variable>
               <xsl:variable name="PropertyTypeArrayParam"> <!--these are used in arrays to take the type stored in the arraylist-->
                  <xsl:choose>
-                   <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                   <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                    <xsl:when test="@type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='unsigned char' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:value-of select="@type"/><xsl:text>*</xsl:text></xsl:when>
                    <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
                  </xsl:choose>
@@ -597,13 +597,13 @@ namespace <xsl:value-of select="@cppNamespace"/>
 
             <xsl:variable name="nativePropertyType"> <!--these are used in arrays to take the native type-->
                <xsl:choose>
-                 <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                 <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                  <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
                </xsl:choose>
             </xsl:variable>
               <xsl:variable name="PropertyTypeArrayParam"> <!--these are used in arrays to take the type stored in the arraylist-->
                  <xsl:choose>
-                   <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                   <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                    <xsl:when test="@type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='unsigned char' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:value-of select="@type"/><xsl:text>*</xsl:text></xsl:when>
                    <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
                  </xsl:choose>
@@ -714,7 +714,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
             <xsl:variable name="propertyType">
             <xsl:choose>
                 <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
-                <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                 <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
             </xsl:choose>
             </xsl:variable>
@@ -723,13 +723,13 @@ namespace <xsl:value-of select="@cppNamespace"/>
 
             <xsl:variable name="nativePropertyType"> <!--these are used in arrays to take the native type-->
                <xsl:choose>
-                 <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                 <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                  <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
                </xsl:choose>
             </xsl:variable>
               <xsl:variable name="PropertyTypeArrayParam"> <!--these are used in arrays to take the type stored in the arraylist-->
                  <xsl:choose>
-                   <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                   <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                    <xsl:when test="@type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='unsigned char' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:value-of select="@type"/><xsl:text>*</xsl:text></xsl:when>
                    <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
                  </xsl:choose>
@@ -774,7 +774,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
             <xsl:variable name="propertyType">
             <xsl:choose>
                 <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
-                <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                 <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
             </xsl:choose>
             </xsl:variable>
@@ -783,13 +783,13 @@ namespace <xsl:value-of select="@cppNamespace"/>
 
             <xsl:variable name="nativePropertyType"> <!--these are used in arrays to take the native type-->
                <xsl:choose>
-                 <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                 <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                  <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
                </xsl:choose>
             </xsl:variable>
               <xsl:variable name="PropertyTypeArrayParam"> <!--these are used in arrays to take the type stored in the arraylist-->
                  <xsl:choose>
-                   <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                   <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                    <xsl:when test="@type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='unsigned char' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:value-of select="@type"/><xsl:text>*</xsl:text></xsl:when>
                    <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
                  </xsl:choose>
@@ -895,7 +895,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
             <xsl:variable name="propertyType">
             <xsl:choose>
                 <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
-                <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                 <xsl:otherwise><xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
             </xsl:choose>
             </xsl:variable>
@@ -910,7 +910,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
             </xsl:variable>
             <xsl:variable name="PropertyTypeArrayParam"> <!--these are used in arrays to take the type stored in the arraylist-->
                <xsl:choose>
-                 <xsl:when test="not(@type)">axiom_node_t*</xsl:when> <!-- these are anonymous -->
+                 <xsl:when test="not(@type)">wso2wsf::OMElement*</xsl:when> <!-- these are anonymous -->
                  <xsl:when test="@type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='unsigned char' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:value-of select="@type"/><xsl:text>*</xsl:text></xsl:when>
                  <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
                </xsl:choose>
