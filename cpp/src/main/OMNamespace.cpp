@@ -27,7 +27,7 @@ axiom_namespace_t * OMNamespace::getAxiomNamespace()
 
 OMNamespace::OMNamespace(std::string uri)
 {
-	_wsf_axiom_namespace = axiom_namespace_create(Environment::getEnv(), , NULL);
+	_wsf_axiom_namespace = axiom_namespace_create(Environment::getEnv(), uri.c_str() , NULL);
 }
 
 
