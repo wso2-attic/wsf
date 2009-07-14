@@ -81,6 +81,11 @@ namespace wso2wsf
          */
         void WSF_CALL setAxiomNamespace(axiom_namespace_t * ns);
 
+		/**
+		* Creates a namespace struct.
+		* @param uri namespace URI.
+		*/
+		WSF_EXTERN WSF_CALL OMNamespace(std::string uri);
         /**
          * Creates a namespace struct.
          * @param uri namespace URI.
