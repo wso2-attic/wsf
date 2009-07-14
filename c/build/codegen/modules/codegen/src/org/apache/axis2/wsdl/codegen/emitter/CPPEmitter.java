@@ -59,7 +59,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
     protected static final String CPP_SVC_SKEL_SUFFIX = "";
 
     protected static final String JAVA_DEFAULT_TYPE = "org.apache.axiom.om.OMElement";
-    protected static final String CPP_DEFAULT_TYPE = "axiom_node_t*";
+    protected static final String CPP_DEFAULT_TYPE = "wso2wsf::OMElement*";
 
     protected static final String CPP_OUR_TYPE_PREFIX = "";
     protected static final String CPP_OUR_TYPE_SUFFIX = "";
