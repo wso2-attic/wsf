@@ -10,7 +10,7 @@ import javax.xml.namespace.QName;
  * To change this template use File | Settings | File Templates.
  */
 public class CPPDefaultTypeMapper  extends TypeMappingAdapter {
-    private String defautClassName = "axiom_node_t*";
+    private String defautClassName = "wso2wsf::OMElement*";
 
     public CPPDefaultTypeMapper() {
     }

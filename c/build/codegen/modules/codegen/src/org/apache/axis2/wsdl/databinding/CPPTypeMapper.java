@@ -14,7 +14,7 @@ import javax.xml.namespace.QName;
  */
 public class CPPTypeMapper extends TypeMappingAdapter {
 
-    private String defaultClassName = "OMElement*";
+    private String defaultClassName = "wso2wsf::OMElement*";
 
     public CPPTypeMapper() {
     }
