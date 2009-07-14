@@ -78,13 +78,13 @@ namespace wso2wsf
          * Method to get the reference to the axiom_attribute struct.
          * @return reference to the axiom_attribute struct.
          */
-        axiom_attribute_t * WSF_CALL getAxiomAttribute();
+        WSF_EXTERN axiom_attribute_t * WSF_CALL getAxiomAttribute();
 
         /**
          * Method to set the reference to the axiom_attribute struct.
          * @param attribute reference to the axiom_attribute struct.
          */
-        void WSF_CALL setAxiomAttribute(axiom_attribute_t * attribute);
+        WSF_EXTERN void WSF_CALL setAxiomAttribute(axiom_attribute_t * attribute);
 
         /**
          * Creates a attribute struct.
