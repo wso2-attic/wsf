@@ -52,11 +52,11 @@ public class CPPTypeMap implements TypeMap{
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_LONG, "int64_t");
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_SHORT, "short");
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_BYTE, "axis2_byte_t");
-        CPPTypeMap.addTypemapping(SchemaConstants.XSD_ANY, "axiom_node_t*");
+        CPPTypeMap.addTypemapping(SchemaConstants.XSD_ANY, "OMElement*");
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_DECIMAL, "double");
 
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_ANYTYPE,
-                                 "axiom_node_t*");
+                                 "wso2wsf::OMElement*");
                           // wrap axutil_qname to c++
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_QNAME,
                                  "axutil_qname_t*");
@@ -147,7 +147,7 @@ public class CPPTypeMap implements TypeMap{
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_NMTOKENS, "std::string");
 
         // a xsd:NOTATION
-        CPPTypeMap.addTypemapping(SchemaConstants.XSD_NOTATION, "axiom_node_t*");
+        CPPTypeMap.addTypemapping(SchemaConstants.XSD_NOTATION, "OMElement*");
 
         // a xsd:XSD_ENTITY
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_ENTITY, "std::string");
@@ -188,7 +188,7 @@ public class CPPTypeMap implements TypeMap{
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_ARRAY,
                 "std::vector<void*>*");
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_STRUCT,
-                "axiom_node_t*");
+                "wso2wsf::OMElement*");
         // wrap for C++
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_BASE64,
                 "axutil_base64_binary_t*");
