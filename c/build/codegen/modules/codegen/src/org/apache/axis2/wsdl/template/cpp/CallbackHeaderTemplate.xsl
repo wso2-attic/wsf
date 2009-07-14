@@ -101,10 +101,10 @@
                     They should be parts of this xsl:choose loop -->
                 <xsl:when test="$mep='12'">
            /**
-            * auto generated Axis2 call back method for <xsl:value-of select="@name"/> method
+            * auto generated WSF/C++ call back method for <xsl:value-of select="@name"/> method
             * override this method for handling normal response from <xsl:value-of select="@name"/> operation
             */
-           void receiveResult_<xsl:value-of select="@name"/>(
+          virtual void receiveResult_<xsl:value-of select="@name"/>(
                     <xsl:choose>
                         <xsl:when test="$outParamCount=1">
                              <xsl:value-of select="output/param[@location='body']/param/@type"/><xsl:if test="output/param/@ours"><xsl:text>*</xsl:text></xsl:if><xsl:text> </xsl:text>result
@@ -124,14 +124,14 @@
                            <xsl:value-of select="$outputtype"/><xsl:text> dp_</xsl:text><xsl:value-of select="@name"/>                
                     </xsl:for-each>
                      <xsl:if test="count(fault/*)">,<xsl:value-of select="$servicename"/>_<xsl:value-of select="@name"/><xsl:text>_fault</xsl:text> fault</xsl:if>
-                    );
+                    ){}
 
 
           /**
-           * auto generated Axis2 Error handler
+           * auto generated WSF/C++ Error handler
            * override this method for handling error response from <xsl:value-of select="@name"/> operation
            */
-           void receiveError_<xsl:value-of select="@name"/>(int exception);
+           virtual void receiveError_<xsl:value-of select="@name"/>(int exception){}
             </xsl:when>
             <xsl:otherwise>
            // No methods generated for meps other than in-out
