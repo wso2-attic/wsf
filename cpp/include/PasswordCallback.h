@@ -113,7 +113,6 @@ extern "C" \
         const axutil_env_t *env) \
     { \
         wsf_rampart_callback_t* rcb = NULL; \
-        wso2wsf::Environment* environment = NULL; \
     \
         rcb = (wsf_rampart_callback_t*)AXIS2_MALLOC(env->allocator, sizeof(wsf_rampart_callback_t)); \
     \
@@ -131,8 +130,7 @@ extern "C" \
             return AXIS2_FAILURE; \
         } \
 \
-        environment = wso2wsf::Environment::getInstance(); \
-        environment->setEnv(env); \
+        wso2wsf::Environment::setEnv(env); \
 \
     \
         return AXIS2_SUCCESS; \

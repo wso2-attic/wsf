@@ -133,7 +133,6 @@ extern "C" \
         const axutil_env_t *env) \
     { \
         wsf_authn_provider_t* authn_callback = NULL; \
-        wso2wsf::Environment* environment = NULL; \
     \
         authn_callback = (wsf_authn_provider_t*)AXIS2_MALLOC(env->allocator, sizeof(wsf_authn_provider_t)); \
     \
@@ -151,8 +150,7 @@ extern "C" \
             return AXIS2_FAILURE; \
         } \
 \
-        environment = wso2wsf::Environment::getInstance(); \
-        environment->setEnv(env); \
+        wso2wsf::Environment::setEnv(env); \
 \
         return AXIS2_SUCCESS; \
     } \

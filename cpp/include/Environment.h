@@ -57,7 +57,7 @@ namespace wso2wsf
 
 		
 #ifdef WIN32
-		static RWLock *lock;		
+		static RWLock lock;		
 #else 
 		static pthread_rwlock_t       rwlock; 
 #endif
@@ -73,8 +73,9 @@ namespace wso2wsf
 		/**
 		* Return an instance of the Static Environment Object
 		*
+		*
+		* static WSF_EXTERN Environment* WSF_CALL getInstance();
 		*/
-		static WSF_EXTERN Environment* WSF_CALL getInstance();
 		/**
 		*	Method to store the current thread specific environment. 
 		*  @param env Pointer to the axutil_env
@@ -102,7 +103,7 @@ namespace wso2wsf
 		*/
 		static WSF_EXTERN void WSF_CALL initialize(std::string logFileName,  axutil_log_levels_t logLevel);
 	
-		WSF_CALL ~Environment();
+		/* WSF_CALL ~Environment(); */
 	};
 	/** @} */
 }
