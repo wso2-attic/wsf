@@ -26,11 +26,27 @@
 using namespace std;
 using namespace wso2wsf;
 
-int main()
+int main(int argc, char* argv[])
 {
+	char *googleKey = "00000000000000000000000000000000";
+	char *wordToSpell = "salvasion";
 
 	Environment::initialize("google.log", AXIS2_LOG_LEVEL_TRACE);
+	
+	if ((argc > 1) && (strcmp("-h", argv[1]) == 0))
+	{
+		cout<< "\nUsage : "<<  argv[0]<<" [google_key] [word_to_spell] \n"<<endl;
+		cout<<"\t Google_key Your Google license key. Default value won't work. You must use your key here.\n" <<endl;
+		cout<<"\tword_to_spell Word to be spelled by Google service. Default is 00000000000000000000000000000000\n"<<endl;
+		cout<<"NOTE: command line arguments must appear in given order, with trailing ones being optional\n \tUse -h for help\n"<<endl;
+		return 0;
+	}
 
+	if (argc > 1)
+		googleKey = argv[1];
+	if (argc > 2)
+		wordToSpell = argv[2];
+	
     ServiceClient sc("http://api.google.com/search/beta2");
     sc.engageModule(AXIS2_MODULE_ADDRESSING);
     
@@ -47,13 +63,15 @@ int main()
     payload->setNamespace(ns2, false);
     payload->setNamespace(ns3, false);
     OMElement * child1 = new OMElement(payload,"key", NULL);
-    OMAttribute * at2 = new OMAttribute("type", "xsd:string", ns2);
+ 
+	OMAttribute * at2 = new OMAttribute("type", "xsd:string", ns2);
     child1->addAttribute(at2);
-    child1->setText("00000000000000000000000000000000");
+    child1->setText(googleKey);
     OMElement * child2 = new OMElement(payload,"phrase", NULL);
-    OMAttribute * at3 = new OMAttribute("type", "xsd:string", ns2);
+
+	OMAttribute * at3 = new OMAttribute("type", "xsd:string", ns2);
     child2->addAttribute(at2);
-    child2->setText("salvasion");
+    child2->setText(wordToSpell);
     cout << endl << "Request: " << payload << endl;
 
     try
@@ -75,6 +93,6 @@ int main()
             cout << endl << "Error: " << e << endl;
         }
     }
-    delete payload;
+	delete payload;
 }
 
