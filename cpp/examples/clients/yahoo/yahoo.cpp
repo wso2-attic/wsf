@@ -35,7 +35,7 @@ void printHelp()
 
 int main(int argc, char* argv[])
 {
-    char *searchString = NULL;
+    char *searchString = "finance";
     
     Environment::initialize("yahoo_rest_search.log", AXIS2_LOG_LEVEL_TRACE);
 
@@ -50,10 +50,11 @@ int main(int argc, char* argv[])
             searchString = argv[1];
     }
 
-    ServiceClient sc("http://search.yahooapis.com/WebSearchService/V1/webSearch");
+	ServiceClient sc("http://search.yahooapis.com/WebSearchService/V1/webSearch");
     
     sc.engageModule(AXIS2_MODULE_ADDRESSING);
     Options * op = sc.getOptions();
+	op->setEnableREST(true);
     op->setHTTPMethod(AXIS2_HTTP_GET);
     
     OMElement * payload = new OMElement(NULL,"yahoo_rest_search", NULL);
@@ -77,5 +78,6 @@ int main(int argc, char* argv[])
         cout << endl << "Error: " << e << endl;
     }
     delete payload;
+
 }
 
