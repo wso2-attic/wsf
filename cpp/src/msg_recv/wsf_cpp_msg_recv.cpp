@@ -164,9 +164,8 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
 	AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
 		"[axis2]Entry:wsf_cpp_msg_recv_invoke_business_logic_sync");
 
-	p = Environment::getInstance();
-	p->setEnv(env);
-
+	Environment::setEnv(env);
+	
 	/* get the implementation class for the Web Service */
 	skel = wsf_cpp_msg_recv_get_svc_obj(msg_recv, env, msg_ctx);
 
