@@ -22,6 +22,7 @@
 using namespace wso2wsf;
 using namespace std;
 
+/*
 Environment* WSF_CALL Environment::getInstance()
 {
 	if(_envObj)
@@ -38,6 +39,7 @@ Environment* WSF_CALL Environment::getInstance()
 		return _envObj;
 	}
 }
+*/
 
 /**
 *	Method to store the current thread specific environment. 
@@ -46,7 +48,7 @@ Environment* WSF_CALL Environment::getInstance()
 void WSF_CALL Environment::setEnv(const axutil_env_t *env)
 {
 #ifdef WIN32
-	lock->writeLock();
+	lock.writeLock();
 #else 
 	int rc;
 	 rc = pthread_rwlock_wrlock(&rwlock);
@@ -55,7 +57,7 @@ void WSF_CALL Environment::setEnv(const axutil_env_t *env)
 	int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
 	_envmap[threadId] = env;
 #ifdef WIN32
-	lock->unlock();
+	lock.unlock();
 #else
 	 rc = pthread_rwlock_unlock(&rwlock);
 #endif
@@ -69,20 +71,21 @@ const axutil_env_t* WSF_CALL Environment::getEnv()
 {
 	const axutil_env_t *env = NULL;
 #ifdef WIN32
-	lock->readLock();
+	lock.readLock();
 #else
 	pthread_rwlock_rdlock(&rwlock);
 #endif
 
 	int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
 	std::map<int, const axutil_env_t*>::iterator _it;
+	
 	_it = _envmap.find(threadId);
 	if(_it != _envmap.end())
 	{
 		env = _it->second;
 	}
 #ifdef WIN32
-	lock->unlock();
+	lock.unlock();
 #else
 	pthread_rwlock_unlock(&rwlock);
 #endif
@@ -93,7 +96,7 @@ const axutil_env_t* WSF_CALL Environment::getEnv()
 WSF_EXTERN void WSF_CALL Environment::removeEnv()
 {
 #ifdef WIN32
-	lock->writeLock();
+	lock.writeLock();
 #else 
      int rc;
 	 rc =  pthread_rwlock_wrlock(&rwlock);
@@ -103,7 +106,7 @@ WSF_EXTERN void WSF_CALL Environment::removeEnv()
 		_envmap.erase(threadId);
 
 #ifdef WIN32
-	lock->unlock();
+	lock.unlock();
 #else
 	rc = pthread_rwlock_unlock(&rwlock);
 #endif
@@ -112,7 +115,7 @@ WSF_EXTERN void WSF_CALL Environment::removeEnv()
 
 /**
 * destructor frees resources.
-*/
+
 WSF_CALL Environment::~Environment()
 {
 	std::map<int, const axutil_env_t*>::iterator _it;
@@ -121,7 +124,7 @@ WSF_CALL Environment::~Environment()
 		axutil_env_free((axutil_env_t*)_it->second);
 	}
 }
-
+*/
 void WSF_CALL Environment::switchToGlobalPool()
 {
 	std::map<int, const axutil_env_t*>::const_iterator _it;
@@ -149,11 +152,12 @@ void WSF_CALL Environment::initialize(std::string logFileName, axutil_log_levels
 {
 	_logFileName = logFileName;
 	_logLevel = logLevel;
-	getInstance();
 
 	axutil_env_t *env = axutil_env_create_all(logFileName.c_str(), logLevel);
 	if(env){
 		setEnv(env);
+	}else{
+		exit(0);
 	}
 }
 
@@ -161,13 +165,14 @@ std::string Environment::_logFileName;
 
 axutil_log_levels_t Environment::_logLevel;
 
-Environment* Environment::_envObj = NULL;
+/* Environment* Environment::_envObj = NULL; */
 
 std::map<int, const axutil_env_t*> Environment::_envmap;
 
+
 #ifdef WIN32
 
-RWLock* Environment::lock;
+RWLock Environment::lock;
 
 #else 
 
