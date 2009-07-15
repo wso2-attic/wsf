@@ -26,9 +26,29 @@
 using namespace std;
 using namespace wso2wsf;
 
-int main()
+void printHelp()
 {
+     cout<<"./yahoosearch string_to_search \n"<<endl;
+     exit(0);
+}
+
+
+int main(int argc, char* argv[])
+{
+    char *searchString = NULL;
+    
     Environment::initialize("yahoo_rest_search.log", AXIS2_LOG_LEVEL_TRACE);
+
+    if(argc > 1)
+    {
+
+        if (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))
+        {
+            printHelp();
+        }
+        else
+            searchString = argv[1];
+    }
 
     ServiceClient sc("http://search.yahooapis.com/WebSearchService/V1/webSearch");
     
@@ -40,7 +60,7 @@ int main()
     OMElement * child1 = new OMElement(payload,"appid", NULL);
     child1->setText("YahooDemo");
     OMElement * child2 = new OMElement(payload,"query", NULL);
-    child2->setText("finance");
+    child2->setText(searchString);
     
     cout << endl << "Request: " << payload << endl;
     
