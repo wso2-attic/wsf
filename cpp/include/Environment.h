@@ -47,11 +47,6 @@ namespace wso2wsf
 	{
 
 	private:
-		/**
-		* @var _env private variable holds reference for
-		* axutil_env struct.
-		*/
-		static Environment *_envObj;
 		
 		static std::map<int, const axutil_env_t*> _envmap;
 
