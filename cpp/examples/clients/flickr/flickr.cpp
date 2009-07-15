@@ -25,10 +25,21 @@
 using namespace std;
 using namespace wso2wsf;
 
-int main()
+int main(int argc, char* argv[])
 {
+	char *apiKey= "00000000000000000000000000000000";
+	char *searchString = "home";
 	Environment::initialize("flicker.log", AXIS2_LOG_LEVEL_TRACE);
 
+	if(argc == 3)
+	{
+			apiKey = argv[1];
+			searchString = argv[2];
+	}else
+	{
+		cout<<"./flicker <APIKEY> <Search String>"<<endl;
+		exit(0);
+	}
     ServiceClient * sc = new ServiceClient("http://api.flickr.com/services/soap/");
 
     OMNamespace * ns = new OMNamespace("urn:flickr", "x");
@@ -36,7 +47,7 @@ int main()
     OMElement * child1 = new OMElement(payload,"method", NULL);
     child1->setText("flickr.photos.search");
     OMElement * child2 = new OMElement(payload,"api_key", NULL);
-    child2->setText("00000000000000000000000000000000");
+    child2->setText(apiKey);
     OMElement * child3 = new OMElement(payload,"tags", NULL);
     child3->setText("home");
     cout << endl << "Request: " << payload << endl;
