@@ -159,7 +159,7 @@ OMElement::~OMElement()
     for(vector<OMAttribute *>::iterator ite = _added_attributes.begin(); 
         ite != _added_attributes.end(); ++ite)
     {
-        if (getAxiomNode())
+        if (!getAxiomNode())
         {
             (*ite)->setAxiomAttribute(NULL);
         }
@@ -169,7 +169,7 @@ OMElement::~OMElement()
    
     if (_default_namespace)
     {
-        if (getAxiomNode())
+        if (!getAxiomNode())
         {
             _default_namespace->setAxiomNamespace(NULL);
         }
@@ -182,7 +182,7 @@ OMElement::~OMElement()
    for (vector<OMNamespace *>::iterator ite = _added_namespaces.begin();
             ite != _added_namespaces.end(); ++ite)
     {
-        if (getAxiomNode())
+        if (!getAxiomNode())
         {
             (*ite)->setAxiomNamespace(NULL);
         }
