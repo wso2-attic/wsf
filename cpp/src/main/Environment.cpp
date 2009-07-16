@@ -93,6 +93,7 @@ const axutil_env_t* WSF_CALL Environment::getEnv()
 		}else
 		{
 			printf("Environment creation failed");
+			exit(0);
 		}
 	}		
 #ifdef WIN32
@@ -166,7 +167,6 @@ void WSF_CALL Environment::initialize(std::string logFileName, axutil_log_levels
 
 	axutil_env_t *env = axutil_env_create_all(logFileName.c_str(), logLevel);
 	if(env){
-		genv = env;
 		setEnv(env);
 	}else{
 		exit(0);
@@ -180,8 +180,6 @@ axutil_log_levels_t Environment::_logLevel;
 /* Environment* Environment::_envObj = NULL; */
 
 std::map<int, const axutil_env_t*> Environment::_envmap;
-
-axutil_env_t *Environment::genv;
 
 #ifdef WIN32
 
