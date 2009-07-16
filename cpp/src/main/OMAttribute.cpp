@@ -64,12 +64,12 @@ OMAttribute::~OMAttribute()
         axiom_attribute_free(_wsf_axiom_attribute, Environment::getEnv());
         if (_namespace)
         {
-            _namespace->setAxiomNamespace(NULL);
             delete _namespace;
         }
     }
     else if (_namespace)
     {
+		_namespace->setAxiomNamespace(NULL);
         delete _namespace;
     }
 }
