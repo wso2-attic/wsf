@@ -44,6 +44,10 @@ Key Features
       * WS-Trust
       * WS-Secure Conversation   
 
+5. Codegeneration Tool
+      * By providing a wsdl and options, it is possible to generate client stubs and service skeletons
+        in C++ using the code generation tool. 
+
 -------------------
 Reporting Problems
 ===================
