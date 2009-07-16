@@ -84,6 +84,17 @@ const axutil_env_t* WSF_CALL Environment::getEnv()
 	{
 		env = _it->second;
 	}
+	if(!env)
+	{
+		env = axutil_env_create_all(_logFileName.c_str(), _logLevel);
+		if(env)
+		{
+			_envmap[threadId] = env;		
+		}else
+		{
+			printf("Environment creation failed");
+		}
+	}		
 #ifdef WIN32
 	lock.unlock();
 #else
@@ -155,6 +166,7 @@ void WSF_CALL Environment::initialize(std::string logFileName, axutil_log_levels
 
 	axutil_env_t *env = axutil_env_create_all(logFileName.c_str(), logLevel);
 	if(env){
+		genv = env;
 		setEnv(env);
 	}else{
 		exit(0);
@@ -169,6 +181,7 @@ axutil_log_levels_t Environment::_logLevel;
 
 std::map<int, const axutil_env_t*> Environment::_envmap;
 
+axutil_env_t *Environment::genv;
 
 #ifdef WIN32
 
