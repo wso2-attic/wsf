@@ -61,6 +61,11 @@ int main()
     ServiceClient * sc = new ServiceClient("http://localhost:9090/axis2/services/echo");
     sc->engageModule(AXIS2_MODULE_ADDRESSING);
     Options * op = sc->getOptions();
+	if(op)
+	{
+		cout<< "Op Not null"<<endl;
+	}else
+		cout<<" OP NULL"<<endl;
     op->setUseSeparateListener(true);
     op->setReplyTo("http://localhost:6060/axis2/services/__ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__");
     sc->setOptions(op);
@@ -84,7 +89,7 @@ int main()
     int count = 0, timeout = 10000;  
     while((count < timeout) && (!callback.isComplete))
     {
-        WSF_USLEEP(100);
+        Sleep(10000);
         count++;
     }
     cout << endl << endl << "Time: " << count << endl;

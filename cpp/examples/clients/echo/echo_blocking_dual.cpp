@@ -53,6 +53,7 @@ int main(int argc, char *argv[])
     ServiceClient sc(end_point);
     sc.engageModule(AXIS2_MODULE_ADDRESSING);
     Options * op = sc.getOptions();
+	op->setTimeout(1);
     op->setUseSeparateListener(true);
     op->setReplyTo(reply_to);
 
@@ -81,5 +82,7 @@ int main(int argc, char *argv[])
             cout << endl << "Error: " << e << endl;
         }
     }
+	Sleep(1000);
+	sc.getLastResponseSoapEnvelopeString();
     delete payload;
 }

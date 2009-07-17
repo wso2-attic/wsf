@@ -56,6 +56,12 @@ int main(int argc, char *argv[])
         policy_file = argv[3];
 
     ServiceClient sc(client_repo, end_point);
+	if(!sc.isValidClient())
+	{
+		cout<<"Client Initialization Failed"<<endl;
+		exit(0);
+	}
+		
     sc.engageModule(AXIS2_MODULE_ADDRESSING);
     sc.setPolicy(new NeethiPolicy(client_repo + "/" + policy_file));
 
