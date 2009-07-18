@@ -52,7 +52,7 @@ public class CPPTypeMap implements TypeMap{
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_LONG, "int64_t");
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_SHORT, "short");
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_BYTE, "axis2_byte_t");
-        CPPTypeMap.addTypemapping(SchemaConstants.XSD_ANY, "OMElement*");
+        CPPTypeMap.addTypemapping(SchemaConstants.XSD_ANY, "wso2wsf::OMElement*");
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_DECIMAL, "double");
 
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_ANYTYPE,
@@ -74,7 +74,7 @@ public class CPPTypeMap implements TypeMap{
                                  "axutil_base64_binary_t*");
 
         CPPTypeMap.addTypemapping(SchemaConstants.XSD_HEXBIN,
-                                 "axiom_node_t*");
+                                 "wso2wsf::OMElement*");
 
         // These are the g* types (gYearMonth, etc) which map to Axis types
         // These types are mapped to an integer
@@ -198,7 +198,7 @@ public class CPPTypeMap implements TypeMap{
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_DATETIME,
                 "axutil_date_time_t*");
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_NOTATION,
-                "axiom_node_t*");
+                "wso2wsf::OMElement*");
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_TIME,
                 "axutil_date_time_t*");
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_DATE,
@@ -218,7 +218,7 @@ public class CPPTypeMap implements TypeMap{
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_BASE64BINARY,
                 "axutil_base64_binary_t*");
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_HEXBINARY,
-                "axiom_node_t*");
+                "wso2wsf::OMElement*");
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_FLOAT,
                 "float");
         addSoapEncodingTypeMapping(SchemaConstants.SOAP_ENCODING_DOUBLE,
