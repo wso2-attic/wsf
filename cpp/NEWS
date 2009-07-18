@@ -29,24 +29,40 @@ Key Features
 
       * Binary optimized
       * Non-optimized (Base64 binary)
-      * Caching support for large attachments
 
 3. WS-Addressing
 
       * Version 1.0
       * Submission
 
-4. WS-Security
+4. WSPolicy 
 
-      * WS-Security ( Username Token, Timestamp Token, Signing, Encryption )
+5. WS-Security
+      * Username Token 
+      * Timestamp Token 
+      *  Signing
+      *  Encryption 
       * WS-SecurityPolicy based configuration  
       * Reply detection
       * WS-Trust
       * WS-Secure Conversation   
 
-5. Codegeneration Tool
+6. Codegeneration Tool
       * By providing a wsdl and options, it is possible to generate client stubs and service skeletons
         in C++ using the code generation tool. 
+
+7. SSL enabled transport layer
+
+8. WS-Reliable Messaging
+
+
+-------------------
+Known Issues
+-------------------
+
+Dual channel scenarios could cause crash issues.
+
+
 
 -------------------
 Reporting Problems
