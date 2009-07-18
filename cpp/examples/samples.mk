@@ -228,6 +228,10 @@ sct_provider:
 	$(LD) $(LDFLAGS) int.msvc\callbacks\sct_provider\sct_provider.obj $(LIBS) /DLL /OUT:$(WSFCPP_SAMPLES_LIB_DIR)\sctprovider.dll
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
+copy_scripts:
+	@xcopy /I /Y /E secscripts $(WSFCPP_SAMPLES_DIR)\security
+	@move $(WSFCPP_SAMPLES_DIR)\security\update_n_run.bat $(WSFCPP_SAMPLES_DIR)\
+
 wsfcpp_callback: password_callback authentication_provider replay_detector sct_provider
 
 clean: 
@@ -236,5 +240,5 @@ clean:
 !if "$(ENABLE_RAMPARTC)" == "0"
 dist: clean wsfcpp_samples
 !else
-dist: clean wsfcpp_samples wsfcpp_callback
+dist: clean wsfcpp_samples wsfcpp_callback copy_scripts
 !endif
