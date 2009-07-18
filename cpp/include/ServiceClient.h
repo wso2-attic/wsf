@@ -126,6 +126,11 @@ namespace wso2wsf
          */
         const axis2_conf_ctx_t * _conf_ctx;
 
+		/**
+		*                                                    
+		*
+		*/
+		bool isValid;
         /**
          * initializes service client.
          * @return boolean result of the operation
@@ -160,6 +165,13 @@ namespace wso2wsf
          * destructor frees resources.
          */
         WSF_EXTERN virtual WSF_CALL ~ServiceClient();
+		/**
+		* Checks whether the ServiceClient got properly initialized or not. If the service client is not
+		* Properly initialized, it will return true , false otherwise.
+		*@return true on success, false otherwise.
+		*/
+
+		WSF_EXTERN bool WSF_CALL isValidClient();
 
 	/**
 	* Sets the options to be used by service client.
