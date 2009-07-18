@@ -21,6 +21,7 @@
 #include <axis2_callback.h>
 #include <axis2_conf_init.h>
 #include <ServiceClient.h>
+#include <assert.h>
 
 using namespace std;
 using namespace wso2wsf;
@@ -118,6 +119,7 @@ axis2_status_t AXIS2_CALL callbackOnFault(axis2_callback_t * callback, const axu
 
 axis2_svc_client_t* WSF_CALL ServiceClient::getAxis2SvcClient()
 {
+	assert(isValid);
 	return _wsf_service_client;
 }
 
@@ -166,6 +168,7 @@ ServiceClient::~ServiceClient()
   */
  ServiceClient::ServiceClient(const axis2_conf_ctx_t * conf_ctx, std::string endpoint_address)
 {
+	isValid =false;
     _conf_ctx = conf_ctx;
     _endpoint_address = endpoint_address;
     _repo_home = "";
@@ -175,8 +178,8 @@ ServiceClient::~ServiceClient()
     _last_response_soap_envelope = NULL;
     _options = NULL;
     _policy = NULL;
-
-    initializeClient();
+	
+    isValid = initializeClient();
 }
 
 /** @brief ServiceClient
@@ -185,6 +188,7 @@ ServiceClient::~ServiceClient()
   */
  ServiceClient::ServiceClient(std::string repo_home, std::string endpoint_address)
 {
+	isValid = false;
     _conf_ctx = NULL;
     _endpoint_address = endpoint_address;
     _repo_home = repo_home;
@@ -195,7 +199,7 @@ ServiceClient::~ServiceClient()
     _options = NULL;
     _policy = NULL;
 
-    initializeClient();
+    isValid = initializeClient();
 }
 
 /** @brief ServiceClient
@@ -204,6 +208,7 @@ ServiceClient::~ServiceClient()
   */
  ServiceClient::ServiceClient(std::string endpoint_address)
 {
+	isValid = false;
     _conf_ctx = NULL;
     _endpoint_address = endpoint_address;
     _repo_home = AXIS2_GETENV("WSFCPP_HOME") ? string(AXIS2_GETENV("WSFCPP_HOME")) : string("");
@@ -214,7 +219,7 @@ ServiceClient::~ServiceClient()
     _options = NULL;
     _policy = NULL;
 
-    initializeClient();
+    isValid = initializeClient();
 }
 
 /** @brief InitializeClient
@@ -271,6 +276,7 @@ bool ServiceClient::initializeClient()
   */
 bool ServiceClient::setOptions(Options * options)
 {
+	assert(isValid);
     axis2_status_t status = AXIS2_FAILURE;
     if (options != NULL)
     {
@@ -290,6 +296,7 @@ bool ServiceClient::setOptions(Options * options)
   */
 string ServiceClient::getLastResponseSoapEnvelopeString()
 {
+	assert(isValid);
     axiom_soap_envelope_t * envelope =
         axis2_svc_client_get_last_response_soap_envelope(_wsf_service_client, Environment::getEnv());
     if (!envelope)
@@ -307,6 +314,7 @@ string ServiceClient::getLastResponseSoapEnvelopeString()
   */
 OMElement * ServiceClient::getLastResponseSoapEnvelope()
 {
+	assert(isValid);
     axiom_soap_envelope_t * envelope =
         axis2_svc_client_get_last_response_soap_envelope(_wsf_service_client, Environment::getEnv());
     if (!envelope)
@@ -369,6 +377,7 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
   */
 OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, std::string operation, std::string action) throw (AxisFault)
 {
+	assert(isValid);
     axis2_status_t status = AXIS2_FAILURE;
     if (!payload)
     {
@@ -544,6 +553,7 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string action) t
   */
 bool ServiceClient::send(OMElement * payload, bool robust, std::string operation, std::string action) throw (AxisFault)
 {
+	assert(isValid);
     axis2_status_t status = AXIS2_FAILURE;
     if (!payload)
     {
@@ -668,6 +678,7 @@ bool ServiceClient::send(OMElement * payload, std::string action) throw (AxisFau
   */
 bool ServiceClient::setPolicy(NeethiPolicy * policy)
 {
+	assert(isValid);
     if (!policy)
     {
         return false;
@@ -689,6 +700,7 @@ bool ServiceClient::setPolicy(NeethiPolicy * policy)
   */
 void ServiceClient::removeAllHeaders()
 {
+	assert(isValid);
     axis2_svc_client_remove_all_headers(_wsf_service_client, Environment::getEnv());
 }
 
@@ -698,6 +710,7 @@ void ServiceClient::removeAllHeaders()
   */
 bool ServiceClient::addHeader(OMElement * header)
 {
+	assert(isValid);
     axis2_status_t status =
         axis2_svc_client_add_header(_wsf_service_client, Environment::getEnv(), header->getAxiomNode());
     return (status == AXIS2_SUCCESS);
@@ -709,6 +722,7 @@ bool ServiceClient::addHeader(OMElement * header)
   */
 bool ServiceClient::disengageModule(std::string module_name)
 {
+	assert(isValid);
     axis2_status_t status =
         axis2_svc_client_disengage_module(_wsf_service_client, Environment::getEnv(), module_name.c_str());
     return (status == AXIS2_SUCCESS);
@@ -720,6 +734,7 @@ bool ServiceClient::disengageModule(std::string module_name)
   */
 bool ServiceClient::engageModule(std::string module_name)
 {
+	assert(isValid);
     axis2_status_t status =
         axis2_svc_client_engage_module(_wsf_service_client, Environment::getEnv(), module_name.c_str());
     return (status == AXIS2_SUCCESS);
@@ -731,6 +746,7 @@ bool ServiceClient::engageModule(std::string module_name)
   */
 Options * ServiceClient::getOptions()
 {
+	assert(isValid);
     return _options;
 }
 
@@ -740,12 +756,14 @@ Options * ServiceClient::getOptions()
   */
 OMElement * ServiceClient::getLastSOAPFault()
 {
+	assert(isValid);
     getLastResponseSoapEnvelope();
     return _last_soap_fault;
 }
 
 axis2_conf_ctx_t* ServiceClient::getAxis2ConfCtx(std::string repositoryPath)
 {
+	assert(isValid);
 	axis2_conf_ctx_t* conf_ctx = NULL;
 	conf_ctx = axis2_build_conf_ctx(Environment::getEnv(), repositoryPath.c_str());
 	return conf_ctx;
@@ -753,6 +771,7 @@ axis2_conf_ctx_t* ServiceClient::getAxis2ConfCtx(std::string repositoryPath)
 
 bool ServiceClient::getProxyAuthRequired()
 {
+	assert(isValid);
 	axis2_bool_t status  = AXIS2_FALSE;
 	status = axis2_svc_client_get_proxy_auth_required(_wsf_service_client, Environment::getEnv());
 	return status ? true : false;
@@ -760,6 +779,7 @@ bool ServiceClient::getProxyAuthRequired()
 
 bool ServiceClient::setProxy(string proxyHost, string proxyPort)
 {
+	assert(isValid);
 	axis2_status_t status = AXIS2_SUCCESS;
 	status = axis2_svc_client_set_proxy(_wsf_service_client, Environment::getEnv(), 
 		(axis2_char_t *)proxyPort.c_str(), (axis2_char_t *)proxyPort.c_str());
@@ -768,9 +788,15 @@ bool ServiceClient::setProxy(string proxyHost, string proxyPort)
 
 bool ServiceClient::setProxyWithAuth(string proxyHost, string proxyPort, string username, string password)
 {
+	assert(isValid);
 	axis2_status_t status = AXIS2_SUCCESS;
 	status = axis2_svc_client_set_proxy_with_auth(_wsf_service_client, Environment::getEnv(), 
 		(axis2_char_t *)proxyHost.c_str(), (axis2_char_t *)proxyPort.c_str(), (axis2_char_t *)username.c_str(), 
 		(axis2_char_t *)password.c_str());
 	return status ? true: false;
+}
+
+bool ServiceClient::isValidClient()
+{
+	return isValid;
 }
