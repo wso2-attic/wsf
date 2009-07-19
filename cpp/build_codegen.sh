@@ -26,4 +26,4 @@ else
 fi
 
 cd ../../../../../../../
-cp -rf `pwd`/tools/codegen/wsdl2cpp $DIL/bin/codegen/wsdl2cpp
+cp -rf `pwd`/tools/codegen/wsdl2cpp $DIL/bin/codegen/
