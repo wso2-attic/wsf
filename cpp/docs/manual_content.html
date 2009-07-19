@@ -25,7 +25,7 @@ Server</a></li>
 Authentication Support</a></li>
 <li><a href="#14__Using_HTTP_Authentication_Support">Using HTTP Authentication
 Support</a></li>
-<li><a href="#15__WSDL2C_Tool">WSDL2CPP Tool</a></li>
+<li><a href="#15__WSDL2CPP_Tool">WSDL2CPP Tool</a></li>
 </ol>
 <p style="margin-bottom: 0in;"><br />
 </p>
@@ -349,7 +349,7 @@ response further.</p>
 <p>You can compile the client sample as shown below.</p>
 <p>On Linux:</p>
 <div class="source">
-<pre>gcc -o hello -I$WSFCPP_HOME/include/axis2-1.6.0/ -L$WSFCPP_HOME/lib -laxutil -laxis2_axiom -laxis2_parser -laxis2_engine -lpthread -laxis2_http_sender -laxis2_http_receiver -lwso2_wsf hello.c -ldl -Wl,--rpath -Wl,$AXIS2C_HOME/lib<br /><br /></pre>
+<pre>gcc -o hello -I$WSFCPP_HOME/include/axis2-1.6.0/ -L$WSFCPP_HOME/lib -laxutil -laxis2_axiom -laxis2_parser -laxis2_engine -lpthread -laxis2_http_sender -laxis2_http_receiver -lwso2_wsf hello.c -ldl -Wl,--rpath -Wl,$WSFCPP_HOME/lib<br /><br /></pre>
 </div>
 <p>On MS Windows:</p>
 <p>to compile,</p>
@@ -593,7 +593,7 @@ on the name of the operation being invoked.</td>
 <td style="font-size: 12pt; font-family: Times New Roman">This method is called by the engine if a fault is
 detected.</td>
 </tr>
-<tr class="a" style="font-size: 12pt; font-family: Times New Roman">
+<tr class="a">
 <td>
 <pre>virtual ~ServiceSkeleton();</pre>
 </td>
@@ -1169,11 +1169,11 @@ direct fault messages.<br /><br /></p>
 </div>
 <p>You can use the following options with simple axis HTTP server.</p>
 <div class="source">
-<pre> -p PORT port number to use, default port is 9090<br /> -r REPO_PATH repository path, default is ../<br /> -t TIMEOUT socket read timeout, default is 30 seconds<br /> -l LOG_LEVEL log level, available log levels:<br /> 0 - critical 1 - errors 2 - warnings<br /> 3 - information 4 - debug 5- user 6 - trace<br /> Default log level is 4(debug).<br /> -f LOG_FILE log file, default is $AXIS2C_HOME/logs/axis2.log<br /> or axis2.log in current folder if AXIS2C_HOME not set<br /> -s LOG_FILE_SIZE Maximum log file size in mega bytes, default maximum size is 1MB.<br /> -h display the help screen.<br /><br /></pre>
+<pre> -p PORT port number to use, default port is 9090<br /> -r REPO_PATH repository path, default is ../<br /> -t TIMEOUT socket read timeout, default is 30 seconds<br /> -l LOG_LEVEL log level, available log levels:<br /> 0 - critical 1 - errors 2 - warnings<br /> 3 - information 4 - debug 5- user 6 - trace<br /> Default log level is 4(debug).<br /> -f LOG_FILE log file, default is $WSFCPP_HOME/logs/axis2.log<br /> or axis2.log in current folder if WSFCPP_HOME not set<br /> -s LOG_FILE_SIZE Maximum log file size in mega bytes, default maximum size is 1MB.<br /> -h display the help screen.<br /><br /></pre>
 </div>
 <p>Example :</p>
 <div class="source">
-<pre> axis2_http_server -l 3 -p 8080 -r $AXIS2C_HOME -f /dev/stderr<br /><br /></pre>
+<pre> axis2_http_server -l 3 -p 8080 -r $WSFCPP_HOME -f /dev/stderr<br /><br /></pre>
 </div>
 </div>
 <div class="subsection"><a name="9_2_MS_Windows_Based_Systems"></a>
@@ -1185,11 +1185,11 @@ direct fault messages.<br /><br /></p>
 </div>
 <p>You can use the following options with simple axis HTTP server.</p>
 <div class="source">
-<pre> -p PORT port number to use, default port is 9090<br /> -r REPO_PATH repository path, default is ../<br /> -t TIMEOUT socket read timeout, default is 30 seconds<br /> -l LOG_LEVEL log level, available log levels:<br /> 0 - critical 1 - errors 2 - warnings<br /> 3 - information 4 - debug 5- user 6 - trace<br /> Default log level is 4(debug).<br /> -f LOG_FILE log file, default is %AXIS2C_HOME%\logs\axis2.log<br /> or axis2.log in current folder if AXIS2C_HOME not set<br /> -s LOG_FILE_SIZE Maximum log file size in mega bytes, default maximum size is 1MB.<br /> -h display the help screen.<br /><br /></pre>
+<pre> -p PORT port number to use, default port is 9090<br /> -r REPO_PATH repository path, default is ../<br /> -t TIMEOUT socket read timeout, default is 30 seconds<br /> -l LOG_LEVEL log level, available log levels:<br /> 0 - critical 1 - errors 2 - warnings<br /> 3 - information 4 - debug 5- user 6 - trace<br /> Default log level is 4(debug).<br /> -f LOG_FILE log file, default is %WSFCPP_HOME%\logs\axis2.log<br /> or axis2.log in current folder if WSFCPP_HOME not set<br /> -s LOG_FILE_SIZE Maximum log file size in mega bytes, default maximum size is 1MB.<br /> -h display the help screen.<br /><br /></pre>
 </div>
 <p>Example :</p>
 <div class="source">
-<pre> axis2_http_server.exe -l 3 -p 8080 -r %AXIS2C_HOME% -f C:\logs\error.log<br /><br /></pre>
+<pre> axis2_http_server.exe -l 3 -p 8080 -r %WSFCPP_HOME% -f C:\logs\error.log<br /><br /></pre>
 </div>
 <p style="margin-bottom: 0in;"><br />
 </p>
@@ -1361,14 +1361,14 @@ file is usually placed in the APACHE_INSTALL_DIR/logs folder.</li>
         When you have nmake axis2_iis_module</p>
 <p>In this document I assume that the mod_axis2_IIS.dll
 is in the directory <code>c:\axis2c\lib</code> and
-AXIS2C_HOME
+WSFCPP_HOME
 is <code>c:\axis2c</code></p>
 <p>Add the following key to the
 registery.</p>
 <p><code>HKEY_LOCAL_MACHINE\SOFTWARE\Apache Axis2c\IIS
 ISAPI
 Redirector</code></p>
-<p>Add a string value with the name <code>AXIS2C_HOME</code>
+<p>Add a string value with the name <code>WSFCPP_HOME</code>
 and a
 value of <code>c:\axis2c</code></p>
 <p>Add a string value with the name <code>log_file</code>
@@ -1576,7 +1576,7 @@ service client, you can check whether authentication was required.</p>
 </div>
 </div>
 </div>
-<div class="section"><a name="15__WSDL2C_Tool"></a>
+<div class="section"><a name="15__WSDL2CPP_Tool"></a>
 <h2>
     15. WSDL2CPP Tool</h2>
 <p>
@@ -1593,7 +1593,7 @@ service client, you can check whether authentication was required.</p>
 the service
 skeleton and other required files with ADB (Axis Data Binding) support.</p>
 <div class="source">
-<pre>java org.apache.axis2.wsdl.WSDL2C -uri interoptestdoclitparameters.wsdl -ss -sd -d adb -u <br /><br /></pre>
+<pre>WSDL2CPP.sh -uri interoptestdoclitparameters.wsdl -ss -sd -d adb -u <br /><br /></pre>
 </div>
 <p>To understand the meanings of the options used with the tool,
 please have
@@ -1607,7 +1607,7 @@ replace
 command, with <code>-d
 none</code>.</p>
 <div class="source">
-<pre>java org.apache.axis2.wsdl.WSDL2C -uri interoptestdoclitparameters.wsdl -ss -sd -d none<br /><br /></pre>
+<pre>WSDL2CPP.sh -uri interoptestdoclitparameters.wsdl -ss -sd -d none<br /><br /></pre>
 </div>
 <p>The WSDL file, <code>interoptestdoclitparameters.wsdl</code>,
 used in the
@@ -1634,7 +1634,7 @@ line with the WSDL file that you used to generate the code.
 <div class="subsection"><a name="17_2_Generating_Client_Stubs"></a>
 <h3>
         15.2 Generating Client Stubs</h3>
-<p>The WSDL2C code generator tool provides support for generating
+<p>The WSDL2CPP code generator tool provides support for generating
 client
 stubs as well. You can generate the required stubs from a given WSDL
 with the
@@ -1642,13 +1642,13 @@ other supporting files. Use following parameters to generate the
 Axis2/C
 client stub code with ADB support.</p>
 <div class="source">
-<pre>java WSDL2C -uri interoptestdoclitparameters.wsdl -d adb -u<br /><br /></pre>
+<pre>WSDL2CPP.sh -uri interoptestdoclitparameters.wsdl -d adb -u<br /><br /></pre>
 </div>
 <p>In order to ignore the data binding support and use a raw XML
 in/out
 model, just use the following parameters.</p>
 <div class="source">
-<pre>java WSDL2C -uri interoptestdoclitparameters.wsdl -d none<br /><br /></pre>
+<pre>WSDL2CPP.sh -uri interoptestdoclitparameters.wsdl -d none<br /><br /></pre>
 </div>
 <p>Like in the case of service skeletons, you have to fill in the
 business
