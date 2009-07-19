@@ -89,7 +89,6 @@ int main()
     int count = 0, timeout = 10000;  
     while((count < timeout) && (!callback.isComplete))
     {
-        Sleep(10000);
         count++;
     }
     cout << endl << endl << "Time: " << count << endl;
