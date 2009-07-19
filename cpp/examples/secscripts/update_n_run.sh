@@ -7,5 +7,5 @@ echo "Copying latest module to client_repo"
 cp -r $WSFCPP_HOME/modules/rampart $CLIENT_REPO/modules
 
 #RUN
-./echo_security http://localhost:9090/axis2/services/sec_echo $CLIENT_REPO
+./sec_echo http://localhost:9090/axis2/services/sec_echo $CLIENT_REPO
 
