@@ -18,18 +18,38 @@ cp $WSFCPP_HOME/samples/src/c/rampartc/data/server_axis2.xml $WSFCPP_HOME/axis2.
 echo "Replacing settings in policy files."
 if [ `uname -s` = Darwin ]
 then
-    sed -e 's,AXIS2C_HOME/samples/src/rampartc,'$INST_DIR'/samples/src/c/rampartc,g' -e 's,\.so,\.dylib,g' $1/client-policy.xml > $CLIENT_REPO/policy.xml
+    sed -e 's,AXIS2C_HOME/samples/src/rampartc,'$INST_DIR'/samples/src/c/rampartc,g' -e 's,\.so,\.dylib,g' $1/client-policy.xml > $CLIENT_REPO/policy1.xml
 else
-    sed 's,AXIS2C_HOME/samples/src/rampartc,'$INST_DIR'/samples/src/c/rampartc,g' $1/client-policy.xml > $CLIENT_REPO/policy.xml
+    sed 's,AXIS2C_HOME/samples/src/rampartc,'$INST_DIR'/samples/src/c/rampartc,g' $1/client-policy.xml > $CLIENT_REPO/policy1.xml
 fi
+
+
+if [ `uname -s` = Darwin ]
+then
+    sed -e 's,AXIS2C_HOME/samples/lib/rampartc,'$INST_DIR'/samples/lib,g' -e 's,\.so,\.dylib,g' $CLIENT_REPO/policy1.xml  > $CLIENT_REPO/policy.xml
+else
+    sed 's,AXIS2C_HOME/samples/lib/rampartc,'$INST_DIR'/samples/lib,g' $CLIENT_REPO/policy1.xml > $CLIENT_REPO/policy.xml
+fi
+
+
 
 echo "Replacing settings in Configuration files."
 if [ `uname -s` = Darwin ]
 then
-    sed -e 's,AXIS2C_HOME/samples/lib/rampartc,'$INST_DIR'/samples/lib,g' -e 's,\.so,\.dylib,g' $1/services.xml > $SERVICE_HOME/services.xml
+    sed -e 's,AXIS2C_HOME/samples/lib/rampartc,'$INST_DIR'/samples/lib,g' -e 's,\.so,\.dylib,g' $1/services.xml > $SERVICE_HOME/services1.xml
 else
-    sed 's,AXIS2C_HOME/samples/lib/rampartc,'$INST_DIR'/samples/lib,g' $1/services.xml > $SERVICE_HOME/services.xml
+    sed 's,AXIS2C_HOME/samples/lib/rampartc,'$INST_DIR'/samples/lib,g' $1/services.xml > $SERVICE_HOME/services1.xml
 fi
+
+
+if [ `uname -s` = Darwin ]
+then
+    sed -e 's,AXIS2C_HOME/samples/src/rampartc,'$INST_DIR'/samples/src/c/rampartc,g' -e 's,\.so,\.dylib,g' $SERVICE_HOME/services1.xml > $SERVICE_HOME/services.xml
+else
+    sed 's,AXIS2C_HOME/samples/src/rampartc,'$INST_DIR'/samples/src/c/rampartc,g' $SERVICE_HOME/services1.xml > $SERVICE_HOME/services.xml
+fi
+
+
 
 if [ -e $1/sts.xml ]
 then
