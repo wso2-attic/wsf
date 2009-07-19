@@ -1,5 +1,5 @@
 prgbindir=$(prefix)/samples/bin
-prgbin_PROGRAMS = echo echo_rest echo_blocking echo_blocking_addr echo_blocking_soap11 echo_blocking_dual echo_non_blocking echo_non_blocking_dual echo_security
+prgbin_PROGRAMS = echo echo_rest echo_blocking echo_blocking_addr echo_blocking_soap11 echo_blocking_dual echo_non_blocking echo_non_blocking_dual sec_echo
 echo_SOURCES = echo.cpp
 echo_rest_SOURCES = echo_rest.cpp
 echo_blocking_SOURCES = echo_blocking.cpp
@@ -114,7 +114,7 @@ echo_non_blocking_dual_LDADD   = $(LDFLAGS) \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
-echo_security_LDADD   = $(LDFLAGS) \
+sec_echo_LDADD   = $(LDFLAGS) \
                 -L$(WSFCPP_HOME)/lib \
 		../../../wsf_c/axis2c/util/src/libaxutil.la \
 		../../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
