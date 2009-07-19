@@ -49,17 +49,17 @@
 <xsl:for-each select="method">
 <xsl:for-each select="input/param[@type!='' and @ours ]">
 <xsl:variable name="inputtype" select="substring-after(@type,'::')"/>
-#include "<xsl:value-of select="$inputtype"/>.h"
+#include &lt;<xsl:value-of select="$inputtype"/>.h&gt;
 </xsl:for-each>
 <xsl:for-each select="output/param[@type!='' and @ours ]">
 <xsl:variable name="outputtype" select="substring-after(@type,'::')"/>
-#include "<xsl:value-of select="$outputtype"/>.h"
+#include &lt;<xsl:value-of select="$outputtype"/>.h&gt;
 </xsl:for-each>
 
 
 <xsl:for-each select="fault/param[@type!='']">
 <xsl:variable name="faulttype" select="substring-after(@type,'::')"/>
-#include "<xsl:value-of select="$faulttype"/>.h"
+#include &lt;<xsl:value-of select="$faulttype"/>.h&gt;
 </xsl:for-each>
 </xsl:for-each>
 
