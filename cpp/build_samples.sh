@@ -10,8 +10,24 @@ make
 make install
 cd ..
 
+if ! test -d $1/samples/src; then
+    mkdir $1/samples/src;
+fi
+
 if ! test -d $1/samples/src/c; then
     mkdir $1/samples/src/c;
+fi
+
+
+if ! test -d $1/samples/src/cpp; then
+    mkdir $1/samples/src/cpp;
+    cp -rf examples/* $1/samples/src/cpp;
+fi
+
+
+if ! test -d $1/samples/src/c/axis2c; then
+    mkdir $1/samples/src/c/axis2c;
+    cp -rf wsf_c/axis2c/samples/* $1/samples/src/c/axis2c;
 fi
 
 if ! test -d $1/samples/src/c/savanc; then 
@@ -41,3 +57,17 @@ if test -d $1/samples/src/rampartc; then
 rm -rf $1/samples/src/rampartc;
 fi
 
+if test -d $1/samples/bin/rampartc; then
+rm -rf $1/samples/bin/rampartc;
+fi
+
+if test -d $1/samples/lib/rampartc; then
+rm -rf $1/samples/lib/rampartc;
+fi
+
+if ! test -d $1/samples/bin/security; then
+mkdir $1/samples/bin/security;
+fi
+
+cp -rf examples/secscripts/*.sh $1/samples/bin/security;
+mv $1/samples/bin/security/update_n_run.sh $1/samples/bin;
