@@ -2,7 +2,7 @@
 set -e
 
 if test ! -z $1; then
-export DIL=`pwd`/$1
+export DIL=$1
 else
 export DIL=`pwd`/deploy
 fi
