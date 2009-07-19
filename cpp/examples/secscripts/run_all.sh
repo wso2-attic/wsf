@@ -1,5 +1,5 @@
 #!/bin/bash
-_SCEN="scenario"
+_SCEN=$WSFCPP_HOME/samples/src/c/rampartc/secpolicy/"scenario"
 _SMPL_DIR="$PWD"
 _PORT=9090
 _SLEEP=2
