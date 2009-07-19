@@ -8,7 +8,7 @@ echo_blocking_soap11_SOURCES = echo_blocking_soap11.cpp
 echo_blocking_dual_SOURCES = echo_blocking_dual.cpp
 echo_non_blocking_SOURCES = echo_non_blocking.cpp
 echo_non_blocking_dual_SOURCES = echo_non_blocking_dual.cpp
-echo_security_SOURCES = echo_security.cpp
+sec_echo_SOURCES = echo_security.cpp
 
 echo_LDADD   = $(LDFLAGS) \
                 -L$(WSFCPP_HOME)/lib \
