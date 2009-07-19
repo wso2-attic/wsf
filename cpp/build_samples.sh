@@ -27,14 +27,8 @@ if ! test -d $1/samples/src/c/wsclient; then
     cp -r wsf_c/wsclient/samples/* $1/samples/src/c/wsclient;
 fi
 
-
-
-
-cd wsf_c/axis2c/samples
-if test -e ../../rampartc/Makefile; then
+if test -e wsf_c/rampartc/Makefile; then
 cd ../../rampartc/samples; ./configure --prefix=$1  --with-axis2=$1/include/axis2-1.6.0; make; make install;
-cd client/sec_echo; cd ../../secpolicy; sh deploy.sh scenario5; cd ../
+cd ../../../../
 fi
-cd ../../examples; ./configure --prefix=$1  --with-wsfc=$1/include; make; make install
-cd ..
 
