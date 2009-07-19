@@ -6,6 +6,9 @@ data_DATA=README.INSTALL.LINUX README.SAMPLES README INSTALL COPYING NEWS NOTICE
 samples:
 	sh build_samples.sh $(prefix)
 
+dist-hook:
+	sh dist_hook.sh
+
 install-data-hook:
 	rm -rf $(prefix)/samples/*
 
