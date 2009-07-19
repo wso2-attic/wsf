@@ -8,8 +8,8 @@ make
 make install
 cd ..
 
-if ! test -d $s/samples/src/c; then
-    mkdir $s/samples/src/c;
+if ! test -d $1/samples/src/c; then
+    mkdir $1/samples/src/c;
 fi
 
 if ! test -d $1/samples/src/c/savanc; then 
