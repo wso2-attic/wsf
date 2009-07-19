@@ -36,7 +36,7 @@
 #ifndef <xsl:value-of select="$caps_svc_name"/>_H
 #define <xsl:value-of select="$caps_svc_name"/>_H
 
-    #include &lt;OMELement.h&gt;
+    #include &lt;OMElement.h&gt;
 
    <xsl:for-each select="method">
     <xsl:for-each select="input/param[@type!='' and @ours]">
