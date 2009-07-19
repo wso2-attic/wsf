@@ -82,7 +82,6 @@ int main(int argc, char *argv[])
             cout << endl << "Error: " << e << endl;
         }
     }
-	Sleep(1000);
 	sc.getLastResponseSoapEnvelopeString();
     delete payload;
 }
