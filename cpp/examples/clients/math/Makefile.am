@@ -1,4 +1,4 @@
-prgbindir=$(prefix)/samples/bin/cpp/math
+prgbindir=$(prefix)/samples/bin
 prgbin_PROGRAMS = math 
 math_SOURCES = math.cpp
 

@@ -1,4 +1,4 @@
-prgbindir=$(prefix)/samples/bin/google
+prgbindir=$(prefix)/samples/bin
 prgbin_PROGRAMS = google
 google_SOURCES = google.cpp
 

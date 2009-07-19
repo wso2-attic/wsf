@@ -1,5 +1,5 @@
 SUBDIRS=resources
-prgbindir=$(prefix)/samples/bin/cpp/mtom
+prgbindir=$(prefix)/samples/bin
 prgbin_PROGRAMS = mtom
 mtom_SOURCES = mtom.cpp
 
