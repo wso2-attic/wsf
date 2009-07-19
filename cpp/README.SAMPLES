@@ -62,6 +62,8 @@ echo_blocking_dual -
   - log_file_name[Line 37]. default: echo_blocking_dual.log
   - log_level[Line 37]. default: AXIS2_LOG_LEVEL_TRACE
   Command-Line Interface: Yes
+  known issue -> This sample sometime fails due to a threading issue.
+ 
 
 echo_blocking_addr -
 
@@ -112,6 +114,7 @@ echo_non_blocking_dual -
   - log_file_name[Line 43]. default: echo_non_blocking_dual.log
   - log_level[Line 43]. default: AXIS2_LOG_LEVEL_TRACE
   Command-Line Interface: No
+  - Known issue -> This sample  sometimes fails due to a threading issue.
 
 echo_security -
 
@@ -141,6 +144,8 @@ yahoo -
   - log_file_name[Line 14]. default: yahoo_rest_search.log
   - log_level[Line 14]. default: AXIS2_LOG_LEVEL_TRACE
   Command-Line Interface: No
+  - This sample sometimes does not respond because the yahoo service is
+    not responding for certain requests.
 
 
 Accessing Google WebService API
@@ -155,7 +160,10 @@ google -
   Command-Line Interface: No
 
   * A valid api key would return a response, and an invalid key would return a
-  fault. The default key is invalid.
+  fault. The default key is invalid. 
+  The google SOAP search API is now deprecated and therefore  you cannot obtain a 
+  google key to use this service anymore. However if  you already have a google key,
+  you can try this sample. 
 
 
 Accessing Flickr WebService API
@@ -223,33 +231,46 @@ secpolicy -
 
   Set of scenarios that be used to generate various policy files and invoke the
   echo_security sample.
-  There are three invocation models
+  There are three invocation models. The scripts for running the security senarios
+  are located in the directory <WSFCPP_HOME>/samples/bin/security. There you will find
+  the scripts run_all.sh, deploy.sh deploy_client_repo.sh and test_scen.sh shell scripts.
+  On windows, use the bat files with similar names. 
+
+ In the directory  <WSFCPP_HOME>/samples/src/c/rampartc/ you will find the rampartc samples.
+ We use the same security policy file used in rampartc for demonstrating the WS security in 
+ WSF/CPP as well. in the secpolicy directory, there are many security scenarios with corresponding folders
+ named scenario1 scenario2 ....
+    
+     The sample used is the sec_echo client in the samples/bin directroy. By changing the policy file and
+     service configuration file, various security scenarios can be modeled. Before running the samples, 
+     you need to run the deploy_client_repo.sh ( or bat ) file. 
+
     - deploy and run
       - deploy policy (run Linux: deploy.sh Windows: deploy.bat)
       - usage: 
-        - Linux: deploy.sh scenarioX
-        - Windows: deploy.bat scenarioX
+        - Linux: deploy.sh <path to scenarioX folder>
+        - Windows: deploy.bat <path to scenarioX folder>
       - restart server
-      - run echo_security
+      - run sec_echo
     - deploy, update and run
       - deploy policy (run Linux: deploy.sh Windows: deploy.bat)
       - usage:
-        - Linux: deploy.sh scenarioX
-        - Windows: deploy.bat scenarioX
+        - Linux: deploy.sh <path to scenarioX>
+        - Windows: deploy.bat <path to scenarioX>
       - restart server
       - update and run (run Linux: update_n_run.sh Windows: update_n_run.bat)
       - usage:
-        - Linux: update_n_run.sh scenarioX
-        - Windows: update_n_run.bat scenarioX
+        - Linux: update_n_run.sh <path to scenarioX>
+        - Windows: update_n_run.bat <path to scenarioX>
     - run all
       - usage:
         - Linux: run_all.sh
-        - Windows: n/a
+        - Windows: run_all.bat
   Testing a scenario
     - run test_scenario
       - usage:
-        - Linux: test_scen.sh scenarioX server_port
-        - Windows: test_scen.bat scenarioX server_port
+        - Linux: test_scen.sh <path to scenarioX> server_port
+        - Windows: test_scen.bat <path to scenarioX> server_port
   Seven scenarios are provided demonstrating various possibilities.
     - Timestamp
     - UsernameToken
