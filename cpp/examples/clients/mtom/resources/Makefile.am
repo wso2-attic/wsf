@@ -1,2 +1,2 @@
-datadir=$(prefix)/samples/bin/cpp/mtom/resources
+datadir=$(prefix)/samples/bin/resources
 data_DATA=axis2.jpg
