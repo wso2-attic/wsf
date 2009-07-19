@@ -28,7 +28,8 @@ using namespace wso2wsf;
 int main(int argc, char *argv[])
 {
     string end_point = "http://localhost:9090/axis2/services/sec_echo";
-    string client_repo = "client_repo/";
+    string client_repo = AXIS2_GETENV("WSFCPP_HOME");
+           client_repo+="/client_repo";
     string policy_file = "policy.xml";
 
 	Environment::initialize("echo_security.log", AXIS2_LOG_LEVEL_TRACE);
