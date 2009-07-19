@@ -1,11 +1,11 @@
 #!bin/bash
 set -e
 
-if [ -a ../dist_temp ]; then
+if test  -d ../dist_temp; then
 rm -rf ../dist_temp
 fi
 
-if [ -a dist_temp ]; then
+if test -d dist_temp; then
 rm -rf dist_temp
 fi
 
@@ -30,7 +30,7 @@ cd wsf_c
 
 export WSFCPP_BUILD_DIR=`pwd`
 export WSFCPP_HOME=`pwd`/deploy
-if [ -a $REGISTRY_HOME ] ; then 
+if test -d $REGISTRY_HOME; then 
 cd $REGISTRY_HOME;
 ./autogen.sh
 ./configure --with-axis2=${WSFCPP_HOME}/include/axis2-1.6.0 --prefix=${WSFCPP_HOME} --enable-tests=yes --with-libcurl=/usr/include/curl
@@ -96,11 +96,11 @@ rm -rf `find . -type f -name Makefile`
 rm -rf `find . -type d -name autom4te.cache`
 rm -rf `find . -type f -name stamp-h1`
 
-if [ -a wsf_c/rampartc/samples/wso2-wsf-c-src-2.0.0 ]; then
+if test -d wsf_c/rampartc/samples/wso2-wsf-c-src-2.0.0; then
 rm -rf wsf_c/rampartc/samples/wso2-wsf-c-src-2.0.0
 fi
 
-if [ -a wsf_c/savanc/samples/wso2-wsf-c-src-2.0.0 ]; then
+if test -d wsf_c/savanc/samples/wso2-wsf-c-src-2.0.0; then
 rm -rf wsf_c/savanc/samples/wso2-wsf-c-src-2.0.0
 fi
 
