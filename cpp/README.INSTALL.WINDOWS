@@ -79,7 +79,11 @@ You also need have a look at and install the dependencies mentioned in section 1
       "Started Simple Axis2 HTTP Server..."
 
    8. You can build the code generation tool from the source. For that, you need to have the apache maven2 installed. 
-      It can be downloaded from http://maven.apache.org/download.html. Then run the build_codegen.bat and copy_codegen.bat scripts. It should installed
+      It can be downloaded from http://maven.apache.org/download.html. 
+      Also you need gunzip tool installed and added to your path environment variable. You can download it from
+       http://gnuwin32.sourceforge.net/packages/unzip.htm.
+
+      Then run the build_codegen.bat and copy_codegen.bat scripts. It should install
       the codegeneration jars and scripts to the wso2-wsf-cpp-x.y.z-win32/bin/tools/codegen directory.
 
 
