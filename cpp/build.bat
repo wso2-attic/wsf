@@ -35,24 +35,10 @@ rem @if exist "%WSFCPP_HOME%" rmdir /s /q "%WSFCPP_HOME%"
 rem Add HTML Documentation
 :add_html_docs
 @cd "%WSFCPP_HOME%"
-@mkdir docs_temp
-move docs docs_temp
-mkdir docs\wsf_c
-xcopy /E /I /Q /Y docs_temp  docs\wsf_c\docs
-rmdir /S /Q docs_temp
+move docs wsf_c
+mkdir docs
 @xcopy /E /I /Q /Y "%WSFCPP_SOURCE%\docs"  docs\cpp
-@if exist wsclient\docs\index.html mkdir docs\wsf_c\wsclient
-@if exist docs\wsf_c\wsclient mkdir docs\wsf_c\wsclient\docs
-@if exist docs\wsf_c\wsclient\docs copy /Y wsclient\docs\index.html docs\wsf_c\wsclient\docs\
-@if exist docs\wsf_c\docs\wsclient mkdir docs\wsf_c\wsclient
-@if exist docs\wsf_c\docs\wsclient xcopy /E /I /Q /Y docs\wsf_c\docs\wsclient docs\wsf_c\wsclient
-@if exist docs\wsf_c\docs\wsclient rmdir /S /Q docs\wsf_c\docs\wsclient
-@if exist docs\wsf_c\wsclient\index.html mkdir docs\wsf_c\wsclient\docs
-@if exist docs\wsf_c\wsclient\index.html copy /Y docs\wsf_c\wsclient\index.html docs\wsf_c\wsclient\docs\
-@if exist docs\wsf_c\wsclient\index.html del docs\wsf_c\wsclient\index.html
-@if exist docs\wsf_c\docs\axis2c rmdir /S /Q docs\wsf_c\docs\axis2c
-@if exist docs\wsf_c\docs\rampartc rmdir /S /Q docs\wsf_c\docs\rampartc
-@if exist docs\wsf_c\docs\sandesha2c rmdir /S /Q docs\wsf_c\docs\sandesha2c
+move wsf_c docs\wsf_c
 
 :remove_wsf_c_services
 @cd %WSFCPP_HOME%
