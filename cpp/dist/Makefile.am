@@ -25,6 +25,8 @@ samples:
 #	rm -rf $(prefix)/bin/samples/mtom  
 #	rm -rf $(prefix)/bin/samples/yahoosearch
 #
+dist-hook:
+	sh dist_hook.sh
 
 install-data-hook:
 	cp -rf $(prefix)/docs $(prefix)/docs_temp
