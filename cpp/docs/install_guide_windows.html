@@ -47,6 +47,63 @@
             You also need have a look at and install the dependencies mentioned in section  1. above.
         </p>
         <h2><a id="source"></a>3. Building and Installing WSO2 WSF/C++ from Source on MS Windows.</h2>
+<ul>
+<li><p>    Extract the source zip package to a folder.</p></li>
+
+<li><p>   If you want to install WSO2 WSF/C++ in a location other than the default, wso2-wsf-cpp-bin-x.x.x-win32,
+      set WSFCPP_HOME environment variable pointing to the location where you want to install WSO2 WSF/C++.
+
+        > set WSFCPP_HOME='your_desired_path_to_wsf_c++_installation' </p></li>
+
+  <li><p> Then go to the folder where you extracted the source.
+
+        > cd your_path_to_wsf_c++_source </p></li>
+
+  <li><p> Edit the Configuration
+      * Edit configure.in found in the folder where you extracted the source.
+
+      The configure.in file contains the user specific configuration parameters. Please have a look at
+      this file and set the settings to match your system's settings. Settings for Apache Axis2/C are
+      mandatory. Settings for Apache Rampart/C and Apache Sandesha2/C are optional and needs to be set
+      only if you want to build those. The comments in the configure.in file explain each setting, 
+      please have a look at the comments to get an understanding on what each setting means.</p></li>
+
+  <li><p> Build the source
+      * Run build.bat batch file found in the folder where you extracted the source.
+
+        > build.bat
+
+      Note: You may need to set the PATH environment variable to vcvars32.bat if Windows complains
+      that it cannot find this batch file when running the build.bat file </p></li>
+
+ <li><p> You need to add the path to lib directory to the PATH variable (%WSFCPP_HOME%\lib)
+
+        > set PATH=%PATH%;%WSFCPP_HOME%\lib </p></li>
+
+ <li><p> Go to where you installed WSO2 WSF/C++. Start simple axis server
+      * To start the simple axis server on port 9090 run the following commands
+
+        > cd "%WSFCPP_HOME%\bin"
+        > axis2_http_server.exe
+
+      * If the server fails to start, you may need to set the WSFCPP_HOME environment variable, pointing
+      to the deploy folder (C:\wsfcpp)
+      
+        > set WSFCPP_HOME='C:\wsfcpp'
+
+      To see the possible command line options run axis2_http_server.exe -h
+
+      If the server is running successfully you should see the message
+      "Started Simple Axis2 HTTP Server..." </p></li>
+
+<li><p>You can build the code generation tool from the source. For that, you need to have the apache maven2 installed. 
+      It can be downloaded from<a href="http://maven.apache.org/download.html">Apache Mavan download page</a>. 
+      Also you need gunzip tool installed and added to your path environment variable. You can download it from
+      <a href="http://gnuwin32.sourceforge.net/packages/unzip.htm">http://gnuwin32.sourceforge.net/packages/unzip.htm</a>.
+
+      Then run the build_codegen.bat and copy_codegen.bat scripts. It should install
+      the codegeneration jars and scripts to the wso2-wsf-cpp-x.y.z-win32/bin/tools/codegen directory.</p></li>
+</ul>
         <p>Now you are ready to use WSO2 WSF/C++.</p>
 Notes:
 <ul>
