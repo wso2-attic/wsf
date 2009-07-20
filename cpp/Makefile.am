@@ -13,6 +13,7 @@ install-data-hook:
 	rm -rf $(prefix)/samples/*
 	mv $(prefix)/docs $(prefix)/wsf_c
 	mkdir $(prefix)/docs
+	mv $(prefix)/wsf_c $(prefix)/docs/wsf_c
 	mkdir $(prefix)/docs/cpp
 	cp -rf docs $(prefix)/docs/cpp        
 
