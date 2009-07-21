@@ -216,7 +216,7 @@ authentication_provider:
 	@if not exist $(WSFCPP_SAMPLES_LIB_DIR) mkdir $(WSFCPP_SAMPLES_LIB_DIR)
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CALLBACK_SAMPLES_HOME_DIR)\authentication_provider\*.cpp /Foint.msvc\callbacks\authentication_provider\ /c
 	$(LD) $(LDFLAGS) int.msvc\callbacks\authentication_provider\*.obj $(LIBS)  /DLL /OUT:$(WSFCPP_SAMPLES_LIB_DIR)\authn_provider.dll
-	if exist $(WSFCPP_SAMPLES_LIB_DIR)\pwcb.dll.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_LIB_DIR)\pwcb.dll.manifest -outputresource:$(WSFCPP_SAMPLES_LIB_DIR)\pwcb.dll;2
+	if exist $(WSFCPP_SAMPLES_LIB_DIR)\authn_provider.dll.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_LIB_DIR)\authn_provider.dll.manifest -outputresource:$(WSFCPP_SAMPLES_LIB_DIR)\authn_provider.dll;2
 
 replay_detector:
 	@if not exist int.msvc\callbacks\replay_detector mkdir int.msvc\callbacks\replay_detector
