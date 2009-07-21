@@ -17,5 +17,5 @@ install-data-hook:
 	mkdir $(prefix)/docs/cpp
 	cp -rf docs $(prefix)/docs/cpp        
 
-EXTRA_DIST=README.INSTALL.LINUX README.INSTALL.WINDOWS README.SAMPLES build.bat init.bat clean.bat configure.in docs NOTICE LICENSE wsf.mk
+EXTRA_DIST=README.INSTALL.LINUX README.INSTALL.WINDOWS README.SAMPLES build.bat init.bat clean.bat configure.in docs NOTICE LICENSE
 
