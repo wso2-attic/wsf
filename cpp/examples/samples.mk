@@ -33,9 +33,15 @@ INCLUDE_PATH = /I$(WSFCPP_HOME_DIR)\include /I.\..\include /I$(WSFCPP_HOME_DIR)\
 CFLAGS = $(CFLAGS) /D "_DEBUG" /Od /Z7 $(CRUNTIME)d /D "AXIS2_DECLARE_EXPORT"
 LDFLAGS = $(LDFLAGS) /DEBUG
 !else
-CFLAGS = $(CFLAGS) /D "NDEBUG" /O2 $(CRUNTIME) /D "AXIS2_DECLARE_EXPORT"
+CFLAGS = $(CFLAGS) /D "NDEBUG" $(CRUNTIME) /D "AXIS2_DECLARE_EXPORT"
 LDFLAGS = $(LDFLAGS)
 !endif
+
+
+# Manifest Options
+####################
+MT=mt.exe
+MT="$(MT)"
 
 !if "$(EMBED_MANIFEST)" == "0"
 _VC_MANIFEST_EMBED_EXE=
@@ -44,6 +50,7 @@ _VC_MANIFEST_EMBED_DLL=
 _VC_MANIFEST_EMBED_EXE= if exist $@.manifest $(MT) -nologo -manifest $@.manifest -outputresource:$@;1
 _VC_MANIFEST_EMBED_DLL= if exist $@.manifest $(MT) -nologo -manifest $@.manifest -outputresource:$@;2
 !endif
+
 
 distdir:
 	if not exist $(WSFCPP_SAMPLES_DIR)	mkdir $(WSFCPP_SAMPLES_DIR)
