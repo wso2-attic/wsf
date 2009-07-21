@@ -42,6 +42,7 @@ fi
 
 cd ..
 #build wsfcpp code
+sh dist_hook.sh
 sh autogen.sh
 ./configure --prefix=`pwd`/wsf_c/deploy
 make -j 10
