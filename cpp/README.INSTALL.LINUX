@@ -43,7 +43,7 @@ on your system. By default, most Linux systems have this tool.
    4. Build the source
       * This can be done using the following command sequence in the directory where you have extracted the source
 
-        $  ./configure --prefix=${WSFCPP_HOME}
+        $  ./configure --prefix=<Path to WSFCPP installation location>
         $ make
         $ make install
         $ make samples
