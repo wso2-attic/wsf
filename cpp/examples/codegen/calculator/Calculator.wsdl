@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2003-2004 The Apache Software Foundation.                      -->
+<!-- (c) Copyright IBM Corp. 2004, 2005 All Rights Reserved                   -->
+<!--                                                                          -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License");          -->
+<!-- you may not use this file except in compliance with the License.         -->
+<!-- You may obtain a copy of the License at                                  -->
+<!--                                                                          -->
+<!--        http://www.apache.org/licenses/LICENSE-2.0                        -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+<wsdl:definitions targetNamespace="http://localhost/axis/Calculator" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://localhost/axis/Calculator" xmlns:intf="http://localhost/axis/Calculator" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://localhost/axis/Calculator" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://localhost/axis/Calculator" xmlns:intf="http://localhost/axis/Calculator" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+   <element name="add">
+    <complexType>
+     <sequence>
+      <element name="arg_0_0" type="xsd:int"/>
+      <element name="arg_1_0" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="addResponse">
+    <complexType>
+     <sequence>
+      <element name="addReturn" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="sub">
+    <complexType>
+     <sequence>
+      <element name="arg_0_1" type="xsd:int"/>
+      <element name="arg_1_1" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="subResponse">
+    <complexType>
+     <sequence>
+      <element name="subReturn" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="mul">
+    <complexType>
+     <sequence>
+      <element name="arg_0_2" type="xsd:int"/>
+      <element name="arg_1_2" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="mulResponse">
+    <complexType>
+     <sequence>
+      <element name="mulReturn" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="div">
+    <complexType>
+     <sequence>
+      <element name="arg_0_3" type="xsd:int"/>
+      <element name="arg_1_3" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="divResponse">
+    <complexType>
+     <sequence>
+      <element name="divReturn" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="subResponse">
+
+      <wsdl:part element="impl:subResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="mulResponse">
+
+      <wsdl:part element="impl:mulResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="subRequest">
+
+      <wsdl:part element="impl:sub" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="divRequest">
+
+      <wsdl:part element="impl:div" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="divResponse">
+
+      <wsdl:part element="impl:divResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="mulRequest">
+
+      <wsdl:part element="impl:mul" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="addResponse">
+
+      <wsdl:part element="impl:addResponse" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="addRequest">
+
+      <wsdl:part element="impl:add" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="Calculator">
+
+      <wsdl:operation name="add">
+
+         <wsdl:input message="impl:addRequest" name="addRequest"/>
+
+         <wsdl:output message="impl:addResponse" name="addResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="sub">
+
+         <wsdl:input message="impl:subRequest" name="subRequest"/>
+
+         <wsdl:output message="impl:subResponse" name="subResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="mul">
+
+         <wsdl:input message="impl:mulRequest" name="mulRequest"/>
+
+         <wsdl:output message="impl:mulResponse" name="mulResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="div">
+
+         <wsdl:input message="impl:divRequest" name="divRequest"/>
+
+         <wsdl:output message="impl:divResponse" name="divResponse"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="CalculatorSoapBinding" type="impl:Calculator">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="add">
+
+         <wsdlsoap:operation soapAction="Calculator#add"/>
+
+         <wsdl:input name="addRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="addResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="sub">
+
+         <wsdlsoap:operation soapAction="Calculator#sub"/>
+
+         <wsdl:input name="subRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="subResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="mul">
+
+         <wsdlsoap:operation soapAction="Calculator#mul"/>
+
+         <wsdl:input name="mulRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="mulResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="div">
+
+         <wsdlsoap:operation soapAction="Calculator#div"/>
+
+         <wsdl:input name="divRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="divResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="Calculator">
+
+      <wsdl:port binding="impl:CalculatorSoapBinding" name="Calculator">
+
+         <wsdlsoap:address location="http://localhost/axis/Calculator"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>
