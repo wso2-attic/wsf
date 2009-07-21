@@ -1,0 +1,64 @@
+Sample: Calculator
+====================
+
+Introduction
+------------
+
+This samples demonstrate the use of code generation using WSF/CPP codegeneration tool with
+which is based on Axis2/Java codegeneration tools (http://svn.apache.org/repos/asf/webservices/axis2/trunk/java)
+tool with Axis Data Binding. 
+
+Files
+-----
+-Calculator
+	Client source       ./Calculator/CalculatorAdd.cpp
+	Service Source	    ./Calculator/CalculatorSkeleton.cpp
+	wsdl		    ./Calculator/Calculator.wsdl
+
+
+Code Generation
+---------------
+
+Use the shell script or batch file available in the <WSFCPP_HOME>/tools/codegen/wsdl2cpp/ directory to generate
+code using following options.(Reade the READEME.txt at wsdl2cpp directory to learn how to use scripts
+
+Client side stub generation with Axis Data Binding:
+	Linux: WSDL2CPP.sh -uri <wsdl path> -g -d adb -u -f -o <output directory> 
+	Win32: WSDL2CPP.bat -uri <wsdl path> -g -d adb -u -f -o <output directory> 
+
+Server side skeleton generation with Axis Data Binding:
+	Linux: WSDL2CPP.sh -uri <wsdl path> -sd -ss -d adb -u -f -o <output directory>
+	Win32: WSDL2CPP.bat -uri <wsdl path> -sd -ss -d adb -u -f -o <output directory>
+
+Description of Options used:
+	
+    -o <output Location> : output file location
+    -ss : Generate server side code (i.e. skeletons). Default is off
+    -sd : Generate service descriptor (i.e. services.xml). Default is off. Valid with -ss
+    -d <databinding> : valid databinding is adb. 
+    -g : Generates all the classes. valid only with the -ss (This will generate client and server codes)
+    -u : unpacks the databinding classes
+    -f : Generate the source output folder without the src directory
+
+Please refer to the http://ws.apache.org/axis2/tools/1_1/CodegenToolReference.html for further details.
+
+Deploying the Service
+---------------------
+You need to generate the required server side code using command described above and replace 
+the <service name>Skeleton.cpp with given implementation. 
+If  you are on linux, the build.sh script will pack the lib<Service Name>.so along with the services.xml to 
+a directory named <Service Name>. Put this directory inside $AXIS2C_HOME/services/ directory.
+
+You need to then startup the server to deploy the service.
+
+On windows, you can use visual studio to complile the client and the service. Just replace the generated CalculatorSkeleton.cpp 
+with the file in the service directory. For the preprocessor options, add the macro AXIS2_DECLARE_EXPORT. In the linker options
+add the libraries, wso2_wsf.lib axiom.lib axutil.lib axis2_engine.lib. 
+
+Running the Client
+------------------
+You need to generate the required client side code using command described above and put them inside 
+where client implementations resides. And then build the client and run it. Add the above mentions libs to the linker option. 
+
+
+ 
