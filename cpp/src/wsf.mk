@@ -31,11 +31,20 @@ CFLAGS = $(CFLAGS) /D "NDEBUG" /O2 $(CRUNTIME)
 LDFLAGS = $(LDFLAGS)
 !endif
 
+
+# Manifest Options
+####################
+MT=mt.exe
+MT="$(MT)"
+
 !if "$(EMBED_MANIFEST)" == "0"
+_VC_MANIFEST_EMBED_EXE=
 _VC_MANIFEST_EMBED_DLL=
 !else
-_VC_MANIFEST_EMBED_DLL= if exist $@.manifest mt.exe -nologo -manifest $@.manifest -outputresource:$@;2
+_VC_MANIFEST_EMBED_EXE= if exist $@.manifest $(MT) -nologo -manifest $@.manifest -outputresource:$@;1
+_VC_MANIFEST_EMBED_DLL= if exist $@.manifest $(MT) -nologo -manifest $@.manifest -outputresource:$@;2
 !endif
+
 
 wso2_wsf_dll :
 	@if not exist int.msvc mkdir int.msvc
