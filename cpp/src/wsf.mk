@@ -57,13 +57,13 @@ wsf_cpp_msg_recv_dll:
 	@if not exist int.msvc\msg_recv mkdir int.msvc\msg_recv
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) msg_recv\wsf_cpp_msg_recv.cpp /Foint.msvc\msg_recv\ /c
 	$(LD) $(LDFLAGS) int.msvc\msg_recv\wsf_cpp_msg_recv.obj $(LIBS) wso2_wsf.lib /DLL /OUT:$(WSFCPP_HOME_DIR)\lib\wsf_cpp_msg_recv.dll
-	if exist $(WSFCPP_HOME_DIR)\lib\wso2_wsf.dll.manifest mt.exe -manifest $(WSFCPP_HOME_DIR)\lib\wsf_cpp_msg_recv.dll.manifest -outputresource:$(WSFCPP_HOME_DIR)\lib\wsf_cpp_msg_recv.dll;2
+	if exist $(WSFCPP_HOME_DIR)\lib\wsf_cpp_msg_recv.dll.manifest mt.exe -manifest $(WSFCPP_HOME_DIR)\lib\wsf_cpp_msg_recv.dll.manifest -outputresource:$(WSFCPP_HOME_DIR)\lib\wsf_cpp_msg_recv.dll;2
 
 wso2_wsf_security_dll:
 	@if not exist int.msvc\security mkdir int.msvc\security
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) security\*.cpp /Foint.msvc\security\ /c
 	$(LD) $(LDFLAGS) int.msvc\security\*.obj $(LIBS) wso2_wsf.lib rampart.lib /DLL  /OUT:$(WSFCPP_HOME_DIR)\lib\wso2_wsf_security.dll /IMPLIB:$(WSFCPP_HOME_DIR)\lib\wso2_wsf_security.lib
-	if exist $(WSFCPP_HOME_DIR)\lib\wso2_wsf.dll.manifest mt.exe -manifest $(WSFCPP_HOME_DIR)\lib\wso2_wsf_security.dll.manifest -outputresource:$(WSFCPP_HOME_DIR)\lib\wso2_wsf_security.dll;2
+	if exist $(WSFCPP_HOME_DIR)\lib\wso2_wsf_security.dll.manifest mt.exe -manifest $(WSFCPP_HOME_DIR)\lib\wso2_wsf_security.dll.manifest -outputresource:$(WSFCPP_HOME_DIR)\lib\wso2_wsf_security.dll;2
 
 !if "$(ENABLE_RAMPARTC)" == "0"
 wsfcpp: wso2_wsf_dll wsf_cpp_msg_recv_dll
