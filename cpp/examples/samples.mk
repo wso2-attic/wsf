@@ -41,7 +41,6 @@ LDFLAGS = $(LDFLAGS)
 # Manifest Options
 ####################
 MT=mt.exe
-MT="$(MT)"
 
 !if "$(EMBED_MANIFEST)" == "0"
 _VC_MANIFEST_EMBED_EXE=
@@ -66,55 +65,55 @@ echo_exe:
 	@if not exist int.msvc\echo\echo mkdir int.msvc\echo\echo
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\echo\echo.cpp /Foint.msvc\echo\echo\ /c
 	$(LD) $(LDFLAGS) int.msvc\echo\echo\*.obj $(LIBS) /OUT:$(WSFCPP_SAMPLES_DIR)\echo.exe
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	if exist $(WSFCPP_SAMPLES_DIR)\echo.exe.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_DIR)\echo.exe.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\echo.exe;1
 
 echo_blocking_exe:
 	@if not exist int.msvc\echo\echo_blocking mkdir int.msvc\echo\echo_blocking
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\echo\echo_blocking.cpp /Foint.msvc\echo\echo_blocking\ /c
 	$(LD) $(LDFLAGS) int.msvc\echo\echo_blocking\*.obj $(LIBS) /OUT:$(WSFCPP_SAMPLES_DIR)\echo_blocking.exe
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	 if exist $(WSFCPP_SAMPLES_DIR)\echo_blocking.exe.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_DIR)\echo_blocking.exe.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\echo_blocking.exe;1
 
 echo_blocking_addr_exe:
 	@if not exist int.msvc\echo\echo_blocking_addr mkdir int.msvc\echo\echo_blocking_addr
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\echo\echo_blocking_addr.cpp /Foint.msvc\echo\echo_blocking_addr\ /c
 	$(LD) $(LDFLAGS) int.msvc\echo\echo_blocking_addr\*.obj $(LIBS) /OUT:$(WSFCPP_SAMPLES_DIR)\echo_blocking_addr.exe
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	 if exist $(WSFCPP_SAMPLES_DIR)\echo_blocking_addr.exe.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_DIR)\echo_blocking_addr.exe.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\echo_blocking_addr.exe;1
 
 echo_blocking_dual_exe:
 	@if not exist int.msvc\echo\echo_blocking_dual mkdir int.msvc\echo\echo_blocking_dual
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\echo\echo_blocking_dual.cpp /Foint.msvc\echo\echo_blocking_dual\ /c
 	$(LD) $(LDFLAGS) int.msvc\echo\echo_blocking_dual\*.obj $(LIBS) /OUT:$(WSFCPP_SAMPLES_DIR)\echo_blocking_dual.exe
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	 if exist $(WSFCPP_SAMPLES_DIR)\echo_blocking_dual.exe.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_DIR)\echo_blocking_dual.exe.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\echo_blocking_dual.exe;1
 
 echo_blocking_soap11_exe:
 	@if not exist int.msvc\echo\echo_blocking_soap11 mkdir int.msvc\echo\echo_blocking_soap11
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\echo\echo_blocking_soap11.cpp /Foint.msvc\echo\echo_blocking_soap11\ /c
 	$(LD) $(LDFLAGS) int.msvc\echo\echo_blocking_soap11\*.obj $(LIBS) /OUT:$(WSFCPP_SAMPLES_DIR)\echo_blocking_soap11.exe
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	 if exist $(WSFCPP_SAMPLES_DIR)\echo_blocking_soap11.exe.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_DIR)\echo_blocking_soap11.exe.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\echo_blocking_soap11.exe;1
 
 echo_non_blocking_exe:
 	@if not exist int.msvc\echo\echo_non_blocking mkdir int.msvc\echo\echo_non_blocking
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\echo\echo_non_blocking.cpp /Foint.msvc\echo\echo_non_blocking\ /c
 	$(LD) $(LDFLAGS) int.msvc\echo\echo_non_blocking\*.obj $(LIBS) /OUT:$(WSFCPP_SAMPLES_DIR)\echo_non_blocking.exe
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	 if exist $(WSFCPP_SAMPLES_DIR)\echo_non_blocking.exe.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_DIR)\echo_non_blocking.exe.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\echo_non_blocking.exe;1
 
 echo_non_blocking_dual_exe:
 	@if not exist int.msvc\echo\echo_non_blocking_dual mkdir int.msvc\echo\echo_non_blocking_dual
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\echo\echo_non_blocking_dual.cpp /Foint.msvc\echo\echo_non_blocking_dual\ /c
 	$(LD) $(LDFLAGS) int.msvc\echo\echo_non_blocking_dual\*.obj $(LIBS) /OUT:$(WSFCPP_SAMPLES_DIR)\echo_non_blocking_dual.exe
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	 if exist $(WSFCPP_SAMPLES_DIR)\echo_non_blocking_dual.exe.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_DIR)\echo_non_blocking_dual.exe.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\echo_non_blocking_dual.exe;1
 
 echo_rest_exe:
 	@if not exist int.msvc\echo\echo_rest mkdir int.msvc\echo\echo_rest
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\echo\echo_rest.cpp /Foint.msvc\echo\echo_rest\ /c
 	$(LD) $(LDFLAGS) int.msvc\echo\echo_rest\*.obj $(LIBS) /OUT:$(WSFCPP_SAMPLES_DIR)\echo_rest.exe
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	 if exist $(WSFCPP_SAMPLES_DIR)\echo_rest.exe.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_DIR)\echo_rest.exe.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\echo_rest.exe;1
 
 echo_security_exe:
 	@if not exist int.msvc\echo\echo_security mkdir int.msvc\echo\echo_security
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\echo\echo_security.cpp /Foint.msvc\echo\echo_security\ /c
 	$(LD) $(LDFLAGS) int.msvc\echo\echo_security\*.obj $(LIBS) /OUT:$(WSFCPP_SAMPLES_DIR)\sec_echo.exe
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	 if exist $(WSFCPP_SAMPLES_DIR)\sec_echo.exe.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_DIR)\sec_echo.exe.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\sec_echo.exe;1
 	
 
 echo_samples: echo_dir echo_exe echo_blocking_exe echo_blocking_addr_exe echo_blocking_dual_exe echo_blocking_soap11_exe echo_non_blocking_exe echo_non_blocking_dual_exe echo_rest_exe echo_security_exe
@@ -124,37 +123,37 @@ flickr_exe:
 	if not exist int.msvc\flickr mkdir int.msvc\flickr
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\flickr\flickr.cpp /Foint.msvc\flickr\ /c
 	$(LD) $(LDFLAGS) int.msvc\flickr\*.obj $(LIBS) /OUT:$(WSFCPP_SAMPLES_DIR)\flickr.exe
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	 if exist $(WSFCPP_SAMPLES_DIR)\flickr.exe.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_DIR)\flickr.exe.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\flickr.exe;1
 
 google_exe:
 	@if not exist int.msvc\google mkdir int.msvc\google
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\google\google.cpp /Foint.msvc\google\ /c
 	$(LD) $(LDFLAGS) int.msvc\google\*.obj $(LIBS) /OUT:$(WSFCPP_SAMPLES_DIR)\google.exe
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	 if exist $(WSFCPP_SAMPLES_DIR)\google.exe.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_DIR)\google.exe.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\google.exe;1
 
 math_exe:
 	@if not exist int.msvc\math mkdir int.msvc\math
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\math\math.cpp /Foint.msvc\math\ /c
 	$(LD) $(LDFLAGS) int.msvc\math\*.obj $(LIBS) /OUT:$(WSFCPP_SAMPLES_DIR)\math.exe
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	 if exist $(WSFCPP_SAMPLES_DIR)\math.exe.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_DIR)\math.exe.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\math.exe;1
 
 notify_exe:
 	@if not exist int.msvc\notify mkdir int.msvc\notify
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\notify\notify.cpp /Foint.msvc\notify\ /c
 	$(LD) $(LDFLAGS) int.msvc\notify\*.obj $(LIBS) /OUT:$(WSFCPP_SAMPLES_DIR)\notify.exe
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	 if exist $(WSFCPP_SAMPLES_DIR)\notify.exe.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_DIR)\notify.exe.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\notify.exe;1
 
 yahoo_exe:
 	@if not exist int.msvc\yahoo mkdir int.msvc\yahoo
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\yahoo\yahoo.cpp /Foint.msvc\yahoo\ /c
 	$(LD) $(LDFLAGS) int.msvc\yahoo\*.obj $(LIBS) /OUT:$(WSFCPP_SAMPLES_DIR)\yahoo.exe
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	 if exist $(WSFCPP_SAMPLES_DIR)\yahoo.exe.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_DIR)\yahoo.exe.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\yahoo.exe;1
 
 mtom_exe:
 	@if not exist int.msvc\mtom mkdir int.msvc\mtom
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CLIENT_SAMPLES_HOME_DIR)\mtom\mtom.cpp /Foint.msvc\mtom\ /c
 	$(LD) $(LDFLAGS) int.msvc\mtom\*.obj $(LIBS) /OUT:$(WSFCPP_SAMPLES_DIR)\mtom.exe
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	 if exist $(WSFCPP_SAMPLES_DIR)\mtom.exe.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_DIR)\mtom.exe.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\mtom.exe;1
 	@xcopy /E /I /Q /Y $(CLIENT_SAMPLES_HOME_DIR)\mtom\resources $(WSFCPP_SAMPLES_DIR)\resources
 	@if exist $(WSFCPP_SAMPLES_DIR)\mtom\resources\*.am del $(WSFCPP_SAMPLES_DIR)\resources\*.am
 
@@ -163,7 +162,7 @@ echo_service:
 	@if not exist $(WSFCPP_HOME_DIR)\services\echo mkdir $(WSFCPP_HOME_DIR)\services\echo
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SERVICES_SAMPLES_HOME_DIR)\echo\Echo.cpp /Foint.msvc\services\echo\ /c
 	$(LD) $(LDFLAGS) int.msvc\services\echo\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_HOME_DIR)\services\echo\echo.dll
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	 if exist $(WSFCPP_HOME_DIR)\services\echo\echo.dll.manifest $(MT) -nologo -manifest $(WSFCPP_HOME_DIR)\services\echo\echo.dll.manifest -outputresource:$(WSFCPP_HOME_DIR)\services\echo\echo.dll;2
 	@copy  /Y $(SERVICES_SAMPLES_HOME_DIR)\echo\services.xml $(WSFCPP_HOME_DIR)\services\echo\services.xml
 
 mtom_service:
@@ -171,7 +170,7 @@ mtom_service:
 	@if not exist $(WSFCPP_HOME_DIR)\services\mtom mkdir $(WSFCPP_HOME_DIR)\services\mtom
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SERVICES_SAMPLES_HOME_DIR)\mtom\*.cpp /Foint.msvc\services\mtom\ /c
 	$(LD) $(LDFLAGS) int.msvc\services\mtom\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_HOME_DIR)\services\mtom\mtom.dll
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	 if exist $(WSFCPP_HOME_DIR)\services\mtom\mtom.dll.manifest $(MT) -nologo -manifest $(WSFCPP_HOME_DIR)\services\mtom\mtom.dll.manifest -outputresource:$(WSFCPP_HOME_DIR)\services\mtom\mtom.dll;2
 	@copy  /Y $(SERVICES_SAMPLES_HOME_DIR)\mtom\services.xml $(WSFCPP_HOME_DIR)\services\mtom\services.xml
 
 
@@ -180,7 +179,7 @@ version_service:
 	@if not exist $(WSFCPP_HOME_DIR)\services\version mkdir $(WSFCPP_HOME_DIR)\services\version
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SERVICES_SAMPLES_HOME_DIR)\version\*.cpp /Foint.msvc\services\version\ /c
 	$(LD) $(LDFLAGS) int.msvc\services\version\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_HOME_DIR)\services\version\version.dll
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	 if exist $(WSFCPP_HOME_DIR)\services\version\version.dll.manifest $(MT) -nologo -manifest $(WSFCPP_HOME_DIR)\services\version\version.dll.manifest -outputresource:$(WSFCPP_HOME_DIR)\services\version\version.dll;2
 	@copy  /Y $(SERVICES_SAMPLES_HOME_DIR)\version\services.xml $(WSFCPP_HOME_DIR)\services\version\services.xml
 
 
@@ -189,7 +188,7 @@ notify_service:
 	@if not exist $(WSFCPP_HOME_DIR)\services\notify mkdir $(WSFCPP_HOME_DIR)\services\notify
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SERVICES_SAMPLES_HOME_DIR)\notify\*.cpp /Foint.msvc\services\notify\ /c
 	$(LD) $(LDFLAGS) int.msvc\services\notify\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_HOME_DIR)\services\notify\notify.dll
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	if exist $(WSFCPP_HOME_DIR)\services\notify\notify.dll.manifest $(MT) -nologo -manifest $(WSFCPP_HOME_DIR)\services\notify\notify.dll.manifest -outputresource:$(WSFCPP_HOME_DIR)\services\notify\notify.dll;2
 	@copy  /Y $(SERVICES_SAMPLES_HOME_DIR)\notify\services.xml $(WSFCPP_HOME_DIR)\services\notify\services.xml
 
 
@@ -198,7 +197,7 @@ math_service:
 	@if not exist $(WSFCPP_HOME_DIR)\services\math mkdir $(WSFCPP_HOME_DIR)\services\math
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(SERVICES_SAMPLES_HOME_DIR)\math\*.cpp /Foint.msvc\services\math\ /c
 	$(LD) $(LDFLAGS) int.msvc\services\math\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_HOME_DIR)\services\math\math.dll
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	if exist $(WSFCPP_HOME_DIR)\services\math\math.dll.manifest $(MT) -nologo -manifest $(WSFCPP_HOME_DIR)\services\math\math.dll.manifest -outputresource:$(WSFCPP_HOME_DIR)\services\math\math.dll;2
 	@copy  /Y $(SERVICES_SAMPLES_HOME_DIR)\math\services.xml $(WSFCPP_HOME_DIR)\services\math\services.xml
 
 
@@ -210,30 +209,30 @@ password_callback:
 	@if not exist $(WSFCPP_SAMPLES_LIB_DIR) mkdir $(WSFCPP_SAMPLES_LIB_DIR)
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CALLBACK_SAMPLES_HOME_DIR)\password_callback\*.cpp /Foint.msvc\callbacks\password_callback\ /c
 	$(LD) $(LDFLAGS) int.msvc\callbacks\password_callback\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_SAMPLES_LIB_DIR)\pwcb.dll
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	if exist $(WSFCPP_SAMPLES_LIB_DIR)\pwcb.dll.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_LIB_DIR)\pwcb.dll.manifest -outputresource:$(WSFCPP_SAMPLES_LIB_DIR)\pwcb.dll;2
 
 authentication_provider:
 	@if not exist int.msvc\callbacks\authentication_provider mkdir int.msvc\callbacks\authentication_provider
 	@if not exist $(WSFCPP_SAMPLES_LIB_DIR) mkdir $(WSFCPP_SAMPLES_LIB_DIR)
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CALLBACK_SAMPLES_HOME_DIR)\authentication_provider\*.cpp /Foint.msvc\callbacks\authentication_provider\ /c
 	$(LD) $(LDFLAGS) int.msvc\callbacks\authentication_provider\*.obj $(LIBS)  /DLL /OUT:$(WSFCPP_SAMPLES_LIB_DIR)\authn_provider.dll
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	if exist $(WSFCPP_SAMPLES_LIB_DIR)\pwcb.dll.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_LIB_DIR)\pwcb.dll.manifest -outputresource:$(WSFCPP_SAMPLES_LIB_DIR)\pwcb.dll;2
 
 replay_detector:
 	@if not exist int.msvc\callbacks\replay_detector mkdir int.msvc\callbacks\replay_detector
 	@if not exist $(WSFCPP_SAMPLES_LIB_DIR) mkdir $(WSFCPP_SAMPLES_LIB_DIR)
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CALLBACK_SAMPLES_HOME_DIR)\replay_detector\*.cpp /Foint.msvc\callbacks\replay_detector\ /c
 	$(LD) $(LDFLAGS) int.msvc\callbacks\replay_detector\*.obj $(LIBS)  /DLL /OUT:$(WSFCPP_SAMPLES_LIB_DIR)\rdflatfile.dll
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	if exist $(WSFCPP_SAMPLES_LIB_DIR)\rdflatfile.dll.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_LIB_DIR)\rdflatfile.dll.manifest -outputresource:$(WSFCPP_SAMPLES_LIB_DIR)\rdflatfile.dll;2
 
 sct_provider:
 	@if not exist int.msvc\callbacks\sct_provider mkdir int.msvc\callbacks\sct_provider
 	@if not exist $(WSFCPP_SAMPLES_LIB_DIR) mkdir $(WSFCPP_SAMPLES_LIB_DIR)
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) $(CALLBACK_SAMPLES_HOME_DIR)\sct_provider\*.cpp /Foint.msvc\callbacks\sct_provider\ /c
 	$(LD) $(LDFLAGS) int.msvc\callbacks\sct_provider\sct_provider_hashdb.obj $(LIBS) /DLL /OUT:$(WSFCPP_SAMPLES_LIB_DIR)\sctprovider_hashdb.dll
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	if exist $(WSFCPP_SAMPLES_LIB_DIR)\sctprovider_hashdb.dll.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_LIB_DIR)\sctprovider_hashdb.dll.manifest -outputresource:$(WSFCPP_SAMPLES_LIB_DIR)\sctprovider_hashdb.dll;2
 	$(LD) $(LDFLAGS) int.msvc\callbacks\sct_provider\sct_provider.obj $(LIBS) /DLL /OUT:$(WSFCPP_SAMPLES_LIB_DIR)\sctprovider.dll
-	-@$(_VC_MANIFEST_EMBED_EXE)
+	if exist $(WSFCPP_SAMPLES_LIB_DIR)\sctprovider.dll.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_LIB_DIR)\sctprovider.dll.manifest -outputresource:$(WSFCPP_SAMPLES_LIB_DIR)\sctprovider.dll;2
 
 copy_scripts:
 	@xcopy /I /Y /E secscripts $(WSFCPP_SAMPLES_DIR)\security
