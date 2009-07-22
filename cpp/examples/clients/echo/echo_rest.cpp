@@ -31,12 +31,14 @@ int main()
 
     ServiceClient sc("http://localhost:9090/axis2/services/echo/echoString");
     Options * op = sc.getOptions();
-    op->setHTTPMethod(AXIS2_HTTP_GET);
-    
+    op->setHTTPMethod(AXIS2_HTTP_POST);
+    op->setEnableREST(true);    
+
     OMNamespace * ns = new OMNamespace("http://ws.apache.org/axis2/services/echo", "ns1");
     OMElement * payload = new OMElement(NULL,"echoString", ns);
     OMElement * child = new OMElement(payload,"text", NULL);
     child->setText("Hello World!");
+    
     cout << endl << "Request: " << payload << endl;
     
     
