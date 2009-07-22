@@ -104,6 +104,20 @@ AC_ARG_ENABLE(libxml2, [  --enable-libxml2      build Libxml2 XML parser library
 AC_ARG_ENABLE(sandesha, [  --enable-sandesha    build sandesha. default=yes])
 AC_ARG_ENABLE(openssl, [  --enable-openssl      enable OpenSSL support in client transport (default=no)])
 AC_ARG_ENABLE(wsclient, [  --enable-wsclient    build wsclient. default=yes])
+AC_ARG_ENABLE(wsclient, [  --enable-wsclient    build wsclient. default=yes])
+AC_ARG_WITH(apr, [  --with-apr[=PATH]      Find the APR header files in 'PATH'. 
+	Some Apache2 distributions, specially development versions, 
+	install APR (Apache Portable Run-time) include files in a separate location. 
+	In that case, to build Apache2 httpd module, this option is also required. 
+	'PATH' should point to APR include files location. If you omit the '=PATH' part completely, 
+	the configure script will search '/usr/include/apr-0' for APR headers.])
+
+AC_ARG_WITH(apache2,
+[  --with-apache2[=PATH]      Find the Apache2 HTTP Web server header files in 'PATH'.
+    If this option is given, the Apache2 httpd module would be built.
+    'PATH' should point to Apache2 httpd include files location.
+    If you omit the '=PATH' part completely, the configure script will search
+    '/usr/include/apache2' for Apache2 headers.])
 
 AC_MSG_CHECKING(path to use Axis2C . This is a compulsory to build Sandesha2C)
 AC_ARG_WITH(axis2,
