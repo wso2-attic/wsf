@@ -336,20 +336,23 @@ int axis2_xmpp_worker_on_start_node(
     axis2_xmpp_session_data_t *session,
     iks* node)
 {
-    if ( session->use_tls && (!iks_is_secure(session->parser)) )
+    AXIS2_LOG_DEBUG(session->env->log, AXIS2_LOG_SI,
+                                "[xmpp]axis2_xmpp_worker_on_start_node");
+    if(session->use_tls && (!iks_is_secure(session->parser)))
     {
-        iks_start_tls(session->parser);
-        return IKS_OK;
+        int return_val = IKS_OK;
+        return_val = iks_start_tls(session->parser);
+        return return_val;
     }
 
-    if (!session->use_sasl) /* basic authentication */
+    if(!session->use_sasl) /* basic authentication */
     {
         iks *x;
         session->session_id = iks_find_attrib(node, "id");
-        x = iks_make_auth (session->jid, session->password, session->session_id);
-        iks_insert_attrib (x, "id", "auth");
-        iks_send (session->parser, x);
-        iks_delete (x);  
+        x = iks_make_auth(session->jid, session->password, session->session_id);
+        iks_insert_attrib(x, "id", "auth");
+        iks_send(session->parser, x);
+        iks_delete(x);
     }
     return IKS_OK;
 }
@@ -369,6 +372,11 @@ int axis2_xmpp_worker_on_normal_node(
         {
             if (session->use_tls && !iks_is_secure (session->parser))
             {
+                if(!session->authorized)
+                {
+                    /* We might be in the process of establishing TLS. So should return OK */
+                    return IKS_OK;
+                }
                 return IKS_HOOK;
             }
 
