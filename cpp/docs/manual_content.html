@@ -976,12 +976,12 @@ followed.</p>
 <li>Write the module.xml file</li>
 <li>Package the module libraries and the module.xml into a
 folder which has the same name as the module</li>
-<li>Deploy the folder in AXIS2C_INSTALL_DIR/modules</li>
+<li>Deploy the folder in &lt;WSFCPP_INSTALL_DIR&gt;/modules </li>
 <li>Add the module specific phases in the axis2.xml file</li>
 </ol>
 <p>The following is an example of engaging a sample module called
 the logging
-module with Axis2/C:</p>
+module with Axis2/C.</p>
 <div class="subsection"><a name="7_1_Writing_the_module_xml_File"></a>
 <h3>7.1 Writing the module.xml File</h3>
 <p>In the module.xml file, the handlers of the module and the
@@ -1006,8 +1006,7 @@ both the out flow and the fault out flow.</p>
 <h3>7.2 Packaging and Deploying the Module</h3>
 <p>The above module.xml file should be copied to a folder named
 "logging"
-(because the module name is "logging") inside the
-AXIS2C_INSTALL_DIR/modules
+(because the module name is "logging") inside the &lt;WSFCPP_INSTALL_DIR&gt;/modules
 folder. The module libraries containing the handler implementation
 should
 also be copied to the same folder. According to the module.xml file
@@ -1211,12 +1210,12 @@ mod_axis2, you need to provide the following configuration options on
 the
 Linux platform:</p>
 <div class="source">
-<pre>./configure --with-apache2=[path to Apache2 include directory] [other configure options]
+<pre>
+./configure --with-apache2=[path to Apache2 include directory] [other configure options]
 <font color="#666666">NOTE: Some Apache2distributions, specially development versions, install APR (Apache Portable Run-time) include files in a separate location. In that case, to build mod_axis2, use:
 </font>
 ./configure --with-apache2=[path to Apache2 include directory] --with-apr=[path to APR include directory]<br /> [other configure options]<br />
-<span style="font-size: 12pt; font-family: Times New Roman">When building WSF/CPP, you
-    will already have installed mod_axis2.so file to your install directory.</span><br /></pre>
+<span style="font-size: 12pt; font-family: Times New Roman">When building WSF/CPP, you will already have installed mod_axis2.so file to your install directory.</span><br /></pre>
 </div>
 </div>
 <div class="subsection"><a name="10_2_MS_Windows_Platform"></a>
@@ -1334,7 +1333,7 @@ already running) and test whether the mod_axis2 module is loaded
 correctly by
 accessing the URL: <a href="http://localhost/axis2/services" class="externalLink" title="External Link">http://localhost/axis2/services</a>.<br />
 </p>
-<p>This should show the list of services deployed with Axis2/C.
+<p>This should show the list of services deployed with WSF/CPP.
 Then you
 should be able to run clients against this endpoint. Example:</p>
 <div class="source">
@@ -1365,20 +1364,22 @@ file is usually placed in the APACHE_INSTALL_DIR/logs folder.</li>
 <p>
         When you have nmake axis2_iis_module</p>
 <p>In this document I assume that the mod_axis2_IIS.dll
-is in the directory <code>c:\axis2c\lib</code> and
+is in the directory <code>
+            c:\wso2-wsf-cpp-bin-x.y.z-win32\lib</code> and
 WSFCPP_HOME
-is <code>c:\axis2c</code></p>
+is <code>c:\wso2-wsf-cpp-bin-x.y.z-win32</code></p>
 <p>Add the following key to the
 registery.</p>
 <p><code>HKEY_LOCAL_MACHINE\SOFTWARE\Apache Axis2c\IIS
 ISAPI
 Redirector</code></p>
-<p>Add a string value with the name <code>WSFCPP_HOME</code>
+<p>Add a string value with the name axis2c_home
 and a
-value of <code>c:\axis2c</code></p>
+value of <code>c:\wso2-wsf-cpp-bin-x.y.z-win32</code></p>
 <p>Add a string value with the name <code>log_file</code>
 and a value
-of <code>c:\axis2c\logs\axis2.log</code></p>
+of <code>
+            c:\wso2-wsf-cpp-bin-x.y.z-win32\logs\axis2.log</code></p>
 <p>Add a string value with the name <code>log_level</code>.
 The value
 can be either <code>trace</code>, <code>error</code>,
@@ -1396,11 +1397,10 @@ If you have /myserser as the value you can access your web services with a url l
 <p>
 
 </p><p>Now you can do all the registry editing using the JScript file
-axis2_iis_regedit.js provided with the distribution. When you build
-axis2/C with the IIS module the file is copied to the root directory of
+axis2_iis_regedit.js provided with the distribution. When you build WSF/CPP with the IIS module the file is copied to the root directory of
 the binary distribution. Just double click it and everything will be
 set to the defaults. The axis2c_home is taken as the current directory,
-so make sure you run the file in the Axis2/C repository location (or
+so make sure you run the file in the WSF/CPP repository location (or
 root of the binary distribution). If you want to change the values you
 can manually edit the the .js file or give it as command line arguments
 to the script when running the script. To run the jscript from the
@@ -1410,8 +1410,8 @@ Using the IIS management console, add a new virtual
 directory to your IIS/PWS web site. The name of the virtual directory
 must be <code>axis2</code>. Its
 physical path should be the directory in which you placed
-mod_axis2_IIS.dll (in our example it is
-c:\axis2c\lib). When creating this new virtual directory, <b>assign
+mod_axis2_IIS.dll (in our example it is <span style="font-family: Courier New">c:\wso2-wsf-cpp-bin-x.y.z-win32</span>\lib).
+        When creating this new virtual directory, <b>assign
 execute access to it</b>.
 <p>By using the IIS management console, add
 mod_axis2_IIS.dll as a filter in your IIS/PWS web site and restart the
@@ -1427,7 +1427,7 @@ mod_axis2_IIS.dll</li>
 </ul>
 <p>Please don't add the mod_axis2_IIS.dll as a filter to IIS as
 in the IIS 5.1 case.</p>
-<p>Note: If the Axis2/C failed to load, verify that Axis2/C and
+<p>Note: If the WSF/CPP failed to load, verify that Axis2/C and
 its dependent DLLs are in the System Path (not the user path). </p>
 </div>
 <div class="section"><a name="12__Using_Proxy_Support"></a>
@@ -1442,8 +1442,7 @@ settings:</p>
 <div class="subsection"><a name="12_1_Specifying_Proxy_Settings_in_axis2_xml"></a>
 <h3>12.1 Specifying Proxy Settings in axis2.xml</h3>
 <div class="source">
-<pre>
-&lt;transportSender name="http" class="axis2_http_sender"&gt;<br /> &lt;parameter name="PROTOCOL" locked="false"&gt;HTTP/1.1&lt;/parameter&gt;<br /> &lt;parameter name="PROXY" proxy_host="127.0.0.1" proxy_port="8080" locked="true"/&gt;<br />&lt;/transportSender&gt;<br /></pre>
+<pre>&lt;transportSender name="http" class="axis2_http_sender"&gt;<br /> &lt;parameter name="PROTOCOL" locked="false"&gt;HTTP/1.1&lt;/parameter&gt;<br /> &lt;parameter name="PROXY" proxy_host="127.0.0.1" proxy_port="8080" locked="true"/&gt;<br />&lt;/transportSender&gt;<br /></pre>
 </div>
 </div>
 <div class="subsection"><a name="12_2_Providing_Proxy_Settings_Using_Service_Client_API"></a>
