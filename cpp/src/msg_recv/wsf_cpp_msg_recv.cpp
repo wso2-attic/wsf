@@ -156,7 +156,6 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
 	axiom_node_t *fault_node = NULL;
 	axiom_soap_fault_detail_t *fault_detail;
 	axis2_bool_t is_fault = AXIS2_FALSE;
-	Environment *p = NULL;
 
 	AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
 	AXIS2_PARAM_CHECK(env->error, new_msg_ctx, AXIS2_FAILURE);
@@ -324,14 +323,14 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
 
 	if (axis2_msg_ctx_get_soap_envelope(new_msg_ctx, env))
 	{
-		p->removeEnv();
+		Environment::removeEnv();
 		return AXIS2_SUCCESS;
 	}
 
 	env_ns = axiom_namespace_create(env, soap_ns, "soapenv");
 	if (!env_ns)
 	{
-		p->removeEnv();
+		Environment::removeEnv();
 		return AXIS2_FAILURE;
 	}
 
@@ -339,28 +338,28 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
 
 	if (!default_envelope)
 	{
-		p->removeEnv();
+		Environment::removeEnv();
 		return AXIS2_FAILURE;
 	}
 
 	out_header = axiom_soap_header_create_with_parent(env, default_envelope);
 	if (!out_header)
 	{
-		p->removeEnv();
+		Environment::removeEnv();
 		return AXIS2_FAILURE;
 	}
 
 	out_body = axiom_soap_body_create_with_parent(env, default_envelope);
 	if (!out_body)
 	{
-		p->removeEnv();
+		Environment::removeEnv();
 		return AXIS2_FAILURE;
 	}
 
 	out_node = axiom_soap_body_get_base_node(out_body, env);
 	if (!out_node)
 	{
-		p->removeEnv();
+		Environment::removeEnv();
 		return AXIS2_FAILURE;
 	}
 
@@ -430,7 +429,7 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
 
 	AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
 		"[axis2]Exit:wsf_cpp_msg_recv_invoke_business_logic_sync");
-	p->removeEnv();
+	Environment::removeEnv();
 	return AXIS2_SUCCESS;
 }
 
