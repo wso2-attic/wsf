@@ -20,6 +20,7 @@ using namespace wso2wsf;
 RWLock::RWLock()
 {
 	_readers = 0;
+	init();
 }
 
 int RWLock::init()
