@@ -14,7 +14,9 @@ libwso2_wsf_la_SOURCES= AxisFault.cpp \
 			Parameter.cpp \
 			Environment.cpp \
 			NeethiPolicy.cpp \
-			MessageContext.cpp
+			MessageContext.cpp \
+			Stub.cpp 
+
 
 libwso2_wsf_la_LIBADD =	../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
                         ../../wsf_c/axis2c/util/src/libaxutil.la \
