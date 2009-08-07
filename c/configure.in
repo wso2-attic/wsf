@@ -2,7 +2,7 @@
 ### General Build Configuration Parameters
 
 # To build with debug symbols set DEBUG = 1
-DEBUG = 1
+DEBUG = 0
 #CRUNTIME Library ( Use /MD or /MT)
 CRUNTIME=/MD
 # embed manifest files or not
@@ -23,10 +23,10 @@ ICONV_BIN_DIR = E:\iconv-1.9.2.win32
 ZLIB_BIN_DIR = E:\zlib-1.2.3.win32
 
 # Path to OpenSSL installation
-OPENSSL_BIN_DIR = F:\src\external\Openssl 
+OPENSSL_BIN_DIR = E:\Openssl 
 
 # Path to Apache2 installation
-APACHE_BIN_DIR = "C:\Program Files (x86)\Apache Software Foundation\Apache2.2"
+APACHE_BIN_DIR = "C:\Program Files\Apache Software Foundation\Apache2.2"
 # Apache httpd version, to use apache 2.0.x famlity set APACHE_VERSION_IS_2_0_X = 1
 APACHE_VERSION_2_0_X = 0
 
@@ -36,7 +36,7 @@ ENABLE_LIBCURL = 0
 #LIBCURL_BIN_DIR = E:\libcurl-7.15.1-msvc-win32-ssl-0.9.8a-zlib-1.2.3
 
 # Enable/disable SSL client transport, to enable set ENABLE_SSL = 1
-ENABLE_SSL = 1
+ENABLE_SSL = 0
 # Path to OpenSSL installation, required if SSL transport is enabled
 
 # build axis2 with Libxml2 Parser. Axis2/C will be built with embeded guththila 
@@ -44,10 +44,10 @@ ENABLE_SSL = 1
 ENABLE_LIBXML2=0
 
 # Build TCP server in addition to HTTP server
-WITH_TCP = 0
+WITH_TCP = 1
 
 # Build UDP transport sender, receiver and server 
-WITH_UDP = 0
+WITH_UDP = 1
 
 # build with archive based deployment support
 WITH_ARCHIVE = 0
@@ -62,12 +62,12 @@ ENABLE_RAMPARTC = 1
 ### Apache Sandesha2/C Build Configuration Parameters
 
 # Whether Sandesha2/C is built or not
-ENABLE_SANDESHA2C = 0
+ENABLE_SANDESHA2C = 1
 
 #############################################################################
 ### Apache Savan/C Build Configuration Parameters
 
 # Whether Savan/C is built or not
-ENABLE_SAVANC = 0
+ENABLE_SAVANC = 1
 
 
