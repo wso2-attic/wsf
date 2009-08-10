@@ -163,6 +163,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
                                                          codeGenConfiguration.getSourceLocation()),
                                       codeGenConfiguration.getOutputLanguage());
 
+
         writeFile(interfaceImplModel, writerHStub);
 
 
@@ -328,7 +329,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
         addAttribute(doc, "qname", serviceName + "|" + serviceTns, rootElement);
         addAttribute(doc, "servicename", serviceCName, rootElement);
         addAttribute(doc, "cppNamespace", CUtils.makeCPPNamespace(codeGenConfiguration.getPackageName()), rootElement);
-
+        addAttribute(doc, "isServer",codeGenConfiguration.isServerSide()? "1" : "0", rootElement);
         addAttribute(doc, "namespace", serviceTns, rootElement);
         addAttribute(doc, "interfaceName", serviceCName, rootElement);
         String callbackName ="";

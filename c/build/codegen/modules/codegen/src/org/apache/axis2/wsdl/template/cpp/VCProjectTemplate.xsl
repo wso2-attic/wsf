@@ -22,6 +22,7 @@
     <xsl:template match="/class">
     <xsl:variable name="callbackName"><xsl:value-of select="@callbackName"/></xsl:variable>
     <xsl:variable name="isSync"><xsl:value-of select="@isSync"/></xsl:variable>
+    <xsl:variable name="isServer"><xsl:value-of select="@isServer"/></xsl:variable>
     <xsl:variable name="isAsync"><xsl:value-of select="@isAsync"/></xsl:variable>
     <xsl:variable name="soapVersion"><xsl:value-of select="@soap-version"/></xsl:variable>
     <xsl:variable name="method-prefix"><xsl:value-of select="@prefix"/></xsl:variable>
@@ -128,6 +129,16 @@
   <Files>
     <Filter Name="Source Files"
 	    Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx">
+        <xsl:if test="$isServer='0'">
+             <File>
+                <xsl:attribute name="RelativePath">.\<xsl:value-of select="@name"/>.cpp</xsl:attribute>
+             </File>
+        </xsl:if>
+        <xsl:if test="$isServer='1'">
+             <File>
+                <xsl:attribute name="RelativePath">.\<xsl:value-of select="@servicename"/>.cpp</xsl:attribute>
+             </File>
+        </xsl:if>
         <xsl:for-each select="method">
             <xsl:for-each select="input/param[@type!='' and @ours ]">
             <xsl:variable name="inputtype" select="substring-after(@type,'::')"/>
@@ -135,10 +146,35 @@
                      <xsl:attribute name="RelativePath">.\<xsl:value-of select='$inputtype'/>.cpp</xsl:attribute>
                 </File>
            </xsl:for-each>
+            <xsl:for-each select="output/param[@type!='' and @ours]">
+             <xsl:variable name="outputtype1" select="substring-after(@type,'::')"/>
+                    <File>
+                     <xsl:attribute name="RelativePath">.\<xsl:value-of select="$outputtype1"/>.cpp</xsl:attribute>
+                </File>
+           </xsl:for-each>
+             <xsl:for-each select="fault/param[@type!='']">
+                <xsl:variable name="faulttype" select="substring-after(@type,'::')"/>
+                    <File>
+                     <xsl:attribute name="RelativePath">.\<xsl:value-of select="$faulttype"/>.cpp</xsl:attribute>
+                    </File>
+            </xsl:for-each>
         </xsl:for-each>
     </Filter>
     <Filter Name="Header Files"
 	    Filter="h;hpp;hxx;hm;inl;inc;xsd">
+        <xsl:if test="$isServer='0'">
+             <File>
+                <xsl:attribute name="RelativePath">.\<xsl:value-of select="@name"/>.h</xsl:attribute>
+             </File>
+            <File>
+                <xsl:attribute name="RelativePath">.\<xsl:value-of select="@callbackName"/>.h</xsl:attribute>
+             </File>
+        </xsl:if>
+        <xsl:if test="$isServer='1'">
+             <File>
+                <xsl:attribute name="RelativePath">.\<xsl:value-of select="@servicename"/>.h</xsl:attribute>
+             </File>
+        </xsl:if>
         <xsl:for-each select="method">
             <xsl:for-each select="input/param[@type!='' and @ours ]">
             <xsl:variable name="inputtype" select="substring-after(@type,'::')"/>
@@ -146,6 +182,18 @@
                      <xsl:attribute name="RelativePath">.\<xsl:value-of select='$inputtype'/>.h</xsl:attribute>
                 </File>
            </xsl:for-each>
+            <xsl:for-each select="output/param[@type!='' and @ours]">
+             <xsl:variable name="outputtype1" select="substring-after(@type,'::')"/>
+                    <File>
+                     <xsl:attribute name="RelativePath">.\<xsl:value-of select="$outputtype1"/>.h</xsl:attribute>
+                    </File>
+            </xsl:for-each>
+            <xsl:for-each select="fault/param[@type!='']">
+                <xsl:variable name="faulttype" select="substring-after(@type,'::')"/>
+                    <File>
+                     <xsl:attribute name="RelativePath">.\<xsl:value-of select="$faulttype"/>.h</xsl:attribute>
+                    </File>
+            </xsl:for-each>
         </xsl:for-each>
     </Filter>
 
