@@ -29,13 +29,21 @@
     <xsl:variable name="qname"><xsl:value-of select="@qname"/></xsl:variable>
     <xsl:variable name="servicename"><xsl:value-of select="@servicename"/></xsl:variable>
     <xsl:variable name="caps_name"><xsl:value-of select="@caps-name"/></xsl:variable>
+
  <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="client"
-	RootNamespace="client"
 	Keyword="Win32Proj"
 	>
+<xsl:if test="$isServer='0'">
+    <xsl:attribute name="Name">client</xsl:attribute>
+    <xsl:attribute name="RootNamespace">client</xsl:attribute>
+</xsl:if>
+<xsl:if test="$isServer='1'">
+    <xsl:attribute name="Name">service</xsl:attribute>
+    <xsl:attribute name="RootNamespace">service</xsl:attribute>
+</xsl:if>
+
   <Platforms>
     <Platform Name="Win32"/>
   </Platforms>
@@ -56,7 +64,7 @@
       <Tool Name="VCCLCompilerTool"
 		Optimization="0"
 		AdditionalIncludeDirectories="."
-		PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;AXIS2_DECLARE_EXPORT"
+		PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;AXIS2_DECLARE_EXPORT"
 		MinimalRebuild="true"
 		BasicRuntimeChecks="3"
 		RuntimeLibrary="3"
@@ -71,7 +79,8 @@
       <Tool Name="VCLinkerTool"
 	AdditionalDependencies="wso2_wsf.lib axiom.lib axis2_engine.lib axutil.lib"
 	LinkIncremental="2"
-	GenerateDebugInformation="true"
+    AdditionalLibraryDirectories="$(WSFCPP_HOME)\lib"
+    GenerateDebugInformation="true"
 	SubSystem="1"
 	TargetMachine="1"/>
       <Tool Name="VCALinkTool"/>
@@ -97,7 +106,7 @@
       <Tool Name="VCMIDLTool"/>
       <Tool
 	Name="VCCLCompilerTool"
-	PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+	PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;AXIS2_DECLARE_EXPORT"
 	RuntimeLibrary="2"
 	UsePrecompiledHeader="0"
 	WarningLevel="3"
@@ -110,7 +119,8 @@
 	Name="VCLinkerTool"
 	LinkIncremental="1"
 	GenerateDebugInformation="true"
-	SubSystem="1"
+    AdditionalLibraryDirectories="$(WSFCPP_HOME)\lib"              
+    SubSystem="1"
 	OptimizeReferences="2"
 	EnableCOMDATFolding="2"
 	TargetMachine="1"/>
