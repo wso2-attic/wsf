@@ -101,6 +101,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
             // write interface implementations
             writeCPPStub();
             writeCallback();
+            writeVCProjectFile();
         } catch (Exception e) {
             //log the error here
             e.printStackTrace();
@@ -125,6 +126,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
             emitBuildScript();
 
             writeServiceXml();
+            writeVCProjectFile();
 
         }
         catch (Exception e) {
@@ -237,6 +239,17 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
 
             writeFile(buildXMLModel, buildXmlWriter);
         }
+    }
+
+    protected void writeVCProjectFile() throws Exception{
+        Document vcprojectXMLModel =  createDOMDocumentForInterfaceImplementation();
+
+        CPPVCProjectWriter vcProjectWriter = new CPPVCProjectWriter(
+                getOutputDirectory(this.codeGenConfiguration.getOutputLocation(),
+                                this.codeGenConfiguration.getSourceLocation()),
+                this.codeGenConfiguration.getOutputLanguage());
+
+        writeFile(vcprojectXMLModel, vcProjectWriter);
     }
 
     protected void writeServiceXml() throws Exception {
