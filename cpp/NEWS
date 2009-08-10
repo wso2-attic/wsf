@@ -3,7 +3,7 @@ WSO2 Web Services Framework for C++ (WSO2 WSF/C++) 2.0.0 Released
 
 WSO2 WSF/C++ team is pleased to announce the release of WSO2 WSF/C++ 2.0.0.
 
-You can download this release from: http://dist.wso2.org/products/wsf/cpp/2.0.0
+You can download this release from: http://wso2.org/downloads/wsf/cpp
 
 WSO2 Web Services Framework for C++ (WSO2 WSF/C++) is a standards compliant, enterprise
 grade, open source, C++ library for providing and consuming Web services in C++, based on the popular,
@@ -29,9 +29,9 @@ Key Features
 
       * Binary optimized
       * Non-optimized (Base64 binary)
+      * Attachment Caching Support
 
 3. WS-Addressing
-
       * Version 1.0
       * Submission
 
@@ -48,21 +48,31 @@ Key Features
       * WS-Secure Conversation   
 
 6. Codegeneration Tool
-      * By providing a wsdl and options, it is possible to generate client stubs and service skeletons
+      * By providing a wsdl and options, generate client stubs and service skeletons
         in C++ using the code generation tool. 
 
 7. SSL enabled transport layer
 
 8. WS-Reliable Messaging
 
+9. Has all the capabilities avilable from WSF/C library.
+
+--------------------------------
+Major Changes Since Last Release
+================================
+1. Service API which enable implementing services in C++.
+2. Code Generation tool for C++.
+3. Documentation Improved.
+4. WS-Security Additions.
+    * WS-Secure Conversation
+    * Replay Detection
+5. Many bug fixes.
 
 -------------------
 Known Issues
 -------------------
 
 Dual channel scenarios could cause crash issues.
-
-
 
 -------------------
 Reporting Problems
@@ -75,7 +85,7 @@ Contact Us
 ===========
 
 Please subscribe to our user or developer mailing lists. For details on how
-to subscribe please visit: http://wso2.org/projects/wsf/cpp#mail
+to subscribe please visit: http://wso2.org/mail
 
 We welcome your early feedback on this implementation.
 Thank you for your interest in WSO2 WSF/C++.
