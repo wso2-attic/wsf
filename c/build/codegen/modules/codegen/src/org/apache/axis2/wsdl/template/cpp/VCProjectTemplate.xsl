@@ -54,8 +54,13 @@
 	Name="Debug|Win32"
 	OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 	IntermediateDirectory="$(ConfigurationName)"
-	ConfigurationType="1"
 	CharacterSet="1">
+    <xsl:if test="$isServer='0'">
+        <xsl:attribute name="ConfigurationType">1</xsl:attribute>
+    </xsl:if>
+    <xsl:if test="$isServer='1'">
+        <xsl:attribute name="ConfigurationType">2</xsl:attribute>
+    </xsl:if>
       <Tool Name="VCPreBuildEventTool"/>
       <Tool Name="VCCustomBuildTool"/>
       <Tool Name="VCXMLDataGeneratorTool"/>
@@ -77,7 +82,7 @@
       <Tool Name="VCResourceCompilerTool" />
       <Tool Name="VCPreLinkEventTool" />
       <Tool Name="VCLinkerTool"
-	AdditionalDependencies="wso2_wsf.lib axiom.lib axis2_engine.lib axutil.lib"
+	AdditionalDependencies="wso2_wsf.lib wso2_wsf_security.lib axiom.lib axis2_engine.lib axutil.lib"
 	LinkIncremental="2"
     AdditionalLibraryDirectories="$(WSFCPP_HOME)\lib"
     GenerateDebugInformation="true"
@@ -96,9 +101,14 @@
 	Name="Release|Win32"
 	OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 	IntermediateDirectory="$(ConfigurationName)"
-	ConfigurationType="1"
 	CharacterSet="1"
 	WholeProgramOptimization="1">
+    <xsl:if test="$isServer='0'">
+        <xsl:attribute name="ConfigurationType">1</xsl:attribute>
+    </xsl:if>
+    <xsl:if test="$isServer='1'">
+        <xsl:attribute name="ConfigurationType">2</xsl:attribute>
+    </xsl:if>
       <Tool Name="VCPreBuildEventTool"/>
       <Tool Name="VCCustomBuildTool"/>
       <Tool Name="VCXMLDataGeneratorTool"/>
@@ -117,7 +127,8 @@
       <Tool Name="VCPreLinkEventTool"/>
       <Tool
 	Name="VCLinkerTool"
-	LinkIncremental="1"
+    AdditionalDependencies="wso2_wsf.lib wso2_wsf_security.lib axiom.lib axis2_engine.lib axutil.lib"
+    LinkIncremental="1"
 	GenerateDebugInformation="true"
     AdditionalLibraryDirectories="$(WSFCPP_HOME)\lib"              
     SubSystem="1"
@@ -147,6 +158,9 @@
         <xsl:if test="$isServer='1'">
              <File>
                 <xsl:attribute name="RelativePath">.\<xsl:value-of select="@servicename"/>.cpp</xsl:attribute>
+             </File>
+             <File>
+                <xsl:attribute name="RelativePath">.\<xsl:value-of select="@servicename"/>Skeleton.cpp</xsl:attribute>
              </File>
         </xsl:if>
         <xsl:for-each select="method">
@@ -183,6 +197,9 @@
         <xsl:if test="$isServer='1'">
              <File>
                 <xsl:attribute name="RelativePath">.\<xsl:value-of select="@servicename"/>.h</xsl:attribute>
+             </File>
+             <File>
+                <xsl:attribute name="RelativePath">.\<xsl:value-of select="@servicename"/>Skeleton.h</xsl:attribute>
              </File>
         </xsl:if>
         <xsl:for-each select="method">
