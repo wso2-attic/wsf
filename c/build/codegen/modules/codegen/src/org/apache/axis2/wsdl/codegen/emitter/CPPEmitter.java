@@ -243,14 +243,27 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
     }
 
     protected void writeVCProjectFile() throws Exception{
-        Document vcprojectXMLModel =  createDOMDocumentForInterfaceImplementation();
-
+        Document doc =  createDOMDocumentForInterfaceImplementation();
+        CodeGenConfiguration codegen = this.codeGenConfiguration;
+        Element rootElement = doc.getDocumentElement();
+        String outputLocation = codegen.getOutputLocation().getPath();
+        String  targetsourceLocation = codegen.getSourceLocation();
+       if(codegen.isSetoutputSourceLocation() && !outputLocation.equals(".") && !outputLocation.equals("")){
+             addAttribute(doc,"option","1",rootElement);
+             addAttribute(doc,"outputlocation",outputLocation,rootElement);
+             addAttribute(doc,"targetsourcelocation",targetsourceLocation,rootElement);
+         }
+        else
+         {
+            addAttribute(doc,"option","0",rootElement);
+         }
+        addAttribute(doc, "isServer",codeGenConfiguration.isServerSide()? "1" : "0", rootElement);
+        //System.out.println(DOM2Writer.nodeToString(doc));
         CPPVCProjectWriter vcProjectWriter = new CPPVCProjectWriter(
                 getOutputDirectory(this.codeGenConfiguration.getOutputLocation(),
                                 this.codeGenConfiguration.getSourceLocation()),
                 this.codeGenConfiguration.getOutputLanguage());
-
-        writeFile(vcprojectXMLModel, vcProjectWriter);
+        writeFile(doc, vcProjectWriter);
     }
 
     protected void writeServiceXml() throws Exception {
@@ -329,7 +342,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
         addAttribute(doc, "qname", serviceName + "|" + serviceTns, rootElement);
         addAttribute(doc, "servicename", serviceCName, rootElement);
         addAttribute(doc, "cppNamespace", CUtils.makeCPPNamespace(codeGenConfiguration.getPackageName()), rootElement);
-        addAttribute(doc, "isServer",codeGenConfiguration.isServerSide()? "1" : "0", rootElement);
+
         addAttribute(doc, "namespace", serviceTns, rootElement);
         addAttribute(doc, "interfaceName", serviceCName, rootElement);
         String callbackName ="";

@@ -21,6 +21,7 @@
     <xsl:output method="xml" indent="yes" omit-xml-declaration="no"/>
     <xsl:template match="/class">
     <xsl:variable name="callbackName"><xsl:value-of select="@callbackName"/></xsl:variable>
+    <xsl:variable name="option"><xsl:value-of select="@option"/></xsl:variable>
     <xsl:variable name="isSync"><xsl:value-of select="@isSync"/></xsl:variable>
     <xsl:variable name="isServer"><xsl:value-of select="@isServer"/></xsl:variable>
     <xsl:variable name="isAsync"><xsl:value-of select="@isAsync"/></xsl:variable>
@@ -68,7 +69,6 @@
       <Tool Name="VCMIDLTool" />
       <Tool Name="VCCLCompilerTool"
 		Optimization="0"
-		AdditionalIncludeDirectories="."
 		PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;AXIS2_DECLARE_EXPORT"
 		MinimalRebuild="true"
 		BasicRuntimeChecks="3"
@@ -77,7 +77,15 @@
 		WarningLevel="3"
 		Detect64BitPortabilityProblems="true"
 		DebugInformationFormat="4"
-		/>
+		>
+        <xsl:choose>
+            <xsl:when test="$option=1">
+                 <xsl:attribute name="AdditionalIncludeDirectories">.;.\src;$(WSFCPP_HOME)\include;$(WSFCPP_HOME)\platforms</xsl:attribute>
+            </xsl:when>
+            <xsl:otherwise>
+                 <xsl:attribute name="AdditionalIncludeDirectories">.;$(WSFCPP_HOME)\include;$(WSFCPP_HOME)\platforms</xsl:attribute>
+            </xsl:otherwise>
+        </xsl:choose></Tool>
       <Tool Name="VCManagedResourceCompilerTool"/>
       <Tool Name="VCResourceCompilerTool" />
       <Tool Name="VCPreLinkEventTool" />
@@ -121,7 +129,15 @@
 	UsePrecompiledHeader="0"
 	WarningLevel="3"
 	Detect64BitPortabilityProblems="true"
-	DebugInformationFormat="3"/>
+	DebugInformationFormat="3">
+    <xsl:choose>
+        <xsl:when test="$option=1">
+            <xsl:attribute name="AdditionalIncludeDirectories">.;.\src;$(WSFCPP_HOME)\include;$(WSFCPP_HOME)\platforms</xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+        <xsl:attribute name="AdditionalIncludeDirectories">.;$(WSFCPP_HOME)\include;$(WSFCPP_HOME)\platforms</xsl:attribute>
+        </xsl:otherwise>
+    </xsl:choose></Tool>
       <Tool Name="VCManagedResourceCompilerTool"/>
       <Tool Name="VCResourceCompilerTool"/>
       <Tool Name="VCPreLinkEventTool"/>
@@ -164,24 +180,48 @@
              </File>
         </xsl:if>
         <xsl:for-each select="method">
-            <xsl:for-each select="input/param[@type!='' and @ours ]">
-            <xsl:variable name="inputtype" select="substring-after(@type,'::')"/>
-                 <File>
-                     <xsl:attribute name="RelativePath">.\<xsl:value-of select='$inputtype'/>.cpp</xsl:attribute>
-                </File>
-           </xsl:for-each>
-            <xsl:for-each select="output/param[@type!='' and @ours]">
-             <xsl:variable name="outputtype1" select="substring-after(@type,'::')"/>
-                    <File>
-                     <xsl:attribute name="RelativePath">.\<xsl:value-of select="$outputtype1"/>.cpp</xsl:attribute>
-                </File>
-           </xsl:for-each>
-             <xsl:for-each select="fault/param[@type!='']">
-                <xsl:variable name="faulttype" select="substring-after(@type,'::')"/>
-                    <File>
-                     <xsl:attribute name="RelativePath">.\<xsl:value-of select="$faulttype"/>.cpp</xsl:attribute>
+            <xsl:choose>
+            <xsl:when test="$option=1">
+                <xsl:for-each select="input/param[@type!='' and @ours ]">
+                <xsl:variable name="inputtype" select="substring-after(@type,'::')"/>
+                     <File>
+                         <xsl:attribute name="RelativePath">.\src\<xsl:value-of select='$inputtype'/>.cpp</xsl:attribute>
                     </File>
-            </xsl:for-each>
+               </xsl:for-each>
+                <xsl:for-each select="output/param[@type!='' and @ours]">
+                 <xsl:variable name="outputtype1" select="substring-after(@type,'::')"/>
+                        <File>
+                         <xsl:attribute name="RelativePath">.\src\<xsl:value-of select="$outputtype1"/>.cpp</xsl:attribute>
+                    </File>
+               </xsl:for-each>
+                 <xsl:for-each select="fault/param[@type!='']">
+                    <xsl:variable name="faulttype" select="substring-after(@type,'::')"/>
+                        <File>
+                         <xsl:attribute name="RelativePath">.\src\<xsl:value-of select="$faulttype"/>.cpp</xsl:attribute>
+                        </File>
+                </xsl:for-each>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:for-each select="input/param[@type!='' and @ours ]">
+                <xsl:variable name="inputtype" select="substring-after(@type,'::')"/>
+                     <File>
+                         <xsl:attribute name="RelativePath">.\<xsl:value-of select='$inputtype'/>.cpp</xsl:attribute>
+                    </File>
+               </xsl:for-each>
+                <xsl:for-each select="output/param[@type!='' and @ours]">
+                 <xsl:variable name="outputtype1" select="substring-after(@type,'::')"/>
+                        <File>
+                         <xsl:attribute name="RelativePath">.\<xsl:value-of select="$outputtype1"/>.cpp</xsl:attribute>
+                    </File>
+               </xsl:for-each>
+                 <xsl:for-each select="fault/param[@type!='']">
+                    <xsl:variable name="faulttype" select="substring-after(@type,'::')"/>
+                        <File>
+                         <xsl:attribute name="RelativePath">.\<xsl:value-of select="$faulttype"/>.cpp</xsl:attribute>
+                        </File>
+                </xsl:for-each>
+            </xsl:otherwise>
+            </xsl:choose>
         </xsl:for-each>
     </Filter>
     <Filter Name="Header Files"
@@ -203,24 +243,48 @@
              </File>
         </xsl:if>
         <xsl:for-each select="method">
-            <xsl:for-each select="input/param[@type!='' and @ours ]">
-            <xsl:variable name="inputtype" select="substring-after(@type,'::')"/>
-                 <File>
-                     <xsl:attribute name="RelativePath">.\<xsl:value-of select='$inputtype'/>.h</xsl:attribute>
-                </File>
-           </xsl:for-each>
-            <xsl:for-each select="output/param[@type!='' and @ours]">
-             <xsl:variable name="outputtype1" select="substring-after(@type,'::')"/>
+            <xsl:choose>
+                <xsl:when test="$option=1">
+                <xsl:for-each select="input/param[@type!='' and @ours ]">
+                    <xsl:variable name="inputtype" select="substring-after(@type,'::')"/>
                     <File>
-                     <xsl:attribute name="RelativePath">.\<xsl:value-of select="$outputtype1"/>.h</xsl:attribute>
+                        <xsl:attribute name="RelativePath">.\src\<xsl:value-of select='$inputtype'/>.h</xsl:attribute>
                     </File>
-            </xsl:for-each>
-            <xsl:for-each select="fault/param[@type!='']">
-                <xsl:variable name="faulttype" select="substring-after(@type,'::')"/>
+                </xsl:for-each>
+                <xsl:for-each select="output/param[@type!='' and @ours]">
+                    <xsl:variable name="outputtype1" select="substring-after(@type,'::')"/>
                     <File>
-                     <xsl:attribute name="RelativePath">.\<xsl:value-of select="$faulttype"/>.h</xsl:attribute>
+                        <xsl:attribute name="RelativePath">.\src\<xsl:value-of select="$outputtype1"/>.h</xsl:attribute>
                     </File>
-            </xsl:for-each>
+                </xsl:for-each>
+                <xsl:for-each select="fault/param[@type!='']">
+                    <xsl:variable name="faulttype" select="substring-after(@type,'::')"/>
+                    <File>
+                        <xsl:attribute name="RelativePath">.\src\<xsl:value-of select="$faulttype"/>.h</xsl:attribute>
+                    </File>
+                </xsl:for-each>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:for-each select="input/param[@type!='' and @ours ]">
+                        <xsl:variable name="inputtype" select="substring-after(@type,'::')"/>
+                            <File>
+                                <xsl:attribute name="RelativePath">.\<xsl:value-of select='$inputtype'/>.h</xsl:attribute>
+                            </File>
+                    </xsl:for-each>
+                    <xsl:for-each select="output/param[@type!='' and @ours]">
+                        <xsl:variable name="outputtype1" select="substring-after(@type,'::')"/>
+                            <File>
+                                <xsl:attribute name="RelativePath">.\<xsl:value-of select="$outputtype1"/>.h</xsl:attribute>
+                            </File>
+                    </xsl:for-each>
+                    <xsl:for-each select="fault/param[@type!='']">
+                        <xsl:variable name="faulttype" select="substring-after(@type,'::')"/>
+                            <File>
+                                <xsl:attribute name="RelativePath">.\<xsl:value-of select="$faulttype"/>.h</xsl:attribute>
+                            </File>
+                    </xsl:for-each>
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:for-each>
     </Filter>
 
