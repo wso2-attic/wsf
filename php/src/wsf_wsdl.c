@@ -1163,7 +1163,7 @@ wsf_wsdl_do_request(zval *client_zval,
                                     zend_hash_get_current_data_ex (Z_ARRVAL_P(arguments),
                                                             (void **) &param_arg, &pos_arg) == SUCCESS;
                                 zend_hash_move_forward_ex (Z_ARRVAL_P(arguments), &pos_arg)) {
-                                if((*param_arg)->is_ref) {
+                                if(Z_ISREF_PP(param_arg)) {
                                     /* we assign return header pointers to all the references
                                        called with the proxy method */
                                     if(zend_hash_get_current_data_ex (Z_ARRVAL_P(header_params),
