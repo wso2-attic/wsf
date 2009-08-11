@@ -1245,7 +1245,7 @@ function wsf_get_wsdl_imports($wsdl_dom, $relative_url, &$already_imported_wsdls
 
 /* normalize_url */
 function wsf_normalize_url($url) {
-    $tokens = split("/", $url);
+    $tokens = explode("/", $url);
 
     $state = 0;
     /**
