@@ -497,8 +497,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
          String  targetsourceLocation = codegen.getSourceLocation();
         //if user specify a location for the source
 
-         if(codegen.isSetoutputSourceLocation()){
-
+         if(codegen.isSetoutputSourceLocation() && !outputLocation.equals(".") && !outputLocation.equals("")){
              addAttribute(doc,"option","1",rootElement);
              addAttribute(doc,"outputlocation",outputLocation,rootElement);
              addAttribute(doc,"targetsourcelocation",targetsourceLocation,rootElement);
@@ -507,7 +506,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
          {
             addAttribute(doc,"option","0",rootElement);
          }
-        fillSyncAttributes(doc, rootElement);
+         fillSyncAttributes(doc, rootElement);
          loadOperations(doc, rootElement, null);
          // add SOAP version
          addSoapVersion(doc, rootElement);
