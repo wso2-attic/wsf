@@ -31,6 +31,7 @@ class WS_WSDL_Binding
     private $wsdl_location;
     private $fun_mapping;
     private $r_actions;
+    private $port;
 
     /**
      * The constructor of the WS_WSDL_Binding class                    
@@ -45,6 +46,9 @@ class WS_WSDL_Binding
         $this->wsdl_location = $wsdl_ep;
         $this->fun_mapping = $ops_to_functions;
         $this->r_actions = $r_actions;
+	$a_url = parse_url($this->wsdl_location);
+        $this->port = $a_url['port'];
+
     }
 
     /**
@@ -83,7 +87,12 @@ class WS_WSDL_Binding
                         $action_value = $this->r_actions[$key];
                     }
                     else {
-                        $action_value = WS_WSDL_Const::WS_WSDL_HTTP_ATTR_NAME.$this->wsdl_location."/".$key;
+		        if ($this->port == 80)
+	                       $action_value = WS_WSDL_Const::WS_WSDL_HTTP_ATTR_NAME.$this->wsdl_location."/".$key;
+                        elseif ($this->port == 443)
+        	               $action_value = WS_WSDL_Const::WS_WSDL_HTTPS_ATTR_NAME.$this->wsdl_location."/".$key;
+                        else
+	                       $action_value = WS_WSDL_Const::WS_WSDL_HTTP_ATTR_NAME.$this->wsdl_location."/".$key;
                     }
                 }
             }
@@ -158,8 +167,13 @@ class WS_WSDL_Binding
                     if($this->r_actions != NULL && array_key_exists($key, $this->r_actions)) {
                         $action_value = $this->r_actions[$key];
                     }
-                    else {
-                        $action_value = WS_WSDL_Const::WS_WSDL_HTTP_ATTR_NAME.$this->wsdl_location."/".$key;
+   	               else {
+	      	        if ($this->port == 80)
+                          $action_value = WS_WSDL_Const::WS_WSDL_HTTP_ATTR_NAME.$this->wsdl_location."/".$key;
+                        elseif ($this->port == 443)
+                          $action_value = WS_WSDL_Const::WS_WSDL_HTTPS_ATTR_NAME.$this->wsdl_location."/".$key;
+                        else
+                           $action_value = WS_WSDL_Const::WS_WSDL_HTTP_ATTR_NAME.$this->wsdl_location."/".$key;
                     }
                 }
             }

@@ -26,7 +26,7 @@ class WS_WSDL_Service
 
     private $S_name;
     private $endpoint;
-
+    private $port;
     /*
      * The constructor of the WS_WSDL_Service class
      * @param string $ser_name Name of the service
@@ -40,6 +40,9 @@ class WS_WSDL_Service
             $this->S_name = "ws_default_service";
 
         $this->endpoint = $ep;
+        $a_url = parse_url($ep);
+        $this->port = $a_url['port'];
+
     }
 
     /**
@@ -63,9 +66,21 @@ class WS_WSDL_Service
         $svr_addr = $svr_dom->createElementNS(WS_WSDL_Const::WS_SCHEMA_SOAP_NAMESPACE,
                                               WS_WSDL_Const::WS_WSDL_ADDRESS_ATTR_NAME);
 
-        $svr_addr->setAttribute(WS_WSDL_Const::WS_WSDL_LOCATION_ATTR_NAME,
+	if ($this->port == 80){
+          $svr_addr->setAttribute(WS_WSDL_Const::WS_WSDL_LOCATION_ATTR_NAME,
+                                  WS_WSDL_Const::WS_WSDL_HTTP_ATTR_NAME.
+                                  $this->endpoint);
+	}
+        else if ($this->port == 443){
+          $svr_addr->setAttribute(WS_WSDL_Const::WS_WSDL_LOCATION_ATTR_NAME,
+                                  WS_WSDL_Const::WS_WSDL_HTTPS_ATTR_NAME.
+                                  $this->endpoint);
+	}
+        else{
+	        $svr_addr->setAttribute(WS_WSDL_Const::WS_WSDL_LOCATION_ATTR_NAME,
                                 WS_WSDL_Const::WS_WSDL_HTTP_ATTR_NAME.
                                 $this->endpoint);
+	}
 
         $svr_port->appendChild($svr_addr);
         $svr_ele->appendChild($svr_port);

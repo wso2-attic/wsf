@@ -118,6 +118,7 @@ class WS_WSDL_Const
     const WS_WSDL_SOAP_ATTR_NAME = "soap";
 
     const WS_WSDL_HTTP_ATTR_NAME = "http://";
+    const WS_WSDL_HTTPS_ATTR_NAME = "https://";
     const WS_WSDL_PORTTYPE_ATTR_NAME ='portType';
 
     const WS_WSDL_PATTERN_ATTR_NAME = "pattern";
