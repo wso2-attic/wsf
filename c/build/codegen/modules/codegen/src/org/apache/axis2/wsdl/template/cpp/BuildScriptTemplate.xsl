@@ -26,42 +26,77 @@
 <xsl:variable name="outputlocation"><xsl:value-of select="@outputlocation"/></xsl:variable>
 <xsl:variable name="targetsourcelocation"><xsl:value-of select="@targetsourcelocation"/></xsl:variable>
 <xsl:choose>
-<xsl:when test="$option=1">
-g++ -g -shared -olib<xsl:value-of select="$servicename"/>.so -I$WSFCPP_HOME/include -I$WSFCPP_HOME/include/axis2-1.6.0 -I$WSFCPP_HOME//include/axis2-1.6.0/platforms -I<xsl:value-of select="$targetsourcelocation"/> -L$WSFCPP_HOME/lib \
-    -laxutil \
-    -laxis2_axiom \
-    -laxis2_engine \
-    -laxis2_parser \
-    -lpthread \
-    -laxis2_http_sender \
-    -laxis2_http_receiver \
-    -lguththila \
-    -lwso2_wsf \
-    *.cpp <xsl:value-of select="@targetsourcelocation"/>/*.cpp
-</xsl:when>
+<xsl:when test="@isServerSide=1">
+    <xsl:choose>
+    <xsl:when test="$option=1">
+    g++ -g -shared -olib<xsl:value-of select="$servicename"/>.so -I$WSFCPP_HOME/include -I$WSFCPP_HOME/include/axis2-1.6.0 -I$WSFCPP_HOME//include/axis2-1.6.0/platforms -I<xsl:value-of select="$targetsourcelocation"/> -L$WSFCPP_HOME/lib \
+        -laxutil \
+        -laxis2_axiom \
+        -laxis2_engine \
+        -laxis2_parser \
+        -lpthread \
+        -laxis2_http_sender \
+        -laxis2_http_receiver \
+        -lguththila \
+        -lwso2_wsf \
+        *.cpp <xsl:value-of select="@targetsourcelocation"/>/*.cpp
+    </xsl:when>
+    <xsl:otherwise>
+    g++ -g -shared -olib<xsl:value-of select="$servicename"/>.so -I$WSFCPP_HOME/include -I$WSFCPP_HOME/include/axis2-1.6.0 -I$WSFCPP_HOME/include/axis2-1.6.0/platforms -L$WSFCPP_HOME/lib \
+        -laxutil \
+        -laxis2_axiom \
+        -laxis2_engine \
+        -laxis2_parser \
+        -lpthread \
+        -laxis2_http_sender \
+        -laxis2_http_receiver \
+        -lguththila \
+        -lwso2_wsf \
+        *.cpp
+    </xsl:otherwise>
+    </xsl:choose>
+
+    if ! test -d <xsl:value-of select="$servicename"/>; then
+        mkdir <xsl:value-of select="$servicename"/>;
+    fi
+
+    cp lib<xsl:value-of select="$servicename"/>.so <xsl:value-of select="$servicename"/>;
+
+    if test -e ./../resources/services.xml; then
+    cp ./../resources/services.xml <xsl:value-of select="$servicename"/>;
+    fi
+
+    </xsl:when>
 <xsl:otherwise>
-g++ -g -shared -olib<xsl:value-of select="$servicename"/>.so -I$WSFCPP_HOME/include -I$WSFCPP_HOME/include/axis2-1.6.0 -I$WSFCPP_HOME/include/axis2-1.6.0/platforms -L$WSFCPP_HOME/lib \
-    -laxutil \
-    -laxis2_axiom \
-    -laxis2_engine \
-    -laxis2_parser \
-    -lpthread \
-    -laxis2_http_sender \
-    -laxis2_http_receiver \
-    -lguththila \
-    -lwso2_wsf \
-    *.cpp 
+    <xsl:choose>
+    <xsl:when test="$option=1">
+    g++ -g -o <xsl:value-of select="$servicename"/>.out -I$WSFCPP_HOME/include -I$WSFCPP_HOME/include/axis2-1.6.0 -I$WSFCPP_HOME//include/axis2-1.6.0/platforms -I<xsl:value-of select="$targetsourcelocation"/> -L$WSFCPP_HOME/lib \
+        -laxutil \
+        -laxis2_axiom \
+        -laxis2_engine \
+        -laxis2_parser \
+        -lpthread \
+        -laxis2_http_sender \
+        -laxis2_http_receiver \
+        -lguththila \
+        -lwso2_wsf \
+        *.cpp <xsl:value-of select="@targetsourcelocation"/>/*.cpp
+    </xsl:when>
+    <xsl:otherwise>
+    g++ -g -o <xsl:value-of select="$servicename"/>.out -I$WSFCPP_HOME/include -I$WSFCPP_HOME/include/axis2-1.6.0 -I$WSFCPP_HOME/include/axis2-1.6.0/platforms -L$WSFCPP_HOME/lib \
+        -laxutil \
+        -laxis2_axiom \
+        -laxis2_engine \
+        -laxis2_parser \
+        -lpthread \
+        -laxis2_http_sender \
+        -laxis2_http_receiver \
+        -lguththila \
+        -lwso2_wsf \
+        *.cpp
+    </xsl:otherwise>
+    </xsl:choose>
 </xsl:otherwise>
 </xsl:choose>
-
-if ! test -d <xsl:value-of select="$servicename"/>; then
-	mkdir <xsl:value-of select="$servicename"/>;
-fi
-	
-cp lib<xsl:value-of select="$servicename"/>.so <xsl:value-of select="$servicename"/>;
-
-if test -e ./../resources/services.xml; then
-cp ./../resources/services.xml <xsl:value-of select="$servicename"/>;
-fi
 </xsl:template>
 </xsl:stylesheet>

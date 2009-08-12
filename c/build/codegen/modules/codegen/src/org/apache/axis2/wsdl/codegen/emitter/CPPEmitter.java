@@ -101,6 +101,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
             // write interface implementations
             writeCPPStub();
             writeCallback();
+            emitBuildScript();
             writeVCProjectFile();
         } catch (Exception e) {
             //log the error here
@@ -491,6 +492,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
          Element rootElement = doc.createElement("interface");
 
          String serviceCName = makeCClassName(axisService.getName());
+         addAttribute(doc,"isServerSide",codegen.isServerSide()?"1":"0", rootElement);
         // String skelName = C_SKEL_PREFIX + serviceCName + C_SKEL_SUFFIX;
          addAttribute(doc,"servicename",serviceCName,rootElement);
          String outputLocation = codegen.getOutputLocation().getPath();
