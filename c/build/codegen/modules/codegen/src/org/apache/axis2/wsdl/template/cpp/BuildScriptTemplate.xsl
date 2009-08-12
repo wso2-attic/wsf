@@ -26,7 +26,7 @@
 <xsl:variable name="outputlocation"><xsl:value-of select="@outputlocation"/></xsl:variable>
 <xsl:variable name="targetsourcelocation"><xsl:value-of select="@targetsourcelocation"/></xsl:variable>
 <xsl:choose>
-<xsl:when test="$option = 1">
+<xsl:when test="$option=1">
 g++ -g -shared -olib<xsl:value-of select="$servicename"/>.so -I$WSFCPP_HOME/include -I$WSFCPP_HOME/include/axis2-1.6.0 -I$WSFCPP_HOME//include/axis2-1.6.0/platforms -I<xsl:value-of select="$targetsourcelocation"/> -L$WSFCPP_HOME/lib \
     -laxutil \
     -laxis2_axiom \

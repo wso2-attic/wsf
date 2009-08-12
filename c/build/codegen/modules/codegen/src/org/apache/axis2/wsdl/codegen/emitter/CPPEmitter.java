@@ -493,10 +493,12 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
          String serviceCName = makeCClassName(axisService.getName());
         // String skelName = C_SKEL_PREFIX + serviceCName + C_SKEL_SUFFIX;
          addAttribute(doc,"servicename",serviceCName,rootElement);
+         String outputLocation = codegen.getOutputLocation().getPath();
+         String  targetsourceLocation = codegen.getSourceLocation();
         //if user specify a location for the source
+
          if(codegen.isSetoutputSourceLocation()){
-             String outputLocation = codegen.getOutputLocation().getPath();
-             String  targetsourceLocation = codegen.getSourceLocation();
+
              addAttribute(doc,"option","1",rootElement);
              addAttribute(doc,"outputlocation",outputLocation,rootElement);
              addAttribute(doc,"targetsourcelocation",targetsourceLocation,rootElement);
