@@ -56,7 +56,8 @@ namespace wso2wsf
 		TLSKey()
 		{
 #ifdef WIN32
-
+			 if ((tls_key = TlsAlloc()) == TLS_OUT_OF_INDEXES) 
+				 ExitProcess(0);
 #else
 			pthread_key_create(&tls_key, NULL);
 #endif
