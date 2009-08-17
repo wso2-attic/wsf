@@ -16,10 +16,10 @@ rem Pack WSO2 WSF/C++
 :pack_wsfcpp
 @cd ..
 @set WSFCPP_SOURCE=%CD%
-@set WSFCPP_HOME=%WSFCPP_SOURCE%\wso2-wsf-cpp-bin-%WSFCPP_VERSION%-win32
-rem @if exist "%WSFCPP_HOME%" rmdir /s /q "%WSFCPP_HOME%"
-@mkdir "%WSFCPP_HOME%"
-@cd "%WSFCPP_HOME%"
+@set WSFCPP_BUILD_HOME=%WSFCPP_SOURCE%\wso2-wsf-cpp-bin-%WSFCPP_VERSION%-win32
+rem @if exist "%WSFCPP_BUILD_HOME%" rmdir /s /q "%WSFCPP_BUILD_HOME%"
+@mkdir "%WSFCPP_BUILD_HOME%"
+@cd "%WSFCPP_BUILD_HOME%"
 @xcopy /E /Q /I /Y "%WSFCPP_SOURCE%\wsf_c\wso2-wsf-c-bin-%WSFC_VERSION%-win32" .
 @copy /Y "%WSFCPP_SOURCE%\INSTALL" .
 @copy /Y "%WSFCPP_SOURCE%\README.INSTALL.WINDOWS" .
@@ -34,14 +34,14 @@ rem @if exist "%WSFCPP_HOME%" rmdir /s /q "%WSFCPP_HOME%"
 
 rem Add HTML Documentation
 :add_html_docs
-@cd "%WSFCPP_HOME%"
+@cd "%WSFCPP_BUILD_HOME%"
 move docs wsf_c
 mkdir docs
 @xcopy /E /I /Q /Y "%WSFCPP_SOURCE%\docs"  docs\cpp
 move wsf_c docs\wsf_c
 
 :remove_wsf_c_services
-@cd %WSFCPP_HOME%
+@cd %WSFCPP_BUILD_HOME%
 move services services_c
 @mkdir services
 xcopy /E /I /Q /Y services_c\sec_echo services\sec_echo\
@@ -52,7 +52,7 @@ xcopy /E /I /Q /Y services_c\secconv_echo services\secconv_echo\
 
 rem Clean bin Folder
 :clean_bin_dir
-@cd "%WSFCPP_HOME%\bin"
+@cd "%WSFCPP_BUILD_HOME%\bin"
 @del *.exp
 @del *.lib
 @cd "%WSFCPP_SOURCE%"
@@ -63,30 +63,30 @@ rem Build Source
 @nmake dist -f wsf.mk AUTOCONF=..\configure.in
 @if not %ERRORLEVEL% EQU 0 goto end
 @cd ..\include
-@copy /Y *.h "%WSFCPP_HOME%\include"
+@copy /Y *.h "%WSFCPP_BUILD_HOME%\include"
 @cd ..
 
 rem Build Client Samples
 :build_client_samples
-copy "%WSFCPP_HOME%\samples\bin\*.bat" "%WSFCPP_HOME%\samples\"
-@if exist "%WSFCPP_HOME%\samples\bin" rmdir /s /q "%WSFCPP_HOME%\samples\bin"
-@if exist "%WSFCPP_HOME%\samples\lib" rmdir /s /q "%WSFCPP_HOME%\samples\lib"
+copy "%WSFCPP_BUILD_HOME%\samples\bin\*.bat" "%WSFCPP_BUILD_HOME%\samples\"
+@if exist "%WSFCPP_BUILD_HOME%\samples\bin" rmdir /s /q "%WSFCPP_BUILD_HOME%\samples\bin"
+@if exist "%WSFCPP_BUILD_HOME%\samples\lib" rmdir /s /q "%WSFCPP_BUILD_HOME%\samples\lib"
 @cd "%WSFCPP_SOURCE%"
 @cd examples
 @nmake dist -f samples.mk AUTOCONF=..\configure.in
 @if not %ERRORLEVEL% EQU 0 goto end
-move "%WSFCPP_HOME%\samples\*.bat" "%WSFCPP_HOME%\samples\bin\"
+move "%WSFCPP_BUILD_HOME%\samples\*.bat" "%WSFCPP_BUILD_HOME%\samples\bin\"
 
 rem Deploy Sample Source
 :dep_sample_source
-@move "%WSFCPP_HOME%\samples\src" "%WSFCPP_HOME%\samples\src_c"
-@mkdir "%WSFCPP_HOME%\samples\src\c"
-@xcopy /E /I /Q /Y "%WSFCPP_HOME%\samples\src_c" "%WSFCPP_HOME%\samples\src\c"
-@rmdir /s /q "%WSFCPP_HOME%\samples\src_c"
+@move "%WSFCPP_BUILD_HOME%\samples\src" "%WSFCPP_BUILD_HOME%\samples\src_c"
+@mkdir "%WSFCPP_BUILD_HOME%\samples\src\c"
+@xcopy /E /I /Q /Y "%WSFCPP_BUILD_HOME%\samples\src_c" "%WSFCPP_BUILD_HOME%\samples\src\c"
+@rmdir /s /q "%WSFCPP_BUILD_HOME%\samples\src_c"
 @cd %WSFCPP_SOURCE%
-@xcopy /E /I /Q /Y examples "%WSFCPP_HOME%\samples\src\cpp"
-@copy /Y configure.in "%WSFCPP_HOME%\samples\src"
-@cd "%WSFCPP_HOME%\samples\src\cpp"
+@xcopy /E /I /Q /Y examples "%WSFCPP_BUILD_HOME%\samples\src\cpp"
+@copy /Y configure.in "%WSFCPP_BUILD_HOME%\samples\src"
+@cd "%WSFCPP_BUILD_HOME%\samples\src\cpp"
 @if not exist .svn mkdir .svn
 @for /F "tokens=*" %%G in ('dir /B /AD /S *.svn*') do rmdir /S /Q "%%G"
 @if not exist int.msvc mkdir int.msvc
