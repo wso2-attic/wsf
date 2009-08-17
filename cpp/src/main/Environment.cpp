@@ -30,7 +30,11 @@ using namespace std;
 void WSF_CALL Environment::setEnv(const axutil_env_t *env)
 {
 #ifdef WIN32
-	TlsSetValue(key.getTLSKey(),(void*)env);
+	if(!TlsSetValue(key.getTLSKey(),(void*)env))
+	{
+		printf("TLS Set Value Error");
+		ExitProcess(0);
+	}
 #else 
 	int rc;
 	rc = pthread_setspecific(key.getTLSKey(), env);
@@ -70,7 +74,7 @@ const axutil_env_t* WSF_CALL Environment::getEnv()
 WSF_EXTERN void WSF_CALL Environment::removeEnv()
 {
 #ifdef WIN32
-	TLSSetValue(key.getTLSKey(), NULL);
+	TlsSetValue(key.getTLSKey(), NULL);
 #else 
          int rc;
         rc = pthread_setspecific(key.getTLSKey(), NULL);
