@@ -43,19 +43,41 @@ namespace wso2wsf
 	/**
 	* @brief class Environment. This keeps track of axis2_env_t when running with threads.
 	*/
+	class TLSKey
+	{
+		private: 	
+#ifdef WIN32
+		DWORD tls_key;
+#else				
+		pthread_key_t tls_key;
+#endif		
+		public:
+
+		TLSKey()
+		{
+#ifdef WIN32
+
+#else
+			pthread_key_create(&tls_key, NULL);
+#endif
+		}
+
+#ifdef WIN32 
+		DWORD getTLSKey()
+#else
+		pthread_key_t getTLSKey()
+#endif
+		{
+			return tls_key;
+		}
+	};
+
 	class Environment
 	{
 
 	private:
 		
-		static std::map<int, const axutil_env_t*> _envmap;
-
-		
-#ifdef WIN32
-		static RWLock lock;		
-#else 
-		static pthread_rwlock_t       rwlock; 
-#endif
+		static TLSKey key;
 		/**
 		* @var _refCount stores the number of references to axutil_env.
 		*/
@@ -65,14 +87,10 @@ namespace wso2wsf
 		static std::string _logFileName;
 		/** keeps the log level */
 		static axutil_log_levels_t _logLevel;
+		
+		Environment();
 		/**
-		* Return an instance of the Static Environment Object
-		*
-		*
-		* static WSF_EXTERN Environment* WSF_CALL getInstance();
-		*/
-		/**
-		*	Method to store the current thread specific environment. 
+		*  Method to store the current thread specific environment. 
 		*  @param env Pointer to the axutil_env
 		*/
 		static WSF_EXTERN void WSF_CALL setEnv(const axutil_env_t *env);
@@ -98,7 +116,7 @@ namespace wso2wsf
 		*/
 		static WSF_EXTERN void WSF_CALL initialize(std::string logFileName,  axutil_log_levels_t logLevel);
 	
-		/* WSF_CALL ~Environment(); */
+		WSF_CALL ~Environment(); 
 	};
 	/** @} */
 }

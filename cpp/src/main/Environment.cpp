@@ -22,24 +22,6 @@
 using namespace wso2wsf;
 using namespace std;
 
-/*
-Environment* WSF_CALL Environment::getInstance()
-{
-	if(_envObj)
-	{
-		return _envObj;
-	}
-	else
-	{
-		_envObj =  new Environment();
-#ifdef WIN32
-		lock = new RWLock();
-		lock->init();
-#endif
-		return _envObj;
-	}
-}
-*/
 
 /**
 *	Method to store the current thread specific environment. 
@@ -48,20 +30,15 @@ Environment* WSF_CALL Environment::getInstance()
 void WSF_CALL Environment::setEnv(const axutil_env_t *env)
 {
 #ifdef WIN32
-	lock.writeLock();
+	TlsSetValue(key.getTLSKey(),(void*)env);
 #else 
 	int rc;
-	 rc = pthread_rwlock_wrlock(&rwlock);
+	rc = pthread_setspecific(key.getTLSKey(), env);
+	if(rc != 0)
+	{
+		printf("Error Setting the environment");
+	}
 #endif
-
-	int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
-	_envmap[threadId] = env;
-#ifdef WIN32
-	lock.unlock();
-#else
-	 rc = pthread_rwlock_unlock(&rwlock);
-#endif
-
 }
 
 /**
@@ -71,92 +48,63 @@ const axutil_env_t* WSF_CALL Environment::getEnv()
 {
 	const axutil_env_t *env = NULL;
 #ifdef WIN32
-	lock.readLock();
+	env = (axutil_env_t*)TlsGetValue(key.getTLSKey());
 #else
-	pthread_rwlock_rdlock(&rwlock);
+	env = (axutil_env_t*)pthread_getspecific(key.getTLSKey());
 #endif
-
-	int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
-	std::map<int, const axutil_env_t*>::iterator _it;
-	
-	_it = _envmap.find(threadId);
-	if(_it != _envmap.end())
-	{
-		env = _it->second;
-	}
 	if(!env)
 	{
 		env = axutil_env_create_all(_logFileName.c_str(), _logLevel);
 		if(env)
 		{
-			_envmap[threadId] = env;		
+			setEnv(env);		
 		}else
 		{
 			printf("Environment creation failed");
 			exit(0);
 		}
 	}		
-#ifdef WIN32
-	lock.unlock();
-#else
-	pthread_rwlock_unlock(&rwlock);
-#endif
-
 	return env;
 }
 
 WSF_EXTERN void WSF_CALL Environment::removeEnv()
 {
 #ifdef WIN32
-	lock.writeLock();
+	TLSSetValue(key.getTLSKey(), NULL);
 #else 
-     int rc;
-	 rc =  pthread_rwlock_wrlock(&rwlock);
+         int rc;
+        rc = pthread_setspecific(key.getTLSKey(), NULL);
+        if(rc != 0)
+        {
+                printf("Error Setting the environment to NULL");
+        }
 #endif
-
-	 int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
-		_envmap.erase(threadId);
-
-#ifdef WIN32
-	lock.unlock();
-#else
-	rc = pthread_rwlock_unlock(&rwlock);
-#endif
-
 }
 
 /**
 * destructor frees resources.
-
+*/
 WSF_CALL Environment::~Environment()
 {
-	std::map<int, const axutil_env_t*>::iterator _it;
-	for(_it = _envmap.begin(); _it != _envmap.end(); ++_it)
-	{
-		axutil_env_free((axutil_env_t*)_it->second);
-	}
 }
-*/
+
 void WSF_CALL Environment::switchToGlobalPool()
 {
-	std::map<int, const axutil_env_t*>::const_iterator _it;
-	int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
-	_it = _envmap.find(threadId);
-	if(_it != _envmap.end())
+	const axutil_env_t *env = NULL;
+	env = getEnv();
+	if(env)
 	{
-		axutil_allocator_switch_to_global_pool((_it->second)->allocator);
+		axutil_allocator_switch_to_global_pool(env->allocator);
 	}
 }
 
 void WSF_CALL Environment::switchToLocalPool()
 {
-
-	std::map<int, const axutil_env_t*>::const_iterator _it;
-	int threadId = AXIS2_PLATFORM_GET_THREAD_ID();
-	_it = _envmap.find(threadId);
-	if(_it != _envmap.end())
+	const axutil_env_t *env = NULL;
+        env = getEnv();
+	if(env)
 	{
-		axutil_allocator_switch_to_local_pool((_it->second)->allocator);
+		axutil_allocator_switch_to_local_pool(env->allocator);
 	}
 }
 
@@ -177,16 +125,4 @@ std::string Environment::_logFileName;
 
 axutil_log_levels_t Environment::_logLevel;
 
-/* Environment* Environment::_envObj = NULL; */
-
-std::map<int, const axutil_env_t*> Environment::_envmap;
-
-#ifdef WIN32
-
-RWLock Environment::lock;
-
-#else 
-
-pthread_rwlock_t Environment::rwlock = PTHREAD_RWLOCK_INITIALIZER;
-
-#endif
+TLSKey Environment::key;
