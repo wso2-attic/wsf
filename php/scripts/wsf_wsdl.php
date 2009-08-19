@@ -127,6 +127,11 @@ function wsf_get_wsdl_with_http_auth_basic($wsdl_url, $username, $password)
 		'header'=>$cred));
 	$ctx = stream_context_create($options);
 	$str = file_get_contents($wsdl_url, false, $ctx);
+	if(empty($str))
+	{
+		throw new WSFault("Receiver","Could not load WSDL from WSDL url $wsdl_url");
+		return NULL;
+	}
 	return $str;
  }
 
@@ -173,7 +178,13 @@ function wsf_get_wsdl_str_from_url($wsdl_url,$user_parameters)
 		}
 	}else
 	{
-		return file_get_contents($wsdl_url);	
+		$result = file_get_contents($wsdl_url);	
+		if(empty($result))
+		{
+			throw new WSFault("Receiver","Could not Load WSDL from $wsdl_url");
+			return NULL;
+		}
+		return $result;
 	}    	
 	return NULL;	
 }
