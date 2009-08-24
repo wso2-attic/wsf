@@ -1298,7 +1298,7 @@ wsf_client_do_request (
 		if(throw_execption)
 		{
 		    zend_throw_exception_ex (zend_exception_get_default (TSRMLS_C),
-            1 TSRMLS_CC, "request payload should not be null");
+            1 TSRMLS_CC, "Invalid Input Message");
 		}
 	}
     
