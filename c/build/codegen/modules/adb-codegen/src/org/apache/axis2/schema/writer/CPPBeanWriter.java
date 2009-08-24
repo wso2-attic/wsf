@@ -74,6 +74,86 @@ public class CPPBeanWriter implements BeanWriter {
     private static int count = 0;
     private boolean wrapClasses = false;
     private boolean writeClasses = false;
+    // rnt-mod: start: polymorphism support
+    private boolean polySupport = true;
+
+    private class ClassInfo {
+        private String className;
+        private String originalName;
+        private String cppNamespace;
+        private QName qName;
+        private boolean isElement;
+        private boolean isAbstract;
+        private BeanWriterMetaInfoHolder metainf;
+        private ArrayList propertyNames;
+        private Map typeMap;
+        private Map groupTypeMap;
+
+        public ClassInfo(String className,
+                         String originalName,
+                         String cppNamespace,
+                         QName qName,
+                         boolean isElement,
+                         boolean isAbstract,
+                         BeanWriterMetaInfoHolder metainf,
+                         ArrayList propertyNames,
+                         Map typeMap,
+                         Map groupTypeMap) {
+            this.className = className;
+            this.originalName = originalName;
+            this.cppNamespace = cppNamespace;
+            this.qName = qName;
+            this.isElement = isElement;
+            this.isAbstract = isAbstract;
+            this.metainf = metainf;
+            this.propertyNames = propertyNames;
+            this.typeMap = typeMap;
+            this.groupTypeMap = groupTypeMap;
+        }
+
+        public String getClassName() {
+            return this.className;
+        }
+
+        public String getOriginalName() {
+            return this.originalName;
+        }
+
+        public String getCppNamespace() {
+            return this.cppNamespace;
+        }
+
+        public QName getQName() {
+            return this.qName;
+        }
+
+        public boolean getIsElement() {
+            return this.isElement;
+        }
+
+        public boolean getIsAbstract() {
+            return this.isAbstract;
+        }
+
+        public BeanWriterMetaInfoHolder getMetainf() {
+            return this.metainf;
+        }
+
+        public ArrayList getPropertyNames() {
+            return this.propertyNames;
+        }
+
+        public Map getTypeMap() {
+            return this.typeMap;
+        }
+
+        public Map getGroupTypeMap() {
+            return this.groupTypeMap;
+        }
+    }
+
+    private ArrayList classInfoList = new ArrayList();
+    // rnt-mod: end
 
     protected File rootDir;
 
@@ -259,6 +339,70 @@ public class CPPBeanWriter implements BeanWriter {
             throw new SchemaCompilationException(e);
         }
     }
+    // rnt-mod: start: polymorphism support
+    /**
+     * Writes all class files out after everything has been processed.
+     *
+     * @throws org.apache.axis2.schema.SchemaCompilationException
+     */
+    public void deferredWrite() throws SchemaCompilationException {
+        ClassInfo currentClassInfo;
+        Document modelHeader;
+        Document modelSource;
+        File fileHeader;
+        File fileSource;
+
+        if (!polySupport) {
+            return;
+        }
+
+        if ((classInfoList == null) && (classInfoList.size() == 0)) {
+            throw new SchemaCompilationException("No information to write");
+        }
+
+        try {
+            for (int i = 0; i < classInfoList.size(); i ++) {
+                currentClassInfo = (ClassInfo) classInfoList.get(i);
+
+                modelHeader = XSLTUtils.getDocument();
+                modelSource = XSLTUtils.getDocument();
+
+                modelHeader.appendChild(
+                    getBeanElement(modelHeader,
+                                   currentClassInfo.getClassName(),
+                                   currentClassInfo.getOriginalName(),
+                                   currentClassInfo.getCppNamespace(),
+                                   currentClassInfo.getQName(),
+                                   currentClassInfo.getIsElement(),
+                                   currentClassInfo.getIsAbstract(),
+                                   currentClassInfo.getMetainf(),
+                                   currentClassInfo.getPropertyNames(),
+                                   currentClassInfo.getTypeMap(),
+                                   currentClassInfo.getGroupTypeMap()));
+                modelSource.appendChild(
+                    getBeanElement(modelSource,
+                                   currentClassInfo.getClassName(),
+                                   currentClassInfo.getOriginalName(),
+                                   currentClassInfo.getCppNamespace(),
+                                   currentClassInfo.getQName(),
+                                   currentClassInfo.getIsElement(),
+                                   currentClassInfo.getIsAbstract(),
+                                   currentClassInfo.getMetainf(),
+                                   currentClassInfo.getPropertyNames(),
+                                   currentClassInfo.getTypeMap(),
+                                   currentClassInfo.getGroupTypeMap()));
+
+                fileHeader = createOutFile(currentClassInfo.getClassName(), ".h");
+                fileSource = createOutFile(currentClassInfo.getClassName(), ".cpp");
+
+                parseHeader(modelHeader, fileHeader);
+                parseSource(modelSource, fileSource);
+            }
+        } catch (Exception e) {
+            throw new SchemaCompilationException(e);
+        }
+    }
+    // rnt-mod: end
 
     /**
      * @param simpleType
@@ -419,6 +563,11 @@ public class CPPBeanWriter implements BeanWriter {
                         originalName, cppNamespace,qName, isElement, isAbstract,
                         metainf, propertyNames, typeMap, groupTypeMap));
 
+        } else if (polySupport) { // rnt-mod: start: polymorphism support
+            classInfoList.add(new ClassInfo(className, originalName, cppNamespace,
+                                            qName, isElement, isAbstract, metainf,
+                                            propertyNames, typeMap, groupTypeMap));
+        // rnt-mod: end
         } else {
             //create the model
             Document modelSource = XSLTUtils.getDocument();
@@ -530,9 +679,14 @@ public class CPPBeanWriter implements BeanWriter {
             XSLTUtils.addAttribute(model, "anon", "yes", rootElt);
         }
 
-        if (metainf.isExtension()) {
+        if (metainf.isExtension() && polySupport) { // rnt-mod: polymorphism support
             XSLTUtils.addAttribute(model, "extension", metainf.getExtensionClassName(), rootElt);
         }
+        // rnt-mod: start: polymorphism support
+        if ((metainf.getExtensionBaseTypeOf() != null) && polySupport) {
+            populateExtensionBaseTypeOf(metainf, model, rootElt);
+        }
+        // rnt-mod: end
 
         if (metainf.isRestriction()) {
             XSLTUtils.addAttribute(model, "restriction", metainf
@@ -634,6 +788,25 @@ public class CPPBeanWriter implements BeanWriter {
 
         }
     }
+    // rnt-mod: start: polymorphism support
+    protected void populateExtensionBaseTypeOf(BeanWriterMetaInfoHolder metainf,
+                                               Document model,
+                                               Element rootElement) {
+        Map baseTypeOf = metainf.getExtensionBaseTypeOf();
+        QName extensionQName;
+        String extensionClass;
+
+        for (Iterator iter = baseTypeOf.keySet().iterator(); iter.hasNext();) {
+            extensionQName = (QName) iter.next();
+            extensionClass = (String) baseTypeOf.get(extensionQName);
+
+            Element extension = XSLTUtils.addChildElement(model, "extensionBaseTypeOf", rootElement);
+            XSLTUtils.addAttribute(model, "type", extensionClass, extension);
+            XSLTUtils.addAttribute(model, "nsuri", extensionQName.getNamespaceURI(), extension);
+            XSLTUtils.addAttribute(model, "originalName", extensionQName.getLocalPart(), extension);
+        }
+    }
+    // rnt-mod: end
 
     /**
      * @param metainf

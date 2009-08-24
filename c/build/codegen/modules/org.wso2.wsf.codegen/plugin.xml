@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	<extension
+         point="org.eclipse.ui.newWizards">
+         <category
+               id="WSF_Codegen_Wizard"
+               name="WSF Codegen Wizard">
+         </category>
+      <wizard
+            category="WSF_Codegen_Wizard"
+            class="org.wso2.wsf.codegen.wizards.CodegenWizard"
+            hasPages="true"
+            icon="icons/sample.gif"
+            id="org.wso2.wsf.codegen.wizards.CodegenWizard"
+            name="WSF Codegen Wizard">
+      </wizard>
+   </extension>
+</plugin>

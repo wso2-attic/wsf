@@ -49,6 +49,12 @@ public interface BeanWriter {
      * returns true.
      */
     public void writeBatch() throws SchemaCompilationException;
+    // rnt-mod: start: polymorphism support
+    /**
+     * Writes all class files after all other processing has taken place.
+     */
+    public void deferredWrite() throws SchemaCompilationException;
+    // rnt-mod: end
 
     /**
      * Gets a map of models. This is useful for tight integrations where the internal workings

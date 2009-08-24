@@ -426,6 +426,9 @@ public class SchemaCompiler {
         if (options.isWrapClasses()) {
             writer.writeBatch();
         }
+        // rnt-mod: start: polymorphism support
+        writer.deferredWrite();
+        // rnt-mod: end
 
         // resets the changed types
         XmlSchemaComplexType xmlSchemaComplexType = null;
@@ -985,6 +988,11 @@ public class SchemaCompiler {
             metaInfHolder.setOwnClassName(javaClassName);
             metaInfHolder.setOwnQname(generatedTypeName);
             writeComplexType(complexType, metaInfHolder);
+            // rnt-mod: start: polymorphism support
+            if (metaInfHolder.isExtension()) {
+                addExtensionBaseTypeOf(metaInfHolder.getExtensionBaseType(), generatedTypeName, javaClassName);
+            }
+            // rnt-mod: end
         }
 
         //since this is a special case (an unnamed complex type) we'll put the already processed
@@ -1018,6 +1026,11 @@ public class SchemaCompiler {
         //add this information to the metainfo holder
         metaInfHolder.setOwnQname(complexType.getQName());
         metaInfHolder.setOwnClassName(fullyQualifiedClassName);
+        // rnt-mod: start: polymorphism support
+        if (metaInfHolder.isExtension()) {
+            addExtensionBaseTypeOf(metaInfHolder.getExtensionBaseType(), complexType.getQName(), fullyQualifiedClassName);
+        }
+        // rnt-mod: end
         //write the class. This type mapping would have been populated right now
         //Note - We always write classes for named complex types
         writeComplexType(complexType, metaInfHolder);
@@ -1226,6 +1239,7 @@ public class SchemaCompiler {
                 // The basetype has been processed already
                 metaInfHolder.setExtension(true);
                 metaInfHolder.setExtensionClassName(className);
+                metaInfHolder.setExtensionBaseType(extension.getBaseTypeName()); // rnt-mod: polymorphism support
                 //Note  - this is no array! so the array boolean is false
             }
         } else if (content instanceof XmlSchemaComplexContentRestriction) {
@@ -1278,6 +1292,23 @@ public class SchemaCompiler {
             }
         }
     }
+    // rnt-mod: start: polymorphism support
+    /**
+     * Record an extension of a base type in the metainfo for the base type
+     *
+     * @param baseTypeName the QName of the extension base type
+     * @param extensionName the QName of the extension
+     */
+    private void addExtensionBaseTypeOf(QName baseTypeName,
+                                        QName extensionQName,
+                                        String extensionClassName)
+    throws SchemaCompilationException {
+        BeanWriterMetaInfoHolder baseMetaInfoHolder =
+            (BeanWriterMetaInfoHolder)processedTypeMetaInfoMap.get(baseTypeName);
+
+        baseMetaInfoHolder.addExtensionBaseTypeOf(extensionQName, extensionClassName);
+    }
+    // rnt-mod: end
 
     /**
      * Recursive method to populate the metainfo holders with info from the base types
@@ -1513,6 +1544,7 @@ public class SchemaCompiler {
                     metaInfHolder.setSimple(true);
                     metaInfHolder.setExtension(true);
                     metaInfHolder.setExtensionClassName(className);
+                    metaInfHolder.setExtensionBaseType(extBaseType); // rnt-mod: polymorphism support
 
                     copyMetaInfoHierarchy(metaInfHolder, extBaseType, resolvedSchema);
                 } else if (type instanceof XmlSchemaComplexType) {
@@ -1522,6 +1554,7 @@ public class SchemaCompiler {
                         // print the element names
                         metaInfHolder.setExtension(true);
                         metaInfHolder.setExtensionClassName(className);
+                        metaInfHolder.setExtensionBaseType(extBaseType); // rnt-mod: polymorphism support
                         copyMetaInfoHierarchy(metaInfHolder, extBaseType, resolvedSchema);
                     }
                 }
