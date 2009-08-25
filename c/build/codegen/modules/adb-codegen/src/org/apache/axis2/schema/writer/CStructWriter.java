@@ -234,14 +234,6 @@ public class CStructWriter implements BeanWriter {
             throw new SchemaCompilationException(e);
         }
     }
-    // rnt-mod: start: polymorphism support
-    /**
-     * Appease the compiler.
-     */
-    public void deferredWrite() throws SchemaCompilationException {
-        return;
-    }
-    // rnt-mod: end
 
     /**
      * @param simpleType

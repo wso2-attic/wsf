@@ -68,9 +68,6 @@
        <xsl:variable name="nsprefix"><xsl:value-of select="@nsprefix"/></xsl:variable>
        <xsl:variable name="anon"><xsl:value-of select="@anon"/></xsl:variable>
        <xsl:variable name="ordered"><xsl:value-of select="@ordered"/></xsl:variable>
-       <!--  start: support polymorphism -->
-       <xsl:variable name="extension"><xsl:value-of select="@extension"/></xsl:variable>
-       <!--  end -->
        <xsl:variable name="particleClass"><xsl:value-of select="@particleClass"/></xsl:variable> <!-- particle classes are used to represent schema groups -->
        <xsl:variable name="hasParticleType"><xsl:value-of select="@hasParticleType"/></xsl:variable> <!-- particle classes are used to represent schema groups -->
 
@@ -94,19 +91,11 @@
         *  <xsl:value-of select="$axis2_name"/> class
         */
 
-       // start: forward declaration for circular references
-       namespace <xsl:value-of select="@cppNamespace"/> {
-           class <xsl:value-of select="$name"/>;
-       }
-       // rnt-mod: end
-
-       <xsl:if test="$extension">#include "<xsl:value-of select="substring-after($extension,'::')"/>.h" // rnt-mod: polymorphism support</xsl:if>
-
         <xsl:for-each select="property">
-          <xsl:if test="not(@inherited)"><xsl:if test="@ours"><!-- start: polymorphism support -->
+          <xsl:if test="@ours">
           <xsl:variable name="propertyType" select="@type"/>
        #include "<xsl:value-of select="substring-after($propertyType,'::')"/>.h"
-          </xsl:if></xsl:if><!-- end -->
+          </xsl:if>
         </xsl:for-each>
         <!--include special headers-->
         <xsl:for-each select="property[@type='axutil_date_time_t*']">
@@ -165,22 +154,14 @@ namespace <xsl:value-of select="@cppNamespace"/>
         <xsl:variable name="isUnion" select="@union"/>
         
 
-        class <xsl:value-of select="$axis2_name"/><xsl:if test="$extension"> /*  polymorphism support */ : public <xsl:value-of select="$extension"/></xsl:if> {
+        class <xsl:value-of select="$axis2_name"/> {
 
-        <xsl:choose><!--  start: polymorphism support -->
-            <xsl:when test="extensionBaseTypeOf">
-        protected: // rnt-mod: polymorphism support
-            </xsl:when>
-            <xsl:otherwise>
         private:
-            </xsl:otherwise>
-        </xsl:choose><!--  end -->
              <xsl:if test="not($istype)">
                 axutil_qname_t* qname;
             </xsl:if>
 
             <xsl:for-each select="property">
-                <xsl:if test="not(@inherited)"><!-- start: polymorphism support: don't duplicate inherited fields -->
                 <xsl:variable name="propertyType">
                    <xsl:choose>                                                               <!-- <xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if> -->
                      <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
@@ -196,7 +177,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
 
                 <!-- For arrays is_valid_* tracks for whether at least one element of the array is non-NULL -->
                 <xsl:text>bool isValid</xsl:text><xsl:value-of select="$CName"/>;
-                </xsl:if><!--end -->
             </xsl:for-each>
 
             <!-- The section covers the storage for list types, -->
@@ -232,7 +212,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
 
         /*** Private methods ***/
           <xsl:for-each select="property">
-            <xsl:if test="not(@inherited)"><!-- start: polymorphism support: don't duplicate inherited fields -->
             <xsl:variable name="propertyType">
             <xsl:choose>
                 <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
@@ -273,7 +252,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
 
         bool WSF_CALL
         set<xsl:value-of select="$CName"/>Nil();
-            </xsl:if>
             </xsl:if>
           </xsl:for-each>
 
@@ -376,31 +354,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
             </xsl:otherwise>
         </xsl:choose>
         -->
-
-        // rnt-mod: start: polymorphism support
-        /**
-         * Static member function for creating objects of a given type
-         *
-         * @param xsiType the xsi:type of the desired object
-         * @return object that is a subtype of <xsl:value-of select="$axis2_name"/>
-         *         matching xsiType.
-         */
-        static <xsl:value-of select="$axis2_name"/>* WSF_CALL
-        createByXsiType(std::string xsiType);
-
-        /**
-         * Member function for determining the xsi:type for this class
-         *
-         * @param index for the next namespace, used for generating namespace
-         *        prefixes
-         * @return a string representing the xsi:type for the class.
-         */
-        <xsl:if test="extensionBaseTypeOf">virtual</xsl:if>
-        axis2_char_t* WSF_CALL
-        getXsiTypeAttr(int *next_ns_index, axiom_element_t *parent_element,
-                       axutil_hash_t *namespaces, int *type_str_len);
-        //  end
-
         /********************************** Class get set methods **************************************/
         <xsl:if test="@choice">/******** In a case of a choose among elements, the last one to set will be chooosen *********/</xsl:if>
         <xsl:if test="count(property[@array])!=0">/******** Deprecated for array types, Use 'Getters and Setters for Arrays' instead ***********/</xsl:if>
@@ -444,7 +397,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
                 </xsl:choose>
             </xsl:variable>
         
-        <xsl:if test="not(@inherited)"><!-- start: polymorphism support: don't duplicate inherited fields -->
+
         /**
          * Getter for <xsl:value-of select="$propertyName"/>. <xsl:if test="@isarray">Deprecated for array types, Use get<xsl:value-of select="$CName"/>At instead</xsl:if>
          * @return <xsl:value-of select="$paramComment"/>
@@ -467,7 +420,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
          */
         WSF_EXTERN bool WSF_CALL
         reset<xsl:value-of select="$CName"/>();
-        </xsl:if><!-- end -->
         </xsl:for-each>
 
         <!-- The following take care of list items -->
@@ -553,7 +505,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
         </xsl:if>
 
         <xsl:for-each select="property">
-            <xsl:if test="not(@inherited)"><!--  start: polymorphism support: don't duplicate inherited fields -->
             <xsl:variable name="propertyType">
             <xsl:choose>
                 <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
@@ -636,7 +587,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
         remove<xsl:value-of select="$CName"/>At(int i);
 
         </xsl:if> <!-- xsl:if test="@isarray" -->
-        </xsl:if><!-- xsl:if test="not(@inherited)"  end -->
         </xsl:for-each> <!-- xsl:for-each select="property" -->
 
         <!-- The section covers the list types -->
@@ -720,7 +670,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
 
         <xsl:if test="$isEnum=1">
           <xsl:for-each select="property">
-            <xsl:if test="not(@inherited)"><!--start: polymorphism support: don't duplicate inherited fields -->
             <xsl:variable name="propertyName"><xsl:value-of select="@name"></xsl:value-of></xsl:variable>
             <xsl:variable name="CName"><xsl:value-of select="@cname"></xsl:value-of></xsl:variable>
             <xsl:variable name="enum">ADB<xsl:value-of select="@cname"/>Enum</xsl:variable>
@@ -750,7 +699,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
             set<xsl:value-of select="$CName"/>Enum(
             <xsl:value-of select="$constValue"/><xsl:value-of select="$enum"/><xsl:text> </xsl:text>arg_<xsl:value-of select="$CName"/>);
             
-            </xsl:if><!-- xsl:if test="not(@inherited)" end -->
           </xsl:for-each>
         </xsl:if>
 
@@ -763,7 +711,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
          */
 
         <xsl:for-each select="property">
-            <xsl:if test="not(@inherited)"><!--  start: polymorphism support: don't duplicate inherited fields -->
             <xsl:variable name="propertyType">
             <xsl:choose>
                 <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
@@ -811,7 +758,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
         set<xsl:value-of select="$CName"/>Nil();
         </xsl:if>
 
-            </xsl:if><!-- xsl:if test="not(@inherited)" polymorphism end -->
         </xsl:for-each> <!-- for-each select="proprety" -->
 
         <xsl:if test="count(property[@array])!=0">
@@ -825,7 +771,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
         </xsl:if>
 
         <xsl:for-each select="property">
-            <xsl:if test="not(@inherited)"><!-- start: polymorphism support: don't duplicate inherited fields -->
             <xsl:variable name="propertyType">
             <xsl:choose>
                 <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
@@ -874,7 +819,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
         set<xsl:value-of select="$CName"/>NilAt(int i);
 
         </xsl:if> <!-- closes isarray -->
-            </xsl:if><!-- xsl:if test="not(@inherited)" polymorphisum support end -->
         </xsl:for-each>
 
         /**************************** Serialize and De serialize functions ***************************/
@@ -887,7 +831,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
          * @param parent_element The parent element if it is an element, NULL otherwise
          * @return true on success, false otherwise
          */
-       <xsl:if test="extensionBaseTypeOf">virtual // polymorphism support</xsl:if>
        bool WSF_CALL
        deserializeFromString(const axis2_char_t *node_value, axiom_node_t *parent);
         </xsl:if>
@@ -899,7 +842,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
          *              (Parent will order this in a case of choice)
          * @return true on success, false otherwise
          */
-        <xsl:if test="extensionBaseTypeOf">virtual // polymorphism support</xsl:if>
         bool WSF_CALL
         deserialize(axiom_node_t** omNode, bool *isEarlyNodeValid, bool dontCareMinoccurs);
                          
@@ -911,7 +853,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
          * @param namespaces hash of namespace uri to prefix
          * @param next_ns_index pointer to an int which contain the next namespace index
          */
-        <xsl:if test="extensionBaseTypeOf">virtual // polymorphism support</xsl:if>
         void WSF_CALL
         declareParentNamespaces(axiom_element_t *parent_element, axutil_hash_t *namespaces, int *next_ns_index);
 
@@ -922,7 +863,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
          * @param namespaces hash which contains a mapping of namespace uris to prefixes
          * @return serialized string
          */
-         <xsl:if test="extensionBaseTypeOf">virtual // polymorphism support</xsl:if>
          char* WSF_CALL
          serializeToString(axutil_hash_t *namespaces);
         </xsl:if>
@@ -936,7 +876,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
          * @param next_ns_index an int which contains the next namespace index
          * @return axiom_node_t on success,NULL otherwise.
          */
-        <xsl:if test="extensionBaseTypeOf">virtual // polymorphism support</xsl:if>
         axiom_node_t* WSF_CALL
         serialize(axiom_node_t* <xsl:value-of select="$name"/>_om_node, axiom_element_t *<xsl:value-of select="$name"/>_om_element, int tag_closed, axutil_hash_t *namespaces, int *next_ns_index);
 
@@ -944,7 +883,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
          * Check whether the <xsl:value-of select="$axis2_name"/> is a particle class (E.g. group, inner sequence)
          * @return true if this is a particle class, false otherwise.
          */
-        <xsl:if test="extensionBaseTypeOf">virtual // polymorphism support</xsl:if>
         bool WSF_CALL
         isParticle();
 
@@ -954,7 +892,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
         /************NOTE: This method is introduced to resolve a problem in unwrapping mode *******************/
 
       <xsl:for-each select="property">
-        <xsl:if test="not(@inherited)"><!-- polymorphism support: don't duplicate inherited fields TODO review-->
             <xsl:variable name="propertyType">
             <xsl:choose>
                 <xsl:when test="@isarray">std::vector&lt;<xsl:value-of select="@type"/><xsl:if test="@ours or @type='std::string' or @type='unsigned char' or @type='unsigned short' or @type='uint64_t' or @type='unsigned int' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t'"><xsl:text>*</xsl:text></xsl:if>&gt;*</xsl:when>
@@ -994,7 +931,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
         <xsl:value-of select="$propertyType"/> WSF_CALL
         getProperty<xsl:value-of select="position()"/>();
 
-        </xsl:if><!-- xsl:if test="not(@inherited)" polimorphisum support Review end -->
     </xsl:for-each>
 
     <xsl:for-each select="memberType">

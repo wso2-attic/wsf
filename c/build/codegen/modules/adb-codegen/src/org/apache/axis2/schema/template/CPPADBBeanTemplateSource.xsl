@@ -53,9 +53,6 @@
         <xsl:variable name="nsprefix"><xsl:value-of select="@nsprefix"/></xsl:variable>
         <xsl:variable name="anon"><xsl:value-of select="@anon"/></xsl:variable>
         <xsl:variable name="ordered"><xsl:value-of select="@ordered"/></xsl:variable>
-        <!-- support polymorphism TODO review-->
-        <xsl:variable name="extension"><xsl:value-of select="@extension"/></xsl:variable>
-        <!-- end -->
         <xsl:variable name="particleClass"><xsl:value-of select="@particleClass"/></xsl:variable> <!-- particle classes are used to represent schema groups -->
         <xsl:variable name="hasParticleType"><xsl:value-of select="@hasParticleType"/></xsl:variable> <!-- particle classes are used to represent schema groups -->
        
@@ -84,8 +81,6 @@
         #include &lt;Environment.h&gt;
         #include &lt;WSFError.h&gt;
 
-        <xsl:for-each select="extensionBaseTypeOf"><xsl:variable name="type" select="@type"/>#include "<xsl:value-of select="substring-after($type,'::')"/>.h" // rnt-mod: polymorphism support
-        </xsl:for-each>
 
         using namespace wso2wsf;
         using namespace std;
@@ -320,73 +315,6 @@
         {
 
         }
-
-        // rnt-mod: start: polymorphism support
-        /**
-         * Static member function for creating objects of a given type
-         *
-         * @param xsiType the xsi:type of the desired object
-         * @return object that is a subtype of <xsl:value-of select="$axis2_name"/>
-         *         matching xsiType.
-         */
-        <xsl:value-of select="$axis2_name"/>* WSF_CALL
-        <xsl:value-of select="$axis2_name"/>::createByXsiType(string xsiType)
-        {
-            <xsl:choose><xsl:when test="extensionBaseTypeOf"><xsl:value-of select="$axis2_name"/> *ret;
-
-            if (xsiType == "")
-                return NULL;
-
-            <xsl:for-each select="extensionBaseTypeOf"><xsl:if test="position()!=1">else </xsl:if>if ((ret = <xsl:value-of select="@type"/>::createByXsiType(xsiType)))
-                return ret;
-            </xsl:for-each></xsl:when><xsl:otherwise>if ((xsiType == "<xsl:value-of select="$axis2_name"/>") || (xsiType == ""))
-                return new <xsl:value-of select="$axis2_name"/>();
-            </xsl:otherwise></xsl:choose>else
-                return NULL;
-        }
-
-        /**
-         * Member function for determining the xsi:type for this class
-         *
-         * @param index for the next namespace, used for generating namespace
-         *        prefixes
-         * @return a string representing the xsi:type for the class.
-         */
-        axis2_char_t* WSF_CALL
-        <xsl:value-of select="$axis2_name"/>::getXsiTypeAttr(int *next_ns_index,
-                axiom_element_t *parent_element,
-                axutil_hash_t *namespaces,
-                int *type_str_len)
-        {
-            <xsl:choose><xsl:when test="$extension">axis2_char_t *p_prefix;
-            static axis2_char_t ret[64] = "";
-            static int ret_len = 0;
-
-            if (!ret_len)
-            {
-                if(!(p_prefix = (axis2_char_t*)axutil_hash_get(namespaces,
-                                                               "<xsl:value-of select="$nsuri"/>",
-                                                               AXIS2_HASH_KEY_STRING)))
-                {
-                    p_prefix = (axis2_char_t*)AXIS2_MALLOC(Environment::getEnv()->allocator,
-                                                           sizeof(axis2_char_t) *
-                                                           ADB_DEFAULT_NAMESPACE_PREFIX_LIMIT);
-                    sprintf(p_prefix, "n%d", (*next_ns_index)++);
-                    axutil_hash_set(namespaces, "<xsl:value-of select="$nsuri"/>",
-                                    AXIS2_HASH_KEY_STRING, p_prefix);
-                    axiom_element_declare_namespace_assume_param_ownership(
-                        parent_element, Environment::getEnv(),
-                        axiom_namespace_create(Environment::getEnv(),
-                        "<xsl:value-of select="$nsuri"/>", p_prefix));
-                }
-
-                ret_len = sprintf(ret, " xsi:type=\"%s:<xsl:value-of select="$originalName"/>\"", p_prefix);
-            }
-
-            *type_str_len = ret_len;
-            return ret;</xsl:when><xsl:otherwise>return NULL;</xsl:otherwise></xsl:choose>
-        }
-        // rnt-mod: end
 
         <xsl:if test="@simple">
             bool WSF_CALL
@@ -1511,25 +1439,7 @@
                               <!-- changes to following choose tag should be changed in another 2 places -->
                                  <xsl:choose>
                                     <xsl:when test="@ours">
-                                    // rnt-mod: start: polymorphism support
-                                    axis2_char_t *xsi_type = axiom_element_get_attribute_value_by_name(current_element, Environment::getEnv(), "xsi:type");
-                                    string xsiType;
-                                    int xsiTypeColonPos;
-                                    <xsl:value-of select="@type"/> *element;
-
-                                    if (xsi_type)
-                                    {
-                                        xsiType = string(xsi_type);
-
-                                        if((xsiTypeColonPos = xsiType.find(':')) != string::npos)
-                                            xsiType = xsiType.substr(xsiTypeColonPos + 1);
-                                    }
-                                    else
-                                        xsiType = string("");
-
-                                    if (!(element = <xsl:value-of select="@type"/>::createByXsiType(xsiType)))
-                                        element = new <xsl:value-of select="@type"/>();
-                                    // rnt-mod: end
+                                      <xsl:value-of select="@type"/>* element = new <xsl:value-of select="@type"/>();
 
                                       status =  element->deserialize(&amp;current_node, &amp;is_early_node_valid, <xsl:choose><xsl:when test="$choice">true</xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose>);
                                       if(AXIS2_FAILURE == status)
@@ -1971,25 +1881,7 @@
                                       <!-- changes to following choose tag should be changed in another 2 places -->
                                      <xsl:choose>
                                         <xsl:when test="@ours">
-                                    // rnt-mod: start: polymorphism support
-                                    axis2_char_t *xsi_type = axiom_element_get_attribute_value_by_name(current_element, Environment::getEnv(), "xsi:type");
-                                    string xsiType;
-                                    int xsiTypeColonPos;
-                                    <xsl:value-of select="@type"/> *element;
-
-                                    if (xsi_type)
-                                    {
-                                        xsiType = string(xsi_type);
-
-                                        if((xsiTypeColonPos = xsiType.find(':')) != string::npos)
-                                            xsiType = xsiType.substr(xsiTypeColonPos + 1);
-                                    }
-                                    else
-                                        xsiType = string("");
-
-                                    if (!(element = <xsl:value-of select="@type"/>::createByXsiType(xsiType)))
-                                        element = new <xsl:value-of select="@type"/>();
-                                    // rnt-mod: end
+                                          <xsl:value-of select="@type"/>* element = new <xsl:value-of select="@type"/>();
                                           
                                           status =  element->deserialize(&amp;current_node, &amp;is_early_node_valid, <xsl:choose><xsl:when test="$choice">true</xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose>);
                                           
@@ -2481,26 +2373,7 @@
                                       <!-- changes to following choose tag should be changed in another 2 places -->
                                      <xsl:choose>
                                         <xsl:when test="@ours">
-                                    // rnt-mod: start: polymorphism support
-                                    axis2_char_t *xsi_type = axiom_element_get_attribute_value_by_name(current_element, Environment::getEnv(), "xsi:type");
-                                    string xsiType;
-                                    int xsiTypeColonPos;
-                                    <xsl:value-of select="@type"/> *element;
-
-                                    if (xsi_type)
-                                    {
-                                        xsiType = string(xsi_type);
-
-                                        if((xsiTypeColonPos = xsiType.find(':')) != string::npos)
-                                            xsiType = xsiType.substr(xsiTypeColonPos + 1);
-                                    }
-                                    else
-                                        xsiType = string("");
-
-                                    if (!(element = <xsl:value-of select="@type"/>::createByXsiType(xsiType)))
-                                        element = new <xsl:value-of select="@type"/>();
-                                    // rnt-mod: end
-
+                                          <xsl:value-of select="@type"/>* element = <xsl:value-of select="@type"/>();
                                           
                                           status =  element->deserialize(&amp;current_node, &amp;is_early_node_valid, <xsl:choose><xsl:when test="$choice">true</xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose>);
                                           if(AXIS2_FAILURE ==  status)
@@ -3517,10 +3390,6 @@
          
          axiom_node_t *current_node = NULL;
          int tag_closed = 0;
-         // rnt-mod: start: polymorphism support
-         axis2_char_t *xsi_type_attr = NULL;
-         int xsi_type_attr_len;
-         // rnt-mod: end
 
          <!--now distinguise the properties specific to simple types -->
          <xsl:choose>
@@ -3623,10 +3492,6 @@
                   </xsl:if>
                 </xsl:if>
 
-            // rnt-mod: start: polymorphism support
-            if (!isParticle() &amp;&amp; (xsi_type_attr = getXsiTypeAttr(next_ns_index, parent_element, namespaces, &amp;xsi_type_attr_len)))
-                axutil_stream_write(stream, Environment::getEnv(), xsi_type_attr, xsi_type_attr_len);
-            // rnt-mod: end
 
             
             <!--first write attributes tothe parent-->
@@ -5003,7 +4868,6 @@
                 </xsl:choose>
             </xsl:variable>
 
-        <xsl:if test="not(@inherited)"><!-- rnt-mod: start: polymorphism support: don't duplicate inherited fields -->
             /**
              * Getter for <xsl:value-of select="$propertyName"/> by  Property Number <xsl:value-of select="position()"/>
              */
@@ -5740,7 +5604,6 @@
            }
 
            </xsl:if> <!-- end of checkiing is array -->
-        </xsl:if><!-- rnt-mod: end -->
         </xsl:for-each>
 
         <!-- The section covers the list types, this almost rewrite above setters/getters -->

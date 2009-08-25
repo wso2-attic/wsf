@@ -71,7 +71,6 @@ public class BeanWriterMetaInfoHolder {
     protected Map memberTypes = new HashMap();
     protected Map xmlNameJavaNameMap = new HashMap();
     protected List memberTypesKeys = new ArrayList();
-    protected Map extensionBaseTypeOf = null; // polymorphism support Review
 
     protected Map elementQNameToDefulatValueMap = new HashMap();
 
@@ -226,16 +225,6 @@ public class BeanWriterMetaInfoHolder {
     public void setExtensionBaseType(QName extensionBaseType) {
         this.extensionBaseType = extensionBaseType;
     }
-    // rnt-mod: start: polymorphism support
-    /**
-     * Gets the extension base type
-     *
-     * @return the extension base type
-     */
-    public QName getExtensionBaseType() {
-        return this.extensionBaseType;
-    }
-    // rnt-mod: end
 
     /**
      * Checks if it is a extension base type.
@@ -874,19 +863,6 @@ public class BeanWriterMetaInfoHolder {
         this.memberTypes.put(qname,className);
         this.memberTypesKeys.add(qname);
     }
-    // rnt-mod: start: polymorphism support
-    public void addExtensionBaseTypeOf(QName qName, String className) {
-        if (this.extensionBaseTypeOf == null) {
-            this.extensionBaseTypeOf = new HashMap();
-        }
-
-        this.extensionBaseTypeOf.put(qName, className);
-    }
-
-    public Map getExtensionBaseTypeOf() {
-        return this.extensionBaseTypeOf;
-    }
-    // rnt-mod: end
 
     public boolean isList() {
         return isList;
