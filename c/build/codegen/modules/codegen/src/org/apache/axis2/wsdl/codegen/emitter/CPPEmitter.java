@@ -263,7 +263,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
         CPPVCProjectWriter vcProjectWriter = new CPPVCProjectWriter(
                 getOutputDirectory(this.codeGenConfiguration.getOutputLocation(),
                                 this.codeGenConfiguration.getSourceLocation()),
-                this.codeGenConfiguration.getOutputLanguage());
+                this.codeGenConfiguration.getOutputLanguage(),axisService.getName(),this.codeGenConfiguration.isServerSide());
         writeFile(doc, vcProjectWriter);
     }
 

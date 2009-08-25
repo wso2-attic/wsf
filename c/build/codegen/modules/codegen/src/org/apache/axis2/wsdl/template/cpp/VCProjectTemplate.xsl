@@ -39,11 +39,11 @@
 	Keyword="Win32Proj"
 	>
 <xsl:if test="$isServer='0'">
-    <xsl:attribute name="Name">client</xsl:attribute>
+    <xsl:attribute name="Name"><xsl:value-of select="$servicename"/></xsl:attribute>
     <xsl:attribute name="RootNamespace">client</xsl:attribute>
 </xsl:if>
 <xsl:if test="$isServer='1'">
-    <xsl:attribute name="Name">service</xsl:attribute>
+    <xsl:attribute name="Name"><xsl:value-of select="$servicename"/></xsl:attribute>
     <xsl:attribute name="RootNamespace">service</xsl:attribute>
 </xsl:if>
 

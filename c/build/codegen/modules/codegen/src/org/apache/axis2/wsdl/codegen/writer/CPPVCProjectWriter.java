@@ -24,20 +24,26 @@ import java.io.FileOutputStream;
 
 public class CPPVCProjectWriter extends FileWriter {
 
-       public CPPVCProjectWriter(File outputFileLocation,String language) {
+        private String serviceName;
+        private boolean isServerSide = false;
+
+       public CPPVCProjectWriter(File outputFileLocation,String language,String sName, boolean isServerSide) {
         this.outputFileLocation = outputFileLocation;
            this.language = language;
+           this.serviceName = sName;
+           this.isServerSide = isServerSide;
     }
 
     public void createOutFile(String packageName, String fileName) throws Exception {
+        String outfilename = serviceName + (isServerSide ?"Service":"Client");
         outputFile = org.apache.axis2.util.FileWriter.createClassFile(outputFileLocation,
                                                 "",
-                                                "project",
+                                                outfilename,
                                                 ".vcproj");
         //set the existing flag
         fileExists = outputFile.exists();
         if (!fileExists) {
             this.stream = new FileOutputStream(outputFile);
-        }
+        }                                                   
     }
 }
