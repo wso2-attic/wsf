@@ -110,8 +110,7 @@ OMElement::OMElement(OMNode * parent, axiom_node_t * node)
         axiom_namespace_t * ns = axiom_element_get_namespace(_wsf_axiom_element, Environment::getEnv(), node);
         if (ns)
         {
-            _namespace = new OMNamespace(axiom_namespace_get_uri(ns, Environment::getEnv()),
-                axiom_namespace_get_prefix(ns, Environment::getEnv()));
+            _namespace = new OMNamespace(ns);
         }
     }
 
@@ -177,7 +176,8 @@ OMElement::~OMElement()
     }
     if (_namespace)
     {
-        delete _namespace;
+		_namespace->setAxiomNamespace(NULL);
+		delete _namespace;
     }
    for (vector<OMNamespace *>::iterator ite = _added_namespaces.begin();
             ite != _added_namespaces.end(); ++ite)
@@ -410,8 +410,7 @@ OMNamespace * OMElement::getNamespace(bool is_default)
     {
         return NULL;
     }
-    _namespace = new OMNamespace(axiom_namespace_get_uri(ns, Environment::getEnv()),
-        axiom_namespace_get_prefix(ns, Environment::getEnv()));
+    _namespace = new OMNamespace(ns);
     return _namespace;
 }
 
