@@ -42,6 +42,11 @@ OMNamespace::OMNamespace(OMNamespace & ns)
         Environment::getEnv(), (ns.getURI()).c_str(), (ns.getPrefix()).c_str());
 }
 
+OMNamespace::OMNamespace(axiom_namespace_t *ns)
+{
+	_wsf_axiom_namespace = ns;
+}
+
 OMNamespace::~OMNamespace()
 {
     if (_wsf_axiom_namespace)
@@ -74,4 +79,6 @@ string OMNamespace::toString()
 {
     return axiom_namespace_to_string(_wsf_axiom_namespace, Environment::getEnv());
 }
+
+
 
