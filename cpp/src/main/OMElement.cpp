@@ -497,7 +497,7 @@ void OMElement::freeTree()
         return;
     }
     std::vector<OMNode *> empty_child_node_array;
-    setChilderen(empty_child_node_array);
+    setChildren(empty_child_node_array);
 }
 
 bool OMElement::insertSiblingAfter(OMNode * to_insert)
@@ -671,7 +671,7 @@ std::vector<OMNode *> OMElement::getChilderen()
     return _child_nodes;
 }
 
-void OMElement::setChilderen(std::vector<OMNode *> children)
+void OMElement::setChildren(std::vector<OMNode *> children)
 {
     if (_child_nodes.size() > 0)
     {
