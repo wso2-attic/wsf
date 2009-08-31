@@ -137,7 +137,6 @@ OMElement::OMElement(OMNode * parent, axiom_node_t * node)
                     continue;
                 }
                 OMElement* element_cpp = new OMElement(this, node_new);
-                _child_nodes.push_back(element_cpp);
             }
             else if (axiom_node_get_node_type(node_new, Environment::getEnv()) == AXIOM_TEXT)
             {
@@ -147,7 +146,6 @@ OMElement::OMElement(OMNode * parent, axiom_node_t * node)
                     continue;
                 }
                 OMText * text_cpp = new OMText(this, node_new);
-                _child_nodes.push_back(text_cpp);
             }
         }
     }
@@ -189,6 +187,17 @@ OMElement::~OMElement()
         delete *ite;
     }
     _added_namespaces.clear();
+
+	if (_child_nodes.size() > 0)
+	{
+		for (vector<OMNode *>::iterator i = _child_nodes.begin();
+			i < _child_nodes.end(); i++)
+		{
+			(*i)->setAxiomNode(NULL);
+			delete (*i);
+		}
+		_child_nodes.clear();
+	}
 }
 
 OMNamespace * OMElement::findNamespace(std::string uri, std::string prefix)

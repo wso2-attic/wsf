@@ -46,8 +46,11 @@ bool OMDataHandler::write(axis2_byte_t * input_stream, int input_stream_length)
     {
         return false;
     }
+	/** the provided stream is duplicated here and set to the data handler since data handler owns the stream */
+	axis2_byte_t *new_input_stream = (axis2_byte_t*)AXIS2_MALLOC(Environment::getEnv()->allocator, sizeof(axis2_byte_t)*input_stream_length);
+	memcpy(new_input_stream, input_stream, input_stream_length);
     axis2_status_t status =
-        axiom_data_handler_set_binary_data(_wsf_axiom_data_handler, Environment::getEnv(), input_stream, input_stream_length);
+        axiom_data_handler_set_binary_data(_wsf_axiom_data_handler, Environment::getEnv(), new_input_stream, input_stream_length);
     if (status != AXIS2_SUCCESS)
     {
         return false;
