@@ -71,6 +71,15 @@ namespace wso2wsf
 		{
 			return tls_key;
 		}
+
+		~TLSKey()
+		{
+#ifdef WIN32
+			TlsFree(tls_key);
+#else
+			pthread_key_delete(tls_key);
+#endif
+		}
 	};
 
 	class Environment
