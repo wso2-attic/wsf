@@ -175,7 +175,7 @@ namespace wso2wsf
          * @param children child node array.
          * @return children of this node.
          */
-        WSF_EXTERN virtual void WSF_CALL setChilderen(std::vector<OMNode *> children);
+        WSF_EXTERN virtual void WSF_CALL setChildren(std::vector<OMNode *> children);
 
 
 
