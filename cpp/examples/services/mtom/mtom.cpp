@@ -78,10 +78,9 @@ OMElement* MTOMService::invoke(OMElement *ele, MessageContext *msgCtx)
 		/** construct a datahandler with the received binary content */
 		OMDataHandler *responseDh = new OMDataHandler();
 		
-		/** Binary data should be copied since the received binary content is owned by the engine */
-		char *buffer = new char[length]	;
-		memcpy(buffer,data, length);
-		responseDh->write(buffer, length);
+		/** Write function duplicates the data and keep it as part of data handler*/
+	
+		responseDh->write(data, length);
 		
 		OMText *dhText = new OMText(responseDh);
 		resultEle->addChild(dhText);
