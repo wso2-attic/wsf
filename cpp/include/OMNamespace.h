@@ -87,11 +87,18 @@ namespace wso2wsf
 		*/
 		WSF_EXTERN WSF_CALL OMNamespace(std::string uri);
         /**
-         * Creates a namespace struct.
+         * Creates a OMNamespace instance from a uri and a prefix value
          * @param uri namespace URI.
          * @param prefix namespace prefix.
          */
         WSF_EXTERN WSF_CALL OMNamespace(std::string uri, std::string prefix);
+
+		/**
+		* Creates an OMNamespace instance from an axiom_namespace_t                                                   
+		* @param ns Pointer to an axiom_namespace
+		* @return an OMNamespace
+		*/
+		WSF_EXTERN WSF_CALL OMNamespace(axiom_namespace_t *ns);
 
         /**
          * Copy Constructor.
