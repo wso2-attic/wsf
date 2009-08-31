@@ -753,6 +753,11 @@ namespace wso2wsf
 		* @return true if still in use, else false 
 		*/
 		WSF_EXTERN bool WSF_CALL incrementRef();
+		/**
+		* Destructor for message context                                                   
+		*
+		*/
+		WSF_EXTERN virtual WSF_CALL ~MessageContext();
 		
 	};
 	/** @} */
