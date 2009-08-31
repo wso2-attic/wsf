@@ -60,10 +60,10 @@ int main(int argc, char *argv[])
     op->setEnableMTOM(true);
 
     OMNamespace * ns1 = new OMNamespace("http://ws.apache.org/axis2/c/samples/mtom", "ns1");
-    OMElement * payload = new OMElement(NULL,"mtomSample", ns1);
-    OMElement * child1 = new OMElement(payload,"fileName", ns1);
+    OMElement * payload = new OMElement(NULL,"mtomSample", NULL);
+    OMElement * child1 = new OMElement(payload,"fileName", NULL);
     child1->setText("test.jpg");
-    OMElement * child2 = new OMElement(payload,"image", ns1);
+    OMElement * child2 = new OMElement(payload,"image", NULL);
     OMDataHandler * data_handler = new OMDataHandler(file_name, "image/jpeg");
     OMText * child3 = new OMText(child2, data_handler);
     child3->optimize(true);
