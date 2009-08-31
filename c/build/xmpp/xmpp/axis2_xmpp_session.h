@@ -29,7 +29,7 @@
  */
 
 #include <iksemel.h>
-#include <axiom_soap.h>
+
 #include <axis2_const.h>
 #include <axis2_defines.h>
 #include <axutil_env.h>
@@ -68,9 +68,7 @@ extern "C"
         axutil_env_t *env;
         axis2_conf_ctx_t* conf_ctx;
         axis2_svc_t *svc;
-        axutil_hash_t *msg_container;
-        /*axis2_msg_ctx_t *response;*/
-        axutil_thread_mutex_t * session_mutex;
+        axis2_msg_ctx_t *response;
     }axis2_xmpp_session_data_t;
 
 
@@ -96,18 +94,6 @@ axis2_xmpp_session_reset (
 AXIS2_EXTERN void AXIS2_CALL
 axis2_xmpp_session_data_init (
     axis2_xmpp_session_data_t *data);
-
-AXIS2_EXTERN axiom_soap_envelope_t *AXIS2_CALL
-axis2_xmpp_session_send(
-    axis2_xmpp_session_data_t * xmpp_session,
-    const axutil_env_t *env,
-    axis2_msg_ctx_t *msg_ctx,
-    const axis2_char_t *mep_uri);
-
-AXIS2_EXTERN void AXIS2_CALL
-axis2_xmpp_session_start(
-    axis2_xmpp_session_data_t * xmpp_session,
-    const axutil_env_t *env);
 
 #ifdef __cplusplus
 }
