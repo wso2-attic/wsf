@@ -38,6 +38,8 @@
 typedef struct axis2_xmpp_transport_sender_impl
 {
     axis2_transport_sender_t sender;
+    axutil_hash_t *xmpp_sessions;
+    axutil_thread_mutex_t * sessions_mutex;
 }
 axis2_xmpp_transport_sender_impl_t;
 
@@ -47,26 +49,26 @@ axis2_xmpp_transport_sender_impl_t;
 
 /* Function headers ***********************************************************/
 
-axis2_status_t AXIS2_CALL
+static axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_sender_invoke(
     axis2_transport_sender_t *transport_sender,
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx);
 
-axis2_status_t AXIS2_CALL
+static axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_sender_clean_up(
     axis2_transport_sender_t *transport_sender,
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx);
 
-axis2_status_t AXIS2_CALL
+static axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_sender_init(
     axis2_transport_sender_t *transport_sender,
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_transport_out_desc_t *out_desc);
 
-void AXIS2_CALL
+static void AXIS2_CALL
 axis2_xmpp_transport_sender_free(
     axis2_transport_sender_t *transport_sender,
     const axutil_env_t *env);
@@ -87,15 +89,33 @@ axis2_xmpp_transport_sender_create(
     const axutil_env_t *env)
 {
     axis2_xmpp_transport_sender_impl_t *impl = NULL;
-    
+
     AXIS2_ENV_CHECK(env, NULL);
 
-    impl = (axis2_xmpp_transport_sender_impl_t *)
-        AXIS2_MALLOC(env->allocator, sizeof(axis2_xmpp_transport_sender_impl_t));
+    impl = (axis2_xmpp_transport_sender_impl_t *) AXIS2_MALLOC(env->allocator,
+        sizeof(axis2_xmpp_transport_sender_impl_t));
 
-    if (!impl)
+    if(!impl)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+        return NULL;
+    }
+
+    impl->xmpp_sessions = axutil_hash_make(env);
+    if(!impl->xmpp_sessions)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "Cannot create xmpp transport. Creating xmpp sessions container failed.");
+        AXIS2_FREE(env->allocator, impl);
+        return NULL;
+    }
+
+    impl->sessions_mutex = axutil_thread_mutex_create(env->allocator, AXIS2_THREAD_MUTEX_DEFAULT);
+    if(!impl->sessions_mutex)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "Cannot create xmpp transport. Creating sessions mutex failed.");
+        axis2_xmpp_transport_sender_free(impl, env);
         return NULL;
     }
     impl->sender.ops = &xmpp_transport_sender_ops_var;
@@ -109,12 +129,211 @@ axis2_xmpp_transport_sender_free(
     const axutil_env_t *env)
 {
     axis2_xmpp_transport_sender_impl_t *impl = NULL;
+    axutil_hash_index_t *hi = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    
     impl = AXIS2_INTF_TO_IMPL(transport_sender);
 
+    if(impl->xmpp_sessions)
+    {
+        for (hi = axutil_hash_first(impl->xmpp_sessions, env); hi; hi = axutil_hash_next(env, hi))
+        {
+            void *val = NULL;
+            axutil_hash_this(hi, NULL, NULL, &val);
+            if (val)
+            {
+                axis2_xmpp_session_free_void_arg(val, env);
+            }
+        }
+        axutil_hash_free(impl->xmpp_sessions, env);
+    }
+
+    if(impl->sessions_mutex)
+    {
+        axutil_thread_mutex_destroy(impl->sessions_mutex);
+    }
+
     AXIS2_FREE(env->allocator, impl);
+}
+
+static axis2_status_t AXIS2_CALL
+axis2_xmpp_transport_sender_establish_session(
+    axis2_xmpp_transport_sender_impl_t *xmpp_sender,
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    axis2_xmpp_session_data_t **session)
+{
+    axis2_char_t *sasl = NULL;
+    axis2_char_t *tls = NULL;
+    axis2_xmpp_session_data_t *xmpp_session;
+    int ret;
+
+    xmpp_session = axis2_xmpp_session_create(env);
+    (xmpp_session)->id_str = (axis2_char_t *) axis2_msg_ctx_get_property_value(msg_ctx, env,
+        "XMPP_JID");
+    xmpp_session->password = (axis2_char_t *) axis2_msg_ctx_get_property_value(msg_ctx, env,
+        "XMPP_PASSWORD");
+    sasl = (axis2_char_t *) axis2_msg_ctx_get_property_value(msg_ctx, env, "XMPP_SASL");
+    tls = (axis2_char_t *) axis2_msg_ctx_get_property_value(msg_ctx, env, "XMPP_TLS");
+
+    /* If JID, PASSWORD and SASL didn't give programmatically then we will get them
+     * from services.xml or axis2.xml */
+    if(!(xmpp_session->id_str && xmpp_session->password))
+    {
+        axutil_param_t *xmpp_param = NULL;
+        axutil_hash_t *xmpp_hash = NULL;
+        axutil_generic_obj_t *xmpp_gen_obj = NULL;
+        axiom_attribute_t *xmpp_attr = NULL;
+
+        xmpp_param = axis2_msg_ctx_get_parameter(msg_ctx, env, "XMPP");
+        xmpp_hash = axutil_param_get_attributes(xmpp_param, env);
+
+        xmpp_gen_obj = axutil_hash_get(xmpp_hash, "JID", AXIS2_HASH_KEY_STRING);
+        xmpp_attr = (axiom_attribute_t *) axutil_generic_obj_get_value(xmpp_gen_obj, env);
+        xmpp_session->id_str = axiom_attribute_get_value(xmpp_attr, env);
+
+        xmpp_gen_obj = axutil_hash_get(xmpp_hash, "PASSWORD", AXIS2_HASH_KEY_STRING);
+        xmpp_attr = (axiom_attribute_t *) axutil_generic_obj_get_value(xmpp_gen_obj, env);
+        xmpp_session->password = axiom_attribute_get_value(xmpp_attr, env);
+
+        xmpp_gen_obj = axutil_hash_get(xmpp_hash, "SASL", AXIS2_HASH_KEY_STRING);
+        xmpp_attr = (axiom_attribute_t *) axutil_generic_obj_get_value(xmpp_gen_obj, env);
+        sasl = axiom_attribute_get_value(xmpp_attr, env);
+
+        xmpp_gen_obj = axutil_hash_get(xmpp_hash, "TLS", AXIS2_HASH_KEY_STRING);
+        xmpp_attr = (axiom_attribute_t *) axutil_generic_obj_get_value(xmpp_gen_obj, env);
+        tls = axiom_attribute_get_value(xmpp_attr, env);
+    }
+
+    if(!axutil_strcmp(sasl, "true"))
+    {
+        xmpp_session->use_sasl = 1;
+    }
+
+    if(!axutil_strcmp(tls, "true"))
+    {
+        xmpp_session->use_tls = 1;
+    }
+
+    xmpp_session->env = (axutil_env_t *) env;
+    xmpp_session->conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+    xmpp_session->svc = axis2_msg_ctx_get_svc(msg_ctx, env);
+
+    xmpp_session->parser = iks_stream_new(IKS_NS_CLIENT, (void*) xmpp_session,
+        axis2_xmpp_client_on_data);
+    iks_set_log_hook(xmpp_session->parser, axis2_xmpp_client_on_log);
+    axis2_xmpp_client_setup_filter(xmpp_session);
+    xmpp_session->jid = iks_id_new(iks_parser_stack(xmpp_session->parser), xmpp_session->id_str);
+    xmpp_session->server = xmpp_session->jid->server;
+    xmpp_session->user = xmpp_session->jid->user;
+
+    ret = iks_connect_tcp(xmpp_session->parser, xmpp_session->server, IKS_JABBER_PORT);
+    if(iks_connect_tcp(xmpp_session->parser, xmpp_session->server, IKS_JABBER_PORT) != IKS_OK)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "Failed to connect to server %s, error code %d", xmpp_session->server, ret);
+        return AXIS2_FAILURE;
+    }
+
+    while(!xmpp_session->authorized || !xmpp_session->session)
+    {
+        ret = iks_recv(xmpp_session->parser, -1);
+    }
+
+    /* Start the thread on the session */
+    axis2_xmpp_session_start(xmpp_session, env);
+    *session = xmpp_session;
+
+    return AXIS2_SUCCESS;
+}
+
+static axis2_status_t AXIS2_CALL
+axis2_xmpp_transport_sender_client_side_invoke(
+    axis2_transport_sender_t *transport_sender,
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx)
+{
+    axis2_xmpp_transport_sender_impl_t *xmpp_sender = NULL;
+    axis2_xmpp_session_data_t *xmpp_session = NULL;
+    axis2_op_t *op = NULL;
+    const axis2_char_t *mep_uri = NULL;
+    axiom_soap_envelope_t *response_soap_env = NULL;
+    axis2_char_t *xmpp_id = NULL;
+
+    /* Should get the user name of the client and see whether we have a session already */
+    xmpp_id = (axis2_char_t *) axis2_msg_ctx_get_property_value(msg_ctx, env, "XMPP_JID");
+    if(!xmpp_id)
+    {
+        axutil_param_t *xmpp_param = NULL;
+        axutil_hash_t *xmpp_hash = NULL;
+        axutil_generic_obj_t *xmpp_gen_obj = NULL;
+        axiom_attribute_t *xmpp_attr = NULL;
+
+        xmpp_param = axis2_msg_ctx_get_parameter(msg_ctx, env, "XMPP");
+        xmpp_hash = axutil_param_get_attributes(xmpp_param, env);
+        xmpp_gen_obj = axutil_hash_get(xmpp_hash, "JID", AXIS2_HASH_KEY_STRING);
+        xmpp_attr = (axiom_attribute_t *) axutil_generic_obj_get_value(xmpp_gen_obj, env);
+        xmpp_id = axiom_attribute_get_value(xmpp_attr, env);
+
+        if(!xmpp_id)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "Cannot find xmpp credentials to make connection");
+            return AXIS2_FAILURE;
+        }
+    }
+
+    /* found the user name, now have to check whether the session is established already */
+    xmpp_sender = AXIS2_INTF_TO_IMPL(transport_sender);
+    xmpp_session = axutil_hash_get(xmpp_sender->xmpp_sessions, xmpp_id, AXIS2_HASH_KEY_STRING);
+    if(!xmpp_session)
+    {
+        /* session is not yet established. Establish it first */
+        /* But, we have to make sure that only one thread will establish it */
+        axutil_thread_mutex_lock(xmpp_sender->sessions_mutex);
+
+        /* If more than one thread tries to acquires the lock, first thread establishes the session.
+         Others should not do it. */
+        xmpp_session = axutil_hash_get(xmpp_sender->xmpp_sessions, xmpp_id, AXIS2_HASH_KEY_STRING);
+        if(!xmpp_session)
+        {
+            if(axis2_xmpp_transport_sender_establish_session(xmpp_sender, env, msg_ctx,
+                &xmpp_session) != AXIS2_SUCCESS)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Establishing session for %s failed.",
+                    xmpp_id);
+                axutil_thread_mutex_unlock(xmpp_sender->sessions_mutex);
+                return AXIS2_FAILURE;
+            }
+
+            /* Store it in the container */
+            axutil_hash_set(xmpp_sender->xmpp_sessions, xmpp_id, AXIS2_HASH_KEY_STRING,
+                xmpp_session);
+        }
+        axutil_thread_mutex_unlock(xmpp_sender->sessions_mutex);
+    }
+
+    /* session is established. Send the request and get the reply */
+    op = axis2_msg_ctx_get_op (msg_ctx, env);
+    mep_uri = axis2_op_get_msg_exchange_pattern(op, env);
+    response_soap_env = axis2_xmpp_session_send(xmpp_session, env, msg_ctx, mep_uri);
+
+    /* check MEP, SEND_ROBUST and OUT_ONLY method does not have any response */
+    if(axutil_strcmp(mep_uri, AXIS2_MEP_URI_OUT_ONLY) &&
+        axutil_strcmp(mep_uri, AXIS2_MEP_URI_ROBUST_OUT_ONLY))
+    {
+        if(response_soap_env)
+        {
+            axis2_msg_ctx_set_response_soap_envelope(msg_ctx, env, response_soap_env);
+        }
+        else
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Sending request using xmpp session failed.");
+            return AXIS2_FAILURE;
+        }
+    }
+
+    return AXIS2_SUCCESS;
 }
 
 /*****************************************************************************/
@@ -137,7 +356,7 @@ axis2_xmpp_transport_sender_free(
  *
  *
  *****************************************************************************/
-axis2_status_t AXIS2_CALL
+static axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_sender_invoke(
     axis2_transport_sender_t *transport_sender,
     const axutil_env_t *env,
@@ -177,6 +396,7 @@ axis2_xmpp_transport_sender_invoke(
     
     if(!is_server)
     {
+#if 0
         axutil_allocator_switch_to_global_pool(env->allocator);
         transport_out = axis2_msg_ctx_get_transport_out_desc(msg_ctx, env);
         xmpp_session = axis2_transport_out_desc_get_param(transport_out, env, "XMPP_SESSION");
@@ -280,6 +500,8 @@ axis2_xmpp_transport_sender_invoke(
                 client_jid = axutil_url_get_server(to_url, env);
             }
         }
+#endif
+        return axis2_xmpp_transport_sender_client_side_invoke(transport_sender, env, msg_ctx);
     }
     else
     {
@@ -345,6 +567,7 @@ axis2_xmpp_transport_sender_invoke(
     xmpp_msg = iks_make_msg(IKS_TYPE_CHAT, client_jid, soap_str);
     iks_send(xmpp_parser, xmpp_msg);
 
+#if 0
     /* Only client needs to terminate connection after recieving
      * response.
      */
@@ -352,30 +575,36 @@ axis2_xmpp_transport_sender_invoke(
     {
         /* check MEP, SEND_ROBUST and OUT_ONLY method doesnt have any
          * response, Hence disconnected*/
-        if(!axutil_strcmp(mep_uri, AXIS2_MEP_URI_OUT_ONLY) || !axutil_strcmp(mep_uri,
-            AXIS2_MEP_URI_ROBUST_OUT_ONLY))
+        if(!axutil_strcmp(mep_uri, AXIS2_MEP_URI_OUT_ONLY) ||
+            !axutil_strcmp(mep_uri, AXIS2_MEP_URI_ROBUST_OUT_ONLY))
         {
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[xmpp]send robust completed.");
         }
         else
         {
             while(!session->in_msg)
+            {
                 iks_recv(xmpp_parser, -1);
+            }
         }
 
         if(session->response)
         {
             response_soap_env = axis2_msg_ctx_get_soap_envelope(session->response, env);
             if(response_soap_env)
+            {
                 axis2_msg_ctx_set_response_soap_envelope(msg_ctx, env, response_soap_env);
+            }
         }
     }
+
+#endif
     return AXIS2_SUCCESS;
 }
 
 /*****************************************************************************/
 
-axis2_status_t AXIS2_CALL
+static axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_sender_clean_up(
     axis2_transport_sender_t *transport_sender,
     const axutil_env_t *env,
@@ -393,7 +622,7 @@ axis2_xmpp_transport_sender_clean_up(
 
 /*****************************************************************************/
 
-axis2_status_t AXIS2_CALL
+static axis2_status_t AXIS2_CALL
 axis2_xmpp_transport_sender_init(
     axis2_transport_sender_t *transport_sender,
     const axutil_env_t *env,
@@ -414,7 +643,7 @@ axis2_get_instance(
     const axutil_env_t *env)
 {
     *inst = axis2_xmpp_transport_sender_create(env);
-    if (!(*inst))
+    if(!(*inst))
     {
         printf("[xmpp]transport sender load not success\n");
         return AXIS2_FAILURE;
@@ -431,7 +660,7 @@ axis2_remove_instance(
     const axutil_env_t *env)
 {
     axis2_status_t status = AXIS2_FAILURE;
-    if (inst)
+    if(inst)
     {
         AXIS2_TRANSPORT_SENDER_FREE(inst, env);
     }
