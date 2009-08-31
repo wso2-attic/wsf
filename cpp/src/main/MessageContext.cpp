@@ -1429,20 +1429,6 @@ WSF_EXTERN std::string WSF_CALL MessageContext::getAuthType()
 	return axis2_msg_ctx_get_auth_type(_msg_ctx, Environment::getEnv());
 }
 
-/*
-WSF_EXTERN axutil_array_list_t *WSF_CALL
-axis2_msg_ctx_get_mime_parts(
-axis2_msg_ctx_t * msg_ctx,
-const axutil_env_t * env){}
-
-
-WSF_EXTERN void WSF_CALL
-axis2_msg_ctx_set_mime_parts(
-axis2_msg_ctx_t * msg_ctx,
-const axutil_env_t * env,
-axutil_array_list_t *mime_parts){}
-*/
-
 /**
 * Incrementing the msg_ctx ref count. This is necessary when 
 * prevent freeing msg_ctx through op_client when it is in use 
@@ -1454,4 +1440,12 @@ WSF_EXTERN bool WSF_CALL MessageContext::incrementRef()
 	if(axis2_msg_ctx_increment_ref(_msg_ctx, Environment::getEnv()))
 		return true;
 	return false;
+}
+
+WSF_EXTERN WSF_CALL MessageContext::~MessageContext()
+{
+	if(_msg_ctx)
+	{
+		axis2_msg_ctx_free(_msg_ctx, Environment::getEnv());
+	}
 }
