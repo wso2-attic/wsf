@@ -59,8 +59,6 @@ namespace wso2wsf
         /**
          * @var _parent private variable holds reference to parent element.
          */
-        OMNode * _parent;
-
     public:
         /**
          * Creates an om text struct.
@@ -157,33 +155,6 @@ namespace wso2wsf
          * false on error.
          */
         WSF_EXTERN bool WSF_CALL setContentId(std::string content_id);
-
-        /**
-         * Detaches given node from the parent and reset the links.
-         * @return a pointer to detached node,returns NULL on error with error
-         * code set to environment's error struct.
-         */
-        WSF_EXTERN virtual OMNode * WSF_CALL detach();
-
-        /**
-         * get parent of node.
-         * @return pointer to parent node of node, return NULL if no parent exists or
-         * when an error occured.
-         */
-        WSF_EXTERN virtual OMNode * WSF_CALL getParent();
-
-        /**
-         * get the previous sibling.
-         * @return a pointer to previous sibling , NULL if a previous sibling does not exits
-         * (happens when this node is the first child of a node).
-         */
-        WSF_EXTERN virtual OMNode * WSF_CALL getPreviousSibling();
-
-        /**
-         * get next sibling.
-         * @return next sibling of this node.
-         */
-        WSF_EXTERN virtual OMNode * WSF_CALL getNextSibling();
 
         /**
          * get the node type of this element.

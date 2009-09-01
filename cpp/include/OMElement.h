@@ -82,11 +82,6 @@ namespace wso2wsf
         axiom_element_t * _wsf_axiom_element;
 
         /**
-         * @var _parent private variable holds reference to parent element.
-         */
-        OMNode * _parent;
-
-        /**
          * Find a namespace in the scope of the document.
          * Start to find from the given node and go up the hierarchy.
          * @param uri namespace uri.
@@ -140,7 +135,7 @@ namespace wso2wsf
          */
         WSF_EXTERN WSF_CALL OMElement(OMNode * parent, axiom_node_t * node);
 
-        /**
+		/**
          * destructor that frees resources. Please note that all associated attributes,
          * namespaces, and child nodes will also be removed.
          */
@@ -168,7 +163,7 @@ namespace wso2wsf
          * Method to retrieve children of this node.
          * @return children of this node.
          */
-        WSF_EXTERN virtual std::vector<OMNode *> WSF_CALL getChilderen();
+        WSF_EXTERN virtual std::vector<OMNode *> WSF_CALL getChildren();
 
         /**
          * Method to set children of this node.
@@ -176,8 +171,6 @@ namespace wso2wsf
          * @return children of this node.
          */
         WSF_EXTERN virtual void WSF_CALL setChildren(std::vector<OMNode *> children);
-
-
 
         /**
          * Frees an om node and all of its children.
@@ -302,7 +295,7 @@ namespace wso2wsf
         WSF_EXTERN bool WSF_CALL setText(std::string text);
 
         /**
-         * select all the text children and concatanate them to a single string.
+         * select all the text children and concatenate them to a single string.
          * @return the contaminated text of all text children text values
          * return null if no text children is available or on error.
          */
@@ -340,19 +333,6 @@ namespace wso2wsf
         WSF_EXTERN bool WSF_CALL build();
 
         /**
-         * Detaches given node from the parent and reset the links
-         * @return a pointer to detached node,returns NULL on error with error
-         * code set to environment's error struct
-         */
-        WSF_EXTERN OMNode * WSF_CALL detach();
-
-        /** get parent of node
-         * @return pointer to parent node of node, return NULL if no parent exists or
-         * when an error occurred.
-         */
-        WSF_EXTERN OMNode * WSF_CALL getParent();
-
-        /**
           * get the first child of node
           * @return pointer to first child node , NULL is returned on error with
           * error code set in environments error
@@ -365,18 +345,7 @@ namespace wso2wsf
          */
         WSF_EXTERN OMNode * WSF_CALL getLastChild();
 
-        /**
-         * get the previous sibling
-         * @return a pointer to previous sibling , NULL if a previous sibling does not exits
-         * (happens when this node is the first child of a node )
-         */
-        WSF_EXTERN OMNode * WSF_CALL getPreviousSibling();
 
-        /**
-         * get next sibling
-         * @return next sibling of this node.
-         */
-        WSF_EXTERN OMNode * WSF_CALL getNextSibling();
 
         /**
          * get the node type of this element

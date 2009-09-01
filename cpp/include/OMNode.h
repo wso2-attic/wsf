@@ -70,12 +70,21 @@ namespace wso2wsf
          */
         axiom_node_t * _wsf_axiom_node;
 
+
+
         /**
          * Indicates whether parser has parsed this information item completely or not
          * @param node node struct.
          * @return true if node is completely build, false if node is not completed.
          */
         bool WSF_CALL isComplete();
+
+	protected:
+		/**
+		* @var _parent variable holds reference for the parent of this node.                                                   
+		*
+		*/
+		OMNode *_parent;
 
     public:
         /**
@@ -137,27 +146,35 @@ namespace wso2wsf
          * @return a pointer to detached node,returns NULL on error with error
          * code set to environment's error struct.
          */
-        virtual OMNode * WSF_CALL detach() = 0;
+        virtual OMNode * WSF_CALL detach();
 
         /**
          * get parent of node.
          * @return pointer to parent node of node, return NULL if no parent exists or
          * when an error occurred.
          */
-        virtual OMNode * WSF_CALL getParent() = 0;
-
+        virtual OMNode * WSF_CALL getParent();
+		/**
+		* 
+		* Set Parent of this Node.If the child node already has a parent which is different 
+		* to the parent being set, the child will be detached first.
+		* @param parent Parent element to be set 
+		* @return bool true if success, false otherwise
+		*
+		*/
+		virtual void WSF_CALL setParent(OMNode *parent);
         /**
          * get the previous sibling.
          * @return a pointer to previous sibling , NULL if a previous sibling does not exits
          * (happens when this node is the first child of a node).
          */
-        virtual OMNode * WSF_CALL getPreviousSibling() = 0;
+        virtual OMNode * WSF_CALL getPreviousSibling();
 
         /**
          * get next sibling.
          * @return next sibling of this node.
          */
-        virtual OMNode * WSF_CALL getNextSibling() = 0;
+        virtual OMNode * WSF_CALL getNextSibling();
 
         /**
          * get the node type of this element.
