@@ -21,7 +21,7 @@
 #include "error.h"
 #include <axiom.h>
 
-#define BUFF_SIZE 32
+#define BUFF_SIZE 1024
 
 static void 
 print_help ();
@@ -199,32 +199,44 @@ static void
 parse_input(const axutil_env_t *env,
 			axis2_char_t **input)
 {
-	int c, nc, index;
-	axis2_char_t buff[BUFF_SIZE];
-	nc = 0;
-	index = 0;
-	*input = "";
-	c = getchar();
-	while(!feof(stdin) && !ferror(stdin))
-	{
-	    nc++;
-	    buff[index] = (axis2_char_t) c;
-	    if(index == (BUFF_SIZE - 2))
-	    {
-			buff[BUFF_SIZE - 1] = '\0';
-			*input = axutil_strcat(env, *input, buff, NULL);
-			index = 0;
-			c = getchar();
-			continue;
-	    }
-	    c = getchar();
-	    index++;
-	}
-	if(feof(stdin) && !ferror(stdin))
-	{
-	    buff[index] = '\0';
-	    *input = axutil_strcat(env, *input, buff, NULL);
-	}
+    int c, nc, index;
+    axis2_char_t buff[BUFF_SIZE];
+    nc = 0;
+    index = 0;
+    *input = NULL;
+    c = getchar();
+    while(!feof(stdin) && !ferror(stdin))
+    {
+        nc++;
+        buff[index] = (axis2_char_t) c;
+        if(index == (BUFF_SIZE - 2))
+        {
+            axis2_char_t *tmp = NULL;
+            buff[BUFF_SIZE - 1] = '\0';
+            tmp = axutil_stracat(env, *input, buff);
+            if(*input)
+            {
+                AXIS2_FREE(env->allocator, *input);
+            }
+            *input = tmp;
+            index = 0;
+            c = getchar();
+            continue;
+        }
+        c = getchar();
+        index++;
+    }
+    if(feof(stdin) && !ferror(stdin))
+    {
+        axis2_char_t *tmp = NULL;
+        buff[index] = '\0';
+        tmp = axutil_stracat(env, *input, buff);
+        if(*input)
+        {
+            AXIS2_FREE(env->allocator, *input);
+        }
+        *input = tmp;
+    }
 }
 
 
