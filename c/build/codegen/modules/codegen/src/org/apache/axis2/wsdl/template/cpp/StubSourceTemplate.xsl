@@ -576,7 +576,7 @@
                         {
                             <xsl:value-of select="substring-before(@type, '_t*')"/>_free(<xsl:value-of select="$header_var"/>, Environment::getEnv());
                         }-->
-                        AXIS2_LOG_ERROR( Environment::getEnv()->log, AXIS2_LOG_SI, "NULL returnted from the <xsl:value-of select="@type"/>_deserialize: "
+                        AXIS2_LOG_ERROR( Environment::getEnv()->log, AXIS2_LOG_SI, "NULL returned from the <xsl:value-of select="@type"/>_deserialize: "
                                                                 "This should be due to an invalid output header");
                             <xsl:for-each select="../../output/param[@location='soap_header']">
                                           if(<xsl:text> _</xsl:text><xsl:value-of select="@name"/>)
@@ -621,7 +621,7 @@
                            delete ret_val;
                         }
 
-                        AXIS2_LOG_ERROR( Environment::getEnv()->log, AXIS2_LOG_SI, "NULL returnted from the <xsl:value-of select="substring-before(output/param/@type, '_t*')"/>_deserialize: "
+                        AXIS2_LOG_ERROR( Environment::getEnv()->log, AXIS2_LOG_SI, "NULL returned from the <xsl:value-of select="substring-before(output/param/@type, '_t*')"/>_deserialize: "
                                                                 "This should be due to an invalid XML");
                         return (<xsl:value-of select="$outputtype"/>)NULL;
                     }
@@ -882,7 +882,7 @@
                             {
                                 <xsl:value-of select="substring-before(@type, '_t*')"/>_free(<xsl:value-of select="$header_var"/>, Environment::getEnv());
                             }-->
-                            WSF_LOG_ERROR_MSG( Environment::getEnv()->log, AXIS2_LOG_SI, "NULL returnted from the <xsl:value-of select="@type"/>_deserialize: "
+                            WSF_LOG_ERROR_MSG( Environment::getEnv()->log, AXIS2_LOG_SI, "NULL returned from the <xsl:value-of select="@type"/>_deserialize: "
                                                                     "This should be due to an invalid output header");
                                 <xsl:for-each select="../../output/param[@location='soap_header']">
                                         if(<xsl:text> _</xsl:text><xsl:value-of select="@name"/>)
@@ -1010,7 +1010,7 @@
             if(NULL == callback_data)
             {
                 AXIS2_ERROR_SET(Environment::getEnv()->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-                AXIS2_LOG_ERROR( Environment::getEnv()->log, AXIS2_LOG_SI, "Can not allocate memeory for the callback data structures");
+                AXIS2_LOG_ERROR( Environment::getEnv()->log, AXIS2_LOG_SI, "Can not allocate memory for the callback data structures");
                 return;
             }
             <!-- for service client currently suppported only 1 input param -->

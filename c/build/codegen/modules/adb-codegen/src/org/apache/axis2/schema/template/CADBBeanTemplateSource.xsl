@@ -5157,7 +5157,7 @@
                         <xsl:value-of select="$name"/>->property_<xsl:value-of select="$CName"/> = (axis2_char_t *)axutil_strdup(env, arg_<xsl:value-of select="$CName"/>);
                         if(NULL == <xsl:value-of select="$name"/>->property_<xsl:value-of select="$CName"/>)
                         {
-                            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Error allocating memeory for <xsl:value-of select="$propertyName"/>");
+                            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Error allocating memory for <xsl:value-of select="$propertyName"/>");
                             return AXIS2_FAILURE;
                         }
                         <xsl:value-of select="$name"/>->is_valid_<xsl:value-of select="$CName"/> = AXIS2_TRUE;
