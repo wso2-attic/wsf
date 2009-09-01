@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <OMNode.h>
 #include <Environment.h>
+#include <OMElement.h>
 using namespace std;
 using namespace wso2wsf;
 
@@ -91,3 +92,122 @@ bool OMNode::isComplete()
     }
     return false;
 }
+
+OMNode * OMNode::detach()
+{
+	axiom_node_t * node = NULL;
+	if (getAxiomNode())
+	{
+		node = axiom_node_detach(getAxiomNode(), Environment::getEnv());
+	}
+	if (!node)
+	{
+		return NULL;
+	}
+	else
+	{
+		setAxiomNode(node);
+		try
+		{
+			OMElement * dp = dynamic_cast<OMElement *>(_parent);
+			dp->removeChildLocal(this);
+			dp = NULL;
+		}
+		catch(bad_cast)
+		{}
+		return this;
+	}
+}
+
+/**
+* get parent of node.
+* @return pointer to parent node of node, return NULL if no parent exists or
+* when an error occurred.
+*/
+OMNode *OMNode::getParent()
+{
+	return _parent;
+}
+
+/**
+* get the previous sibling.
+* @return a pointer to previous sibling , NULL if a previous sibling does not exits
+* (happens when this node is the first child of a node).
+*/
+OMNode * OMNode::getPreviousSibling()
+{
+	OMElement * dp;
+	try
+	{
+		dp = dynamic_cast<OMElement *>(_parent);
+	}
+	catch(bad_cast)
+	{
+		return NULL;
+	}
+	std::vector<OMNode *> children = dp->getChildren();
+	if (children.size() <= 1)
+	{
+		return NULL;
+	}
+	vector<OMNode *>::iterator i = children.begin();
+	while((*i) != this)
+	{
+		if (i == children.end())
+		{
+			return NULL;
+		}
+		i++;
+	}
+	return *(i - 1);
+}
+
+/**
+* get next sibling.
+* @return next sibling of this node.
+*/
+OMNode * OMNode::getNextSibling()
+{
+	OMElement * dp;
+	try
+	{
+		dp = dynamic_cast<OMElement *>(_parent);
+	}
+	catch(bad_cast)
+	{
+		return NULL;
+	}
+	std::vector<OMNode *> children = dp->getChildren();
+	if (children.size() <= 0)
+	{
+		return NULL;
+	}
+	vector<OMNode *>::iterator i = children.end() - 1;
+	while((*i) != this)
+	{
+		if (i == children.begin())
+		{
+			return NULL;
+		}
+		i--;
+	}
+	return *(i + 1);
+}
+
+void OMNode::setParent(OMNode *parent)
+{
+	if(!parent)
+		return;
+
+	if(this->_parent == parent)
+	{
+		return;
+	}
+	else if(this->_parent)
+	{
+		detach();
+	}
+	this->_parent = parent;
+	return;
+}
+

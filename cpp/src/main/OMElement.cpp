@@ -28,7 +28,6 @@ void OMElement::init(OMNode * parent, std::string localname, OMNamespace * ns)
     axiom_node_t * node;
     axiom_node_t * parent_c = NULL;
     axiom_namespace_t * ns_c = NULL;
-    
     _default_namespace = NULL;
     _namespace = NULL;
     _parent = NULL;
@@ -297,61 +296,6 @@ axiom_types_t OMElement::nodeType()
     return AXIOM_ELEMENT;
 }
 
-OMNode * OMElement::getPreviousSibling()
-{
-    OMElement * dp;
-    try
-    {
-        dp = dynamic_cast<OMElement *>(_parent);
-    }
-    catch(bad_cast)
-    {
-        return NULL;
-    }
-    std::vector<OMNode *> children = dp->getChilderen();
-    if (children.size() <= 1)
-    {
-        return NULL;
-    }
-    vector<OMNode *>::iterator i = children.begin();
-    while((*i) != this)
-    {
-        if (i == children.end())
-        {
-            return NULL;
-        }
-        i++;
-    }
-    return *(i - 1);
-}
-
-OMNode * OMElement::getNextSibling()
-{
-    OMElement * dp;
-    try
-    {
-        dp = dynamic_cast<OMElement *>(_parent);
-    }
-    catch(bad_cast)
-    {
-        return NULL;
-    }
-    std::vector<OMNode *> children = dp->getChilderen();
-    if (children.size() <= 0)
-    {
-        return NULL;
-    }
-    vector<OMNode *>::iterator i = children.end() - 1;
-    while((*i) != this)
-    {
-        if (i == children.begin())
-        {
-            return NULL;
-        }
-        i--;
-    }
-    return *(i + 1);
-}
 
 OMNode * OMElement::getLastChild()
 {
@@ -385,11 +329,6 @@ OMNode * OMElement::getFirstChild()
         return NULL;
     }
     return *_child_nodes.begin();
-}
-
-OMNode * OMElement::getParent()
-{
-    return _parent;
 }
 
 OMNamespace * OMElement::getNamespace(bool is_default)
@@ -458,46 +397,32 @@ bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
     return false;
 }
 
-OMNode * OMElement::detach()
-{
-    axiom_node_t * node = NULL;
-    if (getAxiomNode())
-    {
-        node = axiom_node_detach(getAxiomNode(), Environment::getEnv());
-    }
-    if (!node)
-    {
-        return NULL;
-    }
-    else
-    {
-        setAxiomNode(node);
-        try
-        {
-            OMElement * dp = dynamic_cast<OMElement *>(_parent);
-            dp->removeChildLocal(this);
-            dp = NULL;
-        }
-        catch(bad_cast)
-        {}
-        return this;
-    }
-}
-
 void OMElement::freeTree()
 {
-    if (_parent)
+    if (getParent())
     {
         detach();
     }
-    axiom_node_free_tree(getAxiomNode(), Environment::getEnv());
-    setAxiomNode(NULL);
+	/** If this element has its axiom node set, free it. 
+		This will completely free the underlying C Axiom Structure for the entire tree.
+		Therefore before removing the C++ Nodes, all of their axiom nodes must be set to NULL*/
+	if(getAxiomNode())
+	{
+		axiom_node_free_tree(getAxiomNode(), Environment::getEnv());
+		setAxiomNode(NULL);
+	}
     if (_child_nodes.size() <= 0)
     {
         return;
     }
-    std::vector<OMNode *> empty_child_node_array;
-    setChildren(empty_child_node_array);
+
+	for (vector<OMNode *>::iterator i = _child_nodes.begin();
+		i < _child_nodes.end(); i++)
+	{
+		(*i)->setAxiomNode(NULL);
+		delete (*i);
+	}
+	_child_nodes.clear();
 }
 
 bool OMElement::insertSiblingAfter(OMNode * to_insert)
@@ -508,6 +433,7 @@ bool OMElement::insertSiblingAfter(OMNode * to_insert)
         if ((*i) == this)
         {
             _child_nodes.insert(i + 1, to_insert);
+			OMNode::insertSiblingAfter(to_insert);
             return true;
         }
     }
@@ -522,10 +448,12 @@ bool OMElement::insertSiblingBefore(OMNode * to_insert)
         if ((*i) == this)
         {
             _child_nodes.insert(i, to_insert);
-            return true;
+			OMNode::insertSiblingBefore(to_insert);
+			return true;
         }
     }
-    return false;
+	
+	return false;
 }
 
 bool OMElement::build()
@@ -597,14 +525,6 @@ bool OMElement::removeChildLocal(OMNode * child)
     {
         if ((*i) == child)
         {
-            try
-            {
-                OMElement * dp = dynamic_cast<OMElement *>(*i);
-                dp->freeTree();
-            }
-            catch(bad_cast)
-            {}
-            delete *i;
             _child_nodes.erase(i);
             return true;
         }
@@ -614,6 +534,7 @@ bool OMElement::removeChildLocal(OMNode * child)
 
 void OMElement::addChildLocal(OMNode * child)
 {
+	child->setParent(this);
     _child_nodes.push_back(child);
 }
 
@@ -666,7 +587,7 @@ string OMElement::getAttributeValue(std::string name)
     return getAttributeValue(name, NULL);
 }
 
-std::vector<OMNode *> OMElement::getChilderen()
+std::vector<OMNode *> OMElement::getChildren()
 {
     return _child_nodes;
 }
