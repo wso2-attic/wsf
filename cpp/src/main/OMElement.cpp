@@ -173,8 +173,8 @@ OMElement::~OMElement()
     }
     if (_namespace)
     {
-		_namespace->setAxiomNamespace(NULL);
-		delete _namespace;
+		//_namespace->setAxiomNamespace(NULL);
+		//delete _namespace;
     }
    for (vector<OMNamespace *>::iterator ite = _added_namespaces.begin();
             ite != _added_namespaces.end(); ++ite)
