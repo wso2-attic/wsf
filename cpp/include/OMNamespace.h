@@ -67,6 +67,10 @@ namespace wso2wsf
          * axiom_namespace struct.
          */
         axiom_namespace_t * _wsf_axiom_namespace;
+		/**
+		* @var ref This variable keeps track of the number of references to this namespace object.                                                   
+		*/
+		int _refcounter;
 
     public:
         /**
@@ -135,6 +139,17 @@ namespace wso2wsf
          * @return converted namespace as string.
          */
         WSF_EXTERN virtual std::string WSF_CALL toString();
+
+		/**
+		* Increment the ref counter by one
+		* @return the current ref count
+		*/
+		WSF_EXTERN int WSF_CALL incrementRef();
+		/**
+		* Decrement the ref counter by one                                                   
+		* @return the current reference counter
+		*/
+		WSF_EXTERN int WSF_CALL decrementRef();
     };
     /** @} */
 
