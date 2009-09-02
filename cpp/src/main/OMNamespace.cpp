@@ -28,23 +28,27 @@ axiom_namespace_t * OMNamespace::getAxiomNamespace()
 OMNamespace::OMNamespace(std::string uri)
 {
 	_wsf_axiom_namespace = axiom_namespace_create(Environment::getEnv(), uri.c_str() , NULL);
+	_refcounter = 0;
 }
 
 
 OMNamespace::OMNamespace(std::string uri, std::string prefix)
 {
     _wsf_axiom_namespace = axiom_namespace_create(Environment::getEnv(), uri.c_str(), prefix.c_str());
+	_refcounter = 0;
 }
 
 OMNamespace::OMNamespace(OMNamespace & ns)
 {
     _wsf_axiom_namespace = axiom_namespace_create(
         Environment::getEnv(), (ns.getURI()).c_str(), (ns.getPrefix()).c_str());
+	_refcounter = 0;
 }
 
 OMNamespace::OMNamespace(axiom_namespace_t *ns)
 {
 	_wsf_axiom_namespace = ns;
+	_refcounter = 0;
 }
 
 OMNamespace::~OMNamespace()
@@ -80,5 +84,13 @@ string OMNamespace::toString()
     return axiom_namespace_to_string(_wsf_axiom_namespace, Environment::getEnv());
 }
 
+int OMNamespace::incrementRef()
+{
+	return ++_refcounter;
+}
 
+int OMNamespace::decrementRef()
+{
+	return --_refcounter;
+}
 
