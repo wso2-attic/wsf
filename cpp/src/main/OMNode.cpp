@@ -18,6 +18,7 @@
 #include <OMNode.h>
 #include <Environment.h>
 #include <OMElement.h>
+#include <typeinfo>
 using namespace std;
 using namespace wso2wsf;
 
