@@ -55,9 +55,7 @@
         /** Load the service into axis2 engine */
         WSF_SERVICE_INIT(<xsl:value-of select="@name"/>)
 
-
-       <!--
-
+          
          /**
           * function to free any soap input headers
           */
@@ -79,7 +77,7 @@
            </xsl:if>
          </xsl:for-each>
 
-        -->
+  
          <xsl:for-each select="method/output/param[@location='soap_header']">
             <xsl:if test="position()=1">
             /*
@@ -93,7 +91,10 @@
             </xsl:if>
          </xsl:for-each>
 
-
+    <xsl:value-of select="$method-prefix"/>::<xsl:value-of select="$method-prefix"/>()
+	{
+          skel = wsfGet<xsl:value-of select="$svcop-prefix"/>();
+    }
 
 
 	void WSF_CALL
@@ -461,8 +462,8 @@
                         </xsl:variable>
                         <xsl:variable name="outputparam_types"><xsl:value-of select="output/param/param/@type"/><xsl:if test="output/param/param/@ours">*</xsl:if></xsl:variable>
                         {
-                            <xsl:value-of select="$svcop-prefix"/> skel;
-                           <xsl:value-of select="$outputparam_types"/> ret_unwrapped = skel.<xsl:value-of select="$method-name"/><xsl:text>(</xsl:text>
+                           // <xsl:value-of select="$svcop-prefix"/> skel;
+                           <xsl:value-of select="$outputparam_types"/> ret_unwrapped = skel-><xsl:value-of select="$method-name"/><xsl:text>(</xsl:text>
                                                 <xsl:value-of select="$inputparam_values"/>
                                                 <xsl:for-each select="output/param[@location='soap_header']">,
                                                     <xsl:text>&amp;_</xsl:text><xsl:value-of select="@name"/><xsl:value-of select="$position"/>
@@ -496,8 +497,8 @@
                                                     <xsl:text>_</xsl:text><xsl:value-of select="@name"/><xsl:value-of select="$position"/>
                                                 </xsl:for-each>
                         </xsl:variable>
-                        <xsl:value-of select="$svcop-prefix"/> skel;
-                        ret_val<xsl:value-of select="$position"/> =  skel.<xsl:value-of select="$method-name"/><xsl:text>(</xsl:text>
+                        //<xsl:value-of select="$svcop-prefix"/> skel;
+                        ret_val<xsl:value-of select="$position"/> =  skel-><xsl:value-of select="$method-name"/><xsl:text>(</xsl:text>
                                                 <xsl:value-of select="$inputparam_values"/><xsl:for-each select="output/param[@location='soap_header']">,
                                                     <xsl:text>&amp;_</xsl:text><xsl:value-of select="@name"/><xsl:value-of select="$position"/>
                                                 </xsl:for-each><xsl:if test="count(fault/*)">,
