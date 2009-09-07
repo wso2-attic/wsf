@@ -180,6 +180,9 @@
              <File>
                 <xsl:attribute name="RelativePath">.\<xsl:value-of select="@servicename"/>Skeleton.cpp</xsl:attribute>
              </File>
+             <File>
+                <xsl:attribute name="RelativePath">.\<xsl:value-of select="@servicename"/>Macro.cpp</xsl:attribute>
+             </File>
         </xsl:if>
         <xsl:for-each select="method">
             <xsl:choose>

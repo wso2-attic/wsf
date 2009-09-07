@@ -42,19 +42,29 @@
          *  <xsl:value-of select="$skeletonname"/>
          */
 
+#include &lt;ServiceSkeleton.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;axis2_svc.h&gt;
 
-        #include &lt;ServiceSkeleton.h&gt;
-        #include &lt;stdio.h&gt;
-        #include &lt;axis2_svc.h&gt;
-
-        using namespace wso2wsf;
+using namespace wso2wsf;
 
 <xsl:if test="@cppNamespace">
-    using namespace <xsl:value-of select="@cppNamespace"/>;
+using namespace <xsl:value-of select="@cppNamespace"/>;
 </xsl:if>
-          
+
+
+#define WSF_SERVICE_SKEL_INIT(class_name) \
+<xsl:value-of select="$svcop-prefix"/>* wsfGet<xsl:value-of select="$svcop-prefix"/>(){ return new class_name(); }
+
+<xsl:value-of select="$svcop-prefix"/>* wsfGet<xsl:value-of select="$svcop-prefix"/>(); 
+
+
+
         class <xsl:value-of select="@name"/> : public ServiceSkeleton
         {
+            private:
+                <xsl:value-of select="$svcop-prefix"/> *skel;
+
             public:
 
                union {
@@ -66,7 +76,7 @@
                } fault;
 
 
-              WSF_EXTERN WSF_CALL <xsl:value-of select="@name"/>(){};
+              WSF_EXTERN WSF_CALL <xsl:value-of select="@name"/>();
 
               OMElement* WSF_CALL invoke(OMElement *message, MessageContext *msgCtx);
 
