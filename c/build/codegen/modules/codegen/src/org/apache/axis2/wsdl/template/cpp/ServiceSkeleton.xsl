@@ -447,14 +447,14 @@
                         <xsl:variable name="inputparam_values">
                             <xsl:choose>
                                 <xsl:when test="input/param/@complextype">
-                                                <xsl:for-each select="input/param/param[@type!='']">
-                                                    <xsl:if test="position() > 1"><xsl:text>,</xsl:text></xsl:if>
+                                                <xsl:for-each select="input/param/param[@type!='']"><xsl:text>,</xsl:text>
+                                                    <!--xsl:if test="position() > 1"><xsl:text>,</xsl:text></xsl:if-->
                                                     input_val<xsl:value-of select="$position"/>->getProperty1()->getProperty<xsl:value-of select="position()"/>()
                                                 </xsl:for-each>
                                 </xsl:when>
                                 <xsl:otherwise>
-                                                <xsl:for-each select="input/param/param[@type!='']">
-                                                     <xsl:if test="position() > 1"><xsl:text>,</xsl:text></xsl:if>
+                                                <xsl:for-each select="input/param/param[@type!='']"><xsl:text>,</xsl:text>
+                                                     <!--xsl:if test="position() > 1"><xsl:text>,</xsl:text></xsl:if-->
                                                      input_val<xsl:value-of select="$position"/>->getProperty<xsl:value-of select="position()"/>()
                                                 </xsl:for-each>
                                 </xsl:otherwise>
@@ -463,7 +463,7 @@
                         <xsl:variable name="outputparam_types"><xsl:value-of select="output/param/param/@type"/><xsl:if test="output/param/param/@ours">*</xsl:if></xsl:variable>
                         {
                            // <xsl:value-of select="$svcop-prefix"/> skel;
-                           <xsl:value-of select="$outputparam_types"/> ret_unwrapped = skel-><xsl:value-of select="$method-name"/><xsl:text>(</xsl:text>
+                           <xsl:value-of select="$outputparam_types"/> ret_unwrapped = skel-><xsl:value-of select="$method-name"/><xsl:text>(msgCtx </xsl:text>
                                                 <xsl:value-of select="$inputparam_values"/>
                                                 <xsl:for-each select="output/param[@location='soap_header']">,
                                                     <xsl:text>&amp;_</xsl:text><xsl:value-of select="@name"/><xsl:value-of select="$position"/>
@@ -492,13 +492,13 @@
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:variable name="inputparam_values">
-                                                    <xsl:if test="input/param/@type!=''">input_val<xsl:value-of select="$position"/>
+                                                    <xsl:if test="input/param/@type!=''">,input_val<xsl:value-of select="$position"/>
                                                     </xsl:if><xsl:for-each select="input/param[@location='soap_header']">,
                                                     <xsl:text>_</xsl:text><xsl:value-of select="@name"/><xsl:value-of select="$position"/>
                                                 </xsl:for-each>
                         </xsl:variable>
                         //<xsl:value-of select="$svcop-prefix"/> skel;
-                        ret_val<xsl:value-of select="$position"/> =  skel-><xsl:value-of select="$method-name"/><xsl:text>(</xsl:text>
+                        ret_val<xsl:value-of select="$position"/> =  skel-><xsl:value-of select="$method-name"/><xsl:text>(msgCtx </xsl:text>
                                                 <xsl:value-of select="$inputparam_values"/><xsl:for-each select="output/param[@location='soap_header']">,
                                                     <xsl:text>&amp;_</xsl:text><xsl:value-of select="@name"/><xsl:value-of select="$position"/>
                                                 </xsl:for-each><xsl:if test="count(fault/*)">,

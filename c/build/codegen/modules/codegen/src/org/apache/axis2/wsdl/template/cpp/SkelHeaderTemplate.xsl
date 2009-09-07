@@ -37,7 +37,7 @@
 #define <xsl:value-of select="$caps_svc_name"/>_H
 
     #include &lt;OMElement.h&gt;
-
+    #include &lt;MessageContext.h&gt;
    <xsl:for-each select="method">
     <xsl:for-each select="input/param[@type!='' and @ours]">
      <xsl:variable name="inputtype1" select="substring-after(@type,'::')"/>
@@ -133,15 +133,17 @@ class <xsl:value-of select="$svc_name"/>
             <xsl:choose>
             <xsl:when test="$isUnwrapParameters">
                                           <xsl:for-each select="input/param/param[@type!='']">
-                                              <xsl:if test="position() > 1"><xsl:text>,</xsl:text></xsl:if>
+                                              <!-- <xsl:if test="position() > 1"><xsl:text>,</xsl:text></xsl:if> -->
                                               <!-- xsl:if test="count(input/param/param) > 1">,</xsl:if -->
+                                              <xsl:text>,</xsl:text>
                                               <xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if><xsl:text> _</xsl:text><xsl:value-of select="@name"/>
                                           </xsl:for-each>
             </xsl:when>
             <xsl:otherwise>
                                           <xsl:for-each select="input/param[@type!='']">
-                                              <xsl:if test="position() > 1"><xsl:text>,</xsl:text></xsl:if>
+                                              <!-- xsl:if test="position() > 1"><xsl:text>,</xsl:text></xsl:if -->
                                               <!--xsl:if test="count(input/param) > 1">,</xsl:if-->
+                                              <xsl:text>,</xsl:text>
                                               <xsl:value-of select="@type"/><xsl:if test="@ours"><xsl:text>*</xsl:text></xsl:if><xsl:text> _</xsl:text><xsl:value-of select="@name"/>
                                           </xsl:for-each>
             </xsl:otherwise>
@@ -154,7 +156,7 @@ class <xsl:value-of select="$svc_name"/>
         <xsl:when test="$outputtype!=''"><xsl:value-of select="$outputtype"/></xsl:when>
         </xsl:choose>
         <xsl:text> </xsl:text>
-        <xsl:value-of select="@name"/>(<xsl:value-of select="$inputparams"/>
+        <xsl:value-of select="@name"/>(wso2wsf::MessageContext *outCtx <xsl:value-of select="$inputparams"/>
                                             <xsl:for-each select="output/param[@location='soap_header']">
                                             <xsl:variable name="outputtype"><xsl:value-of select="@type"/><xsl:if test="@ours">**</xsl:if></xsl:variable>
                                             <xsl:text>,</xsl:text>
