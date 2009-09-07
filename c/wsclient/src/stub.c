@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include "util.h"
 #include <axutil_utils.h>
 #include <axutil_types.h>
 #include <axiom_soap.h>
@@ -40,7 +41,6 @@
 #include <neethi_policy.h>
 
 #include "constants.h"
-#include "util.h"
 #include "option.h"
 #include "stub.h"
 #include "error.h"

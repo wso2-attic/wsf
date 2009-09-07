@@ -17,8 +17,8 @@
 
 #ifndef WSCLIENT_UTIL_H
 #define WSCLIENT_UTIL_H
-#include <axiom.h>
 #include <axis2_util.h>
+#include <axiom.h>
 #include <axis2_client.h>
 #include <axis2_http_transport_sender.h>
 
