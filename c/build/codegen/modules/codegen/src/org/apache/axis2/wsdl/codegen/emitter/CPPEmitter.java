@@ -220,6 +220,11 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
 
         writeFile(skeletonModel, writer);
 
+        CPPExtensionMacroWriter macroWriter = new CPPExtensionMacroWriter((getOutputDirectory(codeGenConfiguration.getOutputLocation(),
+                                             codeGenConfiguration.getSourceLocation())),
+                                             codeGenConfiguration.getOutputLanguage(),axisService.getName());
+
+        writeFile(skeletonModel, macroWriter);
     }
 
     /**
@@ -227,7 +232,6 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
      *
      * @throws Exception
      */
-
     protected void writeBuildScript() throws Exception {
         if (this.codeGenConfiguration.isGenerateDeployementDescriptor()) {
 
@@ -249,15 +253,20 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
         Element rootElement = doc.getDocumentElement();
         String outputLocation = codegen.getOutputLocation().getPath();
         String  targetsourceLocation = codegen.getSourceLocation();
+        addAttribute(doc,"targetsourcelocation",targetsourceLocation,rootElement);
+
        if(codegen.isSetoutputSourceLocation() && !outputLocation.equals(".") && !outputLocation.equals("")){
-             addAttribute(doc,"option","1",rootElement);
+           if(!codegen.isFlattenFiles()){
+                addAttribute(doc,"option","1",rootElement);
+             }else{
+                addAttribute(doc,"option","0",rootElement);
+             }
              addAttribute(doc,"outputlocation",outputLocation,rootElement);
-             addAttribute(doc,"targetsourcelocation",targetsourceLocation,rootElement);
-         }
+        }
         else
-         {
+        {
             addAttribute(doc,"option","0",rootElement);
-         }
+        }
         addAttribute(doc, "isServer",codeGenConfiguration.isServerSide()? "1" : "0", rootElement);
         //System.out.println(DOM2Writer.nodeToString(doc));
         CPPVCProjectWriter vcProjectWriter = new CPPVCProjectWriter(
@@ -497,12 +506,16 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
          addAttribute(doc,"servicename",serviceCName,rootElement);
          String outputLocation = codegen.getOutputLocation().getPath();
          String  targetsourceLocation = codegen.getSourceLocation();
+        addAttribute(doc,"targetsourcelocation",targetsourceLocation,rootElement);
         //if user specify a location for the source
 
          if(codegen.isSetoutputSourceLocation() && !outputLocation.equals(".") && !outputLocation.equals("")){
-             addAttribute(doc,"option","1",rootElement);
+             if(!codegen.isFlattenFiles()){
+                addAttribute(doc,"option","1",rootElement);
+             }else{
+                addAttribute(doc,"option","0",rootElement);                 
+             }
              addAttribute(doc,"outputlocation",outputLocation,rootElement);
-             addAttribute(doc,"targetsourcelocation",targetsourceLocation,rootElement);
          }
         else
          {
