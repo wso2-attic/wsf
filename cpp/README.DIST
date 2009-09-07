@@ -1,14 +1,14 @@
 dependencies
 -----------
 
-1. libxml
-2. openssl
-3. zlib
-4. iconv
-5. doxgen
-6. mavan
-7. mavan2
-10. libiksemel
-11. registry_client https://wso2.org/repos/wso2/trunk/solutions/wsf/c/registry_client
-12. libcurl
-13. libxslt
+ 1. libxml
+ 2. openssl
+ 3. zlib
+ 4. iconv
+ 5. doxgen
+ 6. mavan
+ 7. mavan2
+ 8. libiksemel
+ 9. registry_client https://wso2.org/repos/wso2/trunk/solutions/wsf/c/registry_client
+10. libcurl
+11. libxslt
