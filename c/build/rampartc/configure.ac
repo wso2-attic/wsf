@@ -107,7 +107,10 @@ AC_ARG_WITH(openssl,
         openssllib="-L$withval/lib"
     elif test -d '/usr/include/openssl'; then
         opensslinc="-I/usr/include/openssl"
-        openssllib=""
+        openssllib="-L/usr/lib"
+    elif test -d '/usr/local/include/openssl'; then
+        opensslinc="-I/usr/local/include/openssl"
+        openssllib="-L/usr/lib -L/usr/local/lib"
     else
         AC_MSG_ERROR(could not find openssl. stop)
     fi
