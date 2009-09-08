@@ -67,10 +67,10 @@ namespace wso2wsf
          * axiom_namespace struct.
          */
         axiom_namespace_t * _wsf_axiom_namespace;
-		/**
-		* @var ref This variable keeps track of the number of references to this namespace object.                                                   
-		*/
-		int _refcounter;
+	/**
+	* @var ref This variable keeps track of the number of references to this namespace object.                                                   
+	*/
+	int _refcounter;
 
     public:
         /**
@@ -85,24 +85,25 @@ namespace wso2wsf
          */
         void WSF_CALL setAxiomNamespace(axiom_namespace_t * ns);
 
-		/**
-		* Creates a namespace struct.
-		* @param uri namespace URI.
-		*/
-		WSF_EXTERN WSF_CALL OMNamespace(std::string uri);
-        /**
+	/**
+	* Creates a namespace struct.
+	* @param uri namespace URI.
+	*/
+	WSF_EXTERN WSF_CALL OMNamespace(std::string uri);
+        
+	/**
          * Creates a OMNamespace instance from a uri and a prefix value
          * @param uri namespace URI.
          * @param prefix namespace prefix.
          */
         WSF_EXTERN WSF_CALL OMNamespace(std::string uri, std::string prefix);
 
-		/**
-		* Creates an OMNamespace instance from an axiom_namespace_t                                                   
-		* @param ns Pointer to an axiom_namespace
-		* @return an OMNamespace
-		*/
-		WSF_EXTERN WSF_CALL OMNamespace(axiom_namespace_t *ns);
+	/**
+	* Creates an OMNamespace instance from an axiom_namespace_t                                                   
+	* @param ns Pointer to an axiom_namespace
+	* @return an OMNamespace
+	*/
+	WSF_EXTERN WSF_CALL OMNamespace(axiom_namespace_t *ns);
 
         /**
          * Copy Constructor.
@@ -140,16 +141,16 @@ namespace wso2wsf
          */
         WSF_EXTERN virtual std::string WSF_CALL toString();
 
-		/**
-		* Increment the ref counter by one
-		* @return the current ref count
-		*/
-		WSF_EXTERN int WSF_CALL incrementRef();
-		/**
-		* Decrement the ref counter by one                                                   
-		* @return the current reference counter
-		*/
-		WSF_EXTERN int WSF_CALL decrementRef();
+	/**
+	* Increment the ref counter by one
+	* @return the current ref count
+	*/
+	WSF_EXTERN int WSF_CALL incrementRef();
+	/**
+	* Decrement the ref counter by one                                                   
+	* @return the current reference counter
+	*/
+	WSF_EXTERN int WSF_CALL decrementRef();
     };
     /** @} */
 
