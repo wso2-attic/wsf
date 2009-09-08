@@ -43,24 +43,25 @@ namespace wso2wsf
 	*/
 
 	/**
-	* message context captures all state information related to a message
+	* Message context captures all state information related to a message
 	* invocation. It holds information on the service and operation to be invoked
 	* as well as context hierarchy information related to the service and operation.
 	* It also has information on transports, that are to be used in invocation. The
 	* phase information is kept, along with the phase at which message invocation was
 	* paused as well as the handler in the phase from which the invocation is to be
-	* resumed. message context would hold the request SOAP message along the out
+	* resumed.Message context would hold the request SOAP message along the out
 	* path and would capture response along the in path.
-	* message context also has information on various engine specific information,
+	* Message context also has information on various engine specific information,
 	* such as if it should be doing MTOM, REST.
 	* As message context is inherited form context, it has the capability of
-	* storing user defined properties.
+	* storing user defined properties. In addition to the methods exposed by the MessageContex
+	* class, the underlying axis2 level message context can also be accessed if required. 
 	* @{
 	*/
 	class MessageContext
 	{
 	private:
-		/** pointer to the underlying axis2_msg_context */
+		/**@var pointer to the underlying axis2_msg_context */
 		axis2_msg_ctx_t *_msg_ctx;
 		
 	public:
@@ -69,11 +70,11 @@ namespace wso2wsf
 		 * Create message Context using the axis2_msg_ctx object                                                                     
 		 */
 		 WSF_EXTERN MessageContext(axis2_msg_ctx_t *_msg_ctx);
-
-        /**
-        * Returns existing axis2_msg_ctx object
-        */
-        WSF_EXTERN axis2_msg_ctx_t * getAxis2MessageContext();
+	
+	        /**
+	        * Returns existing axis2_msg_ctx object
+	        */
+        	WSF_EXTERN axis2_msg_ctx_t * getAxis2MessageContext();
 
 		 /**
 		* This method returns the WS-Addressing fault to address. Fault to address tells where to 
@@ -148,7 +149,7 @@ namespace wso2wsf
 		*/
 		WSF_EXTERN std::string WSF_CALL getTo();
 
-	   /**
+		/**
 		* Sets WS-Addressing fault to endpoint. Fault to address tells where 
 		* the fault message should be sent when there is an error.
 		* @param toUri To uri
@@ -170,7 +171,7 @@ namespace wso2wsf
 		*/
 		WSF_EXTERN bool WSF_CALL setInFaultFlow(bool infault);
 
-    	/**
+	    	/**
 		* Sets WS-Addressing reply to address indicating the location to which
 		* the reply would be sent.
 		* @param ReplyTo endpoint reference uri
@@ -755,7 +756,6 @@ namespace wso2wsf
 		WSF_EXTERN bool WSF_CALL incrementRef();
 		/**
 		* Destructor for message context                                                   
-		*
 		*/
 		WSF_EXTERN virtual WSF_CALL ~MessageContext();
 		
