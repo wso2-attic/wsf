@@ -88,10 +88,6 @@ namespace wso2wsf
 	private:
 		
 		static TLSKey key;
-		/**
-		* @var _refCount stores the number of references to axutil_env.
-		*/
-
 	public:
 		/** keeps the log file name */
 		static std::string _logFileName;
@@ -121,11 +117,13 @@ namespace wso2wsf
 		 */
 		static WSF_EXTERN void WSF_CALL switchToLocalPool();
 		/**
-		* Initialize with log file and log level                                                   
-		*
+		* Initialize with log file and log level. This function must be called prior to using the framework for client
+		* side. For the server, calling the method for initialization is not required 
 		*/
 		static WSF_EXTERN void WSF_CALL initialize(std::string logFileName,  axutil_log_levels_t logLevel);
-	
+		/**
+		 * Destructor for Environment Object
+		 */
 		WSF_CALL ~Environment(); 
 	};
 	/** @} */
