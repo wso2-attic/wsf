@@ -20,8 +20,10 @@
 #include <WSFDefines.h>
 #include <axutil_utils.h>
 #include <string>
+
+
 /**
- * @file Property.h
+ * @file Parameter.h
  */
 
 /**
@@ -37,33 +39,33 @@ namespace wso2wsf
 
     /**
      * @brief class Parameter
+     * Parameter is a class which abstract out name, value pairs which are used within Axis2/C Engine (WSF/CPP) to 
+     * manage internal runtime configurations.
      */
-	class Parameter
+    class Parameter
     {
     private:
         /**
-         * @var _name private variable holds reference for
-         * Property name.
+         * @var _name private variable holds reference for Parameter name.
          */
         std::string _name;
 
         /**
-         * @var _name private variable holds reference for
-         * Property value.
+         * @var _name private variable holds reference for Parameter value.
          */
         void * _value;
 
         /**
-         * @var _name private variable holds reference for
-         * Property scope.
+         * @var _name private variable holds reference for Parameter scope.
          */
         int _type;
 
     public:
         /**
-         * Creates a node struct.
-         * @param name property key string.
+         * Constructor for the Paramter class. 
+         * @param name key string.
          * @param value pointer to property to be set.
+         * @param scope of the paramter.
          */
         WSF_EXTERN WSF_CALL Parameter(std::string name, void * value,int type );
 
@@ -76,13 +78,13 @@ namespace wso2wsf
 
         /**
          * Gets Parameter value.
-         * @return Parameter to property to be set.
+         * @return Parameter to Parameter to be set.
          */
         WSF_EXTERN void * WSF_CALL getValue();
 
         /**
          * Gets Parameter scope.
-         * @return scope of property.
+         * @return scope of Parameter.
          */
         WSF_EXTERN int WSF_CALL getType();
     };
