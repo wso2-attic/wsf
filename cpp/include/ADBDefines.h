@@ -17,6 +17,11 @@
 #ifndef ADBDEFINES_H
 #define ADBDEFINES_H
 
+/**
+ * @file ADBDefines.h
+ * @brief This defines dafault adb codegen constants
+ */
+
 #define ADB_DEFAULT_DIGIT_LIMIT 1024
 #define ADB_DEFAULT_NAMESPACE_PREFIX_LIMIT 64
 #define ADB_DEFAULT_LIST_SEPERATOR " "
