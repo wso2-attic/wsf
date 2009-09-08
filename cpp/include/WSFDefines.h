@@ -22,6 +22,28 @@
 
 /**
  * @file WSFDefines.h
+ * @brief Definitions for WSF/CPP Project
+ */
+
+/**
+ * @defgroup WSF/CPP Project
+ * @{
+ * @}
+ */
+
+/** \mainpage WSF/CPP API Documentation
+ * 
+ * \section intro_sec Introduction 
+ * This is the API documentation for WSF/CPP Project. A C++ Binding for the popular Web Services Library
+ * <a href="http://wso2.org/projects/wsf/c">WSF/C</a>. WSF/CPP bring to the C++ world, not only the capability 
+ * to handle Basic Web Services, but also the Advanced Web Services Sepecifcation Implementations including 
+ * WS-Security, WS-Reliable Messaging WS-Addressing and WS-Eventing.
+ * Being a lightweight framework with support for mulitiple transport protocols including, http, https, amqp, xmpp ...
+ * WSF/CPP bring the flexibility the C++ Developers are looking for when trying to intergrate their lagacy applications and
+ * to Web Service Enable their CPP applications. 
+ * <p> We Welcome your feedback on this implementation and documentation. Please send your feedback to <a href="mailto:wsf-cpp-user@wso2.org">
+ * wsf-cpp-user@wso2.org</a>. 
+ * </p>
  */
 
 #define WSF_EXTERN AXIS2_EXTERN
