@@ -37,17 +37,18 @@ namespace wso2wsf
      */
 
     /**
-     * @brief class Stub This object serves as the primary client
-     * for consuming SOAP services.
+     * @brief class Stub This object serves as the primary client API for consuming SOAP services.
+     * This is the base class for the codegenerated client side stub classes.
      */
     class Stub
     {
 	
 	
 	protected:
-		/** service client */
+		/**@var  service client Reference to ServiceClient instance */
 		ServiceClient *serviceClient;
-		/** Options */
+
+		/**@var  Options Reference to clientObjects  instance */
 		
 		Options *clientOptions;
 		
@@ -55,52 +56,39 @@ namespace wso2wsf
        
 		WSF_EXTERN void WSF_CALL init(std::string& client_home, std::string& endpointUri);
 
-		//************************************
-		// Method:    _getOptions
-		// FullName:  wso2wsf::Stub::_getOptions
-		// Access:    public 
-		// Returns:   WSF_EXTERN Options* WSF_CALL
-		// Qualifier:
-		//************************************
+		/**
+		 * getOptions method is used to obtain a pointer to the Stub Object's underlying options instance.
+		 * @returns A pointer to the Options Object instance
+		 *
+		*/
 		WSF_EXTERN Options* WSF_CALL getOptions();
 
-		//************************************
-		// Method:    _getServiceClient
-		// FullName:  wso2wsf::Stub::_getServiceClient
-		// Access:    public 
-		// Returns:   WSF_EXTERN ServiceClient* WSF_CALL
-		// Qualifier:
-		// Returns the service client associated with this stub
-		//************************************
+		/**
+		* getServiceClient method is used to obtain a pointer to the Stub Object's Underlying ServiceClient
+		* Object instance.
+		* @returns A pointer to the ServiceClient Object instance
+		*/
 		WSF_EXTERN ServiceClient* WSF_CALL getServiceClient();
 		
-		//************************************
-		// Method:    _setServiceClient
-		// FullName:  wso2wsf::Stub::_setServiceClient
-		// Access:    public 
-		// Returns:   WSF_EXTERN bool WSF_CALL
-		// Qualifier:
-		// Parameter: ServiceClient * client
-		//************************************
+		/**
+		* setServiceClient() Used to set ServiceClient instance to the stub and configure stub.
+		* @param client Pointer to a ServiceClient instance
+		* @returns true on success, false otherwise.
+		*/
+ 		
+
 		WSF_EXTERN bool WSF_CALL setServiceClient(ServiceClient *client);
 		
-		//************************************
-		// Method:    _engageModule
-		// FullName:  wso2wsf::Stub::_engageModule
-		// Access:    public 
-		// Returns:   WSF_EXTERN bool WSF_CALL
-		// Qualifier:
-		// Parameter: std::string moduleName
-		//************************************
+		/**
+		 *  engageModule Engage an Axis2/C module to this Stub
+		 *  @param moduleName identifying name for the module
+		 *  @returns true on success, false otherwise
+		 */
 		WSF_EXTERN bool WSF_CALL engageModule(std::string moduleName);
 
-		//************************************
-		// Method:    _addAnonymousOperations
-		// FullName:  wso2wsf::Stub::_addAnonymousOperations
-		// Access:    public 
-		// Returns:   WSF_EXTERN void WSF_CALL
-		// Qualifier:
-		//************************************
+		/**
+		 * addAnnonymousOperations
+		 */ 
 		WSF_EXTERN void WSF_CALL addAnonymousOperations();
 
 
