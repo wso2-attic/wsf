@@ -26,6 +26,7 @@
 #include <vector>
 
 /**
+ * @file OMElement.h
  * @brief namespace wso2wsf Namespace of WSO2 Web Services Framework.
  */
 namespace wso2wsf
