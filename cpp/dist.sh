@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 set -e
 
 if test  -d ../dist_temp; then
