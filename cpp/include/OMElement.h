@@ -31,7 +31,7 @@
 namespace wso2wsf
 {
     /**
-     * @defgroup om_element OM Element
+     * @defgroup OMElement  OMElement
      * @ingroup wso2wsf
      * @{
      */
@@ -42,7 +42,7 @@ namespace wso2wsf
      * children, attributes, and namespaces. In contrast with DOM, this
      * interface exposes namespaces separately from the attributes.
      */
-	class OMElement : public OMNode
+    class OMElement : public OMNode
     {
     private:
         /**
@@ -344,8 +344,6 @@ namespace wso2wsf
          * @return pointer to last child of this node , return NULL on error.
          */
         WSF_EXTERN OMNode * WSF_CALL getLastChild();
-
-
 
         /**
          * get the node type of this element
