@@ -46,9 +46,13 @@
  * </p>
  */
 
+/** Map os dependent export macro to WSF */
 #define WSF_EXTERN AXIS2_EXTERN
+/** Map Axis2 Calling convention to WSF */
 #define WSF_CALL AXIS2_CALL
+/** Define AXIS2_USLEEP as WSF_USLEEP */
 #define WSF_USLEEP AXIS2_USLEEP
+/** Define AXIS2_SLEEP as WSF_SLEEP */
 #define WSF_SLEEP AXIS2_SLEEP
 
 #endif // WSFDEFINES_H
