@@ -45,28 +45,27 @@ namespace wso2wsf
     {
     private:
         /**
-         * @var _wsf_axiom_data_handler protected variable holds reference for
+         * _wsf_axiom_data_handler protected variable holds reference for
          * axiom_data_handler struct.
          */
         axiom_data_handler_t * _wsf_axiom_data_handler;
 
     public:
         /**
-         * Creates data_handler struct.
+         * Constructor for OMDataHandler.
          * @param file_name associated file name.
          * @param mime_type mime type.
          */
         WSF_EXTERN WSF_CALL OMDataHandler(std::string file_name, std::string mime_type);
 
         /**
-         * Creates data_handler struct.
+         * Constructor for OMDataHandler. 
          * @param mime_type mime type.
          */
         WSF_EXTERN WSF_CALL OMDataHandler(std::string mime_type);
 
         /**
-         * Creates data_handler struct.
-         * @param mime_type mime type.
+         * Constructor for  OMDataHandler with no arguments.
          */
         WSF_EXTERN WSF_CALL OMDataHandler();
 
@@ -116,7 +115,7 @@ namespace wso2wsf
         /**
          * Method to write to a stream.
          * @param input_stream stream to use.
-         * @param input_stream_len size of input stream.
+         * @param input_stream_length size of input stream.
          * @return true if operation was successful, false otherwise.
          */
         WSF_EXTERN bool WSF_CALL write(axis2_byte_t * input_stream, int input_stream_length);
@@ -127,16 +126,17 @@ namespace wso2wsf
          * @return true if operation was successful, false otherwise.
          */
         WSF_EXTERN bool WSF_CALL setFileName(std::string file_name);
-		/**
-		* Returns whether the attachment is cached or not                                                   
-		* @returns true if attachment is cached and false otherwise 
-		*/
-		WSF_EXTERN bool WSF_CALL isCached();
-		/**
-		* Write to a file.The filename is the file to be written.                  
-		* Returns the true if the operation is successful, false otherwise
-		*/
-		WSF_EXTERN bool WSF_CALL writeTo(std::string filename);
+	/**
+	* Returns whether the attachment is cached or not                                                   
+	* @returns true if attachment is cached and false otherwise 
+	*/
+	WSF_EXTERN bool WSF_CALL isCached();
+	/**
+	* Write to a file.The filename is the file to be written.                  
+	* @param filename Name of the file to which the binary content will be written by the DataHandler.
+	* Returns the true if the operation is successful, false otherwise
+	*/
+	WSF_EXTERN bool WSF_CALL writeTo(std::string filename);
 
 		
     };
