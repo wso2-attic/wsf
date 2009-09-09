@@ -45,15 +45,22 @@ namespace wso2wsf
 	
 	
 	protected:
-		/**@var  service client Reference to ServiceClient instance */
+		/**
+		 * ServiceClient object instance associated with the stub
+		 */
 		ServiceClient *serviceClient;
 
-		/**@var  Options Reference to clientObjects  instance */
-		
+		/**
+		 * Options object instance associated with the stub
+		 */
 		Options *clientOptions;
 		
     public:
-       
+      		/**
+		 * Initialize the Stub. 
+		 * @param client_home string refering to the client repository location.
+		 * @param endpointUri The endpoint URI of the service which will be invoked using this stub.
+		 */ 	 
 		WSF_EXTERN void WSF_CALL init(std::string& client_home, std::string& endpointUri);
 
 		/**
