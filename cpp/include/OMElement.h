@@ -169,7 +169,6 @@ namespace wso2wsf
 
         /**
          * Frees an om node and all of its children.
-         * @param node node to be freed.
          */
         WSF_EXTERN void WSF_CALL freeTree();
 
@@ -243,7 +242,6 @@ namespace wso2wsf
         /**
          * Gets (finds) the attribute with the given name and namespace.
          * @param name name of the attribute to be found. should not be NULL.
-         * @param ns namespace of the attribute to be found. can be NULL.
          * @return a pointer to the attribute with given name if found, else NULL.
          * On error, returns NULL and sets the error code in environment's error struct.
          */
@@ -260,7 +258,6 @@ namespace wso2wsf
         /**
          * Gets (finds) the attribute value with the given name.
          * @param name name of the attribute to be found. should not be NULL.
-         * @param ns namespace of the attribute to be found. can be NULL.
          * @return the attribute value with given name if found, else NULL.
          */
         WSF_EXTERN std::string WSF_CALL getAttributeValue(std::string name);
