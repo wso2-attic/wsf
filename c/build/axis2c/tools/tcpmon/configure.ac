@@ -39,6 +39,7 @@ AC_CHECK_FUNCS([memmove])
 
 AC_CHECK_LIB(z, inflate)
 dnl AC_CHECK_LIB(cutest, CuTestInit)
+AC_CHECK_LIB(socket,socket,LDFLAGS="$LDFLAGS -lsocket",)
 
 AC_MSG_CHECKING(whether to build guththila xml parser library)
 AC_ARG_ENABLE(guththila, [  --enable-guththila    build guththila xml parser library wrapper. default=no],
