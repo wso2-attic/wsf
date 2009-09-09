@@ -40,7 +40,7 @@ namespace wso2wsf
     /**
      * @brief class NeethiPolicy Defines a policy object that can be used to
      * provide WS-Policy information. This is a wrapper to the XML policy
-     * advertisement used in security, QoS etc.
+     * advertisement used in WS-Security, WS-Reliable Messaging etc.
      */
     class NeethiPolicy 
     {
@@ -65,19 +65,19 @@ namespace wso2wsf
         void WSF_CALL setNeethiPolicy(neethi_policy_t * policy);
 
         /**
-         * Creates a neethi_policy struct.
+         * Constructor for the NeethiPolicy Class. Accepts the policy file name as the argument.
          * @param file_name file name.
          */
         WSF_EXTERN WSF_CALL NeethiPolicy(std::string file_name);
 
         /**
-         * Creates a neethi_policy struct.
+         * Constructor for NeethiPolicy Class. Accepts an OMElement representing the WS-Policy XML
          * @param element OM element which is the root of WS-Policy XML.
          */
         WSF_EXTERN WSF_CALL NeethiPolicy(OMElement * element);
 
         /**
-         * destructor that frees resources.
+         * Destructor for the NeethiPolicy class.
          */
         virtual WSF_CALL ~NeethiPolicy();
 
