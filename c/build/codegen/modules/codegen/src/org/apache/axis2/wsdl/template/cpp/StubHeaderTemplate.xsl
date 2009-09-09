@@ -44,7 +44,6 @@
 #include &lt;OMElement.h&gt;
 #include &lt;Stub.h&gt;
 #include &lt;ServiceClient.h&gt;
-#include &lt;ADBObject.h&gt;        
 
 <xsl:for-each select="method">
 <xsl:for-each select="input/param[@type!='' and @ours ]">
