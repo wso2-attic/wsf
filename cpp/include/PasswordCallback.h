@@ -73,11 +73,23 @@ namespace wso2wsf
     };
     /** @} */
 }
-
+/**
+ * @brief stucture wsf_rampart_callback.
+ * This callback is used to pass data and invoke c++ level callback
+ */
 typedef struct wsf_rampart_callback
 {
+    /**
+     * Operations stuct pointer
+     */ 
     rampart_callback_ops_t *ops;
+    /**
+     * pointer to corresponding axis2 parameter
+     */ 
     axutil_param_t *param;
+    /**
+     * C++ Level Callback pointer
+     */ 	
     wso2wsf::PasswordCallback* callback;
 }wsf_rampart_callback_t;
 

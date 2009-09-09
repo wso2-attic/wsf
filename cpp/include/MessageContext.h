@@ -43,7 +43,7 @@ namespace wso2wsf
 	*/
 
 	/**
-	* Message context captures all state information related to a message
+	* @brief Class MessageContext captures all state information related to a message
 	* invocation. It holds information on the service and operation to be invoked
 	* as well as context hierarchy information related to the service and operation.
 	* It also has information on transports, that are to be used in invocation. The
@@ -160,40 +160,38 @@ namespace wso2wsf
 		/**
 		* Sets WS-Addressing from endpoint. From address tells where 
 		* the message came from.
+		* @param fromUri uri identifying the message origin
 		* @return true on success, false otherwise
 		*/
-		WSF_EXTERN bool WSF_CALL setFrom(std::string toUri);
+		WSF_EXTERN bool WSF_CALL setFrom(std::string fromUri);
 
 		/**
 		* Sets in fault flow status. 
-		* @param in_fault_flow true if there is a fault on in path, false otherwise
+		* @param inFault true if there is a fault on in path, false otherwise
 		* @return true if success false otherwise
 		*/
-		WSF_EXTERN bool WSF_CALL setInFaultFlow(bool infault);
+		WSF_EXTERN bool WSF_CALL setInFaultFlow(bool inFault);
 
 	    	/**
 		* Sets WS-Addressing reply to address indicating the location to which
 		* the reply would be sent.
-		* @param ReplyTo endpoint reference uri
+		* @param replyToUri endpoint reference uri
 		* @return true on success, else false
 		*/
 		WSF_EXTERN bool WSF_CALL setReplyTo(std::string replyToUri);
 
 		/**
-		* Sets the bool value indicating if it is the server side or the
+		* Sets the boolean value indicating if it is the server side or the
 		* client side.
-		* @param server_side true if it is server side, false if it
-		* is client side
-		* @return true on success, else false
+		* @param serverSide true if it is server side, false if it is client side
+		* @return true on success, false otherwise.
 		*/
 		
 		WSF_EXTERN bool WSF_CALL setServerSide(bool serverSide);
 
 		/**
-		* Sets WS-Addressing to address.
-		* @param reference pointer to endpoint reference struct representing
-		* the address where the request should be sent to. message context
-		* assumes ownership of endpoint struct
+		* Sets WS-Addressing to address url.
+		* @param toUri A uri of the endpoint where the request should be sent to. 
 		* @return true on success, else false
 		*/
 		WSF_EXTERN bool WSF_CALL setTo(std::string toUri);
@@ -201,26 +199,21 @@ namespace wso2wsf
 		/**
 		* Gets the bool value indicating if it is required to have a new thread
 		* for the invocation, or if the same thread of execution could be used.
-		*
-		
 		* @return true if new thread is required, else false
 		*/
-		WSF_EXTERN bool WSF_CALL getNewThread_required();
+		WSF_EXTERN bool WSF_CALL getNewThreadRequired();
 
 		/**
 		* Sets the bool value indicating if it is required to have a new thread
 		* for the invocation, or if the same thread of execution could be used.    
-		*
-		
-		* @param new_thread_required true if a new thread is required, 
-		* else false
-		* @return true on success, else false
+		* @param newThreadRequired true if a new thread is required.
+		* @return true on success, else false.
 		*/
 		WSF_EXTERN bool WSF_CALL setNewThreadRequired(bool newThreadRequired);
 			
 		/**
 		* Sets WS-Addressing action. 
-		* @param action_uri WSA action URI string
+		* @param actionUri WSA action URI string
 		* @return true on success, else false
 		*/
 		WSF_EXTERN bool WSF_CALL setWSAAction(std::string actionUri);
@@ -233,7 +226,7 @@ namespace wso2wsf
 
 		/**
 		* Sets WS-Addressing message ID.
-		* @param message_id pointer to message ID string
+		* @param messageId pointer to message ID string
 		* @return true on success, else false
 		*/
 		WSF_EXTERN bool WSF_CALL setWSAMessageId(std::string messageId);
@@ -272,7 +265,7 @@ namespace wso2wsf
 		* Sets the bool value indicating the keep alive status of invocation.
 		* By setting this one can indicate the engine not to clean the message 
 		* context.
-		* @param keep_alive keep alive
+		* @param keepAlive keep alive
 		* @return true on success, else false
 		*/
 		WSF_EXTERN bool WSF_CALL setKeepAlive(bool keepAlive);
@@ -285,7 +278,7 @@ namespace wso2wsf
 
 		/**
 		* Sets the bool value indicating the output written status. 
-		* @param output_written true if output is written, else false
+		* @param outputWritten  
 		* @return true on success, else false
 		*/
 		WSF_EXTERN bool WSF_CALL setOutputWritten(bool outputWritten);
@@ -301,8 +294,7 @@ namespace wso2wsf
 		/**
 		* Sets the HTTP Method that relates to the service that is 
 		* related to the message context.
-		* @param rest_http_method HTTP Method string, msg_ctx does not assume
-		* ownership of rest_http_method.
+		* @param HTTPMethod HTTP Method string
 		* @return true on success, else false
 		*/
 		WSF_EXTERN axis2_status_t WSF_CALL setRESTHTTPMethod(std::string HTTPMethod);
@@ -334,7 +326,7 @@ namespace wso2wsf
 
 		/**
 		* Gets property value corresponding to the property given key.
-		* @param property_str key string with which the property is stored
+		* @param propStr key string with which the property is stored
 		* @return pointer to property struct
 		*/
 		WSF_EXTERN void* WSF_CALL getPropertyValue(std::string propStr);
@@ -363,7 +355,7 @@ namespace wso2wsf
 
 		/**
 		* Sets the name of the phase at which the invocation was paused.
-		* @param paused_phase_name paused phase name string
+		* @param pausedPhaseName paused phase name string
 		* @return true on success, else false
 		*/
 		WSF_EXTERN bool WSF_CALL setPausedPhaseName(std::string pausedPhaseName);
@@ -376,7 +368,7 @@ namespace wso2wsf
 
 		/**
 		* Sets SOAP action.
-		* @param soap_action SOAP action string
+		* @param action SOAP action string
 		* @return true on success, else false
 		*/
 		WSF_EXTERN bool WSF_CALL setSOAPAction(std::string action);
@@ -389,7 +381,7 @@ namespace wso2wsf
 
 		/**
 		* Sets the boolean value indicating if MTOM is enabled or not.
-		* @param doing_mtom true if MTOM is enabled, else false
+		* @param doingMTOM true if MTOM is enabled, else false
 		* @return true on success, else false
 		*/
 		WSF_EXTERN bool WSF_CALL setDoingMTOM(bool doingMTOM);
@@ -402,7 +394,7 @@ namespace wso2wsf
 
 		/**
 		* Sets the boolean value indicating if REST is enabled or not.
-		* @param doing_rest true if REST is enabled, else false
+		* @param doingREST true if REST is enabled, else false
 		* @return true on success, else false
 		*/
 		WSF_EXTERN bool WSF_CALL setDoingREST(bool doingREST);
@@ -410,11 +402,11 @@ namespace wso2wsf
 		/**
 		* Sets the boolean value indicating if REST should be done through 
 		* HTTP POST or not.
-		* @param do_rest_through_post true if REST is to be done with 
+		* @param doRESTThroughPost true if REST is to be done with 
 		* HTTP POST, else false if REST is not to be done with HTTP POST
 		* @return true on success, else false
 		*/
-		WSF_EXTERN bool WSF_CALL setDoRESTThroughPOST(bool doREST);
+		WSF_EXTERN bool WSF_CALL setDoRESTThroughPOST(bool doRESTThroughPost);
 
 		/**
 		* Sets the boolean value indicating if REST should be done through 
@@ -432,7 +424,7 @@ namespace wso2wsf
 
 		/**
 		* Sets manage session bool value.
-		* @param manage_session manage session bool value
+		* @param manageSession manage session bool value
 		* @return true on success, else false
 		*/
 		WSF_EXTERN bool WSF_CALL setManageSession(bool manageSession);
@@ -449,8 +441,7 @@ namespace wso2wsf
 		/**
 		* Sets the bool value indicating the SOAP version being used either
 		* SOAP 1.1 or SOAP 1.2
-		* @param is_soap11 true if SOAP 1.1 is being used, else 
-		* false if SOAP 1.2 is being used
+		* @param isSOAP11 true if SOAP 1.1 is being used,false if SOAP 1.2 is being used
 		* @return true on success, else false
 		*/
 		WSF_EXTERN bool WSF_CALL setIsSOAP11(bool isSOAP11);
@@ -489,14 +480,10 @@ namespace wso2wsf
 		*/
 		WSF_EXTERN int WSF_CALL getFlow();
 
-
 		/**
 		* Sets the list of supported REST HTTP Methods
-		* @param supported_rest_http_methods pointer array list containing
-		* the list of HTTP Methods supported. Message context does
-		* assumes the ownership of the array list. Anything added to this
-		* array list will be freed by the msg_ctx
-		* @return true on success, else false
+		* @param methods A pointer to a vector containing the list of HTTP Methods supported. 
+		* @return true on success otherwise false.
 		*/
 		WSF_EXTERN bool WSF_CALL setSupportedRESTHTTPMethods(std::vector<std::string> *methods);
 
@@ -573,8 +560,8 @@ namespace wso2wsf
 
 		/**
 		* Sets the int value indicating http status code
-		* @param status_code of the http response
-		* @return true on success, else false
+		* @param statusCode of the http response
+		* @return true on success,otherwise false
 		*/
 		WSF_EXTERN bool WSF_CALL setStatusCode(int statusCode);
 
@@ -594,7 +581,7 @@ namespace wso2wsf
 
 		/**
 		* Sets the HTTP Accept-Charset records
-		* @param accept_charset_record_list an Array List containing the
+		* @param recordList an Array List containing the
 		* HTTP Accept-Charset records
 		* @return true on success, else false
 		*/
@@ -615,7 +602,7 @@ namespace wso2wsf
 
 		/**
 		* Sets the HTTP Accept-Language records
-		* @param accept_language_record_list an Array List containing the
+		* @param acceptLanguageRecordList an Array List containing the
 		* HTTP Accept-Language records
 		* @return true on success, else false
 		*/
@@ -629,11 +616,10 @@ namespace wso2wsf
 
 		/**
 		* Sets the Content Language used
-		* @param str Content Language string
+		* @param language Content Language string
 		* @return true on success, else false
 		*/
-
-		WSF_EXTERN bool WSF_CALL setContentLanguage(std::string langauge);
+		WSF_EXTERN bool WSF_CALL setContentLanguage(std::string language);
 
 		/**
 		* Retrieves HTTP Accept records.
@@ -642,16 +628,14 @@ namespace wso2wsf
 		WSF_EXTERN std::vector<std::string>* WSF_CALL getHTTPAcceptRecordList();
 
 		/**
-		* Retrieves HTTP Accept records, and removes them
-		* from the message context
+		* Retrieves HTTP Accept records, and removes them from the message context
 		* @return HTTP Accept records associated.
 		*/
 		WSF_EXTERN std::vector<std::string>* WSF_CALL extractHTTPAcceptRecordList();
 
 		/**
 		* Sets the HTTP Accept records
-		* @param accept_record_list an Array List containing the
-		* HTTP Accept records
+		* @param recordList an Array List containing the HTTP Accept records
 		* @return true on success, else false
 		*/
 		WSF_EXTERN bool WSF_CALL setHTTPAcceptRecordList(std::vector<std::string>* recordList);
@@ -664,7 +648,7 @@ namespace wso2wsf
 
 		/**
 		* Sets the transfer encoding used
-		* @param str Transfer encoding string
+		* @param encoding Transfer encoding string
 		* @return true on success, else false
 		*/
 		WSF_EXTERN bool WSF_CALL setTransferEncoding(std::string encoding);
@@ -676,8 +660,8 @@ namespace wso2wsf
 		WSF_EXTERN std::string WSF_CALL getTransportURL();
 
 		/**
-		* Sets the Transport URL
-		* @param str Transport URL string
+		* Sets the Transport URL.
+		* @param transportURL string representing the transport uril
 		* @return true on success, else false
 		*/
 		WSF_EXTERN bool WSF_CALL setTransportURL(std::string transportURL);
@@ -694,7 +678,7 @@ namespace wso2wsf
 
 		/**
 		* Sets that there was no content in the response.
-		* @param no_content expects true if there was no
+		* @param noContent expects true if there was no
 		* content in the response or false otherwise
 		* @return true on success, else false
 		*/
@@ -728,7 +712,7 @@ namespace wso2wsf
 		/**
 		* Sets whether HTTP Authentication is required or
 		* whether Proxy Authentication is required
-		* @param is_http use true for HTTP Authentication
+		* @param isHTTP use true for HTTP Authentication
 		* and false for Proxy Authentication
 		* @return true on success, else false
 		*/
@@ -736,7 +720,7 @@ namespace wso2wsf
 
 		/**
 		* Sets the authentication type
-		* @param auth_type Authentication type string
+		* @param authType Authentication type string
 		* @return true on success, else false
 		*/
 		WSF_EXTERN bool WSF_CALL setAuthType(std::string authType);
