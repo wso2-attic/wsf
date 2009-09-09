@@ -49,10 +49,12 @@ namespace wso2wsf
      */
 
     /**
-     * @brief class ServiceClient The service client interface serves as the primary client
+     * @brief Class ServiceClient 
+     * The service client Class serves as the primary client
      * interface for consuming services. The Service Client is
-     * derived either from the repository, or by using a configuration
-     * context. Optionally, you can pass options during the
+     * associated to a repository which includes an axis2.xml.
+     * Service client can be constructed by passing a configuration
+     * context as well. Optionally, you can pass options during the
      * initialization. You also can explicitly set options. Advanced
      * features such as engaging and disengaging modules, adding and
      * removing headers are supported. Some methods in the client may
