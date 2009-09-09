@@ -18,15 +18,13 @@
 #ifndef AXIS2_WSCLIENT_STUB_H
 #define AXIS2_WSCLIENT_STUB_H
 
+#include <platforms/axutil_platform_auto_sense.h>
 #include <axutil_utils.h>
 #include <axutil_utils_defines.h>
 #include <axutil_env.h>
 #include <axutil_array_list.h>
 #include <axutil_hash.h>
-#include <platforms/axutil_platform_auto_sense.h>
 #include <axiom_node.h>
-
-
 
 #ifdef __cplusplus
 extern "C"

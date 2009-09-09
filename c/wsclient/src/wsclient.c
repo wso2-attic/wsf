@@ -15,14 +15,13 @@
  * limitations under the License.
  */
 
-#include "option.h"
 #include "constants.h"
-#include "stub.h"
 #include "error.h"
+#include "stub.h"
+#include "option.h"
 #include <axiom.h>
 
 #define BUFF_SIZE 1024
-
 static void 
 print_help ();
 
