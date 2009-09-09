@@ -6,7 +6,6 @@ libwsf_cpp_msg_recv_la_LIBADD=../main/libwso2_wsf.la \
         	             ../../wsf_c/axis2c/util/src/libaxutil.la \
                              ../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
                 	     ../../wsf_c/axis2c/neethi/src/libneethi.la \
-			     ../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
 	                     -lpthread
 
 
