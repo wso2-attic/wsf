@@ -22,6 +22,11 @@
 #include <string>
 #include <MessageContext.h>
 
+/**
+ * WSF_SERVICE_INIT Macro. This macro is used to pass the class name to the class loading methods
+ * for loading the service class to the engine for execution. The service implementor should have
+ * this macro with the appropriate class name as the argument for successful deployment of the service.
+ */
 
 #define WSF_SERVICE_INIT(class_name) \
 extern "C" \

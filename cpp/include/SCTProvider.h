@@ -123,6 +123,12 @@ namespace wso2wsf
     /** @} */
 }
 
+/**
+ * Macro used to load the SecurityContextToken provider class to the engine. The implementor should have this
+ * macro in the code and should pass the appropriate class name as the arugment for proper deployment,functioning
+ * of security associated service.
+ */
+
 #define WSF_SCT_PROVIDER_INIT(class_name) \
 extern "C" \
 { \
