@@ -81,8 +81,7 @@ namespace wso2wsf
 
 	protected:
 		/**
-		* @var _parent variable holds reference for the parent of this node.                                                   
-		*
+		*  _parent variable holds reference for the parent of this node.                                                   
 		*/
 		OMNode *_parent;
 
@@ -123,7 +122,6 @@ namespace wso2wsf
 
         /**
          * Frees an om node and all of its children.
-         * @param node node to be freed.
          */
         virtual void WSF_CALL freeTree();
 

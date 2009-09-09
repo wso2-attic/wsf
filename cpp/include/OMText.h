@@ -76,9 +76,9 @@ namespace wso2wsf
         /**
          * Creates an om text struct.
          * @param parent parent element.
-         * @param value Text value. Optional, can be NULL.
+         * @param dataHandler DataHanlder object instance to be associated with this OMText
          */
-        WSF_EXTERN WSF_CALL OMText(OMNode * parent, OMDataHandler * data_handler);
+        WSF_EXTERN WSF_CALL OMText(OMNode * parent, OMDataHandler * dataHandler);
 
         /**
          * Creates an om text struct.
