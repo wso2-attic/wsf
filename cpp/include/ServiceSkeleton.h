@@ -74,37 +74,41 @@ namespace wso2wsf
 
     /**
      * @brief class ServiceSkeleton represents the Interface that should be implemented by
-     * any CPP service to be deployed. This class defines 3 virtual methods which should be overridden
-     * by the implementation class of any service. 
+     * any CPP service to be deployed with WSF/CPP. This class defines 3 virtual methods which should be overridden
+     * by the implementation class. They are init() which performs any initialization required, invoke() which should handle
+     * the business logic processing for the services, and onFault() which should implement the fault handling. 
      */
-	class WSF_EXTERN ServiceSkeleton
+    class WSF_EXTERN ServiceSkeleton
     {
     public:
         /**
          * This method is called for handling the business logic of the service
 	 * Services should implement this method in order to process the soap meesage's content.
 	 * @param omEle is the first child of the SOAP Body element. The msgCtx is the message context of the
-	 * out going message. The MessageContext object carries all the contextual details related to the soap message.
+	 * out going message flow. The MessageContext object carries all the contextual details related to the soap message.
 	 * Various details of the SOAP Message can be accessed using the MessageContext.
 	 * This function should return the resultant OMElement which would be sent back to the message sender.
-         * @param message Reference to message that is passed in.
+         * @param message pointer to message that is passed in.
+         * @param msgCtx  pointer to the Out Message Context.
+         * @returns Returns the response OMElement constructed.
          */
 	virtual OMElement* WSF_CALL invoke(OMElement* omEle, MessageContext *msgCtx){ return NULL;};
 
         /**
          * This is the handler to be invoked when a Fault occurs. The Service implementor should implement any service specific fault
-	 * handling here.
-	 * @param omEle Fault OMElement
-         * @param message Reference to message that is passed in.
+	 * handling here. This method is called, when the message exchange pattern is Request,Response and the invoke() method has already failed.
+	 * @param omEle omEle is the received SOAP Body's firstchild element. 
+         * @returns OMElement Constructed Fault OMElement.
          */
 	virtual OMElement* WSF_CALL onFault(OMElement* omEle){return NULL;};
 
         /**
          *Initialization method. Any service specific initialization can be done here.                                                    
-	 *   
 	 */
 	virtual void WSF_CALL init(){};
-		
+	/**
+	 * Destructor for ServiceSkeleton.			
+	 */ 			
         virtual WSF_CALL ~ServiceSkeleton();
     };
     /** @} */
