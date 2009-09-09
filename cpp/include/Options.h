@@ -270,7 +270,7 @@ namespace wso2wsf
 		* Sets HTTP authentication information.
 		* @param username string representing username
 		* @param password string representing password
-		* @param auth_type use "Basic" to force basic authentication
+		* @param authType use "Basic" to force basic authentication
 		* and "Digest" to force digest authentication or NULL for not
 		* forcing authentication
 		* @return true on success, else false

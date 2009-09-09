@@ -47,38 +47,32 @@ namespace wso2wsf
     {
     private:
         /**
-         * @var _added_namespaces private variable holds an array of
-         * namespaces that were added.
+         * _added_namespaces private variable holds an array of namespaces that were added.
          */
         std::vector<OMNamespace *> _added_namespaces;
 
         /**
-         * @var _default_namespace private variable holds the reference to the
-         * default namespaces that was added.
+         * _default_namespace private variable holds the reference to the default namespaces that was added.
          */
         OMNamespace * _default_namespace;
 
         /**
-         * @var _namespace private variable holds the reference to the
-         * namespace added in constructor.
+         * _namespace private variable holds the reference to the namespace added in constructor.
          */
         OMNamespace * _namespace;
 
         /**
-         * @var _added_attributes private variable holds an array of
-         * attributes that were added.
+         * _added_attributes private variable holds an array of attributes that were added.
          */
         std::vector<OMAttribute *> _added_attributes;
 
         /**
-         * @var _child_nodes private variable holds an array of
-         * child nodes of this element.
+         * _child_nodes private variable holds an array of child nodes of this element.
          */
         std::vector<OMNode *> _child_nodes;
 
         /**
-         * @var _wsf_axiom_element private variable holds reference for
-         * axiom_element struct.
+         * _wsf_axiom_element private variable holds reference for axiom_element struct.
          */
         axiom_element_t * _wsf_axiom_element;
 

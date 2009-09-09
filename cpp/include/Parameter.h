@@ -46,17 +46,17 @@ namespace wso2wsf
     {
     private:
         /**
-         * @var _name private variable holds reference for Parameter name.
+         * _name private variable holds reference for Parameter name.
          */
         std::string _name;
 
         /**
-         * @var _name private variable holds reference for Parameter value.
+         * _name private variable holds reference for Parameter value.
          */
         void * _value;
 
         /**
-         * @var _name private variable holds reference for Parameter scope.
+         * _name private variable holds reference for Parameter scope.
          */
         int _type;
 
@@ -65,7 +65,7 @@ namespace wso2wsf
          * Constructor for the Paramter class. 
          * @param name key string.
          * @param value pointer to property to be set.
-         * @param scope of the paramter.
+         * @param type scode of the paramter.
          */
         WSF_EXTERN WSF_CALL Parameter(std::string name, void * value,int type );
 

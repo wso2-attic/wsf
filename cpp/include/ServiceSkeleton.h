@@ -88,7 +88,7 @@ namespace wso2wsf
 	 * out going message flow. The MessageContext object carries all the contextual details related to the soap message.
 	 * Various details of the SOAP Message can be accessed using the MessageContext.
 	 * This function should return the resultant OMElement which would be sent back to the message sender.
-         * @param message pointer to message that is passed in.
+         * @param omEle pointer to message that is passed in.
          * @param msgCtx  pointer to the Out Message Context.
          * @returns Returns the response OMElement constructed.
          */

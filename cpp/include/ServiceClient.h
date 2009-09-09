@@ -62,11 +62,12 @@ namespace wso2wsf
      * ways of invoking a service operation, which are based on the
      * concept of a message exchange pattern (MEP). The two basic MEPs
      * supported by service client are out-only and out-in. Each MEP
-     * can be used in either blocking or non-blocking mode. The operation
-     * invocations using the service client API are based on the
-     * XML-in/XML-out principle: both the payload to be sent to the
-     * service and the result from the service are in XML, represented
-     * in AXIOM.
+     * can be used in either blocking or non-blocking mode.Out-only MEP
+     * means one way message which does not expect a response. Out-In MEP means
+     * a request response message exchange. The operation invocations using 
+     * the service client API are based on the XML-in/XML-out principle: both 
+     * the payload to be sent to the service and the result from the service 
+     * are in XML, represented in AXIOM.
      */
     class ServiceClient 
     {
@@ -75,31 +76,31 @@ namespace wso2wsf
 
     private:
         /**
-         * @var _wsf_service_client private variable holds reference for
+         * _wsf_service_client private variable holds reference for
          * axis2_svc_client struct.
          */
         axis2_svc_client_t * _wsf_service_client;
 
         /**
-         * @var _last_soap_fault private variable holds reference for
+         * _last_soap_fault private variable holds reference for
          * last SOAP fault.
          */
         OMElement * _last_soap_fault;
 
         /**
-         * @var _last_response_soap_envelope_element private variable holds reference for
+         * _last_response_soap_envelope_element private variable holds reference for
          * last response SOAP envelope element.
          */
         OMElement * _last_response_soap_envelope_element;
 
         /**
-         * @var _last_response_soap_envelope private variable holds reference for
+         * _last_response_soap_envelope private variable holds reference for
          * last response SOAP envelope.
          */
         axiom_soap_envelope_t * _last_response_soap_envelope;
 
         /**
-         * @var _options private variable holds reference for
+         * _options private variable holds reference for
          * composite Options object.
          */
         Options * _options;
@@ -145,20 +146,21 @@ namespace wso2wsf
 
     public:
         /**
-         * create a service client from the default repository.
-         * @param endpoint_address endpoint address to be used.
+         * Create a Service Client which is associated with the default repository.
+         * @param endpoint_address endpoint address which would be invoked using this
+         * service Client Object.
          */
         WSF_EXTERN WSF_CALL ServiceClient(std::string endpoint_address);
 
         /**
-         * create a service client from the repository.
+         * Create a Service Client from the repository.
          * @param repo_home location of the repository.
          * @param endpoint_address endpoint address to be used.
          */
         WSF_EXTERN WSF_CALL ServiceClient(std::string repo_home, std::string endpoint_address);
 
         /**
-         * create a service client from a configuration context.
+         * Create a service client from a configuration context.
          * @param conf_ctx pointer to configuration context.
          * @param endpoint_address endpoint address to be used.
          */
@@ -169,9 +171,9 @@ namespace wso2wsf
          */
         WSF_EXTERN virtual WSF_CALL ~ServiceClient();
 	/**
-	* Checks whether the ServiceClient got properly initialized or not. If the service client is not
-	* Properly initialized, it will return true , false otherwise.
-	*@return true on success, false otherwise.
+	* Checks whether the ServiceClient got properly initialized or not. 
+	* If the service client is properly initialized, it will return true  and will return false otherwise.
+	* @return true on success, false otherwise.
 	*/
 
 	WSF_EXTERN bool WSF_CALL isValidClient();
@@ -385,7 +387,7 @@ namespace wso2wsf
 	/**
 	* Set proxy with authentication                                                   
 	* @param proxyHost Proxy host
-	* @param porxyPort proxy port
+	* @param proxyPort proxy port
 	* @param username  username required for proxy authentication
 	* @param password  password required for proxy authentication
 	*/
@@ -393,8 +395,7 @@ namespace wso2wsf
 		std::string proxyPort, std::string username, std::string password);
 
 	/**
-	* Gets the boolean value indicating whether HTTP Authentication
-	* is required.
+	* Gets the boolean value indicating whether HTTP Authentication is required.
 	* @return true if HTTP authentication is required, false otherwise.
 	*/
 	WSF_EXTERN bool WSF_CALL getHttpAuthRequired();

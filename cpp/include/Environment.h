@@ -36,12 +36,13 @@
 namespace wso2wsf
 {
 	/**
-	* @defgroup axis
+	* @defgroup Environment Environment
 	* @ingroup wso2wsf
 	* @{
 	*/
 	/**
-	* @brief class Environment. This keeps track of axis2_env_t when running with threads.
+	* @brief class TLSKey. This is an internal class for keeping managing the allocation and deallocation of thread local
+	* Storage which is used to store the axis2/c environment associated with each thread.
 	*/
 	class TLSKey
 	{
@@ -81,6 +82,10 @@ namespace wso2wsf
 #endif
 		}
 	};
+
+	/**
+	 *@brief Class Environment
+  	 */
 
 	class Environment
 	{
