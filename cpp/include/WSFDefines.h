@@ -139,4 +139,26 @@
 /** Define AXIS2_SLEEP as WSF_SLEEP */
 #define WSF_SLEEP AXIS2_SLEEP
 
+/** Log Levels */
+/** Critical level, logs only critical errors */
+#define WSF_LOG_LEVEL_CRITICAL AXIS2_LOG_LEVEL_CRITICAL
+
+/** Error level, logs only errors */
+#define WSF_LOG_LEVEL_ERROR AXIS2_LOG_LEVEL_ERROR
+
+/** Warning level, logs only warnings */
+#define WSF_LOG_LEVEL_WARNING AXIS2_LOG_LEVEL_WARNING
+
+/** Info level, logs information */
+#define WSF_LOG_LEVEL_INFO AXIS2_LOG_LEVEL_INFO
+
+/** Debug level, logs everything */
+#define WSF_LOG_LEVEL_DEBUG AXIS2_LOG_LEVEL_DEBUG
+
+/** User level, logs only user level debug messages */
+#define WSF_LOG_LEVEL_USER AXIS2_LOG_LEVEL_USER
+
+/** Trace level, Enable with compiler time option AXIS2_TRACE */
+#define WSF_LOG_LEVEL_TRACE AXIS2_LOG_LEVEL_TRACE
+
 #endif // WSFDEFINES_H
