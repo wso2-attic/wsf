@@ -317,7 +317,7 @@ WSF_EXTERN bool WSF_CALL MessageContext::setTo(std::string toUri)
 
 * @return true if new thread is required, else false
 */
-WSF_EXTERN bool WSF_CALL MessageContext::getNewThread_required()
+WSF_EXTERN bool WSF_CALL MessageContext::getNewThreadRequired()
 {
 	if(axis2_msg_ctx_get_new_thread_required(_msg_ctx,Environment::getEnv()))
 		return true;
