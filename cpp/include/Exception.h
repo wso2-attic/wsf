@@ -63,7 +63,7 @@ namespace wso2wsf
 
     private:
         /**
-         * @var _reason reason to what caused the exception.
+         * _reason reason to what caused the exception.
          */
         std::string _reason;
 

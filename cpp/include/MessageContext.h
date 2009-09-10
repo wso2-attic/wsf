@@ -61,7 +61,9 @@ namespace wso2wsf
 	class MessageContext
 	{
 	private:
-		/**@var pointer to the underlying axis2_msg_context */
+		/**
+		 *  pointer to the underlying axis2_msg_context 
+		 */
 		axis2_msg_ctx_t *_msg_ctx;
 		
 	public:
