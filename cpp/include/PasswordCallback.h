@@ -38,8 +38,8 @@ namespace wso2wsf
      */
 
     /**
-     * @brief class PasswordCallback Represents an interface needed implement any user specific
-     * password callback
+     * @brief class PasswordCallback Represents an interface that should be implemented by a user specific
+     * password callback. 
      */
     class PasswordCallback
     {
@@ -51,6 +51,7 @@ namespace wso2wsf
 
         /**
          * Handler to be invoked to get the pkcs12 password
+         * @param username Username
          */
         virtual std::string WSF_CALL getPKCS12Password(std::string& username) = 0;
 
@@ -93,7 +94,12 @@ typedef struct wsf_rampart_callback
     wso2wsf::PasswordCallback* callback;
 }wsf_rampart_callback_t;
 
-
+/**
+ * Macro used to load the password callback shared library to the engine. The implementor should 
+ * include this macro in the code and the appropriate class name should be passed as the argument
+ * for proper deployment and functioning of the service associated with this password callback.
+ *
+ */
 #define WSF_PASSWORD_CALLBACK_INIT(class_name) \
 extern "C" \
 { \
