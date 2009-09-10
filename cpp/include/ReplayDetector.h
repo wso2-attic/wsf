@@ -40,7 +40,7 @@ namespace wso2wsf
 
     /**
      * @brief class ReplayDetector Represents an interface needed implement any user specific
-     * replay detection logic
+     * replay detection logic.
      */
     class WSF_EXTERN ReplayDetector
     {
@@ -67,14 +67,20 @@ namespace wso2wsf
     };
     /** @} */
 }
-
+/**
+ * stuct used to keep the information data for replay detection callback.
+ */
 typedef struct wsf_replay_detector
 {
     rampart_replay_detector_ops_t *ops;
 	axutil_param_t *param;
     wso2wsf::ReplayDetector* callback;
 }wsf_replay_detector_t;
-
+/**
+ * Macro used to load the shared lib to the engine. The implementer should include this macro within the code,
+ * and provide the class extending from the ReplayDetector class as the argument for this macro for proper
+ * deployment and functioning of the replay detection callback.
+ */
 
 #define WSF_REPLAY_DETECTOR_INIT(class_name) \
 extern "C" \

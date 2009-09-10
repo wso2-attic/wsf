@@ -40,13 +40,17 @@ namespace wso2wsf
 
     /**
      * @brief class AuthenticationProvider Represents an interface needed implement any user specific
-     * authentication module
+     * authentication module. Extend from this class and implement the abstract methods defined here to
+     * implement a authentication provider.
      */
     class AuthenticationProvider
     {
     public:
         /**
          * Handler to be invoked to check plain password
+         * @param username username
+         * @param password password
+         * @return msgctx pointer to message context
          */
         virtual bool WSF_CALL checkPassword(
             std::string& username, 
@@ -55,6 +59,13 @@ namespace wso2wsf
 
         /**
          * Handler to be invoked to check digest password
+         * @param username Username
+         * @param nonce    nonce value
+         * @param created  created time
+         * @param digest digest value
+         * @param msgctx pointer to message context
+         * @return true if successful, false otherwise
+         *
          */
         virtual bool WSF_CALL checkDigestPassword(
             std::string& username, 
@@ -101,7 +112,11 @@ typedef struct wsf_authn_provider
     wso2wsf::AuthenticationProvider* callback;
 }wsf_authn_provider_t;
 
-
+/**
+ * Macro used to load the authentication provider shared lib to the engine. The authentication provider
+ * code should include this macro and provide the class extended from authentication provider as the
+ * argument to the macro.
+ */
 #define WSF_AUTHENTICATION_PROVIDER_INIT(class_name) \
 extern "C" \
 { \
