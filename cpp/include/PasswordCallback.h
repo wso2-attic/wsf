@@ -39,19 +39,22 @@ namespace wso2wsf
 
     /**
      * @brief class PasswordCallback Represents an interface that should be implemented by a user specific
-     * password callback. 
+     * password callback. Extend from the PasswordCallback class and implement the abstract methods defined here.
      */
     class PasswordCallback
     {
     public:
         /**
          * Handler to be invoked to get the password
+         * @param username Username associated with the password
+         * @return The corresponding password if successful. 
          */
         virtual std::string WSF_CALL getPassword(std::string& username) = 0;
 
         /**
          * Handler to be invoked to get the pkcs12 password
          * @param username Username
+         * @return Password associated with the provided username
          */
         virtual std::string WSF_CALL getPKCS12Password(std::string& username) = 0;
 
