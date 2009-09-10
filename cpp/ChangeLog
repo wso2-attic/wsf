@@ -1,3 +1,35 @@
+WSO2 WSF/C++ 2.1.0
+==================
+On top of WSO2 WSF/C++ 2.0.0, following changes were done.
+1. API documentation Improved
+	* Documented all the classes and methods and fixed the issues found
+	 in the documentation.
+
+2. Added Visual Studio Project File Generation Support to Codegen Tool
+	* Now codegen tool is able to generate Visual Studio Project Files for
+	  the generated code.
+
+3. Performace Improvements to the entire library.
+	* The performace of the entire library has been substantially improved
+	from the pervious release. Also the way the axis2_env was handles have
+	been changed with this release resulting in substantial gain in performace.
+
+4. Eclipse Plugin Wizzard added for Code Generation tool.
+	* Added a new eclipse plug-in wizzard which provides a graphical 
+	interface to the codegeneration tool.
+
+5.Platfrom protability issues addressed.
+	* The compilation issues found on macos and soalris platfroms have
+	been fixed.
+
+6.New Samples Added.
+	* Added new samples in addition to the samples contained in the 2.0.0
+	release.
+
+7. Many Memory Leaks Fixed.
+	* Many memory leaks have been fixed for this release.
+	
+
 WSO2 WSF/C++ 2.0.0
 ==================
 On top of WSO2 WSF/C++ 1.0.0 following changes were  done.
