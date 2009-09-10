@@ -40,13 +40,18 @@ namespace wso2wsf
 
     /**
      * @brief class SCTProvider Represents an interface needed implement any user specific
-     * security context token provider functionality
+     * security context token provider functionality. For implementing a Token provider, one 
+     * need to extend from the SCTProvider class and implement the abstract public methods defined by
+     * the SCTProvider class. 
      */
     class SCTProvider
     {
     public:
         /**
          * Handler to be invoked to get previously stored sct
+         * @param sct_id Security Context Token ID
+         * @param msgctx pointer to message context
+         * @return void pointer to the token object requested security context token.
          */
         virtual void* WSF_CALL getToken(
             std::string& sct_id, 
@@ -54,6 +59,9 @@ namespace wso2wsf
 
         /**
          * Handler to be invoked to store sct
+         * @param sct_id Security Content Token ID
+         * @param msgctx pointer to message context
+         * @return true if the operation is successful, false otherwise.
          */
         virtual bool WSF_CALL storeToken(
             std::string& sct_id, 
@@ -62,6 +70,9 @@ namespace wso2wsf
 
         /**
          * Handler to be invoked to remove previously stored sct
+         * @param sct_id security context token id
+         * @param msgctx pointer to the message context
+         * @return true if the operation is successful, false otherwise.
          */
         virtual bool WSF_CALL removeToken(
             std::string& sct_id, 
@@ -69,6 +80,9 @@ namespace wso2wsf
 
         /**
          * Handler to be invoked to validate whether security context token is valid or not
+         * @param sct_node OMNode representing the Security Context Token
+         * @param msgctx pointer to the message context
+         * @return true if the token is valid, false otherwise.
          */
         virtual bool WSF_CALL validateToken(
             OMNode* sct_node, 
@@ -81,6 +95,7 @@ namespace wso2wsf
 
         /**
          * Static Handler to be invoked to store the sct
+         *
          */
         WSF_EXTERN static axis2_status_t WSF_CALL storeToken(
             const axutil_env_t *env, 
@@ -124,7 +139,7 @@ namespace wso2wsf
 }
 
 /**
- * Macro used to load the SecurityContextToken provider class to the engine. The implementor should have this
+ * Macro used to load the SecurityContextToken provider shared lib to the engine. The implementor should have this
  * macro in the code and should pass the appropriate class name as the arugment for proper deployment,functioning
  * of security associated service.
  */
