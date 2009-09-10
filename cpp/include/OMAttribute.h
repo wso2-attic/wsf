@@ -62,13 +62,13 @@ namespace wso2wsf
 
     private:
         /**
-         * @var _wsf_axiom_attribute protected variable holds reference for
+         * _wsf_axiom_attribute protected variable holds reference for
          * axiom_attribute struct.
          */
         axiom_attribute_t * _wsf_axiom_attribute;
 
         /**
-         * @var _namespace private variable holds the reference to the
+         * _namespace private variable holds the reference to the
          * namespace added in constructor.
          */
         OMNamespace * _namespace;

@@ -106,31 +106,31 @@ namespace wso2wsf
         Options * _options;
 
 	/**
-         * @var _policy private variable holds reference for
+         * _policy private variable holds reference for
          * associated policy object.
          */
         NeethiPolicy * _policy;
 
         /**
-         * @var _endpoint_address private variable holds reference of the
+         * _endpoint_address private variable holds reference of the
          * endpoint address.
          */
         std::string _endpoint_address;
 
         /**
-         * @var _repo_home private variable holds reference of the
+         * _repo_home private variable holds reference of the
          * repository home.
          */
         std::string _repo_home;
 
         /**
-         * @var _conf_ctx private variable holds reference for
+         * _conf_ctx private variable holds reference for
          * axis2_conf_ctx_t struct.
          */
         const axis2_conf_ctx_t * _conf_ctx;
 
 	/**
-	*@var isValid This variable is used to keep track of the consitancy of
+	*  isValid This variable is used to keep track of the consitancy of
 	* service client. If the value is false, that means, ServiceClient object 
 	* instance is in an inconsistance stage due to an error condition.                                                    
 	*/

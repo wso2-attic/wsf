@@ -63,12 +63,12 @@ namespace wso2wsf
 
     private:
         /**
-         * @var _wsf_axiom_namespace protected variable holds reference for
+         * _wsf_axiom_namespace protected variable holds reference for
          * axiom_namespace struct.
          */
         axiom_namespace_t * _wsf_axiom_namespace;
 	/**
-	* @var ref This variable keeps track of the number of references to this namespace object.                                                   
+	* ref This variable keeps track of the number of references to this namespace object.                                                   
 	*/
 	int _refcounter;
 

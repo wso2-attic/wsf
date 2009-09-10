@@ -59,31 +59,31 @@ namespace wso2wsf
 
     private:
         /**
-         * @var _wsf_options private variable holds reference for
+         * _wsf_options private variable holds reference for
          * axis2_options struct.
          */
         axis2_options_t * _wsf_options;
 
         /**
-         * @var _reply_to private variable holds reference for
+         * _reply_to private variable holds reference for
          * reply to epr.
          */
         axis2_endpoint_ref_t * _reply_to;
 
         /**
-         * @var _reply_to private variable holds reference for
+         * _reply_to private variable holds reference for
          * to epr.
          */
         axis2_endpoint_ref_t * _to;
 
         /**
-         * @var _reply_to private variable holds reference for
+         * _reply_to private variable holds reference for
          * from epr.
          */
         axis2_endpoint_ref_t * _from;
 
         /**
-         * @var _reply_to private variable holds reference for
+         * _reply_to private variable holds reference for
          * fault to epr.
          */
         axis2_endpoint_ref_t * _fault_to;

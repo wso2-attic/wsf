@@ -45,20 +45,17 @@ namespace wso2wsf
     {
     private:
         /**
-         * @var _wsf_axiom_text protected variable holds reference for
+         * _wsf_axiom_text protected variable holds reference for
          * axiom_text struct.
          */
         axiom_text_t * _wsf_axiom_text;
 
         /**
-         * @var _data_handler protected variable holds reference for
+         *_data_handler protected variable holds reference for
          * axiom_data_handler struct.
          */
         OMDataHandler * _data_handler;
 
-        /**
-         * @var _parent private variable holds reference to parent element.
-         */
     public:
         /**
          * Creates an om text struct.

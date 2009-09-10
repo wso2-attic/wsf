@@ -66,7 +66,7 @@ namespace wso2wsf
 
     private:
         /**
-         * @var _wsf_axiom_node variable holds reference for axiom_node struct.
+         * _wsf_axiom_node variable holds reference for axiom_node struct.
          */
         axiom_node_t * _wsf_axiom_node;
 

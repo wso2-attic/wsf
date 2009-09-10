@@ -44,19 +44,19 @@ namespace wso2wsf
     {
     private:
         /**
-         * @var _name private variable holds reference for
+         * _name private variable holds reference for
          * Property name.
          */
         std::string _name;
 
         /**
-         * @var _name private variable holds reference for
+         * _name private variable holds reference for
          * Property value.
          */
         void * _value;
 
         /**
-         * @var _name private variable holds reference for
+         * _name private variable holds reference for
          * Property scope.
          */
         axis2_scope_t _scope;

@@ -46,7 +46,7 @@ namespace wso2wsf
     {
     private:
         /**
-         * @var _wsf_neethi_policy protected variable holds reference for
+         * _wsf_neethi_policy protected variable holds reference for
          * neethi_policy struct.
          */
         neethi_policy_t * _wsf_neethi_policy;
