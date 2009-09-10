@@ -61,6 +61,7 @@ namespace wso2wsf
          * Handler to be invoked to store sct
          * @param sct_id Security Content Token ID
          * @param msgctx pointer to message context
+         * @param sct Security Context token to be stored.
          * @return true if the operation is successful, false otherwise.
          */
         virtual bool WSF_CALL storeToken(
