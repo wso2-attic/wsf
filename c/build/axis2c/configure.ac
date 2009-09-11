@@ -133,27 +133,6 @@ AC_ARG_WITH(archive,
   AC_MSG_RESULT(no)
 )
 
-
-AC_MSG_CHECKING(whether to build libxml2 xml parser library)
-AC_ARG_ENABLE(libxml2, [  --enable-libxml2    
-                          build Libxml2 XML parser library wrapper (default=no)],
-[ case "${enableval}" in
-  no)
-    AC_MSG_RESULT(no)
-    WRAPPER_DIR=""
-    ;;
-  *)
-    AC_MSG_RESULT(yes)
-    WRAPPER_DIR="libxml2"
-    PKG_CHECK_MODULES(PARSER, libxml-2.0)
-    CFLAGS="$CFLAGS $PARSER_CFLAGS"
-    LDFLAGS="$LDFLAGS $PARSER_LIBS"
-    ;;
-  esac ],
-  AC_MSG_RESULT(no)
-)
-
-
 GUTHTHILA_LIBS=""
 
 AC_MSG_CHECKING(whether to build guththila xml parser library)
@@ -176,6 +155,26 @@ AC_ARG_ENABLE(guththila, [  --enable-guththila
   GUTHTHILA_DIR="guththila"
 
 )
+
+AC_MSG_CHECKING(whether to build libxml2 xml parser library)
+AC_ARG_ENABLE(libxml2, [  --enable-libxml2    
+                          build Libxml2 XML parser library wrapper (default=no)],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    WRAPPER_DIR=""
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    WRAPPER_DIR="libxml2"
+    PKG_CHECK_MODULES(PARSER, libxml-2.0)
+    CFLAGS="$CFLAGS $PARSER_CFLAGS"
+    LDFLAGS="$LDFLAGS $PARSER_LIBS"
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
 
 AC_MSG_CHECKING(whether to build tcp transport)
 AC_ARG_ENABLE(tcp, [  --enable-tcp
