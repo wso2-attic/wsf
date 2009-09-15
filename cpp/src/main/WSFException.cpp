@@ -15,7 +15,7 @@
  */
 
 #include <stdio.h>
-#include <Exception.h>
+#include <WSFException.h>
 using namespace wso2wsf;
 
 Exception::~Exception()
