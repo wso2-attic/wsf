@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef EXCEPTION_H
-#define EXCEPTION_H
+#ifndef WSFEXCEPTION_H
+#define WSFEXCEPTION_H
 
 #include <WSFDefines.h>
 #include <iostream>
@@ -105,4 +105,4 @@ namespace wso2wsf
         return str << const_cast<Exception *>(e)->operator std::string();
     }    
 }
-#endif // EXCEPTION_H
+#endif // WSFEXCEPTION_H

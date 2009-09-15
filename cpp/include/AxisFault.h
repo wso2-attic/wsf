@@ -18,7 +18,7 @@
 #define AXISFAULT_H
 
 #include <WSFDefines.h>
-#include <Exception.h>
+#include <WSFException.h>
 
 /**
  * @file AxisFault.h

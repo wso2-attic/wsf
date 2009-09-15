@@ -234,6 +234,12 @@ namespace wso2wsf
          */
         WSF_EXTERN bool WSF_CALL getEnableMTOM();
 
+		/**
+		* configure client to use the specified the SOAP/Addressing action                                                   
+		* @param action, The soap action
+		* @return true if the action is succefully set, false otherwise.
+		*/
+		WSF_EXTERN bool WSF_CALL setAction(std::string action);
         /**
          * Sets the HTTP method to be used
          * @param http_method string representing HTTP method to use,
