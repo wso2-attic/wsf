@@ -318,3 +318,17 @@ bool Options::setTestProxyAuth(bool testProxyAuth)
 	status = axis2_options_set_test_proxy_auth(_wsf_options, Environment::getEnv(), testProxyAuth ? AXIS2_TRUE : AXIS2_FALSE);
 	return status ? true : false;
 }
+
+bool Options::setAction(std::string action)
+{
+	axis2_status_t status = AXIS2_FAILURE;
+	if(_wsf_options)
+	{
+		status = axis2_options_set_action(_wsf_options, Environment::getEnv(), action.c_str());
+		status =axis2_options_set_soap_action(_wsf_options, 
+			Environment::getEnv(),
+			axutil_string_create(Environment::getEnv(),action.c_str()));
+		return status  ? true :false;
+	}
+	return false;
+}
