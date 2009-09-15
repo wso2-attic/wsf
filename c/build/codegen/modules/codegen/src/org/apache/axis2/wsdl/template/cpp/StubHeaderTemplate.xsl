@@ -138,9 +138,9 @@ class <xsl:value-of select="@name"/> : public wso2wsf::Stub
             <xsl:variable name="outputtype">
                 <xsl:choose>
                     <xsl:when test="$isUnwrapParameters">
-                        <xsl:value-of select="output/param/param/@type"/>
+                        <xsl:value-of select="output/param/param/@type"/><xsl:if test="output/param/param/@ours">*</xsl:if>
                     </xsl:when>
-                    <xsl:otherwise><xsl:value-of select="output/param/@type"></xsl:value-of></xsl:otherwise>
+                    <xsl:otherwise><xsl:value-of select="output/param/@type"></xsl:value-of><xsl:if test="output/param/@ours">*</xsl:if></xsl:otherwise>
                 </xsl:choose>
             </xsl:variable>
 
@@ -175,7 +175,7 @@ class <xsl:value-of select="@name"/> : public wso2wsf::Stub
             </xsl:variable>
             <xsl:choose>
                 <xsl:when test="$outputtype=''">bool WSF_CALL</xsl:when>
-                <xsl:when test="$outputtype!=''"><xsl:value-of select="$outputtype"/>* WSF_CALL</xsl:when>
+                <xsl:when test="$outputtype!=''"><xsl:value-of select="$outputtype"/> WSF_CALL</xsl:when>
             </xsl:choose>
             <xsl:text> </xsl:text>
         <xsl:value-of select="@name"/><xsl:text>( </xsl:text><xsl:value-of select="$inputparams"/>
@@ -205,7 +205,7 @@ class <xsl:value-of select="@name"/> : public wso2wsf::Stub
         <xsl:variable name="outputtype">
             <xsl:choose>
                 <xsl:when test="$isUnwrapParameters">
-                            <xsl:value-of select="output/param/param/@type"/>
+                            <xsl:value-of select="output/param/param/@type"/><xsl:if test="output/param/param/@ours">*</xsl:if>
                 </xsl:when>
                 <xsl:otherwise><xsl:value-of select="output/param/@type"></xsl:value-of></xsl:otherwise>
             </xsl:choose>

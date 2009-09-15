@@ -99,12 +99,21 @@
             <xsl:choose>
                 <!-- Code generation for in-out only. Need to consider the other meps also
                     They should be parts of this xsl:choose loop -->
-                <xsl:when test="$mep='12'">
+          <xsl:when test="$mep='12'">
+            <xsl:variable name="outputtype">
+                <xsl:choose>
+                    <xsl:when test="$isUnwrapParameters">
+                        <xsl:value-of select="output/param/param/@type"/><xsl:if test="output/param/param/@ours"><xsl:text>*</xsl:text></xsl:if>
+                    </xsl:when>
+                    <xsl:otherwise><xsl:value-of select="output/param/@type"></xsl:value-of><xsl:if test="output/param/@ours"><xsl:text>*</xsl:text></xsl:if></xsl:otherwise>
+                </xsl:choose>
+            </xsl:variable>
            /**
             * auto generated WSF/C++ call back method for <xsl:value-of select="@name"/> method
             * override this method for handling normal response from <xsl:value-of select="@name"/> operation
             */
           virtual void receiveResult_<xsl:value-of select="@name"/>(
+              <!--
                     <xsl:choose>
                         <xsl:when test="$outParamCount=1">
                              <xsl:value-of select="output/param[@location='body']/param/@type"/><xsl:if test="output/param/@ours"><xsl:text>*</xsl:text></xsl:if><xsl:text> </xsl:text>result
@@ -118,6 +127,8 @@
                             <xsl:value-of select="$outParamType"/><xsl:if test="output/param/@ours"><xsl:text>*</xsl:text></xsl:if><xsl:text> </xsl:text>result
                         </xsl:when>
                     </xsl:choose>
+                    -->
+                    <xsl:value-of select="$outputtype"/> result
                     <xsl:for-each select="output/param[@location='soap_header']">
                            <xsl:if test="position()>0">,</xsl:if>
                            <xsl:variable name="outputtype"><xsl:value-of select="@type"/><xsl:if test="@ours">*</xsl:if></xsl:variable>
