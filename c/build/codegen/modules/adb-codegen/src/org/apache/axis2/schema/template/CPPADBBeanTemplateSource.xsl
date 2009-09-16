@@ -66,6 +66,14 @@
             <xsl:otherwise>0</xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
+        <xsl:variable name="CPPNamespace">
+        <xsl:choose>
+            <xsl:when test="@cppNamespace">
+                <xsl:value-of select="@cppNamespace"/><xsl:text>::</xsl:text>
+            </xsl:when>
+            <xsl:otherwise></xsl:otherwise>
+        </xsl:choose>
+        </xsl:variable>
 
         <!-- checking for is union -->
         <xsl:variable name="isUnion" select="@union"/>
@@ -106,7 +114,7 @@
         </xsl:choose>
 
 
-        <xsl:value-of select="$axis2_name"/>::<xsl:value-of select="$axis2_name"/>()
+        <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::<xsl:value-of select="$axis2_name"/>()
         {
 
         <xsl:if test="not($istype)">
@@ -166,7 +174,7 @@
 
         <!-- the following two functions was added in support of the unwrapped mode -->
        <xsl:if test="count(property) > 0">
-        <xsl:value-of select="$axis2_name"/>::<xsl:value-of select="$axis2_name"/>(<xsl:value-of select="$arg_list"/>)
+        <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::<xsl:value-of select="$axis2_name"/>(<xsl:value-of select="$arg_list"/>)
         {
              <xsl:if test="not($istype)">
                    qname = NULL;
@@ -311,7 +319,7 @@
         }
        -->
 
-        <xsl:value-of select="$axis2_name"/>::~<xsl:value-of select="$axis2_name"/>()
+        <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::~<xsl:value-of select="$axis2_name"/>()
         {
 
         }
@@ -861,7 +869,7 @@
         </xsl:if>
 
         bool WSF_CALL
-        <xsl:value-of select="$axis2_name"/>::deserialize(axiom_node_t** dp_parent,bool *dp_is_early_node_valid, bool dont_care_minoccurs)
+        <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::deserialize(axiom_node_t** dp_parent,bool *dp_is_early_node_valid, bool dont_care_minoccurs)
         {
           axiom_node_t *parent = *dp_parent;
           
@@ -2809,7 +2817,7 @@
        }
 
           bool WSF_CALL
-          <xsl:value-of select="$axis2_name"/>::isParticle()
+          <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::isParticle()
           {
             <xsl:choose>
               <xsl:when test="$particleClass">
@@ -2823,7 +2831,7 @@
 
 
           void WSF_CALL
-          <xsl:value-of select="$axis2_name"/>::declareParentNamespaces(
+          <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::declareParentNamespaces(
                     axiom_element_t *parent_element,
                     axutil_hash_t *namespaces, int *next_ns_index)
           {
@@ -2887,7 +2895,7 @@
 
         <xsl:if test="@simple">
             char* WSF_CALL
-            <xsl:value-of select="$axis2_name"/>::serializeToString(axutil_hash_t *namespaces)
+            <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::serializeToString(axutil_hash_t *namespaces)
             {
                 axis2_char_t *text_value = NULL;
                 axis2_char_t *qname_uri = NULL;
@@ -3372,7 +3380,7 @@
         </xsl:if>
         
         axiom_node_t* WSF_CALL
-	<xsl:value-of select="$axis2_name"/>::serialize(axiom_node_t *parent, 
+	<xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::serialize(axiom_node_t *parent, 
 			axiom_element_t *parent_element, 
 			int parent_tag_closed, 
 			axutil_hash_t *namespaces, 
@@ -4872,7 +4880,7 @@
              * Getter for <xsl:value-of select="$propertyName"/> by  Property Number <xsl:value-of select="position()"/>
              */
             <xsl:value-of select="$propertyType"/> WSF_CALL
-            <xsl:value-of select="$axis2_name"/>::getProperty<xsl:value-of select="position()"/>()
+            <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::getProperty<xsl:value-of select="position()"/>()
             {
                 return get<xsl:value-of select="$CName"/>();
             }
@@ -4881,7 +4889,7 @@
              * getter for <xsl:value-of select="$propertyName"/>.
              */
             <xsl:value-of select="$propertyType"/> WSF_CALL
-            <xsl:value-of select="$axis2_name"/>::get<xsl:value-of select="$CName"/>()
+            <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::get<xsl:value-of select="$CName"/>()
              {
                 return property_<xsl:value-of select="$CName"/>;
              }
@@ -4890,7 +4898,7 @@
              * setter for <xsl:value-of select="$propertyName"/>
              */
             bool WSF_CALL
-            <xsl:value-of select="$axis2_name"/>::set<xsl:value-of select="$CName"/>(
+            <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::set<xsl:value-of select="$CName"/>(
                     <xsl:if test="not(@isarray)">
                         <xsl:value-of select="$constValue"/> </xsl:if><xsl:value-of select="$propertyType"/><xsl:text> </xsl:text> arg_<xsl:value-of select="$CName"/>)
              {
@@ -5004,7 +5012,7 @@
              * specialized enum getter for <xsl:value-of select="$CName"/>.
              */
              <xsl:value-of select="$enum"/> WSF_CALL
-             <xsl:value-of select="$axis2_name"/>::get<xsl:value-of select="$CName"/>Enum()
+             <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::get<xsl:value-of select="$CName"/>Enum()
              {
 
                 <xsl:for-each select="enumFacet">
@@ -5021,7 +5029,7 @@
              * specialized enum setter for <xsl:value-of select="$propertyName"/>.
              */
              bool WSF_CALL
-            <xsl:value-of select="$axis2_name"/>::set<xsl:value-of select="$CName"/>Enum(<xsl:value-of select="$constValue"/><xsl:value-of select="$enum"/><xsl:text> </xsl:text> arg_<xsl:value-of select="$CName"/>)
+            <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::set<xsl:value-of select="$CName"/>Enum(<xsl:value-of select="$constValue"/><xsl:value-of select="$enum"/><xsl:text> </xsl:text> arg_<xsl:value-of select="$CName"/>)
              {
                 <xsl:if test="@isarray">
                  int size = 0;
@@ -5066,7 +5074,7 @@
              * Get ith element of <xsl:value-of select="$propertyName"/>.
              */
             <xsl:value-of select="$nativePropertyType"/> WSF_CALL
-            <xsl:value-of select="$axis2_name"/>::get<xsl:value-of select="$CName"/>At(int i)
+            <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::get<xsl:value-of select="$CName"/>At(int i)
             {
                 <xsl:value-of select="$PropertyTypeArrayParam"/> ret_val;
                 if(property_<xsl:value-of select="$CName"/> == NULL)
@@ -5092,7 +5100,7 @@
              * Set the ith element of <xsl:value-of select="$propertyName"/>.
              */
            bool WSF_CALL
-            <xsl:value-of select="$axis2_name"/>::set<xsl:value-of select="$CName"/>At(int i,
+            <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::set<xsl:value-of select="$CName"/>At(int i,
                     <xsl:value-of select="$constValue"/><xsl:value-of select="$nativePropertyType"/><xsl:text> arg_</xsl:text><xsl:value-of select="$CName"/>)
             {
                  <xsl:value-of select="$PropertyTypeArrayParam"/> element;
@@ -5270,7 +5278,7 @@
              * Add to <xsl:value-of select="$propertyName"/>.
              */
             bool WSF_CALL
-            <xsl:value-of select="$axis2_name"/>::add<xsl:value-of select="$CName"/>(
+            <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::add<xsl:value-of select="$CName"/>(
                     <xsl:value-of select="$constValue"/><xsl:value-of select="$nativePropertyType"/><xsl:text> arg_</xsl:text> <xsl:value-of select="$CName"/>)
              {
 
@@ -5327,7 +5335,7 @@
              * Get the size of the <xsl:value-of select="$propertyName"/> array.
              */
             int WSF_CALL
-            <xsl:value-of select="$axis2_name"/>::sizeof<xsl:value-of select="$CName"/>()
+            <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::sizeof<xsl:value-of select="$CName"/>()
             {
 
                 if(property_<xsl:value-of select="$CName"/> == NULL)
@@ -5341,7 +5349,7 @@
              * remove the ith element, same as set_nil_at.
              */
             bool WSF_CALL
-            <xsl:value-of select="$axis2_name"/>::remove<xsl:value-of select="$CName"/>At(int i)
+            <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::remove<xsl:value-of select="$CName"/>At(int i)
             {
                 return set<xsl:value-of select="$CName"/>NilAt(i);
             }
@@ -5352,7 +5360,7 @@
             * resetter for <xsl:value-of select="$propertyName"/>
             */
            bool WSF_CALL
-           <xsl:value-of select="$axis2_name"/>::reset<xsl:value-of select="$CName"/>()
+           <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::reset<xsl:value-of select="$CName"/>()
            {
                int i = 0;
                int count = 0;
@@ -5453,7 +5461,7 @@
             * Check whether <xsl:value-of select="$propertyName"/> is nill
             */
            bool WSF_CALL
-           <xsl:value-of select="$axis2_name"/>::is<xsl:value-of select="$CName"/>Nil()
+           <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::is<xsl:value-of select="$CName"/>Nil()
            {
                return !isValid<xsl:value-of select="$CName"/>;
            }
@@ -5462,7 +5470,7 @@
             * Set <xsl:value-of select="$propertyName"/> to nill (currently the same as reset)
             */
            bool WSF_CALL
-           <xsl:value-of select="$axis2_name"/>::set<xsl:value-of select="$CName"/>Nil()
+           <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::set<xsl:value-of select="$CName"/>Nil()
            {
                return reset<xsl:value-of select="$CName"/>();
            }
@@ -5472,7 +5480,7 @@
             * Check whether <xsl:value-of select="$propertyName"/> is nill at i
             */
            bool WSF_CALL
-           <xsl:value-of select="$axis2_name"/>::is<xsl:value-of select="$CName"/>NilAt(int i)
+           <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::is<xsl:value-of select="$CName"/>NilAt(int i)
            {
                return (isValid<xsl:value-of select="$CName"/> == false ||
                        NULL == property_<xsl:value-of select="$CName"/> ||
@@ -5483,7 +5491,7 @@
             * Set <xsl:value-of select="$propertyName"/> to nil at i
             */
            bool WSF_CALL
-           <xsl:value-of select="$axis2_name"/>::set<xsl:value-of select="$CName"/>NilAt(int i)
+           <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::set<xsl:value-of select="$CName"/>NilAt(int i)
            {
                 int size = 0;
                 int j;
@@ -5638,7 +5646,7 @@
          * Get the ith element of <xsl:value-of select="$propertyName"/>.
          */
         <xsl:value-of select="$nativePropertyType"/> WSF_CALL
-        <xsl:value-of select="$axis2_name"/>::get<xsl:value-of select="$CName"/>At(int i)
+        <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::get<xsl:value-of select="$CName"/>At(int i)
         {
                 <xsl:value-of select="$PropertyTypeArrayParam"/> ret_val;
 
@@ -5663,7 +5671,7 @@
          * Set the ith element of <xsl:value-of select="$propertyName"/>. (If the ith already exist, it will be replaced)
          */
         bool WSF_CALL
-        <xsl:value-of select="$axis2_name"/>::set<xsl:value-of select="$CName"/>At(int i,
+        <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::set<xsl:value-of select="$CName"/>At(int i,
                 <xsl:value-of select="$constValue"/><xsl:value-of select="$nativePropertyType"/><xsl:text> arg_</xsl:text> <xsl:value-of select="$CName"/>)
         {
                 <xsl:value-of select="$PropertyTypeArrayParam"/> element= NULL;
@@ -5785,7 +5793,7 @@
          * Add to <xsl:value-of select="$propertyName"/>.
          */
         bool WSF_CALL
-        <xsl:value-of select="$axis2_name"/>::add<xsl:value-of select="$CName"/>(<xsl:value-of select="$constValue"/><xsl:value-of select="$nativePropertyType"/><xsl:text> arg_</xsl:text> <xsl:value-of select="$CName"/>)
+        <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::add<xsl:value-of select="$CName"/>(<xsl:value-of select="$constValue"/><xsl:value-of select="$nativePropertyType"/><xsl:text> arg_</xsl:text> <xsl:value-of select="$CName"/>)
         {
                 <xsl:if test="@type='unsigned short' or @type='unsigned char' or @type='std::string' or @type='unsigned int' or @type='uint64_t' or @type='short' or @type='char' or @type='int' or @type='float' or @type='double' or @type='int64_t' or @type='bool' or @type='axis2_unsigned_byte_t' or @type='axis2_byte_t'">
                    <xsl:value-of select="$PropertyTypeArrayParam"/><xsl:text> ptr_param_</xsl:text><xsl:value-of select="$CName"/>;
@@ -5825,7 +5833,7 @@
          * Get the size of the <xsl:value-of select="$propertyName"/> array.
          */
         int WSF_CALL
-        <xsl:value-of select="$axis2_name"/>::sizeof<xsl:value-of select="$CName"/>()
+        <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::sizeof<xsl:value-of select="$CName"/>()
         {
                 if(property_<xsl:value-of select="$CName"/> == NULL)
                 {
@@ -5839,7 +5847,7 @@
          * Remove the ith element of <xsl:value-of select="$propertyName"/>.
          */
         bool WSF_CALL
-        <xsl:value-of select="$axis2_name"/>::remove<xsl:value-of select="$CName"/>At(int i)
+        <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::remove<xsl:value-of select="$CName"/>At(int i)
         {
                 void *element = NULL;
                 int size = 0;
@@ -5923,7 +5931,7 @@
          * Getter for <xsl:value-of select="$propertyName"/> by  Property Number <xsl:value-of select="position()"/>
          */
         <xsl:value-of select="$propertyType"/> WSF_CALL
-        <xsl:value-of select="$axis2_name"/>::getProperty<xsl:value-of select="position()"/>()
+        <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::getProperty<xsl:value-of select="position()"/>()
         {
             return get<xsl:value-of select="$CName"/>();
         }
@@ -5933,7 +5941,7 @@
          * Getter for <xsl:value-of select="$propertyName"/>.
          */
         <xsl:value-of select="$propertyType"/> WSF_CALL
-        <xsl:value-of select="$axis2_name"/>::get<xsl:value-of select="$CName"/>()
+        <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::get<xsl:value-of select="$CName"/>()
         {
              return property_<xsl:value-of select="$CName"/>;
         }
@@ -5942,7 +5950,7 @@
          * Setter for <xsl:value-of select="$propertyName"/>.
          */
         bool WSF_CALL
-        <xsl:value-of select="$axis2_name"/>::set<xsl:value-of select="$CName"/>(
+        <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::set<xsl:value-of select="$CName"/>(
             <xsl:value-of select="$propertyType"/><xsl:text> </xsl:text> arg_<xsl:value-of select="$CName"/>)
         {
 
@@ -5978,7 +5986,7 @@
          * Reset method for <xsl:value-of select="$propertyName"/>
          */
         bool WSF_CALL
-        <xsl:value-of select="$axis2_name"/>::reset<xsl:value-of select="$CName"/>()
+        <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::reset<xsl:value-of select="$CName"/>()
         {
                 <!-- This is always an array -->
                   if (property_<xsl:value-of select="$CName"/> != NULL)
@@ -6057,7 +6065,7 @@
             <xsl:variable name="member_name"><xsl:text></xsl:text><xsl:value-of select="@originalName"/></xsl:variable>
  
             <xsl:value-of select="$member_type"/> WSF_CALL
-            <xsl:value-of select="$axis2_name"/>::get<xsl:value-of select="$member_name"/>()
+            <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::get<xsl:value-of select="$member_name"/>()
             {
                 if(!axutil_strcmp(currentValue.c_str(), "<xsl:value-of select="@originalName"/>"))
                 {
@@ -6067,7 +6075,7 @@
             }
  
             bool WSF_CALL
-            <xsl:value-of select="$axis2_name"/>::set<xsl:value-of select="$member_name"/>(<xsl:value-of select="$member_type"/> member_type)
+            <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::set<xsl:value-of select="$member_name"/>(<xsl:value-of select="$member_type"/> member_type)
             {
                 bool status;
                 status = resetMembers();
@@ -6098,7 +6106,7 @@
         <xsl:if test="$isUnion">
 
         bool WSF_CALL
-        <xsl:value-of select="$axis2_name"/>::resetMembers()
+        <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::resetMembers()
         {
 
             if(!axutil_strcmp(currentValue.c_str(), ""))
@@ -6131,7 +6139,7 @@
         }
 
         std::string WSF_CALL
-        <xsl:value-of select="$axis2_name"/>::currentMemberType()
+        <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::currentMemberType()
         {
             return currentValue;
         }
