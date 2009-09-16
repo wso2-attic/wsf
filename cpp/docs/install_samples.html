@@ -8,331 +8,325 @@
 
 <body lang="en-US" dir="ltr">
 <h1>WSO2 Web Services Framework/C++ -Samples Guide</h1>
-<pre>
-Running the Samples
--------------------
+<h3><ul>Running the Samples
+</ul>
+</h3>
+<p>
 Once you have installed the samples, you can run them from,
 WSFCPP_HOME/bin/samples/cpp. For example, to run the echo sample, execute
 the echo binary found in WSFCPP_HOME/bin/samples/cpp/echo.
-
-
-Modifying the Samples
----------------------
-You always can modify the samples by editing the respective .cpp files
+</p>
+<h3>Modifying the Samples</h3>
+<p>You always can modify the samples by editing the respective .cpp files
 found in the sub-directories of WSFCPP_INSTALL_DIR/samples. For instance,
 to modify the echo_security client edit echo_security.cpp found in
-WSFCPP_INSTALL_DIR/samples/echo.
-
+WSFCPP_INSTALL_DIR/samples/echo.<br />
 Once you have finished editing, re-build WSO2 WSF/C++ in the case of MS
 Windows or, run 'make examples' for Linux from the WSFCPP_INSTALL_DIR.
-
-
-Re-building Samples (MS Windows)
---------------------------------
+</p>
+<h3>Re-building Samples (MS Windows)</h3>
+<p>
 Initialize environment for using Microsoft Visual Studio tools, by running
 vcvars32.bat (which is found in, MS_VISUAL_STUDIO_INSTALL_DIR/VC/bin). Then,
-  1. cd WSFCPP_INSTALL_DIR\samples
-  2. Run 'nmake dist -f samples.mk AUTOCONF=..\configure.in'
-
-
-Using Command-Line Interface
-----------------------------
-Some samples do have a command-line interface where you can specify certain
+</p>
+<ol>
+<li>cd WSFCPP_INSTALL_DIR\samples</li>
+<li>Run 'nmake dist -f samples.mk AUTOCONF=..\configure.in'</li>
+</ol>
+<h3>Using Command-Line Interface</h3>
+<p>Some samples do have a command-line interface where you can specify certain
 parameters at runtime. For help in using the command-line interface run the
-sample with a -h switch. (ex:- Windows: 'echo.exe -h', Linux: './echo -h').
+sample with a -h switch. (ex:- Windows: 'echo.exe -h', Linux: './echo -h').</p>
 
-
-Echo Samples
-------------
-echo -
-
-  Echo client with WS-Addressing, and iterative invocation.
-  Set the following variables to match your case.
-  - end_point[Line 15]. default: http://localhost:9090/axis2/services/echo
-  - iterations[Line 16]. default: 2
-  - log_file_name[Line 35]. default: echo.log
-  - log_level[Line 35]. default: AXIS2_LOG_LEVEL_TRACE
-  Command-Line Interface: Yes
-
-echo_blocking -
-
+<h3>Echo Samples</h3>
+<h4>echo</h4>
+<p>Echo client with WS-Addressing, and iterative invocation.
+  Set the following variables to match your case.</p>
+  <ol>
+  <li>end_point[Line 15]. default: http://localhost:9090/axis2/services/echo</li>
+  <li>iterations[Line 16]. default: 2</li><li>log_file_name[Line 35]. default: echo.log</li>
+  <li>log_level[Line 35]. default: AXIS2_LOG_LEVEL_TRACE  Command-Line Interface: Yes</li>
+  </ol>
+<h4>echo_blocking</h4>
+<p>
   Echo client with most basic options.
-  Set the following variables to match your case.
-  - end_point[Line 11]. default: http://localhost:9090/axis2/services/echo
-  - log_file_name[Line 14]. default: echo_blocking.log
-  - log_level[Line 14]. default: AXIS2_LOG_LEVEL_TRACE
-  Command-Line Interface: No
+  Set the following variables to match your case.</p>
+  <ol>
+    <li>end_point[Line 11]. default: http://localhost:9090/axis2/services/echo</li>
+  <li>log_file_name[Line 14]. default: echo_blocking.log</li> 
+  <li> log_level[Line 14]. default: AXIS2_LOG_LEVEL_TRACE</li>
+  <li>Command-Line Interface: No</li>
+  </ol>
 
-echo_blocking_dual -
-
+<h4>echo_blocking_dual </h4>
+<p>
   Echo client using seperate listner, and different ReplyTo.
-  Set the following variables to match your case.
-  - end_point[Line 14]. default: http://localhost:9090/axis2/services/echo
-  - reply_to[Line 15]. default: http://localhost:6060/axis2/services/
-    __ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__
-  - log_file_name[Line 37]. default: echo_blocking_dual.log
-  - log_level[Line 37]. default: AXIS2_LOG_LEVEL_TRACE
-  Command-Line Interface: Yes
-  known issue -> This sample sometime fails due to a threading issue.
- 
+  Set the following variables to match your case.</p>
+  <ol>
+  <li>end_point[Line 14]. default: http://localhost:9090/axis2/services/echo</li> 
+  <li>reply_to[Line 15]. default: http://localhost:6060/axis2/services/</li> 
+  <li>__ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__</li>
+  <li>log_file_name[Line 37]. default: echo_blocking_dual.log</li> 
+  <li>log_level[Line 37]. default: AXIS2_LOG_LEVEL_TRACE</li> 
+  <li>Command-Line Interface: Yes</li>
+  <li>known issue -> This sample sometime fails due to a threading issue.</li>
+ </ol>
 
-echo_blocking_addr -
-
+<h4>echo_blocking_addr</h4>
+<p>
   Echo client with WS-Addressing.
-  Set the following variables to match your case.
-  - end_point[Line 11]. default: http://localhost:9090/axis2/services/echo
-  - log_file_name[Line 14]. default: echo_blocking_addr.log
-  - log_level[Line 14]. default: AXIS2_LOG_LEVEL_TRACE
-  Command-Line Interface: No
-
-echo_blocking_soap11 -
-
+  Set the following variables to match your case.</p>
+  <ol>
+  <li>end_point[Line 11]. default: http://localhost:9090/axis2/services/echo</li> 
+  <li>log_file_name[Line 14]. default: echo_blocking_addr.log</li>
+  <li>log_level[Line 14]. default: AXIS2_LOG_LEVEL_TRACE</li>
+  <li>Command-Line Interface: No</li>
+</ol>
+<h4>echo_blocking_soap11</h4>
+<p>
   Echo client with SOAP 1.1 support.
-  Set the following variables to match your case.
-  - end_point[Line 11]. default: http://localhost:9090/axis2/services/echo
-  - log_file_name[Line 14]. default: echo_blocking_soap11.log
-  - log_level[Line 14]. default: AXIS2_LOG_LEVEL_TRACE
-  Command-Line Interface: No
-
-echo_rest -
-
-  Echo client with REST style invocation support.
-  Set the following variables to match your case.
-  - end_point[Line 11]. default: http://localhost:9090/axis2/services/echo
-  - log_file_name[Line 14]. default: echo_rest.log
-  - log_level[Line 14]. default: AXIS2_LOG_LEVEL_TRACE
-  Command-Line Interface: No
-
-echo_non_blocking -
-
-  Echo client with non-blocking (asynchronous) operations.
-  Set the following variables to match your case.
-  - end_point[Line 44]. default: http://localhost:9090/axis2/services/echo
-  - timeout[Line 45]. default: 10000
-  - log_file_name[Line 67]. default: echo_non_blocking.log
-  - log_level[Line 67]. default: AXIS2_LOG_LEVEL_TRACE
-  Command-Line Interface: Yes
-
-echo_non_blocking_dual -
-
-  Echo client using seperate listner, and different ReplyTo in a non-blocking
+  Set the following variables to match your case.</p>
+  <ol>
+  <li> end_point[Line 11]. default: http://localhost:9090/axis2/services/echo</li>
+  <li>log_file_name[Line 14]. default: echo_blocking_soap11.log</li>
+  <li>log_level[Line 14]. default: AXIS2_LOG_LEVEL_TRACE</li> 
+  <li>Command-Line Interface: No</li>
+</ol>
+<h4>echo_rest</h4>
+<p>Echo client with REST style invocation support.
+  Set the following variables to match your case.</p>  
+<ol>
+ <li>end_point[Line 11]. default: http://localhost:9090/axis2/services/echo</li>
+  <li>log_file_name[Line 14]. default: echo_rest.log</li> 
+  <li>log_level[Line 14]. default: AXIS2_LOG_LEVEL_TRACE</li> 
+  <li>Command-Line Interface: No</li>
+</ol>
+<h4>echo_non_blocking</h4>
+<p>Echo client with non-blocking (asynchronous) operations.
+  Set the following variables to match your case.</p>
+  <ol>
+  <li>end_point[Line 44]. default: http://localhost:9090/axis2/services/echo</li> 
+  <li>timeout[Line 45]. default: 10000</li> 
+  <li>log_file_name[Line 67]. default: echo_non_blocking.log</li> 
+  <li>log_level[Line 67]. default: AXIS2_LOG_LEVEL_TRACE</li> 
+  <li>Command-Line Interface: Yes</li>
+</ol>
+<h4>echo_non_blocking_dual</h4>
+<p>Echo client using seperate listner, and different ReplyTo in a non-blocking
   (asynchronous) operation.
-  Set the following variables to match your case.
-  - end_point[Line 40]. default: http://localhost:9090/axis2/services/echo
-  - reply_to[Line 53]. default: http://localhost:6060/axis2/services/
-    __ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__
-  - timeout[Line 72]. default: 10000
-  - log_file_name[Line 43]. default: echo_non_blocking_dual.log
-  - log_level[Line 43]. default: AXIS2_LOG_LEVEL_TRACE
-  Command-Line Interface: No
-  - Known issue -> This sample  sometimes fails due to a threading issue.
-
-echo_security -
-
-  Echo client with WS-SecurityPolicy.
-  Set the following variables to match your case.
-  - end_point[Line 14]. default: http://localhost:9090/axis2/services/sec_echo
-  - client_repo[Line 15]. default: client_repo/
-  - policy_file[Line 16]. default: policy.xml
-  - log_file_name[Line 41]. default: echo_security.log
-  - log_level[Line 41]. default: AXIS2_LOG_LEVEL_TRACE
-  Command-Line Interface: Yes
-
+  Set the following variables to match your case.</p>
+  <ol>
+  <li>end_point[Line 40]. default: http://localhost:9090/axis2/services/echo</li> 
+  <li>reply_to[Line 53]. default: http://localhost:6060/axis2/services/</li> 
+  <li>__ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__</li> 
+  <li>timeout[Line 72]. default: 10000</li> 
+  <li>log_file_name[Line 43]. default: echo_non_blocking_dual.log</li>
+  <li>log_level[Line 43]. default: AXIS2_LOG_LEVEL_TRACE</li> 
+  <li>Command-Line Interface: No</li>
+  <li>Known issue -> This sample  sometimes fails due to a threading issue.</li> 
+  </ol>
+<h4>echo_security</h4>
+<p>Echo client with WS-SecurityPolicy.
+  Set the following variables to match your case.</p>
+ <ol>
+  <li>end_point[Line 14]. default: http://localhost:9090/axis2/services/sec_echo</li> 
+  <li>client_repo[Line 15]. default: client_repo/</li> 
+  <li>policy_file[Line 16]. default: policy.xml</li> 
+  <li>log_file_name[Line 41]. default: echo_security.log</li> 
+  <li>log_level[Line 41]. default: AXIS2_LOG_LEVEL_TRACE</li> 
+  <li>Command-Line Interface: Yes</li>
+  </ol>
+  <ol><li>
   * Please note that the echo_security sample will not work unless you set the
-  client_repo, and the policy_file variables, and modify the sample.
-
+  client_repo, and the policy_file variables, and modify the sample.</li>
+    <li>
   * Make sure you have run,
   Linux: RAMPART_SAMPLES_DIR/rampart/client/sec_echo/deploy_client_repo.sh or
   Windows: RAMPART_SAMPLES_DIR\client\sec_echo\deploy_client_repo.bat.
-  
+  </li>
+  </ol>
 
-Accessing Yahoo WebService API
-------------------------------
-yahoo -
+<h3>Accessing Yahoo WebService API</h3>
+<h4>yahoo</h4>
+<p>A client assessing Yahoo search using REST.
+  Set the following variables to match your case.</p>  
+<ol>
+<li>log_file_name[Line 14]. default: yahoo_rest_search.log</li>
+ <li>log_level[Line 14]. default: AXIS2_LOG_LEVEL_TRACE</li>
+  <li>Command-Line Interface: No</li>
+  <li>This sample sometimes does not respond because the yahoo service is not responding for certain requests.</li> 
+</ol>
 
-  A client assessing Yahoo search using REST.
-  Set the following variables to match your case.
-  - log_file_name[Line 14]. default: yahoo_rest_search.log
-  - log_level[Line 14]. default: AXIS2_LOG_LEVEL_TRACE
-  Command-Line Interface: No
-  - This sample sometimes does not respond because the yahoo service is
-    not responding for certain requests.
-
-
-Accessing Google WebService API
--------------------------------
-google -
-  
-  A client assessing Google SOAP 1.1 search.
-  Set the following variables to match your case.
-  - log_file_name[Line 14]. default: google_client.log
-  - log_level[Line 14]. default: AXIS2_LOG_LEVEL_TRACE
-  - google_api_key[Line 38]. default: 00000000000000000000000000000000
-  Command-Line Interface: No
-
-  * A valid api key would return a response, and an invalid key would return a
+<h3>Accessing Google WebService API</h3>
+<h4>google</h4>
+ <p>A client assessing Google SOAP 1.1 search.
+  Set the following variables to match your case.</p>
+  <ol>
+  <li>log_file_name[Line 14]. default: google_client.log</li> 
+  <li>log_level[Line 14]. default: AXIS2_LOG_LEVEL_TRACE</li> 
+  <li>google_api_key[Line 38]. default: 00000000000000000000000000000000</li> 
+  <li>Command-Line Interface: No</li>
+  <li>A valid api key would return a response, and an invalid key would return a
   fault. The default key is invalid. 
   The google SOAP search API is now deprecated and therefore  you cannot obtain a 
   google key to use this service anymore. However if  you already have a google key,
-  you can try this sample. 
+  you can try this sample. </li> 
+</ol>
 
+<h3>Accessing Flickr WebService API</h3>
+<h4>flickr</h4>
+<p>A client assessing Flickr photo search.
+  Set the following variables to match your case.</p>
+  <ol>
+  <li>log_file_name[Line 14]. default: flickr_client.log</li>
+  <li>log_level[Line 14]. default: AXIS2_LOG_LEVEL_TRACE</li> 
+  <li> flickr_api_key[Line 27]. default: 00000000000000000000000000000000</li>
+  <li>Command-Line Interface: No</li>
+  <li>A valid api key would return a response, and an invalid key would return a
+  fault. The default key is invalid.</li>
+</ol>                     
 
-Accessing Flickr WebService API
--------------------------------
-flickr -
-
-  A client assessing Flickr photo search.
-  Set the following variables to match your case.
-  - log_file_name[Line 14]. default: flickr_client.log
-  - log_level[Line 14]. default: AXIS2_LOG_LEVEL_TRACE
-  - flickr_api_key[Line 27]. default: 00000000000000000000000000000000
-  Command-Line Interface: No
-
-  * A valid api key would return a response, and an invalid key would return a
-  fault. The default key is invalid.
-                     
-
-MTOM / Base64 Attachments
--------------------------
-mtom -
-
+<h3>MTOM / Base64 Attachments</h3>
+<h4>mtom</h4>
+<p>
   Client for uploading JPEG image files using MTOM.
-  Set the following variables to match your case.
-  - end_point[Line 16]. default: http://localhost:9090/axis2/services/mtom
-  - file_name[Line 17]. default: resources/axis2.jpg
-  - log_file_name[Line 40]. default: mtom.log
-  - log_level[Line 40]. default: AXIS2_LOG_LEVEL_TRACE
-  Command-Line Interface: Yes
+  Set the following variables to match your case.</p>
+  <ol>
+  <li>end_point[Line 16]. default: http://localhost:9090/axis2/services/mtom</li> 
+  <li>file_name[Line 17]. default: resources/axis2.jpg</li> 
+  <li>log_file_name[Line 40]. default: mtom.log</li> 
+  <li> log_level[Line 40]. default: AXIS2_LOG_LEVEL_TRACE</li>
+  <li>Command-Line Interface: Yes</li>
+</ol>
 
-
-Math Client
------------
-math -
-
+<h3>Math Client</h3>
+<h4>math</h4>
+<p>
   Client providing four mathematical operations
     - add: Addition
     - sub: Subtraction
     - mul: Multiplication
-    - div: Division
-  Set the following variables to match your case.
-  - end_point[Line 14]. default: http://localhost:9090/axis2/services/math
-  - operation[Line 15]. default: add
-  - param1[Line 16]. default: 40
-  - param2[Line 17]. default: 8
-  - log_file_name[Line 45]. default: math_blocking.log
-  - log_level[Line 45]. default: AXIS2_LOG_LEVEL_TRACE
-  Command-Line Interface: Yes
+    - div: Division</p>
+    
+  <p>Set the following variables to match your case.</p>
+  <ol>
+  <li>end_point[Line 14]. default: http://localhost:9090/axis2/services/math</li> 
+  <li>operation[Line 15]. default: add</li> 
+  <li>param1[Line 16]. default: 40</li> 
+  <li>param2[Line 17]. default: 8</li> 
+  <li>log_file_name[Line 45]. default: math_blocking.log</li> 
+  <li>log_level[Line 45]. default: AXIS2_LOG_LEVEL_TRACE</li> 
+  <li>Command-Line Interface: Yes</li>
+</ol>
 
-
-Notify Client
--------------
-notify -
-
+<h3>Notify Client</h3>
+<h4>notify</h4>
+<p>
   Client demonstrating one-way operation.
-  Set the following variables to match your case.
-  - end_point[Line 11]. default: http://localhost:9090/axis2/services/notify
-  - log_file_name[Line 14]. default: notify.log
-  - log_level[Line 14]. default: AXIS2_LOG_LEVEL_TRACE
-  Command-Line Interface: No
-
-
-Security Policy Samples
------------------------
-secpolicy -
-
+  Set the following variables to match your case.</p>
+  <ol><li>end_point[Line 11]. default: http://localhost:9090/axis2/services/notify</li>
+  <li>log_file_name[Line 14]. default: notify.log</li> 
+  <li>log_level[Line 14]. default: AXIS2_LOG_LEVEL_TRACE</li> 
+  <li>Command-Line Interface: No</li>  
+</ol>
+<h3>Security Policy Samples</h3>
+<h4>secpolicy</h4>
+<p>
   Set of scenarios that be used to generate various policy files and invoke the
   echo_security sample.
   There are three invocation models. The scripts for running the security senarios
-  are located in the directory <WSFCPP_HOME>/samples/bin/security. There you will find
+  are located in the directory &ltWSFCPP_HOME&gt/samples/bin/security. There you will find
   the scripts run_all.sh, deploy.sh deploy_client_repo.sh and test_scen.sh shell scripts.
   On windows, use the bat files with similar names. 
-
- In the directory  <WSFCPP_HOME>/samples/src/c/rampartc/ you will find the rampartc samples.
+<br/>
+ In the directory  &ltWSFCPP_HOME&gt/samples/src/c/rampartc/ you will find the rampartc samples.
  We use the same security policy file used in rampartc for demonstrating the WS security in 
  WSF/CPP as well. in the secpolicy directory, there are many security scenarios with corresponding folders
  named scenario1 scenario2 ....
-    
+ </p>
+ <p>
      The sample used is the sec_echo client in the samples/bin directroy. By changing the policy file and
      service configuration file, various security scenarios can be modeled. Before running the samples, 
-     you need to run the deploy_client_repo.sh ( or bat ) file. 
+     you need to run the deploy_client_repo.sh ( or bat ) file. </p>   
 
-    - deploy and run
-      - deploy policy (run Linux: deploy.sh Windows: deploy.bat)
-      - usage: 
-        - Linux: deploy.sh <path to scenarioX folder>
-        - Windows: deploy.bat <path to scenarioX folder>
-      - restart server
-      - run sec_echo
-    - deploy, update and run
-      - deploy policy (run Linux: deploy.sh Windows: deploy.bat)
-      - usage:
-        - Linux: deploy.sh <path to scenarioX>
-        - Windows: deploy.bat <path to scenarioX>
-      - restart server
-      - update and run (run Linux: update_n_run.sh Windows: update_n_run.bat)
-      - usage:
-        - Linux: update_n_run.sh <path to scenarioX>
-        - Windows: update_n_run.bat <path to scenarioX>
-    - run all
-      - usage:
-        - Linux: run_all.sh
-        - Windows: run_all.bat
-  Testing a scenario
-    - run test_scenario
-      - usage:
-        - Linux: test_scen.sh <path to scenarioX> server_port
-        - Windows: test_scen.bat <path to scenarioX> server_port
-  Seven scenarios are provided demonstrating various possibilities.
-    - Timestamp
-    - UsernameToken
-    - Encryption
-    - Signature
-    - A complete scenario to show: Timestamp, UsernameToken, Encrypt,
-      The protection order is Sign->Encrypt Signature is Encrypted
-    - A complete scenario to show: Timestamp, UsernameToken, Encrypt,
-      The protection order is Encrypt->Sign Signature is Encrypted
-    - Replay detection
-
-  * Read more on echo_security sample for further details.
-
-Sample Services
----------------
-
-     These samples are found under the directory WSFCPP_INSTALL_DIR/examples/services directory
+  <ul><li>deploy and run</li> 
+      <li>
+      <ul><li>deploy policy (run Linux: deploy.sh Windows: deploy.bat)</li>
+      <li>
+      <ul><li>usage:</li>
+        <li> Linux: deploy.sh &ltpath to scenarioX folder&gt</li>
+        <li>windows: deploy.bat &ltpath to scenarioX folder&gt</li>
+         </ul></li>
+      </ul>
+      </li>         
+        <li>restart server</li>
+      <li> run sec_echo</li>
+    <li> deploy, update and run</li>
+      <li> deploy policy (run Linux: deploy.sh Windows: deploy.bat)</li>
+      <li>
+      - usage:</li>
+        <li>- Linux: deploy.sh &ltpath to scenarioX&gt</li>
+        <li>- Windows: deploy.bat &ltpath to scenarioX&gt</li>
+      <li> restart server</li>
+      <li>update and run (run Linux: update_n_run.sh Windows: update_n_run.bat)</li>
+      <li> usage:</li>
+        <li> Linux: update_n_run.sh &ltpath to scenarioX&gt</li>
+       <li> Windows: update_n_run.bat &ltpath to scenarioX&gt</li>
+    <li> run all</li>
+      <li> usage:</li>
+        <li> Linux: run_all.sh</li>
+        <li> Windows: run_all.bat</li>
+  <li>Testing a scenario</li>
+    <li> run test_scenario</li>
+      <li> usage:</li>
+        <li>Linux: test_scen.sh &ltpath to scenarioX&gt server_port</li> 
+        <li> Windows: test_scen.bat &ltpath to scenarioX&gt server_port</li>
+        
+  </ul>        
+  <p>Seven scenarios are provided demonstrating various possibilities.</p>
+  <ul>
+   <li>Timestamp</li> 
+   <li>UsernameToken</li>
+   <li>Encryption</li> 
+   <li>Signature</li> 
+   <li>A complete scenario to show: Timestamp, UsernameToken, Encrypt,
+      The protection order is Sign->Encrypt Signature is Encrypted</li> 
+    <li>A complete scenario to show: Timestamp, UsernameToken, Encrypt,
+      The protection order is Encrypt->Sign Signature is Encrypted</li>
+    <li>Replay detection</li> 
+  <li>Read more on echo_security sample for further details.</li> 
+</ul>
+<h3>
+pSample Services</h3>
+<p>
+     These samples are found under the directory WSFCPP_INSTALL_DIR/examples/services directory</p>
     
-Echo Service
--------------
-     - This is one of the simplest services possible. This service simply echos 
-       back the request received from the client.
-     - Sevice Endpoint http://localhost:9090/axis2/services/echo
-     - Log File
-
-Math Service
--------------
-  This service consist of four mathamatical operations
-    - add: Addition
-    - sub: Subtraction
-    - mul: Multiplication
-    - div: Division
-    - default endpoint with simple axis2 server end_point http://localhost:9090/axis2/services/math
-
-MTOM Service
--------------
-  This service receives and send a SOAP message with a MTOM optimized binary attachment.e
-    -  Default service endpoint http://localhost:9090/axis2/services/mtommm
-
+<h4>Echo Service</h4>
+    <ul>
+    <li>This is one of the simplest services possible. This service simply echos 
+       back the request received from the client.</li>
+     <li>Sevice Endpoint http://localhost:9090/axis2/services/echo</li>
+     <li>Log File</li> 
+    </ul>
+<h4>Math Service</h4>
+<p>This service consist of four mathamatical operations</p>
+    <ul><li> add: Addition</li>
+    <li> sub: Subtraction</li>
+    <li> mul: Multiplication</li>
+    <li> div: Division</li>
+    <li> default endpoint with simple axis2 server end_point http://localhost:9090/axis2/services/math</li>
+    </ul>
+ <h4>
+MTOM Service</h4>
+<p>  This service receives and send a SOAP message with a MTOM optimized binary attachment.e
+    -  Default service endpoint http://localhost:9090/axis2/services/mtom</p>
 
 
-Monitoring Payload
-------------------
-tcpmon -
+<h4>
+Monitoring Payload</h4>
 
+<h5>tcpmon</h5>
+<p>
   You may monitor the exchanged payload using the tcpmon utility provided in WSF/C.
-  This tool can be found in [wsf_c/axis2c/tools/tcpmon].
-
-
-Contacting us
--------------
-Refer README for more information.
-</pre>
+  This tool can be found in [wsf_c/axis2c/tools/tcpmon].</p>
 </body></html>
