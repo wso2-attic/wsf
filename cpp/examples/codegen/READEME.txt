@@ -11,7 +11,7 @@ tool with Axis Data Binding.
 Files
 -----
 -Calculator
-	Client source       ./Calculator/CalculatorAdd.cpp
+	Client source       ./Calculator/Calculator.cpp
 	Service Source	    ./Calculator/CalculatorSkeleton.cpp
 	wsdl		    ./Calculator/Calculator.wsdl
 
@@ -22,6 +22,8 @@ Code Generation
 Use the shell script or batch file available in the <WSFCPP_HOME>/tools/codegen/wsdl2cpp/ directory to generate
 code using following options.(Reade the READEME.txt at wsdl2cpp directory to learn how to use scripts
 
+Wrapped Mode
+------------
 Client side stub generation with Axis Data Binding:
 	Linux: WSDL2CPP.sh -uri <wsdl path> -g -d adb -u -f -o <output directory> 
 	Win32: WSDL2CPP.bat -uri <wsdl path> -g -d adb -u -f -o <output directory> 
@@ -29,6 +31,17 @@ Client side stub generation with Axis Data Binding:
 Server side skeleton generation with Axis Data Binding:
 	Linux: WSDL2CPP.sh -uri <wsdl path> -sd -ss -d adb -u -f -o <output directory>
 	Win32: WSDL2CPP.bat -uri <wsdl path> -sd -ss -d adb -u -f -o <output directory>
+
+Unwrapped Mode
+--------------
+
+Client side stub generation with Axis Data Binding:
+	Linux: WSDL2CPP.sh -uri <wsdl path> -g -d adb -u -uw -f -o <output directory> 
+	Win32: WSDL2CPP.bat -uri <wsdl path> -g -d adb -u -uw -f -o <output directory> 
+
+Server side skeleton generation with Axis Data Binding:
+	Linux: WSDL2CPP.sh -uri <wsdl path> -sd -ss -d adb -u -uw -f -o <output directory>
+	Win32: WSDL2CPP.bat -uri <wsdl path> -sd -ss -d adb -u -uw -f -o <output directory>
 
 Description of Options used:
 	
@@ -39,6 +52,8 @@ Description of Options used:
     -g : Generates all the classes. valid only with the -ss (This will generate client and server codes)
     -u : unpacks the databinding classes
     -f : Generate the source output folder without the src directory
+    -uw: Generate stub and skeleton classes with paremeters unwrapped.
+
 
 Please refer to the http://ws.apache.org/axis2/tools/1_1/CodegenToolReference.html for further details.
 
