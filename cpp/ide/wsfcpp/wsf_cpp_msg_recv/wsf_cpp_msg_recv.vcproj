@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\..\..\..\axis2c\ides\vc\axis2c\deploy\lib"
+			OutputDirectory="..\..\..\wso2-wsf-cpp-bin-2.1.0-win32\lib"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="E:\svnwork\cpp\include;&quot;E:\axis2c\build\axis2c-bin-1.5.0-win32\include&quot;;&quot;E:\axis2c\build\axis2c-bin-1.5.0-win32\include\platforms&quot;;&quot;E:\svnwork\cpp\wso2-wsf-cpp-bin-1.1.0-win32\include\platforms\windows&quot;"
+				AdditionalIncludeDirectories="$(WSFCPP_HOME)\include;$(WSFCPP_HOME)\include\platforms"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;WSF_CPP_MSG_RECV_EXPORTS;AXIS2_DECLARE_EXPORT;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

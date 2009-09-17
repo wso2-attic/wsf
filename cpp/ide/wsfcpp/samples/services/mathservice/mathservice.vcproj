@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="..\..\..\..\..\wso2-wsf-cpp-bin-2.1.0-win32\services\math"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="E:\svnwork\cpp\include;&quot;E:\svnwork\cpp\wso2-wsf-cpp-bin-1.1.0-win32\include&quot;;&quot;E:\svnwork\cpp\wso2-wsf-cpp-bin-1.1.0-win32\include\platforms&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;AXIS2_DECLARE_EXPORT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"

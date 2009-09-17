@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\..\wso2-wsf-cpp-bin-1.1.0-win32\lib\"
+			OutputDirectory="..\..\..\wso2-wsf-cpp-bin-2.1.0-win32\lib"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="E:\svnwork\cpp\include;&quot;E:\svnwork\cpp\wso2-wsf-cpp-bin-1.1.0-win32\include&quot;;&quot;E:\svnwork\cpp\wso2-wsf-cpp-bin-1.1.0-win32\include\platforms&quot;;&quot;E:\svnwork\cpp\wso2-wsf-cpp-bin-1.1.0-win32\include\platforms\windows&quot;"
+				AdditionalIncludeDirectories="E:\wsfcpp\cpp\include;&quot;E:\wsfcpp\cpp\wsf_c\wso2-wsf-c-bin-2.0.0-win32\include&quot;;&quot;E:\wsfcpp\cpp\wsf_c\wso2-wsf-c-bin-2.0.0-win32\include\platforms&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;WSFCPP_EXPORTS;AXIS2_DECLARE_EXPORT;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -118,6 +118,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="$(WSFCPP_HOME)\include;$(WSFCPP_HOME)\include\platforms"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;WSFCPP_EXPORTS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -182,11 +183,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\main\AxisObject.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\main\Exception.cpp"
+				RelativePath="..\..\..\src\main\Environment.cpp"
 				>
 			</File>
 			<File
@@ -230,15 +227,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\main\Process.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\main\Property.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\main\RWLock.cpp"
 				>
 			</File>
 			<File
@@ -246,11 +235,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\main\WSRESTClient.cpp"
+				RelativePath="..\..\..\src\main\Stub.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\main\WSSOAPClient.cpp"
+				RelativePath="..\..\..\src\main\WSFException.cpp"
 				>
 			</File>
 		</Filter>
@@ -260,15 +249,19 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\..\..\include\ADBDefines.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\AuthenticationProvider.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\AxisFault.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\AxisObject.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\Exception.h"
+				RelativePath="..\..\..\include\Environment.h"
 				>
 			</File>
 			<File
@@ -312,7 +305,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\Process.h"
+				RelativePath="..\..\..\include\Parameter.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\PasswordCallback.h"
 				>
 			</File>
 			<File
@@ -320,7 +317,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\RWLock.h"
+				RelativePath="..\..\..\include\ReplayDetector.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\SCTProvider.h"
 				>
 			</File>
 			<File
@@ -332,6 +333,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\Stub.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\WSFDefines.h"
 				>
 			</File>
@@ -340,11 +345,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\WSRESTClient.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\WSSOAPClient.h"
+				RelativePath="..\..\..\include\WSFException.h"
 				>
 			</File>
 		</Filter>
