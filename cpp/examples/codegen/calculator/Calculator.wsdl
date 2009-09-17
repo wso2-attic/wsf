@@ -20,8 +20,8 @@
    <element name="add">
     <complexType>
      <sequence>
-      <element name="arg_0_0" type="xsd:int"/>
-      <element name="arg_1_0" type="xsd:int"/>
+      <element name="a" type="xsd:int"/>
+      <element name="b" type="xsd:int"/>
      </sequence>
     </complexType>
    </element>
@@ -35,8 +35,8 @@
    <element name="sub">
     <complexType>
      <sequence>
-      <element name="arg_0_1" type="xsd:int"/>
-      <element name="arg_1_1" type="xsd:int"/>
+      <element name="a" type="xsd:int"/>
+      <element name="b" type="xsd:int"/>
      </sequence>
     </complexType>
    </element>
@@ -50,8 +50,8 @@
    <element name="mul">
     <complexType>
      <sequence>
-      <element name="arg_0_2" type="xsd:int"/>
-      <element name="arg_1_2" type="xsd:int"/>
+      <element name="a" type="xsd:int"/>
+      <element name="b" type="xsd:int"/>
      </sequence>
     </complexType>
    </element>
@@ -65,8 +65,8 @@
    <element name="div">
     <complexType>
      <sequence>
-      <element name="arg_0_3" type="xsd:int"/>
-      <element name="arg_1_3" type="xsd:int"/>
+      <element name="a" type="xsd:int"/>
+      <element name="b" type="xsd:int"/>
      </sequence>
     </complexType>
    </element>
@@ -246,7 +246,7 @@
 
       <wsdl:port binding="impl:CalculatorSoapBinding" name="Calculator">
 
-         <wsdlsoap:address location="http://localhost/axis/Calculator"/>
+         <wsdlsoap:address location="http://localhost:9090/axis2/services/Calculator"/>
 
       </wsdl:port>
 
