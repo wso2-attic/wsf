@@ -1,20 +1,11 @@
-Sample: Calculator
-====================
+Codegeneration Samples
+======================
 
 Introduction
 ------------
-
 This samples demonstrate the use of code generation using WSF/CPP codegeneration tool with
 which is based on Axis2/Java codegeneration tools (http://svn.apache.org/repos/asf/webservices/axis2/trunk/java)
 tool with Axis Data Binding. 
-
-Files
------
--Calculator
-	Client source       ./Calculator/Calculator.cpp
-	Service Source	    ./Calculator/CalculatorSkeleton.cpp
-	wsdl		    ./Calculator/Calculator.wsdl
-
 
 Code Generation
 ---------------
@@ -34,6 +25,8 @@ Server side skeleton generation with Axis Data Binding:
 
 Unwrapped Mode
 --------------
+When unwraping option is enabled, the generated Skeleton and Stub generates method parameters become simpler with the
+the databinding classes being hidden within the code, while providing the actual parameters in method signatures to the user.
 
 Client side stub generation with Axis Data Binding:
 	Linux: WSDL2CPP.sh -uri <wsdl path> -g -d adb -u -uw -f -o <output directory> 
@@ -68,12 +61,38 @@ You need to then startup the server to deploy the service.
 
 On windows, you can use visual studio to complile the client and the service. Just replace the generated CalculatorSkeleton.cpp 
 with the file in the service directory. For the preprocessor options, add the macro AXIS2_DECLARE_EXPORT. In the linker options
-add the libraries, wso2_wsf.lib axiom.lib axutil.lib axis2_engine.lib. 
+add the libraries, wso2_wsf.lib axiom.lib axutil.lib axis2_engine.lib. Since now the codegenerator generates both client and service
+VC Projects, it would be easy to compile the generated clients and services using Visual Studio.  
 
 Running the Client
 ------------------
 You need to generate the required client side code using command described above and put them inside 
 where client implementations resides. And then build the client and run it. Add the above mentions libs to the linker option. 
+
+
+
+1. Sample: Calculator
+====================
+
+Files
+-----
+-Calculator
+ This is a  simple calculator web service and a client with the service implementing calculation operations addition, substraction, 
+ division and multiplication.
+	Client source       ./Calculator/client/Calculator.cpp
+		unwrapped   ./Calculator/client/unwrapped/Calculator.cpp
+	Service Source	    ./Calculator/service/CalculatorSkeleton.cpp
+		unwrapped   ./Calculator/service/unwrapped/CalculatorSkeleton.cpp
+	wsdl		    ./Calculator/Calculator.wsdl
+
+
+2. Sample: Stokequote
+-SimpleStockQuote
+  This is a implementation of a stockquote service and a client.
+
+	Client source      ./stockquote/client/main.cpp
+	Service source	   ./stockquote/service/SimpleStockQuoteSkeleton.cpp
+	wsdl 		   ./stockquote/SimpleStockQuoteService.wsdl
 
 
  
