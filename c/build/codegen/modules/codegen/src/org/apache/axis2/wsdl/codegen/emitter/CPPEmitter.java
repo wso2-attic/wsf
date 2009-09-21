@@ -228,7 +228,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
     }
 
     /**
-     * Write the Build Script
+     * Write the Bu.lsild Script
      *
      * @throws Exception
      */
@@ -785,7 +785,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
         boolean isOurs = true;
 
         if (typeMappingStr.length() != 0 && !typeMappingStr.equals("void") &&
-                !typeMappingStr.equals(CPP_DEFAULT_TYPE) && typeMappingStr.contains("::")) {
+                !typeMappingStr.equals(CPP_DEFAULT_TYPE) && typeMappingStr.contains("::") && !typeMappingStr.contains("std::string")) {
             addAttribute(doc, "ours", "yes", paramElement);
 
 
@@ -839,7 +839,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
         addAttribute(doc, "caps-type", paramType.toUpperCase(), param);
 
         if (!paramType.equals("") && !paramType.equals("void") &&
-                !typeMappingStr.equals(CPP_DEFAULT_TYPE) && typeMappingStr.contains("::") ) {
+                !typeMappingStr.equals(CPP_DEFAULT_TYPE) && typeMappingStr.contains("::") && !typeMappingStr.contains("std::string") ) {
             addAttribute(doc, "ours", "yes", param);
         }
 
@@ -932,7 +932,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
                 boolean isOurs = true;
 
                 if (typeMappingStr.length() != 0 && !typeMappingStr.equals("void") &&
-                        !typeMappingStr.equals(CPP_DEFAULT_TYPE) && typeMappingStr.contains("::")) {
+                        !typeMappingStr.equals(CPP_DEFAULT_TYPE) && typeMappingStr.contains("::") && !typeMappingStr.contains("std::string")) {
                     addAttribute(doc, "ours", "yes", param);
                     isOurs = true;
                 } else {
@@ -1233,6 +1233,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
             }
 
         }
+        //System.out.println(DOM2Writer.nodeToString(inputElt));
         return inputElt;
     }
 

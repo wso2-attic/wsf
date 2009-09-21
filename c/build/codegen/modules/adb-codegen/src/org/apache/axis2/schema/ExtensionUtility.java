@@ -26,6 +26,8 @@ import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.schema.typemap.JavaTypeMap;
 import org.apache.axis2.schema.typemap.TypeMap;
+import org.apache.axis2.schema.typemap.CPPTypeMap;
+import org.apache.axis2.schema.typemap.CTypeMap;
 import org.apache.axis2.wsdl.WSDLConstants;
 import org.apache.axis2.wsdl.WSDLUtil;
 import org.apache.axis2.wsdl.codegen.CodeGenConfiguration;
@@ -102,16 +104,19 @@ public class ExtensionUtility {
         //create the type mapper
         //First try to take the one that is already there
         TypeMapper mapper = configuration.getTypeMapper();
+        TypeMap basicTypeMap =  new JavaTypeMap();
         if (mapper == null) {
             if (configuration.getOutputLanguage() != null &&
                     !configuration.getOutputLanguage().trim().equals("") &&
                     configuration.getOutputLanguage().toLowerCase().equals("c")) {
                 mapper = new CTypeMapper();
+                basicTypeMap = new CTypeMap();
 
             }else if (configuration.getOutputLanguage() != null &&
                     !configuration.getOutputLanguage().trim().equals("") &&
                     configuration.getOutputLanguage().toLowerCase().equals("cpp")) {
                 mapper = new CPPTypeMapper();
+                basicTypeMap = new CPPTypeMap();
 
             }  else {
                 mapper = new JavaTypeMapper();
@@ -172,7 +177,7 @@ public class ExtensionUtility {
                                 mapper,
                                 schemaMap,
                                 op.getName().getLocalPart(),
-                                WSDLConstants.INPUT_PART_QNAME_SUFFIX);
+                                WSDLConstants.INPUT_PART_QNAME_SUFFIX,basicTypeMap);
                     }
 
                     // TODO: support for xml beans
@@ -183,7 +188,7 @@ public class ExtensionUtility {
                                     mapper,
                                     schemaMap,
                                     op.getName().getLocalPart(),
-                                    WSDLConstants.OUTPUT_PART_QNAME_SUFFIX);
+                                    WSDLConstants.OUTPUT_PART_QNAME_SUFFIX,basicTypeMap);
                         }
                     }
 
@@ -290,7 +295,8 @@ public class ExtensionUtility {
                                    TypeMapper mapper,
                                    Map schemaMap,
                                    String opName,
-                                   String qnameSuffix) {
+                                   String qnameSuffix,
+                                   TypeMap basicTypeMap) {
 
         if (message.getParameter(Constants.UNWRAPPED_KEY) != null) {
 
@@ -317,8 +323,6 @@ public class ExtensionUtility {
                 }
             }
 
-            //create a type mapper
-            TypeMap basicTypeMap = new JavaTypeMap();
             if (schemaType instanceof XmlSchemaComplexType) {
                 processXMLSchemaComplexType(schemaType, mapper, opName, schemaMap, qnameSuffix);
             } else if ((schemaTypeQname != null) && basicTypeMap.getTypeMap().containsKey(schemaTypeQname)){
