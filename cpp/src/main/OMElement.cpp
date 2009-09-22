@@ -240,13 +240,15 @@ OMAttribute * OMElement::getAttribute(std::string name, OMNamespace * ns)
     {
         const axis2_char_t *uri = NULL;
         const axis2_char_t *prefix = NULL;
-        if(ns->getURI() != "")
+        string str_uri = ns->getURI();
+        if(str_uri != "")
         {
-            uri = ns->getURI().c_str();
+            uri = str_uri.c_str();
         }
-        if(ns->getPrefix() != "")
+        string str_prefix = ns->getPrefix();
+        if(str_prefix != "")
         {
-            prefix = ns->getPrefix().c_str();
+            prefix = str_prefix.c_str();
         }
         qn = axutil_qname_create(Environment::getEnv(), name.c_str(), uri, prefix);
     }
