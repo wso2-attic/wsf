@@ -25,23 +25,41 @@ axiom_namespace_t * OMNamespace::getAxiomNamespace()
     return _wsf_axiom_namespace;
 }
 
-OMNamespace::OMNamespace(std::string uri)
+OMNamespace::OMNamespace(std::string str_uri)
 {
-	_wsf_axiom_namespace = axiom_namespace_create(Environment::getEnv(), uri.c_str() , NULL);
+    const axis2_char_t *uri = NULL;
+    if(str_uri != "")
+    {
+        uri = str_uri.c_str();
+    }
+	_wsf_axiom_namespace = axiom_namespace_create(Environment::getEnv(), uri , NULL);
 	_refcounter = 0;
 }
 
 
-OMNamespace::OMNamespace(std::string uri, std::string prefix)
+OMNamespace::OMNamespace(std::string str_uri, std::string str_prefix)
 {
-    _wsf_axiom_namespace = axiom_namespace_create(Environment::getEnv(), uri.c_str(), prefix.c_str());
+    const axis2_char_t *uri = NULL;
+    if(str_uri != "")
+    {
+        uri = str_uri.c_str();
+    }
+    const axis2_char_t *prefix = NULL;
+    if(str_prefix != "")
+    {
+        prefix = str_prefix.c_str();
+    }
+    _wsf_axiom_namespace = axiom_namespace_create(Environment::getEnv(), uri, prefix);
 	_refcounter = 0;
 }
 
 OMNamespace::OMNamespace(OMNamespace & ns)
 {
-    _wsf_axiom_namespace = axiom_namespace_create(
-        Environment::getEnv(), (ns.getURI()).c_str(), (ns.getPrefix()).c_str());
+    const axis2_char_t *uri = axiom_namespace_get_uri(
+        ns._wsf_axiom_namespace, Environment::getEnv());
+    const axis2_char_t *prefix = axiom_namespace_get_prefix(
+        ns._wsf_axiom_namespace, Environment::getEnv());
+    _wsf_axiom_namespace = axiom_namespace_create(Environment::getEnv(), uri, prefix);
 	_refcounter = 0;
 }
 
@@ -71,17 +89,41 @@ bool OMNamespace::equals(OMNamespace * ns)
 
 string OMNamespace::getURI()
 {
-    return axiom_namespace_get_uri(_wsf_axiom_namespace, Environment::getEnv());
+    axis2_char_t *value = axiom_namespace_get_uri(_wsf_axiom_namespace, Environment::getEnv());
+    if(value)
+    {
+        return value;
+    }
+    else
+    {
+        return "";
+    }
 }
 
 string OMNamespace::getPrefix()
 {
-    return axiom_namespace_get_prefix(_wsf_axiom_namespace, Environment::getEnv());
+    axis2_char_t *value = axiom_namespace_get_prefix(_wsf_axiom_namespace, Environment::getEnv());
+    if(value)
+    {
+        return value;
+    }
+    else
+    {
+        return "";
+    }
 }
 
 string OMNamespace::toString()
 {
-    return axiom_namespace_to_string(_wsf_axiom_namespace, Environment::getEnv());
+    axis2_char_t *value = axiom_namespace_to_string(_wsf_axiom_namespace, Environment::getEnv());
+    if(value)
+    {
+        return value;
+    }
+    else
+    {
+        return "";
+    }
 }
 
 int OMNamespace::incrementRef()

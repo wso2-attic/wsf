@@ -128,7 +128,13 @@ bool Options::setProperty(Property * property)
   */
 void Options::setMessageId(std::string message_id)
 {
-    axis2_options_set_message_id(_wsf_options, Environment::getEnv(), message_id.c_str());
+    const axis2_char_t* msg_id= NULL;
+    if(message_id != "")
+    {
+        msg_id = message_id.c_str();
+    }
+
+    axis2_options_set_message_id(_wsf_options, Environment::getEnv(), msg_id);
 }
 
 /** @brief setTo

@@ -224,10 +224,31 @@ OMNamespace * OMElement::findNamespace(std::string uri, std::string prefix)
 
 OMAttribute * OMElement::getAttribute(std::string name, OMNamespace * ns)
 {
+    for (vector<OMAttribute *>::iterator i = _added_attributes.begin();
+        i < _added_attributes.end(); i++)
+    {
+        /* Compare ns first as it is smaller in size */
+        if (((*i)->getNamespace()->getURI() == ns->getURI())
+            && ((*i)->getName() == name))
+        {
+            return *i;
+        }
+    }
+
     axutil_qname_t * qn = NULL;
     if (ns)
     {
-        qn = axutil_qname_create(Environment::getEnv(), name.c_str(), ns->getURI().c_str(), ns->getPrefix().c_str());
+        const axis2_char_t *uri = NULL;
+        const axis2_char_t *prefix = NULL;
+        if(ns->getURI() != "")
+        {
+            uri = ns->getURI().c_str();
+        }
+        if(ns->getPrefix() != "")
+        {
+            prefix = ns->getPrefix().c_str();
+        }
+        qn = axutil_qname_create(Environment::getEnv(), name.c_str(), uri, prefix);
     }
     else
     {
@@ -239,16 +260,7 @@ OMAttribute * OMElement::getAttribute(std::string name, OMNamespace * ns)
     {
         return NULL;
     }
-    for (vector<OMAttribute *>::iterator i = _added_attributes.begin();
-        i < _added_attributes.end(); i++)
-    {
-        /* Compare ns first as it is smaller in size */
-        if (((*i)->getNamespace() == ns)
-            && ((*i)->getName() == name))
-        {
-            return *i;
-        }
-    }
+
     OMAttribute * at_cpp = new OMAttribute(name, axiom_attribute_get_value(at, Environment::getEnv()), ns);
     _added_attributes.push_back(at_cpp);
     return at_cpp;
@@ -472,7 +484,7 @@ OMElement * OMElement::getChildElement(std::string localname, OMNamespace * ns)
         {
             OMElement * dp = dynamic_cast<OMElement *>(*i);
             if ((strcmp(dp->getLocalname().c_str(), localname.c_str()) == 0)
-                && (dp->getNamespace(false) == ns))
+                && (dp->getNamespace(false)->getURI() == ns->getURI()))
             {
                 return dp;
             }
