@@ -237,7 +237,7 @@ namespace wso2wsf
 		/**
 		* configure client to use the specified the SOAP/Addressing action                                                   
 		* @param action, The soap action
-		* @return true if the action is succefully set, false otherwise.
+		* @return true if the action is successfully set, false otherwise.
 		*/
 		WSF_EXTERN bool WSF_CALL setAction(std::string action);
         /**
