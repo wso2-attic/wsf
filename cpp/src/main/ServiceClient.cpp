@@ -800,3 +800,32 @@ bool ServiceClient::isValidClient()
 {
 	return isValid;
 }
+
+MessageContext* WSF_CALL ServiceClient::getMessageContext(axis2_wsdl_msg_labels_t message_lebel)
+{
+	if(_wsf_service_client)
+	{
+		axis2_op_client_t *op_client = NULL;
+		op_client = axis2_svc_client_get_op_client(_wsf_service_client, Environment::getEnv());
+		if(op_client)
+		{
+			const axis2_msg_ctx_t* msg_ctx = NULL;
+			msg_ctx = axis2_op_client_get_msg_ctx(op_client, Environment::getEnv(), message_lebel);
+			if(msg_ctx)
+				return new MessageContext((axis2_msg_ctx_t*)msg_ctx);
+			else
+				return NULL;
+		}
+	}
+	return NULL;
+}
+
+
+MessageContext* WSF_CALL ServiceClient::getInMessageContext()
+{
+	return getMessageContext(AXIS2_WSDL_MESSAGE_LABEL_IN);
+}
+MessageContext* WSF_CALL ServiceClient::getOutMessageContext()
+{
+	return getMessageContext(AXIS2_WSDL_MESSAGE_LABEL_OUT);
+}
