@@ -32,6 +32,7 @@
 #include <OMElement.h>
 #include <OMNamespace.h>
 #include <NeethiPolicy.h>
+#include <MessageContext.h>
 
 /**
  * @file ServiceClient.h
@@ -130,9 +131,9 @@ namespace wso2wsf
         const axis2_conf_ctx_t * _conf_ctx;
 
 	/**
-	*  isValid This variable is used to keep track of the consitancy of
+	*  isValid This variable is used to keep track of the consistency of
 	* service client. If the value is false, that means, ServiceClient object 
-	* instance is in an inconsistance stage due to an error condition.                                                    
+	* instance is in an inconsistent stage due to an error condition.                                                    
 	*/
 	bool isValid;
         /**
@@ -140,6 +141,10 @@ namespace wso2wsf
          * @return boolean result of the operation
          */
         bool WSF_CALL initializeClient();
+		/**
+		*  @returns the message contexts associated with the current service client.                                                   
+		*/
+		MessageContext* WSF_CALL getMessageContext(axis2_wsdl_msg_labels_t message_lebel);
 
     protected:
 
@@ -406,6 +411,23 @@ namespace wso2wsf
 	* @return true if proxy authentication is required and false otherwise.
 	*/
 	WSF_EXTERN bool WSF_CALL getProxyAuthRequired();
+
+	/**
+	* Returns the MessageContext object used in the inflow of the Engine.                                                   
+	* @returns MessageContext
+	*/
+	WSF_EXTERN MessageContext* WSF_CALL 
+		getInMessageContext();
+
+	/**
+	* Returns the MessageContext object used in the outflow of the engine. 
+	* This method is only valid when calling after a service invocation call using
+	* ServiceClient::request or ServiceClient::send methods. 
+	* @returns MessageContext. Freeing the returned messgaec
+	*/
+	WSF_EXTERN MessageContext* WSF_CALL
+		getOutMessageContext();
+
 
     };
     /** @} */
