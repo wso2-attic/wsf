@@ -485,10 +485,23 @@ OMElement * OMElement::getChildElement(std::string localname, OMNamespace * ns)
         try
         {
             OMElement * dp = dynamic_cast<OMElement *>(*i);
-            if ((strcmp(dp->getLocalname().c_str(), localname.c_str()) == 0)
-                && (dp->getNamespace(false)->getURI() == ns->getURI()))
+            if (dp->getLocalname() == localname)
             {
-                return dp;
+                OMNamespace *existing_ns = dp->getNamespace(false);
+                string str_existing_ns;
+                string str_ns;
+                if(existing_ns)
+                {
+                    str_existing_ns = existing_ns->getURI();
+                }
+                if(ns)
+                {
+                    str_ns = ns->getURI();
+                }
+                if(str_existing_ns == str_ns)
+                {
+                    return dp;
+                }
             }
         }
         catch(bad_cast)
