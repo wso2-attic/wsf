@@ -73,10 +73,23 @@ namespace wso2wsf
 		 */
 		 WSF_EXTERN MessageContext(axis2_msg_ctx_t *_msg_ctx);
 	
-	        /**
-	        * Returns existing axis2_msg_ctx object
-	        */
-        	WSF_EXTERN axis2_msg_ctx_t * getAxis2MessageContext();
+        /**
+        * Returns existing axis2_msg_ctx object
+		* @returns A pointer to the axis2_msg_ctx_t object. Since the returned axis2_msg_ctx_t
+		* Belongs to the MessageContext Object, it should not be freed. 
+        */
+    	WSF_EXTERN axis2_msg_ctx_t * getAxis2MessageContext();
+		
+		/**
+		* Sets the internal reference to the internal axis2_msg_ctx_t object. 
+		* This method is specially useful when deleting the MessageContex Object
+		* returned the Framework. When the internal reference belongs to the framework
+		* the MessageContext would require freeing. Then this method can be used to reset
+		* the internal reference so that, only the C++ MessageContext is freed.
+		* @returns true on success, false otherwise.
+		*/
+
+		WSF_EXTERN bool setAxis2MessageContext(axis2_msg_ctx_t *msg_ctx);
 
 		 /**
 		* This method returns the WS-Addressing fault to address. Fault to address tells where to 
