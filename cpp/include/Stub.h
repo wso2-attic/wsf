@@ -58,7 +58,7 @@ namespace wso2wsf
     public:
       		/**
 		 * Initialize the Stub. 
-		 * @param client_home string refering to the client repository location.
+		 * @param client_home string referring to the client repository location.
 		 * @param endpointUri The endpoint URI of the service which will be invoked using this stub.
 		 */ 	 
 		WSF_EXTERN void WSF_CALL init(std::string& client_home, std::string& endpointUri);
