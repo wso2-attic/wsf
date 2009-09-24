@@ -1449,3 +1449,14 @@ WSF_EXTERN WSF_CALL MessageContext::~MessageContext()
 		axis2_msg_ctx_free(_msg_ctx, Environment::getEnv());
 	}
 }
+
+WSF_EXTERN bool MessageContext::setAxis2MessageContext(axis2_msg_ctx_t *msg_ctx)
+{
+	if(_msg_ctx)
+	{
+		_msg_ctx = msg_ctx;
+		return true;
+	}
+	return false;
+}
+
