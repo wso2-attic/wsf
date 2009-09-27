@@ -191,7 +191,10 @@ long Options::getTimeout()
   */
 string Options::getReplyTo()
 {
-    return axis2_endpoint_ref_get_address(_reply_to, Environment::getEnv());
+    const axis2_char_t *repltyto = axis2_endpoint_ref_get_address(_reply_to, Environment::getEnv());
+	if(repltyto)
+		return repltyto;
+	return "";
 }
 
 /** @brief getMessageId
@@ -200,7 +203,8 @@ string Options::getReplyTo()
   */
 string Options::getMessageId()
 {
-    return axis2_options_get_message_id(_wsf_options, Environment::getEnv());
+    const axis2_char_t *msgid = axis2_options_get_message_id(_wsf_options, Environment::getEnv());
+	return msgid != NULL ? msgid : "";
 }
 
 /** @brief getFrom
@@ -209,7 +213,8 @@ string Options::getMessageId()
   */
 string Options::getFrom()
 {
-    return axis2_endpoint_ref_get_address(_from, Environment::getEnv());
+    const axis2_char_t *from = axis2_endpoint_ref_get_address(_from, Environment::getEnv());
+	return from != NULL ? from : "";
 }
 
 /** @brief getFaultTo
@@ -218,7 +223,8 @@ string Options::getFrom()
   */
 string Options::getFaultTo()
 {
-    return axis2_endpoint_ref_get_address(_fault_to, Environment::getEnv());
+    const axis2_char_t* faulto = axis2_endpoint_ref_get_address(_fault_to, Environment::getEnv());
+	return faulto != NULL ? faulto : "";
 }
 
 /** @brief ~Options
