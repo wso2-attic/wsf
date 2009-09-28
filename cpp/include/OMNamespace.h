@@ -73,16 +73,16 @@ namespace wso2wsf
 	int _refcounter;
 
     public:
-        /**
-         * Method to get the reference to the axiom_namespace struct.
-         * @return reference to the axiom_namespace struct.
-         */
-        axiom_namespace_t * WSF_CALL getAxiomNamespace();
+    /**
+     * Method to get the reference to the axiom_namespace struct.
+     * @return reference to the axiom_namespace struct.
+     */
+    axiom_namespace_t * WSF_CALL getAxiomNamespace();
 
-        /**
-         * Method to set the reference to the axiom_namespace struct.
-         * @param ns reference to the axiom_namespace struct.
-         */
+    /**
+     * Method to set the reference to the axiom_namespace struct.
+     * @param ns reference to the axiom_namespace struct.
+     */
         void WSF_CALL setAxiomNamespace(axiom_namespace_t * ns);
 
 	/**
@@ -92,11 +92,11 @@ namespace wso2wsf
 	WSF_EXTERN WSF_CALL OMNamespace(std::string uri);
         
 	/**
-         * Creates a OMNamespace instance from a uri and a prefix value
-         * @param uri namespace URI.
-         * @param prefix namespace prefix.
-         */
-        WSF_EXTERN WSF_CALL OMNamespace(std::string uri, std::string prefix);
+     * Creates a OMNamespace instance from a uri and a prefix value
+     * @param uri namespace URI.
+     * @param prefix namespace prefix.
+     */
+    WSF_EXTERN WSF_CALL OMNamespace(std::string uri, std::string prefix);
 
 	/**
 	* Creates an OMNamespace instance from an axiom_namespace_t                                                   
@@ -105,41 +105,41 @@ namespace wso2wsf
 	*/
 	WSF_EXTERN WSF_CALL OMNamespace(axiom_namespace_t *ns);
 
-        /**
-         * Copy Constructor.
-         * @param om_namespace namespace to be cloned.
-         */
-        WSF_EXTERN WSF_CALL OMNamespace(OMNamespace & om_namespace);
+    /**
+     * Copy Constructor.
+     * @param om_namespace namespace to be cloned.
+     */
+    WSF_EXTERN WSF_CALL OMNamespace(OMNamespace & om_namespace);
 
-        /**
-         * destructor that frees resources.
-         */
-        virtual WSF_CALL ~OMNamespace();
+    /**
+     * destructor that frees resources.
+     */
+    virtual WSF_CALL ~OMNamespace();
 
-        /**
-         * Compares two namespaces.
-         * @param ns namespace to be compared.
-         * @return true if the two namespaces are equal, false otherwise.
-         */
-        WSF_EXTERN bool WSF_CALL equals(OMNamespace * ns);
+    /**
+     * Compares two namespaces.
+     * @param ns namespace to be compared.
+     * @return true if the two namespaces are equal, false otherwise.
+     */
+    WSF_EXTERN bool WSF_CALL equals(OMNamespace * ns);
 
-        /**
-         * Method to obtain URI.
-         * @return namespace uri, NULL on error.
-         */
-        WSF_EXTERN std::string WSF_CALL getURI();
+    /**
+     * Method to obtain URI.
+     * @return namespace uri, NULL on error.
+     */
+    WSF_EXTERN std::string WSF_CALL getURI();
 
-        /**
-         * Method to obtain prefix.
-         * @return prefix, NULL on error.
-         */
-        WSF_EXTERN std::string WSF_CALL getPrefix();
+    /**
+     * Method to obtain prefix.
+     * @return prefix, NULL on error.
+     */
+    WSF_EXTERN std::string WSF_CALL getPrefix();
 
-        /**
-         * Converts this namespace to a string.
-         * @return converted namespace as string.
-         */
-        WSF_EXTERN virtual std::string WSF_CALL toString();
+    /**
+     * Converts this namespace to a string.
+     * @return converted namespace as string.
+     */
+    WSF_EXTERN virtual std::string WSF_CALL toString();
 
 	/**
 	* Increment the ref counter by one
