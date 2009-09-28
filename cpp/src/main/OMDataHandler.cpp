@@ -93,7 +93,11 @@ axis2_byte_t * OMDataHandler::getInputStream()
   */
 string OMDataHandler::getContentType()
 {
-    return axiom_data_handler_get_content_type(_wsf_axiom_data_handler, Environment::getEnv());
+    axis2_char_t *contentType = axiom_data_handler_get_content_type(_wsf_axiom_data_handler, Environment::getEnv());
+	if(contentType)
+		return contentType;
+	else 
+		return "";
 }
 
 /** @brief ~OMDataHandler

@@ -67,7 +67,11 @@ bool NeethiPolicy::setName(std::string name)
 
 std::string NeethiPolicy::getName()
 {
-    return neethi_policy_get_name(_wsf_neethi_policy, Environment::getEnv());
+	axis2_char_t* policyName = neethi_policy_get_name(_wsf_neethi_policy, Environment::getEnv());
+	if(policyName)
+		return policyName;
+	else
+		return "";
 }
 
 bool NeethiPolicy::setId(std::string id)
@@ -79,5 +83,9 @@ bool NeethiPolicy::setId(std::string id)
 
 std::string NeethiPolicy::getId()
 {
-    return neethi_policy_get_id(_wsf_neethi_policy, Environment::getEnv());
+	axis2_char_t *policyId = neethi_policy_get_id(_wsf_neethi_policy, Environment::getEnv());
+	if(policyId)
+		return policyId;
+	else
+		return "";
 }

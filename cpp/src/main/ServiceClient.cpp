@@ -259,7 +259,10 @@ string ServiceClient::getLastResponseSoapEnvelopeString()
     }
     _last_response_soap_envelope = envelope;
     axiom_node_t * node = axiom_soap_envelope_get_base_node(_last_response_soap_envelope, Environment::getEnv());
-    return axiom_node_to_string(node, Environment::getEnv());
+    axis2_char_t *envstr = axiom_node_to_string(node, Environment::getEnv());
+	if(envstr)
+		return envstr;
+	return "";
 }
 
 /** @brief getLastResponseSoapEnvelope

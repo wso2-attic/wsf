@@ -558,7 +558,10 @@ void OMElement::addChildLocal(OMNode * child)
 
 string OMElement::getText()
 {
-    return axiom_element_get_text(_wsf_axiom_element, Environment::getEnv(), getAxiomNode());
+	axis2_char_t *text = axiom_element_get_text(_wsf_axiom_element, Environment::getEnv(), getAxiomNode());
+	if(text)
+		return text;
+	return "";
 }
 
 bool OMElement::setText(std::string text)
@@ -570,7 +573,10 @@ bool OMElement::setText(std::string text)
 
 string OMElement::getLocalname()
 {
-    return axiom_element_get_localname(_wsf_axiom_element, Environment::getEnv());
+	axis2_char_t *localname = axiom_element_get_localname(_wsf_axiom_element, Environment::getEnv());
+	if(localname)
+		return localname;
+	return "";
 }
 
 bool OMElement::removeAttribute(OMAttribute * attribute)

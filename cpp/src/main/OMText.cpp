@@ -58,12 +58,18 @@ void OMText::optimize(bool optimize)
 
 string OMText::getText()
 {
-    return axiom_text_get_text(_wsf_axiom_text, Environment::getEnv());
+	const axis2_char_t *textvalue = axiom_text_get_text(_wsf_axiom_text, Environment::getEnv());
+	if(textvalue)
+		return textvalue;
+	return "";
 }
 
 string OMText::getValue()
 {
-    return axiom_text_get_value(_wsf_axiom_text, Environment::getEnv());
+    const axis2_char_t *value =  axiom_text_get_value(_wsf_axiom_text, Environment::getEnv());
+	if(value)
+		return value;
+	return "";
 }
 
 bool OMText::setValue(std::string value)

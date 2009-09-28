@@ -110,12 +110,21 @@ bool OMAttribute::equals(OMAttribute * attribute)
 
 string OMAttribute::getValue()
 {
-    return axiom_attribute_get_value(_wsf_axiom_attribute, Environment::getEnv());
+	axis2_char_t *attrValue = axiom_attribute_get_value(_wsf_axiom_attribute, Environment::getEnv());
+	if(attrValue)
+		return attrValue;
+	else 
+		return "";
 }
 
 string OMAttribute::getName()
 {
-    return axiom_attribute_get_localname(_wsf_axiom_attribute, Environment::getEnv());
+	axis2_char_t *attrLocalName = axiom_attribute_get_localname(_wsf_axiom_attribute, Environment::getEnv());
+	if(attrLocalName)
+		return attrLocalName;
+	else
+		return "";
+
 }
 
 OMNamespace * OMAttribute::getNamespace()
@@ -164,6 +173,12 @@ void OMAttribute::setValue(std::string value)
 string OMAttribute::toString()
 {
     axutil_qname_t * qname = axiom_attribute_get_qname(_wsf_axiom_attribute, Environment::getEnv());
-    return axutil_qname_to_string(qname, Environment::getEnv());
+	if(qname)
+	{
+		axis2_char_t *qname_str = axutil_qname_to_string(qname, Environment::getEnv());
+		if(qname_str)
+			return qname_str;
+	}
+	return "";
 }
 
