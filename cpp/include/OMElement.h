@@ -77,16 +77,6 @@ namespace wso2wsf
         axiom_element_t * _wsf_axiom_element;
 
         /**
-         * Find a namespace in the scope of the document.
-         * Start to find from the given node and go up the hierarchy.
-         * @param uri namespace uri.
-         * @param prefix namespace prefix. can be NULL.
-         * @return pointer to the namespace, if found, else NULL. On error, returns
-         * NULL and sets error code in environment,s error.
-         */
-        OMNamespace * WSF_CALL findNamespace(std::string uri, std::string prefix);
-
-        /**
          * creates and Initializes om element.
          * @param parent parent element.
          * @param localname local name of the element. cannot be NULL.
@@ -95,6 +85,17 @@ namespace wso2wsf
         void WSF_CALL init(OMNode * parent, std::string localname, OMNamespace * ns);
 
     public:
+
+		/**
+		* Find a namespace in the scope of the document.
+		* Start to find from the given node and go up the hierarchy.
+		* @param uri namespace uri.
+		* @param prefix namespace prefix. can be NULL.
+		* @return pointer to the namespace, if found, else NULL. On error, returns
+		* NULL and sets error code in environment,s error.
+		*/
+		OMNamespace * WSF_CALL findNamespace(std::string uri, std::string prefix);
+
         /**
          * Creates an om element struct.
          * @param localname local name of the element. cannot be empty.
@@ -199,22 +200,26 @@ namespace wso2wsf
         WSF_EXTERN bool WSF_CALL setNamespace(OMNamespace * ns, bool no_find);
 
         /**
-         * get the OMNamespace of om_element. If the object is not yet built, it will be built and 
+         * Get the OMNamespace of associated with this element. If the object is not yet built, it will be built and 
          * returned. 
-         * @param is_default whether the retrieved namespace is default.
+         * @param is_default whether the retrieved namespace is default. If the default value is set,
+		 * it will only return a namespace, if a default namespace exists. Otherwise, the namespace
+		 * applicable to this element will be returned.
+		 * Note:- The is_default parameter is Deprecated and is kept for backward compatibility. It will 
+		 * be dropped in future releases.
          * @return pointer to Namespace. NULL if there is no namespace.
-         * associated with the element.
          */
-        WSF_EXTERN OMNamespace * WSF_CALL getNamespace(bool is_default);
+        WSF_EXTERN OMNamespace* WSF_CALL getNamespace(bool is_default = false);
+
 
         /**
-         * get the existing OMNamespace of om_element. If this is not yet build, NULL will be 
-         * returned
-         * @param is_default whether the retrieved namespace is default.
+         * Get the existing OMNamespace of om_element. If this is not yet build, NULL will be 
+         * returned. The parameter is_default is deprecated and will be dropped in future releases.
+         * @param is_default whether the retrieved namespace is default. 
          * @return pointer to Namespace. NULL if there is no namespace.
          * associated with the element.
          */
-        WSF_EXTERN OMNamespace * WSF_CALL getNamespaceLocal(bool is_default);
+        WSF_EXTERN OMNamespace * WSF_CALL getNamespaceLocal(bool is_default = false);
 
         /**
          * declared a default namespace explicitly.
