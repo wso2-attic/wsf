@@ -107,28 +107,28 @@ namespace wso2wsf
         Options * _options;
 
 	/**
-         * _policy private variable holds reference for
-         * associated policy object.
-         */
-        NeethiPolicy * _policy;
+     * _policy private variable holds reference for
+     * associated policy object.
+     */
+    NeethiPolicy * _policy;
 
-        /**
-         * _endpoint_address private variable holds reference of the
-         * endpoint address.
-         */
-        std::string _endpoint_address;
+    /**
+     * _endpoint_address private variable holds reference of the
+     * endpoint address.
+     */
+    std::string _endpoint_address;
 
-        /**
-         * _repo_home private variable holds reference of the
-         * repository home.
-         */
-        std::string _repo_home;
+    /**
+     * _repo_home private variable holds reference of the
+     * repository home.
+     */
+	std::string _repo_home;
 
-        /**
-         * _conf_ctx private variable holds reference for
-         * axis2_conf_ctx_t struct.
-         */
-        const axis2_conf_ctx_t * _conf_ctx;
+    /**
+     * _conf_ctx private variable holds reference for
+     * axis2_conf_ctx_t struct.
+     */
+    const axis2_conf_ctx_t * _conf_ctx;
 
 	/**
 	*  isValid This variable is used to keep track of the consistency of
@@ -136,45 +136,45 @@ namespace wso2wsf
 	* instance is in an inconsistent stage due to an error condition.                                                    
 	*/
 	bool isValid;
-        /**
-         * initializes service client.
-         * @return boolean result of the operation
-         */
-        bool WSF_CALL initializeClient();
-		/**
-		*  @returns the message contexts associated with the current service client.                                                   
-		*/
-		MessageContext* WSF_CALL getMessageContext(axis2_wsdl_msg_labels_t message_lebel);
+    /**
+     * initializes service client.
+     * @return boolean result of the operation
+     */
+    bool WSF_CALL initializeClient();
+	/**
+	*  @returns the message contexts associated with the current service client.                                                   
+	*/
+	MessageContext* WSF_CALL getMessageContext(axis2_wsdl_msg_labels_t message_lebel);
 
     protected:
 
 
     public:
-        /**
-         * Create a Service Client which is associated with the default repository.
-         * @param endpoint_address endpoint address which would be invoked using this
-         * service Client Object.
-         */
-        WSF_EXTERN WSF_CALL ServiceClient(std::string endpoint_address);
+    /**
+     * Create a Service Client which is associated with the default repository.
+     * @param endpoint_address endpoint address which would be invoked using this
+     * service Client Object.
+     */
+    WSF_EXTERN WSF_CALL ServiceClient(std::string endpoint_address);
 
-        /**
-         * Create a Service Client from the repository.
-         * @param repo_home location of the repository.
-         * @param endpoint_address endpoint address to be used.
-         */
-        WSF_EXTERN WSF_CALL ServiceClient(std::string repo_home, std::string endpoint_address);
+    /**
+     * Create a Service Client from the repository.
+     * @param repo_home location of the repository.
+     * @param endpoint_address endpoint address to be used.
+     */
+    WSF_EXTERN WSF_CALL ServiceClient(std::string repo_home, std::string endpoint_address);
 
-        /**
-         * Create a service client from a configuration context.
-         * @param conf_ctx pointer to configuration context.
-         * @param endpoint_address endpoint address to be used.
-         */
-        WSF_EXTERN WSF_CALL ServiceClient(const axis2_conf_ctx_t * conf_ctx, std::string endpoint_address);
+    /**
+     * Create a service client from a configuration context.
+     * @param conf_ctx pointer to configuration context.
+     * @param endpoint_address endpoint address to be used.
+     */
+    WSF_EXTERN WSF_CALL ServiceClient(const axis2_conf_ctx_t * conf_ctx, std::string endpoint_address);
 
-        /**
-         * destructor frees resources.
-         */
-        WSF_EXTERN virtual WSF_CALL ~ServiceClient();
+    /**
+     * Destructor frees resources. 
+     */
+    WSF_EXTERN virtual WSF_CALL ~ServiceClient();
 	/**
 	* Checks whether the ServiceClient got properly initialized or not. 
 	* If the service client is properly initialized, it will return true  and will return false otherwise.
@@ -190,191 +190,191 @@ namespace wso2wsf
 	*/
 	WSF_EXTERN bool WSF_CALL setOptions(Options * options);
 
-        /**
-         * Method to retrieve the last SOAP fault that resulted after invoking
-         * a send or a request operation.
-         * @return returns an OMElement containing the SOAP fault.
-         */
-        WSF_EXTERN OMElement * WSF_CALL getLastSOAPFault ();
+    /**
+     * Method to retrieve the last SOAP fault that resulted after invoking
+     * a send or a request operation.
+     * @return returns an OMElement containing the SOAP fault.
+     */
+    WSF_EXTERN OMElement * WSF_CALL getLastSOAPFault ();
 
-        /**
-         * Gets options used by service client.
-         * @return a pointer to the options struct if options set, else NULL.
-         * Returns a reference, not a cloned copy.
-         */
-        WSF_EXTERN Options * WSF_CALL getOptions();
+    /**
+     * Gets options used by service client.
+     * @return a pointer to the options struct if options set, else NULL.
+     * Returns a reference, not a cloned copy.
+     */
+    WSF_EXTERN Options * WSF_CALL getOptions();
 
-        /**
-         * Engages the named module. The engaged modules extend the message
-         * processing when consuming services. Modules help to apply QoS
-         * norms in messaging. Once a module is engaged to a service client,
-         * the axis2_engine makes sure to invoke the module for all the
-         * interactions between the client and the service.
-         * @param module_name name of the module to be engaged.
-         * @return true on success or false on failure.
-         */
-        WSF_EXTERN bool WSF_CALL engageModule(std::string module_name);
+    /**
+     * Engages the named module. The engaged modules extend the message
+     * processing when consuming services. Modules help to apply QoS
+     * norms in messaging. Once a module is engaged to a service client,
+     * the axis2_engine makes sure to invoke the module for all the
+     * interactions between the client and the service.
+     * @param module_name name of the module to be engaged.
+     * @return true on success or false on failure.
+     */
+    WSF_EXTERN bool WSF_CALL engageModule(std::string module_name);
 
-        /**
-         * Dis-engages the named module. Dis-engaging a module on a service
-         * client ensures that the axis2_engine would not invoke the named
-         * module when sending and receiving messages.
-         * @param module_name name of the module to be dis-engaged.
-         * @return true on success or false on failure.
-         */
-        WSF_EXTERN bool WSF_CALL disengageModule(std::string module_name);
+    /**
+     * Dis-engages the named module. Dis-engaging a module on a service
+     * client ensures that the axis2_engine would not invoke the named
+     * module when sending and receiving messages.
+     * @param module_name name of the module to be dis-engaged.
+     * @return true on success or false on failure.
+     */
+    WSF_EXTERN bool WSF_CALL disengageModule(std::string module_name);
 
-        /**
-         * Adds an XML element as a header to be sent to the server side.
-         * This allows users to go beyond the usual XML-in/XML-out pattern,
-         * and send custom SOAP headers. Once added, service client owns
-         * the header and will clean up when the service client is freed.
-         * @param header om node representing the SOAP header in XML.
-         * @return true on success or false on failure.
-         */
-        WSF_EXTERN bool WSF_CALL addHeader(OMElement * header);
+    /**
+     * Adds an XML element as a header to be sent to the server side.
+     * This allows users to go beyond the usual XML-in/XML-out pattern,
+     * and send custom SOAP headers. Once added, service client owns
+     * the header and will clean up when the service client is freed.
+     * @param header om node representing the SOAP header in XML.
+     * @return true on success or false on failure.
+     */
+    WSF_EXTERN bool WSF_CALL addHeader(OMElement * header);
 
-        /**
-         * Removes all the headers added to service client.
-         * @exception AxisFault an exception is thrown if something goes wrong
-         * while removing headers.
-         */
-        WSF_EXTERN void WSF_CALL removeAllHeaders();
+    /**
+     * Removes all the headers added to service client.
+     * @exception AxisFault an exception is thrown if something goes wrong
+     * while removing headers.
+     */
+    WSF_EXTERN void WSF_CALL removeAllHeaders();
 
-        /**
-         * Set the given policy object to the description hierarchy.
-         * @param policy pointer to a policy struct.
-         * @return true on success or false on failure.
-         */
-        WSF_EXTERN bool WSF_CALL setPolicy(NeethiPolicy * policy);
+    /**
+     * Set the given policy object to the description hierarchy.
+     * @param policy pointer to a policy struct.
+     * @return true on success or false on failure.
+     */
+    WSF_EXTERN bool WSF_CALL setPolicy(NeethiPolicy * policy);
 
-        /**
-         * This method is used to interact with a service operation whose MEP is Robust Out-Only.
-         * That is, there is an opportunity to get an error from the service via this method; one may still
-         * get client-side errors, such as host unknown etc.
-         * @param payload pointer to OM node representing the XML payload to be sent.
-         * @param action soap/addressing action.
-         * @return true if no soap fault was received, and false if received.
-         * @exception AxisFault an exception is thrown if something goes wrong
-         * while creating a config context.
-         */
-        WSF_EXTERN bool WSF_CALL send(OMElement * payload, std::string action) throw (AxisFault);
+    /**
+     * This method is used to interact with a service operation whose MEP is Robust Out-Only.
+     * That is, there is an opportunity to get an error from the service via this method; one may still
+     * get client-side errors, such as host unknown etc.
+     * @param payload pointer to OM node representing the XML payload to be sent.
+     * @param action soap/addressing action.
+     * @return true if no soap fault was received, and false if received.
+     * @exception AxisFault an exception is thrown if something goes wrong
+     * while creating a config context.
+     */
+    WSF_EXTERN bool WSF_CALL send(OMElement * payload, std::string action) throw (AxisFault);
 
-        /**
-         * This method is used to interact with a service operation whose MEP is Robust Out-Only.
-         * That is, there is an opportunity to get an error from the service via this method; one may still
-         * get client-side errors, such as host unknown etc.
-         * @param payload pointer to OM node representing the XML payload to be sent.
-         * @param operation operation name. "" is equivalent to an
-         * operation name of "__OPERATION_OUT_ONLY__".
-         * @param action soap/addressing action.
-         * @return true if no soap fault was received, and false if received.
-         * @exception AxisFault an exception is thrown if something goes wrong
-         * while creating a config context.
-         */
-        WSF_EXTERN bool WSF_CALL send(OMElement * payload, std::string operation, std::string action) throw (AxisFault);
+    /**
+     * This method is used to interact with a service operation whose MEP is Robust Out-Only.
+     * That is, there is an opportunity to get an error from the service via this method; one may still
+     * get client-side errors, such as host unknown etc.
+     * @param payload pointer to OM node representing the XML payload to be sent.
+     * @param operation operation name. "" is equivalent to an
+     * operation name of "__OPERATION_OUT_ONLY__".
+     * @param action soap/addressing action.
+     * @return true if no soap fault was received, and false if received.
+     * @exception AxisFault an exception is thrown if something goes wrong
+     * while creating a config context.
+     */
+    WSF_EXTERN bool WSF_CALL send(OMElement * payload, std::string operation, std::string action) throw (AxisFault);
 
-        /**
-         * This method is used to interact with a service operation whose MEP is Out-Only, or Robust Out-Only.
-         * That is, there is an opportunity to get an error from the service via this method; one may still
-         * get client-side errors, such as host unknown etc.
-         * @param operation operation name. "" is equivalent to an
-         * operation name of "__OPERATION_OUT_ONLY__".
-         * @param payload pointer to OM node representing the XML payload to be sent.
-         * @param robust true represents a robust operation, and false represents an ordinary send operation.
-         * @param action soap/addressing action.
-         * @return true if no soap fault was received, and false if received.
-         * @exception AxisFault an exception is thrown if something goes wrong
-         * while creating a config context.
-         */
-        WSF_EXTERN bool WSF_CALL send(OMElement * payload, bool robust, std::string operation, std::string action) throw (AxisFault);
+    /**
+     * This method is used to interact with a service operation whose MEP is Out-Only, or Robust Out-Only.
+     * That is, there is an opportunity to get an error from the service via this method; one may still
+     * get client-side errors, such as host unknown etc.
+     * @param operation operation name. "" is equivalent to an
+     * operation name of "__OPERATION_OUT_ONLY__".
+     * @param payload pointer to OM node representing the XML payload to be sent.
+     * @param robust true represents a robust operation, and false represents an ordinary send operation.
+     * @param action soap/addressing action.
+     * @return true if no soap fault was received, and false if received.
+     * @exception AxisFault an exception is thrown if something goes wrong
+     * while creating a config context.
+     */
+    WSF_EXTERN bool WSF_CALL send(OMElement * payload, bool robust, std::string operation, std::string action) throw (AxisFault);
 
-        /**
-         * This method is used to interact with a service operation whose MEP is Out-Only, or Robust Out-Only.
-         * That is, there is an opportunity to get an error from the service via this method; one may still
-         * get client-side errors, such as host unknown etc.
-         * @param payload pointer to OM node representing the XML payload to be sent.
-         * @param robust true represents a robust operation, and false represents an ordinary send operation.
-         * @param action soap/addressing action.
-         * @return true if no soap fault was received, and false if received.
-         * @exception AxisFault an exception is thrown if something goes wrong
-         * while creating a config context.
-         */
-        WSF_EXTERN bool WSF_CALL send(OMElement * payload, bool robust, std::string action) throw (AxisFault);
+    /**
+     * This method is used to interact with a service operation whose MEP is Out-Only, or Robust Out-Only.
+     * That is, there is an opportunity to get an error from the service via this method; one may still
+     * get client-side errors, such as host unknown etc.
+     * @param payload pointer to OM node representing the XML payload to be sent.
+     * @param robust true represents a robust operation, and false represents an ordinary send operation.
+     * @param action soap/addressing action.
+     * @return true if no soap fault was received, and false if received.
+     * @exception AxisFault an exception is thrown if something goes wrong
+     * while creating a config context.
+     */
+    WSF_EXTERN bool WSF_CALL send(OMElement * payload, bool robust, std::string action) throw (AxisFault);
 
-        /**
-         * Sends XML request and receives XML response.
-         * This method is used to interact with a service operation whose MEP is In-Out.
-         * @param payload pointer to OM node representing the XML payload to be sent
-         * @return pointer to OM node representing the XML response. The
-         * caller owns the returned node.
-         * @param action soap/addressing action.
-         * @exception AxisFault an exception is thrown if something goes wrong
-         * while creating a config context.
-         */
-        WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, std::string action) throw (AxisFault);
+    /**
+     * Sends XML request and receives XML response.
+     * This method is used to interact with a service operation whose MEP is In-Out.
+     * @param payload pointer to OM node representing the XML payload to be sent
+     * @return pointer to OM node representing the XML response. The
+     * caller owns the returned node.
+     * @param action soap/addressing action.
+     * @exception AxisFault an exception is thrown if something goes wrong
+     * while creating a config context.
+     */
+    WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, std::string action) throw (AxisFault);
 
-        /**
-         * Sends XML request and receives XML response.
-         * This method is used to interact with a service operation whose MEP is In-Out.
-         * @param operation operation name. "" is equivalent to an
-         * operation name of "__OPERATION_OUT_IN__".
-         * @param payload pointer to OM node representing the XML payload to be sent.
-         * @param callback pointer to callback object used to capture response, in a
-         * non-blocking operation, NULL represents a blocking operation.
-         * @return pointer to OM node representing the XML response. The
-         * caller owns the returned node.
-         * @param action soap/addressing action.
-         * @exception AxisFault an exception is thrown if something goes wrong
-         * while creating a config context.
-         */
-        WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, ICallback * callback, std::string operation, std::string action) throw (AxisFault);
+    /**
+     * Sends XML request and receives XML response.
+     * This method is used to interact with a service operation whose MEP is In-Out.
+     * @param operation operation name. "" is equivalent to an
+     * operation name of "__OPERATION_OUT_IN__".
+     * @param payload pointer to OM node representing the XML payload to be sent.
+     * @param callback pointer to callback object used to capture response, in a
+     * non-blocking operation, NULL represents a blocking operation.
+     * @return pointer to OM node representing the XML response. The
+     * caller owns the returned node.
+     * @param action soap/addressing action.
+     * @exception AxisFault an exception is thrown if something goes wrong
+     * while creating a config context.
+     */
+    WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, ICallback * callback, std::string operation, std::string action) throw (AxisFault);
 
-        /**
-         * Sends XML request and receives XML response.
-         * This method is used to interact with a service operation whose MEP is In-Out.
-         * @param payload pointer to OM node representing the XML payload to be sent.
-         * @param callback pointer to callback object used to capture response, in a
-         * non-blocking operation, NULL represents a blocking operation.
-         * @return pointer to OM node representing the XML response. The
-         * caller owns the returned node.
-         * @param action soap/addressing action.
-         * @exception AxisFault an exception is thrown if something goes wrong
-         * while creating a config context.
-         */
-        WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, ICallback * callback, std::string action) throw (AxisFault);
+    /**
+     * Sends XML request and receives XML response.
+     * This method is used to interact with a service operation whose MEP is In-Out.
+     * @param payload pointer to OM node representing the XML payload to be sent.
+     * @param callback pointer to callback object used to capture response, in a
+     * non-blocking operation, NULL represents a blocking operation.
+     * @return pointer to OM node representing the XML response. The
+     * caller owns the returned node.
+     * @param action soap/addressing action.
+     * @exception AxisFault an exception is thrown if something goes wrong
+     * while creating a config context.
+     */
+    WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, ICallback * callback, std::string action) throw (AxisFault);
 
-        /**
-         * Sends XML request and receives XML response.
-         * This method is used to interact with a service operation whose MEP is In-Out.
-         * @param operation operation name. "" is equivalent to an
-         * operation name of "__OPERATION_OUT_IN__".
-         * @param payload pointer to OM node representing the XML payload to be sent.
-         * @return pointer to OM node representing the XML response. The
-         * caller owns the returned node.
-         * @param action soap/addressing action.
-         * @exception AxisFault an exception is thrown if something goes wrong
-         * while creating a config context.
-         */
-        WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, std::string operation, std::string action) throw (AxisFault);
+    /**
+     * Sends XML request and receives XML response.
+     * This method is used to interact with a service operation whose MEP is In-Out.
+     * @param operation operation name. "" is equivalent to an
+     * operation name of "__OPERATION_OUT_IN__".
+     * @param payload pointer to OM node representing the XML payload to be sent.
+     * @return pointer to OM node representing the XML response. The
+     * caller owns the returned node.
+     * @param action soap/addressing action.
+     * @exception AxisFault an exception is thrown if something goes wrong
+     * while creating a config context.
+     */
+    WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, std::string operation, std::string action) throw (AxisFault);
 
-        /**
-         * Gets the last response SOAP envelope.
-         * @return pointer to SOAP envelope that was returned as a result
-         * when request was called last time.
-         */
-        WSF_EXTERN OMElement * WSF_CALL getLastResponseSoapEnvelope();
+    /**
+     * Gets the last response SOAP envelope.
+     * @return pointer to SOAP envelope that was returned as a result
+     * when request was called last time.
+     */
+    WSF_EXTERN OMElement * WSF_CALL getLastResponseSoapEnvelope();
 
-        /**
-         * Gets the last response SOAP envelope.
-         * @return SOAP envelope that was returned as a result
-         * when request was called last time, as a String.
-         */
-        WSF_EXTERN std::string WSF_CALL getLastResponseSoapEnvelopeString();
+    /**
+     * Gets the last response SOAP envelope.
+     * @return SOAP envelope that was returned as a result
+     * when request was called last time, as a String.
+     */
+    WSF_EXTERN std::string WSF_CALL getLastResponseSoapEnvelopeString();
 
 	/**
-	* Returns the axis2_svc_client used within ServiceClient.
-	*/
+     * Returns the axis2_svc_client used within ServiceClient.
+	 */
 	WSF_EXTERN axis2_svc_client_t* WSF_CALL getAxis2SvcClient();
 	/** 
 	 * Returns the axis2_conf_ctx_t which can be used to create a configuration context once and pass it when creating multiple service clients.
@@ -382,53 +382,50 @@ namespace wso2wsf
 	WSF_EXTERN axis2_conf_ctx_t* WSF_CALL getAxis2ConfCtx(std::string repositoryPath);
 
 	/**
-	* Configure Service client with a proxy.
-	* @param proxyHost proxy host
-	* @param proxyPort proxy port
-	*
-	*/
+	 * Configure Service client with a proxy.
+	 * @param proxyHost proxy host
+	 * @param proxyPort proxy port
+	 *
+	 */
 	WSF_EXTERN bool WSF_CALL setProxy(std::string proxyHost, std::string proxyPort);
 
 	/**
-	* Set proxy with authentication                                                   
-	* @param proxyHost Proxy host
-	* @param proxyPort proxy port
-	* @param username  username required for proxy authentication
-	* @param password  password required for proxy authentication
-	*/
+	 * Set proxy with authentication                                                   
+	 * @param proxyHost Proxy host
+	 * @param proxyPort proxy port
+	 * @param username  username required for proxy authentication
+	 * @param password  password required for proxy authentication
+	 */
 	WSF_EXTERN bool WSF_CALL setProxyWithAuth(std::string proxyHost,
 		std::string proxyPort, std::string username, std::string password);
 
 	/**
-	* Gets the boolean value indicating whether HTTP Authentication is required.
-	* @return true if HTTP authentication is required, false otherwise.
-	*/
+	 * Gets the boolean value indicating whether HTTP Authentication is required.
+	 * @return true if HTTP authentication is required, false otherwise.
+	 */
 	WSF_EXTERN bool WSF_CALL getHttpAuthRequired();
 
 	/**
-	* Gets the boolean value indicating whether Proxy Authentication
-	* is required.
-	* @return true if proxy authentication is required and false otherwise.
-	*/
+	 * Gets the boolean value indicating whether Proxy Authentication
+	 * is required.
+	 * @return true if proxy authentication is required and false otherwise.
+	 */
 	WSF_EXTERN bool WSF_CALL getProxyAuthRequired();
 
 	/**
-	* Returns the MessageContext object used in the inflow of the Engine.                                                   
-	* @returns MessageContext
-	*/
-	WSF_EXTERN MessageContext* WSF_CALL 
-		getInMessageContext();
+	 * Returns the MessageContext object used in the inflow of the Engine.                                                   
+	 * @returns MessageContext
+	 */
+	WSF_EXTERN MessageContext* WSF_CALL getInMessageContext();
 
 	/**
-	* Returns the MessageContext object used in the outflow of the engine. 
-	* This method is only valid when calling after a service invocation call using
-	* ServiceClient::request or ServiceClient::send methods. 
-	* @returns MessageContext. Freeing the returned messgaec
-	*/
-	WSF_EXTERN MessageContext* WSF_CALL
-		getOutMessageContext();
-
-
+	 * Returns the MessageContext object used in the outflow of the engine. 
+	 * This method is only valid when calling after a service invocation call using
+	 * ServiceClient::request or ServiceClient::send methods. 
+	 * @returns MessageContext. Freeing the returned MessageContext must be freed by the
+	 * user. Before freeing the message context use 
+	 */
+	WSF_EXTERN MessageContext* WSF_CALL	getOutMessageContext();
     };
     /** @} */
 }
