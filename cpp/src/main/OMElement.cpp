@@ -155,20 +155,14 @@ OMElement::~OMElement()
     for(vector<OMAttribute *>::iterator ite = _added_attributes.begin(); 
         ite != _added_attributes.end(); ++ite)
     {
-        if (!getAxiomNode())
-        {
-            (*ite)->setAxiomAttribute(NULL);
-        }
+       (*ite)->setAxiomAttribute(NULL);
         delete *ite;
     }
     _added_attributes.clear();
    
     if (_default_namespace)
     {
-        if (!getAxiomNode())
-        {
-            _default_namespace->setAxiomNamespace(NULL);
-        }
+        _default_namespace->setAxiomNamespace(NULL);
         delete _default_namespace;
     }
     if (_namespace)
@@ -179,10 +173,7 @@ OMElement::~OMElement()
    for (vector<OMNamespace *>::iterator ite = _added_namespaces.begin();
             ite != _added_namespaces.end(); ++ite)
     {
-        if (!getAxiomNode())
-        {
-            (*ite)->setAxiomNamespace(NULL);
-        }
+        (*ite)->setAxiomNamespace(NULL);
         delete *ite;
     }
     _added_namespaces.clear();
@@ -487,7 +478,7 @@ OMElement * OMElement::getChildElement(std::string localname, OMNamespace * ns)
             OMElement * dp = dynamic_cast<OMElement *>(*i);
             if (dp->getLocalname() == localname)
             {
-                OMNamespace *existing_ns = dp->getNamespace(false);
+                OMNamespace *existing_ns = dp->getNamespace();
                 string str_existing_ns;
                 string str_ns;
                 if(existing_ns)
