@@ -73,6 +73,7 @@ namespace wso2wsf
          */
         OMNamespace * _namespace;
 
+
     public:
         /**
          * Method to get the reference to the axiom_attribute struct.
@@ -136,6 +137,17 @@ namespace wso2wsf
          * @return attribute namespace, NULL on error.
          */
         WSF_EXTERN OMNamespace * WSF_CALL getNamespace();
+
+		/**
+		* Method to set the OMNamespace. The passed OMNamespace will be owned by the Attribute. 
+		* @param ns The OMNamespace object to be set.
+		* @param deleteExisting When this is set to true, it will delete the underlying c axiom
+		* namespace in addition to the referenced OMNamespace currently existing. If false, it will 
+		* only delete the CPP level namespace. 
+		* @returns true If the operation is successful. false if the operation failed. If false is returned,
+		* the namespace object is not owned by the attribute object.
+		*/
+		WSF_EXTERN bool WSF_CALL setNamespace(OMNamespace *ns, bool deleteExisting = false);
 
         /**
          * Method to set value.
