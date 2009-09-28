@@ -46,18 +46,26 @@ string OMNode::toString()
 {
 	/** Delete the allocated xml string returned from axiom_node_to_string method */
 	char *xml = axiom_node_to_string(_wsf_axiom_node, Environment::getEnv());
-	string str = xml;
-	AXIS2_FREE(Environment::getEnv()->allocator, xml);
-	return str;
+	if(xml)
+	{
+		string str = xml;
+		AXIS2_FREE(Environment::getEnv()->allocator, xml);
+		return str;
+	}
+	return "";
 }
 
 string OMNode::subTreeToString()
 {
 	/** Delete the allocated xml string returned from axiom_node_sub_tree_to_string method */
 	char *xml = axiom_node_sub_tree_to_string(_wsf_axiom_node, Environment::getEnv());
-	string str = xml;
-	AXIS2_FREE(Environment::getEnv()->allocator, xml);
-	return str; 
+	if(xml)
+	{
+		string str = xml;
+		AXIS2_FREE(Environment::getEnv()->allocator, xml);
+		return str; 
+	}
+	return "";
 }
 
 void OMNode::freeTree()
