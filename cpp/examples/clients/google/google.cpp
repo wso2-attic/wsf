@@ -63,14 +63,14 @@ int main(int argc, char* argv[])
     payload->setNamespace(ns2, false);
     payload->setNamespace(ns3, false);
     OMElement * child1 = new OMElement(payload,"key", NULL);
- 
-	OMAttribute * at2 = new OMAttribute("type", "xsd:string", ns2);
+
+	OMAttribute * at2 = new OMAttribute("type", "xsd:string", new OMNamespace(*ns2));
     child1->addAttribute(at2);
     child1->setText(googleKey);
     OMElement * child2 = new OMElement(payload,"phrase", NULL);
 
-	OMAttribute * at3 = new OMAttribute("type", "xsd:string", ns2);
-    child2->addAttribute(at2);
+	OMAttribute * at3 = new OMAttribute("type", "xsd:string", new OMNamespace(*ns2));
+    child2->addAttribute(new OMAttribute(*at2));
     child2->setText(wordToSpell);
     cout << endl << "Request: " << payload << endl;
 
