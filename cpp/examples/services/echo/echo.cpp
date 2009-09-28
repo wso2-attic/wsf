@@ -25,13 +25,20 @@ using namespace wso2wsf;
 /** Load the service into axis2 engine */
 WSF_SERVICE_INIT(Echo)
 
-OMElement* Echo::invoke(OMElement *ele, MessageContext *msgCtx)
+OMElement* Echo::echoString(OMElement *msg)
 {
-	OMElement *echoEle = new OMElement(ele->getLocalname(), new OMNamespace(ele->getNamespace(false)->getURI(),ele->getNamespace(false)->getPrefix()));
+	OMElement *echoEle = new OMElement(msg->getLocalname(), new OMNamespace(msg->getNamespace()->getURI(),msg->getNamespace()->getPrefix()));
 	OMElement *text = new OMElement("text");
 	echoEle->addChild(text);
 	text->setText("Hello World");
 	return echoEle;
+}
+
+OMElement* Echo::invoke(OMElement *ele, MessageContext *msgCtx)
+{
+	/** Since this is the only method in the service, it can be directly invoked. Please refer to the math
+	 * sample to check how to selectively invoke a mehtod */
+	return echoString(ele);
 }
 
 OMElement* Echo::onFault(OMElement *ele)
