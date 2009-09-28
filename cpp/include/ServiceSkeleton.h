@@ -102,7 +102,7 @@ namespace wso2wsf
         /**
          * This is the handler to be invoked when a Fault occurs. The Service implementor should implement any service specific fault
 	 * handling here. This method is called, when the message exchange pattern is Request,Response and the invoke() method has already failed.
-	 * @param omEle omEle is the received SOAP Body's firstchild element. 
+	 * @param omEle omEle is the received SOAP Body's first child element. 
          * @returns OMElement Constructed Fault OMElement.
          */
 	virtual OMElement* WSF_CALL onFault(OMElement* omEle){return NULL;};
