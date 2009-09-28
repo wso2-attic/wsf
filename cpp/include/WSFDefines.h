@@ -75,19 +75,14 @@
  *   <tr valign="top">
  *     <td width="145"><p>Portability and Platform Support</p>
  *     </td>
- *
  *     <td width="502"><p>WSO2 WSF/C++ has been tested on:</p>
  *       <ul>
- *         <li><p>Windows XP - Microsoft Visual C++ 7.1</p>
- *         </li>
- *         <li><p>Windows XP - Microsoft Visual C++ 8.0</p>
- *         </li>
+ *         <li><p>Windows XP - Microsoft Visual C++ 7.1</p></li>
+ *         <li><p>Windows XP - Microsoft Visual C++ 8.0</p></li>
  *         <li><p>Windows XP - Microsoft Visual C++ 9.0</p></li>
- *         <li><p>Linux – gcc/g++ 4.3.2</p> </li>
- *          <li><p>Sun Solaris 2.10 x86 - gcc 3.4.3</p>
- *          </li>
- *          <li><p>MacOS 10.4.10 - gcc/g++ 4.0.1</p>
- *          </li>
+ *         <li><p>Linux – gcc/g++ 4.3.2</p></li>
+ *         <li><p>Sun Solaris 2.10 x86 - gcc 3.4.3</p></li>
+ *          <li><p>MacOS 10.4.10 - gcc/g++ 4.0.1</p></li>
  *        </ul>
  *      </td>
  *    </tr>
@@ -97,7 +92,6 @@
  *     <td width="502"><p>WSO2 WSF/C++ comes with code generation tool which generates client stubs and
  *       service skeletons  for a given wsdl.</p>
  *     </td>
- *
  *   </tr>
  *   <tr valign="top">
  *     <td width="145"><p>Other Features inherited from WSF/C</p>
@@ -117,10 +111,10 @@
  *       base, WSO2 WSF/C such as,
  *       <ul>
  *       <li>Proven Interoperability</li>
- *
  *       <li>Transport Abstraction</li>
  *       <li>XML Parser Abstraction</li>
- *       <li>WSDL2C Code Generation</li></ul>
+ *       <li>WSDL2C Code Generation</li>
+ *		</ul>
  *     </td>
  *   </tr>
  *</table>
