@@ -558,10 +558,16 @@ void OMElement::addChildLocal(OMNode * child)
 
 string OMElement::getText()
 {
-	axis2_char_t *text = axiom_element_get_text(_wsf_axiom_element, Environment::getEnv(), getAxiomNode());
-	if(text)
-		return text;
-	return "";
+    axis2_char_t *text = axiom_element_get_text(
+        _wsf_axiom_element, Environment::getEnv(), getAxiomNode());
+    if(text)
+    {
+        return text;
+    }
+    else
+    {
+        return "";
+    }
 }
 
 bool OMElement::setText(std::string text)

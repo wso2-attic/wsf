@@ -111,6 +111,7 @@ ServiceClient::~ServiceClient()
         delete _options;
     }
 	/** Freeing conf context is not done since it is freed by service client free */    
+    axis2_svc_client_finalize_invoke(_wsf_service_client, Environment::getEnv());
     axis2_svc_client_free(_wsf_service_client, Environment::getEnv());
 
 	_conf_ctx = NULL;
