@@ -11,96 +11,110 @@
      #include "SimpleStockQuoteServiceSkeleton.h"
 
     
-     #include <GetMarketActivityE3.h>
+     #include <GetQuoteE7.h>
     
-     #include <GetMarketActivityResponseE7.h>
+     #include <GetQuoteResponseE2.h>
     
-     #include <GetQuoteE4.h>
+     #include <ExceptionE0.h>
     
-     #include <GetQuoteResponseE1.h>
+     #include <GetMarketActivityE4.h>
     
-     #include <ExceptionE5.h>
+     #include <GetMarketActivityResponseE3.h>
     
-     #include <GetFullQuoteE6.h>
+     #include <PlaceOrderE1.h>
     
-     #include <GetFullQuoteResponseE0.h>
+     #include <GetFullQuoteE5.h>
     
-     #include <PlaceOrderE2.h>
+     #include <GetFullQuoteResponseE6.h>
     
      #include <GetSimpleQuote.h>
     
      #include <GetSimpleQuoteResponse.h>
-	 
-	 #include <PlaceOrder.h>
-	 
-	 #include <GetQuoteResponse.h>
-
-	 #include <GetSimpleQuoteResponse.h>
-
-	 #include <TradingDay.h>
+	
+	#include <GetQuoteResponse.h>
     
     using namespace samples_services;
-	using namespace samples_services_xsd;
 
 
-static double getRandom(double base, double varience, bool onlypositive) {
-	double r = 0;
-	srand((int)time(NULL));
-	r = ((double)(rand() % 100))/100;
-	return (base + ((r > 0.5 ? 1 : -1) * varience * base * r))
-		* (onlypositive ? 1 : (r > 0.5 ? 1 : -1));
-}
+	static double getRandom(double base, double varience, bool onlypositive)
+	{
+		double r = 0;
+		srand((int)time(NULL));
+		r = ((double)(rand() % 100))/100;
+		return (base + ((r > 0.5 ? 1 : -1) * varience * base * r))
+			* (onlypositive ? 1 : (r > 0.5 ? 1 : -1));
+	}
 
-static TradingDay* create_trading_day(int day, samples_services_xsd::GetQuoteResponse *response)
-{
-	samples_services_xsd::TradingDay *tday = new samples_services_xsd::TradingDay();
-	tday->setDay(day);
-	tday->setQuote(response);
-	return tday;
-}	
+	static TradingDay* create_trading_day(int day, samples_services::GetQuoteResponse *response)
+	{
+		samples_services::TradingDay *tday = new samples_services::TradingDay();
+		tday->setDay(day);
+		tday->setQuote(response);
+		return tday;
+	}	
 
-static GetQuoteResponse* createGetQuoteResponse(std::string symbol) 
-{
-	double last = 0;
-	double change = 0;
-	double prevClose = 0;
-	GetQuoteResponse *response = new GetQuoteResponse();
-	response->setSymbol(symbol);
-	last = getRandom(100,0.9, true);
-	response->setLast(last);
-	response->setLastTradeTimestamp("2009-10-11");
-	change = getRandom(3,0.5,false);
-	response->setChange(change);
-	response->setOpen(getRandom(last,0.05,false));
-	response->setHigh(getRandom(last,0.05,false));
-	response->setLow(getRandom(last, 0.05, false));
-	response->setVolume((int)getRandom(10000, 1, true));
-	response->setMarketCap(getRandom(100000, 5, true));
-	prevClose = getRandom(last,0.15,false);
-	response->setPrevClose(prevClose);
-	response->setPercentageChange((change/prevClose)*100);
-	response->setEarnings(getRandom(10, 0.4, false));
-	response->setPeRatio(getRandom(20, .3, false));
-	response->setName("Company");
-	return response;
-}
+	static GetQuoteResponse* createGetQuoteResponse(std::string symbol) 
+	{
+		double last = 0;
+		double change = 0;
+		double prevClose = 0;
+		GetQuoteResponse *response = new GetQuoteResponse();
+		response->setSymbol(symbol);
+		last = getRandom(100,0.9, true);
+		response->setLast(last);
+		response->setLastTradeTimestamp("2009-10-11");
+		change = getRandom(3,0.5,false);
+		response->setChange(change);
+		response->setOpen(getRandom(last,0.05,false));
+		response->setHigh(getRandom(last,0.05,false));
+		response->setLow(getRandom(last, 0.05, false));
+		response->setVolume((int)getRandom(10000, 1, true));
+		response->setMarketCap(getRandom(100000, 5, true));
+		prevClose = getRandom(last,0.15,false);
+		response->setPrevClose(prevClose);
+		response->setPercentageChange((change/prevClose)*100);
+		response->setEarnings(getRandom(10, 0.4, false));
+		response->setPeRatio(getRandom(20, .3, false));
+		response->setName("Company");
+		return response;
+	}		 
+        /**
+         * Auto generated function definition signature
+         * for "getQuote|http://services.samples" operation.
+         * 
+         * @param _getQuote of the samples_services::GetQuoteE7
+         *
+         * @return samples_services::GetQuoteResponseE2*
+         */
+        samples_services::GetQuoteResponseE2* SimpleStockQuoteServiceSkeleton::getQuote(samples_services::GetQuoteE7* _getQuote,
+                                                  SimpleStockQuoteServiceSkeleton_getQuote_fault *fault)
+
+        {
+			GetQuoteResponseE2 *responseE7 = new GetQuoteResponseE2();
+			GetQuote *getQuote = _getQuote->getRequest();
+			std::string symbol = getQuote->getSymbol();
+			GetQuoteResponse *response = createGetQuoteResponse(symbol);
+			responseE7->set_return(response);
+			return responseE7;
+        }
+     
 
 		 
         /**
          * Auto generated function definition signature
          * for "getMarketActivity|http://services.samples" operation.
          * 
-         * @param _getMarketActivity of the samples_services_xsd::GetMarketActivityE3
+         * @param _getMarketActivity of the samples_services::GetMarketActivityE4
          *
-         * @return samples_services_xsd::GetMarketActivityResponseE7*
+         * @return samples_services::GetMarketActivityResponseE3*
          */
-        samples_services_xsd::GetMarketActivityResponseE7* SimpleStockQuoteServiceSkeleton::getMarketActivity(wso2wsf::MessageContext *outCtx ,samples_services_xsd::GetMarketActivityE3* _getMarketActivity)
+        samples_services::GetMarketActivityResponseE3* SimpleStockQuoteServiceSkeleton::getMarketActivity(samples_services::GetMarketActivityE4* _getMarketActivity)
 
         {
 			GetMarketActivity *marketActivity =  _getMarketActivity->getRequest();
 			std::vector<std::string*>* symbols = marketActivity->getSymbols();
 			std::vector<GetQuoteResponse*> *responses =  new std::vector<GetQuoteResponse*>();
-			GetMarketActivityResponseE7 *getMarketActivityResponseE7 = new GetMarketActivityResponseE7();
+			GetMarketActivityResponseE3 *getMarketActivityResponseE3 = new GetMarketActivityResponseE3();
 			GetMarketActivityResponse *marketActivityResponse = new GetMarketActivityResponse();
 			if (symbols != NULL) {						
 				std::vector<std::string*>::iterator it= symbols->begin();
@@ -113,30 +127,32 @@ static GetQuoteResponse* createGetQuoteResponse(std::string symbol)
 			}
 
 			marketActivityResponse->setQuotes(responses);
-			getMarketActivityResponseE7->set_return(marketActivityResponse);
-			return getMarketActivityResponseE7;
+			getMarketActivityResponseE3->set_return(marketActivityResponse);
+			return getMarketActivityResponseE3;
         }
      
 
 		 
         /**
          * Auto generated function definition signature
-         * for "getQuote|http://services.samples" operation.
+         * for "placeOrder|http://services.samples" operation.
          * 
-         * @param _getQuote of the samples_services_xsd::GetQuoteE4
+         * @param _placeOrder of the samples_services::PlaceOrderE1
          *
-         * @return samples_services_xsd::GetQuoteResponseE1*
+         * @return 
          */
-        samples_services_xsd::GetQuoteResponseE1* SimpleStockQuoteServiceSkeleton::getQuote(wso2wsf::MessageContext *outCtx ,samples_services_xsd::GetQuoteE4* _getQuote,
-                                                  SimpleStockQuoteServiceSkeleton_getQuote_fault *fault)
+        bool  SimpleStockQuoteServiceSkeleton::placeOrder(samples_services::PlaceOrderE1* _placeOrder)
 
         {
-			GetQuoteResponseE1 *responseE1 = new GetQuoteResponseE1();
-			GetQuote *getQuote = _getQuote->getRequest();
-			std::string symbol = getQuote->getSymbol();
-			GetQuoteResponse *response = createGetQuoteResponse(symbol);
-			responseE1->set_return(response);
-			return responseE1;
+			double price;
+			int quantity = 0;
+			std::string symbol;
+			PlaceOrder *order = _placeOrder->getOrder();
+			price = order->getPrice();
+			quantity = order->getQuantity();
+			symbol = order->getSymbol();
+			std::cout<<"Accepted order for"<<quantity<<" stocks of "<<symbol <<" at"<<price<<std::endl;
+			return true;
         }
      
 
@@ -145,16 +161,16 @@ static GetQuoteResponse* createGetQuoteResponse(std::string symbol)
          * Auto generated function definition signature
          * for "getFullQuote|http://services.samples" operation.
          * 
-         * @param _getFullQuote of the samples_services_xsd::GetFullQuoteE6
+         * @param _getFullQuote of the samples_services::GetFullQuoteE5
          *
-         * @return samples_services_xsd::GetFullQuoteResponseE0*
+         * @return samples_services::GetFullQuoteResponseE6*
          */
-        samples_services_xsd::GetFullQuoteResponseE0* SimpleStockQuoteServiceSkeleton::getFullQuote(wso2wsf::MessageContext *outCtx ,samples_services_xsd::GetFullQuoteE6* _getFullQuote)
+        samples_services::GetFullQuoteResponseE6* SimpleStockQuoteServiceSkeleton::getFullQuote(samples_services::GetFullQuoteE5* _getFullQuote)
 
         {
 			std::string symbol = NULL;
 
-			GetFullQuoteResponseE0 *getFullQuoteResponseE0 = new GetFullQuoteResponseE0();
+			GetFullQuoteResponseE6 *getFullQuoteResponseE6 = new GetFullQuoteResponseE6();
 			GetFullQuoteResponse *getFullQuoteResponse = new GetFullQuoteResponse();
 			GetFullQuote *fullQuote = _getFullQuote->getRequest();
 			symbol = fullQuote->getSymbol();
@@ -166,32 +182,8 @@ static GetQuoteResponse* createGetQuoteResponse(std::string symbol)
 			}
 
 			getFullQuoteResponse->setTradeHistory(days);
-			getFullQuoteResponseE0->set_return(getFullQuoteResponse);
-			return getFullQuoteResponseE0;
-		}
-     
-
-		 
-        /**
-         * Auto generated function definition signature
-         * for "placeOrder|http://services.samples" operation.
-         * 
-         * @param _placeOrder of the samples_services_xsd::PlaceOrderE2
-         *
-         * @return 
-         */
-        bool  SimpleStockQuoteServiceSkeleton::placeOrder(wso2wsf::MessageContext *outCtx ,samples_services_xsd::PlaceOrderE2* _placeOrder)
-
-        {
-			double price;
-			int quantity = 0;
-			std::string symbol;
-			PlaceOrder *order = _placeOrder->getOrder();
-			price = order->getPrice();
-			quantity = order->getQuantity();
-			symbol = order->getSymbol();
-			std::cout<<"Accepted order for"<<quantity<<" stocks of "<<symbol <<" at"<<price<<std::endl;
-	          return true;
+			getFullQuoteResponseE6->set_return(getFullQuoteResponse);
+			return getFullQuoteResponseE6;
         }
      
 
@@ -200,11 +192,11 @@ static GetQuoteResponse* createGetQuoteResponse(std::string symbol)
          * Auto generated function definition signature
          * for "getSimpleQuote|http://services.samples" operation.
          * 
-         * @param _getSimpleQuote of the samples_services_xsd::GetSimpleQuote
+         * @param _getSimpleQuote of the samples_services::GetSimpleQuote
          *
-         * @return samples_services_xsd::GetSimpleQuoteResponse*
+         * @return samples_services::GetSimpleQuoteResponse*
          */
-        samples_services_xsd::GetSimpleQuoteResponse* SimpleStockQuoteServiceSkeleton::getSimpleQuote(wso2wsf::MessageContext *outCtx ,samples_services_xsd::GetSimpleQuote* _getSimpleQuote)
+        samples_services::GetSimpleQuoteResponse* SimpleStockQuoteServiceSkeleton::getSimpleQuote(samples_services::GetSimpleQuote* _getSimpleQuote)
 
         {
 			std::string symbol;
@@ -213,7 +205,7 @@ static GetQuoteResponse* createGetQuoteResponse(std::string symbol)
 			symbol = _getSimpleQuote->getSymbol();
 			response->setSymbol(symbol);
 			simpleResponse->set_return(response);
-          return simpleResponse;
+			return simpleResponse;
         }
      
 
