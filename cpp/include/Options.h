@@ -88,13 +88,14 @@ namespace wso2wsf
          */
         axis2_endpoint_ref_t * _fault_to;
 
-        /**
-         * Sets xml parser reset. By default, set to true.
-         * @param paser_reset is a boolean value.
-         */
-        void WSF_CALL setXMLParserReset(bool paser_reset);
-
     public:
+
+		/**
+		* Sets xml parser reset. By default, set to true.
+		* @param paser_reset is a boolean value.
+		*/
+		void WSF_CALL setXMLParserReset(bool paser_reset);
+
         /**
          * Creates the options struct with or without given parent.
          */
