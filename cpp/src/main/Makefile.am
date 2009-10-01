@@ -1,6 +1,6 @@
 lib_LTLIBRARIES=libwso2_wsf.la
 
-libwso2_wsf_la_SOURCES= AxisFault.cpp \
+libwso2_wsf_la_SOURCES= WSFault.cpp \
 			WSFException.cpp \
 			OMAttribute.cpp \
 			OMElement.cpp \
