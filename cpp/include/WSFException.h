@@ -67,6 +67,11 @@ namespace wso2wsf
          */
         std::string _reason;
 
+		/**
+		* _code Error code corresponding the exception.                                                  
+		*/
+		std::string _code;
+
     public:
         /**
          * destructor that can be overridden.
