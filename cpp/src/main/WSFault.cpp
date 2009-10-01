@@ -15,14 +15,14 @@
  */
 
 #include <stdio.h>
-#include <AxisFault.h>
+#include <WSFault.h>
 using namespace wso2wsf;
 
 /** @brief (one liner)
   *
   * (documentation goes here)
   */
-AxisFault::AxisFault(char const * reason)
+WSFault::WSFault(char const * reason)
     : Exception(reason)
 {}
 
@@ -30,6 +30,6 @@ AxisFault::AxisFault(char const * reason)
   *
   * (documentation goes here)
   */
-void AxisFault::process() const
+void WSFault::process() const
 {
 }

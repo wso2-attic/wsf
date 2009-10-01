@@ -315,7 +315,7 @@ OMElement * ServiceClient::getLastResponseSoapEnvelope()
   *
   * @todo: document this function
   */
-OMElement * ServiceClient::request(OMElement * payload, std::string operation, std::string action) throw (AxisFault)
+OMElement * ServiceClient::request(OMElement * payload, std::string operation, std::string action) throw (WSFault)
 {
     return request(payload, NULL, operation, action);
 }
@@ -324,7 +324,7 @@ OMElement * ServiceClient::request(OMElement * payload, std::string operation, s
   *
   * @todo: document this function
   */
-OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, std::string action) throw (AxisFault)
+OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, std::string action) throw (WSFault)
 {
     return request(payload, callback, "", action);
 }
@@ -333,13 +333,13 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
   *
   * @todo: document this function
   */
-OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, std::string operation, std::string action) throw (AxisFault)
+OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, std::string operation, std::string action) throw (WSFault)
 {
 	assert(isValid);
     axis2_status_t status = AXIS2_FAILURE;
     if (!payload)
     {
-        throw AxisFault(EMPTY_PAYLOAD_RECIEVED);
+        throw WSFault(EMPTY_PAYLOAD_RECIEVED);
     }
     if (action != "")
     {
@@ -356,7 +356,7 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
                     (payload->getNamespace())->setAxiomNamespace(NULL);
                 }
                 payload->setAxiomNode(NULL);
-                throw AxisFault(SETTING_SOAP_ACTION_FAILED);
+                throw WSFault(SETTING_SOAP_ACTION_FAILED);
             }
         }
         else
@@ -376,7 +376,7 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
                         (payload->getNamespace())->setAxiomNamespace(NULL);
                     }
                     payload->setAxiomNode(NULL);
-                    throw AxisFault(SETTING_WSA_ACTION_FAILED);
+                    throw WSFault(SETTING_WSA_ACTION_FAILED);
                 }
             }
         }
@@ -402,7 +402,7 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
                 (payload->getNamespaceLocal(false))->setAxiomNamespace(NULL);
             }
             payload->setAxiomNode(NULL);
-            throw AxisFault(SEND_RECIEVE_OPERATION_FAILED);
+            throw WSFault(SEND_RECIEVE_OPERATION_FAILED);
         }
         else
         {
@@ -418,7 +418,7 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
                     (payload->getNamespace())->setAxiomNamespace(NULL);
                 }
                 payload->setAxiomNode(NULL);
-                throw AxisFault(UNABLE_TO_RETRIEVE_RESPONSE_ELEMENT);
+                throw WSFault(UNABLE_TO_RETRIEVE_RESPONSE_ELEMENT);
             }
             axis2_bool_t has_fault =
                 axis2_svc_client_get_last_response_has_fault(_wsf_service_client, Environment::getEnv());
@@ -435,7 +435,7 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
                     (payload->getNamespace())->setAxiomNamespace(NULL);
                 }
                 payload->setAxiomNode(NULL);
-                throw AxisFault(SOAP_FAULT_RECIEVED);
+                throw WSFault(SOAP_FAULT_RECIEVED);
             }
             if (_last_response_soap_envelope_element)
             {
@@ -461,7 +461,7 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
                 (payload->getNamespace())->setAxiomNamespace(NULL);
             }
             payload->setAxiomNode(NULL);
-            throw AxisFault(CREATION_OF_CALLBACK_OBJECT_FAILED);
+            throw WSFault(CREATION_OF_CALLBACK_OBJECT_FAILED);
         }
         axis2_callback_set_on_complete(callback_c, callbackOnComplete);
         axis2_callback_set_on_error(callback_c, callbackOnFault);
@@ -491,7 +491,7 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
   *
   * @todo: document this function
   */
-OMElement * ServiceClient::request(OMElement * payload, std::string action) throw (AxisFault)
+OMElement * ServiceClient::request(OMElement * payload, std::string action) throw (WSFault)
 {
     return request(payload, NULL, "", action);
 }
@@ -500,7 +500,7 @@ OMElement * ServiceClient::request(OMElement * payload, std::string action) thro
   *
   * @todo: document this function
   */
-bool ServiceClient::send(OMElement * payload, bool robust, std::string action) throw (AxisFault)
+bool ServiceClient::send(OMElement * payload, bool robust, std::string action) throw (WSFault)
 {
     return send(payload, robust, "", action);
 }
@@ -509,13 +509,13 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string action) t
   *
   * @todo: document this function
   */
-bool ServiceClient::send(OMElement * payload, bool robust, std::string operation, std::string action) throw (AxisFault)
+bool ServiceClient::send(OMElement * payload, bool robust, std::string operation, std::string action) throw (WSFault)
 {
 	assert(isValid);
     axis2_status_t status = AXIS2_FAILURE;
     if (!payload)
     {
-        throw AxisFault(EMPTY_PAYLOAD_RECIEVED);
+        throw WSFault(EMPTY_PAYLOAD_RECIEVED);
     }
     if (action != "")
     {
@@ -531,7 +531,7 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string operation
                         (payload->getNamespace())->setAxiomNamespace(NULL);
                     }
                     payload->setAxiomNode(NULL);
-                throw AxisFault(SETTING_SOAP_ACTION_FAILED);
+                throw WSFault(SETTING_SOAP_ACTION_FAILED);
             }
         }
         else
@@ -551,7 +551,7 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string operation
                         (payload->getNamespace())->setAxiomNamespace(NULL);
                     }
                     payload->setAxiomNode(NULL);
-                    throw AxisFault(SETTING_WSA_ACTION_FAILED);
+                    throw WSFault(SETTING_WSA_ACTION_FAILED);
                 }
             }
         }
@@ -576,7 +576,7 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string operation
                 (payload->getNamespace())->setAxiomNamespace(NULL);
             }
             payload->setAxiomNode(NULL);
-            throw AxisFault(ROBUST_SEND_OPERATION_FAILED);
+            throw WSFault(ROBUST_SEND_OPERATION_FAILED);
         }
         axis2_bool_t has_fault =
             axis2_svc_client_get_last_response_has_fault(_wsf_service_client, Environment::getEnv());
@@ -587,7 +587,7 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string operation
                 (payload->getNamespace())->setAxiomNamespace(NULL);
             }
             payload->setAxiomNode(NULL);
-            throw AxisFault(SOAP_FAULT_RECIEVED);
+            throw WSFault(SOAP_FAULT_RECIEVED);
         }
     }
     else
@@ -616,7 +616,7 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string operation
   *
   * @todo: document this function
   */
-bool ServiceClient::send(OMElement * payload, std::string operation, std::string action) throw (AxisFault)
+bool ServiceClient::send(OMElement * payload, std::string operation, std::string action) throw (WSFault)
 {
     return send(payload, true, operation, action);
 }
@@ -625,7 +625,7 @@ bool ServiceClient::send(OMElement * payload, std::string operation, std::string
   *
   * @todo: document this function
   */
-bool ServiceClient::send(OMElement * payload, std::string action) throw (AxisFault)
+bool ServiceClient::send(OMElement * payload, std::string action) throw (WSFault)
 {
     return send(payload, true, "", action);
 }
