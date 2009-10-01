@@ -26,7 +26,7 @@
 #include <axis2_const.h>
 #include <axis2_http_transport.h>
 #include <platforms/axutil_platform_auto_sense.h>
-#include <AxisFault.h>
+#include <WSFault.h>
 #include <ICallback.h>
 #include <Options.h>
 #include <OMElement.h>
@@ -258,7 +258,7 @@ namespace wso2wsf
      * @exception AxisFault an exception is thrown if something goes wrong
      * while creating a config context.
      */
-    WSF_EXTERN bool WSF_CALL send(OMElement * payload, std::string action) throw (AxisFault);
+    WSF_EXTERN bool WSF_CALL send(OMElement * payload, std::string action) throw (WSFault);
 
     /**
      * This method is used to interact with a service operation whose MEP is Robust Out-Only.
@@ -272,7 +272,7 @@ namespace wso2wsf
      * @exception AxisFault an exception is thrown if something goes wrong
      * while creating a config context.
      */
-    WSF_EXTERN bool WSF_CALL send(OMElement * payload, std::string operation, std::string action) throw (AxisFault);
+    WSF_EXTERN bool WSF_CALL send(OMElement * payload, std::string operation, std::string action) throw (WSFault);
 
     /**
      * This method is used to interact with a service operation whose MEP is Out-Only, or Robust Out-Only.
@@ -287,7 +287,7 @@ namespace wso2wsf
      * @exception AxisFault an exception is thrown if something goes wrong
      * while creating a config context.
      */
-    WSF_EXTERN bool WSF_CALL send(OMElement * payload, bool robust, std::string operation, std::string action) throw (AxisFault);
+    WSF_EXTERN bool WSF_CALL send(OMElement * payload, bool robust, std::string operation, std::string action) throw (WSFault);
 
     /**
      * This method is used to interact with a service operation whose MEP is Out-Only, or Robust Out-Only.
@@ -300,7 +300,7 @@ namespace wso2wsf
      * @exception AxisFault an exception is thrown if something goes wrong
      * while creating a config context.
      */
-    WSF_EXTERN bool WSF_CALL send(OMElement * payload, bool robust, std::string action) throw (AxisFault);
+    WSF_EXTERN bool WSF_CALL send(OMElement * payload, bool robust, std::string action) throw (WSFault);
 
     /**
      * Sends XML request and receives XML response.
@@ -312,7 +312,7 @@ namespace wso2wsf
      * @exception AxisFault an exception is thrown if something goes wrong
      * while creating a config context.
      */
-    WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, std::string action) throw (AxisFault);
+    WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, std::string action) throw (WSFault);
 
     /**
      * Sends XML request and receives XML response.
@@ -328,7 +328,7 @@ namespace wso2wsf
      * @exception AxisFault an exception is thrown if something goes wrong
      * while creating a config context.
      */
-    WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, ICallback * callback, std::string operation, std::string action) throw (AxisFault);
+    WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, ICallback * callback, std::string operation, std::string action) throw (WSFault);
 
     /**
      * Sends XML request and receives XML response.
@@ -342,7 +342,7 @@ namespace wso2wsf
      * @exception AxisFault an exception is thrown if something goes wrong
      * while creating a config context.
      */
-    WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, ICallback * callback, std::string action) throw (AxisFault);
+    WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, ICallback * callback, std::string action) throw (WSFault);
 
     /**
      * Sends XML request and receives XML response.
@@ -356,7 +356,7 @@ namespace wso2wsf
      * @exception AxisFault an exception is thrown if something goes wrong
      * while creating a config context.
      */
-    WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, std::string operation, std::string action) throw (AxisFault);
+    WSF_EXTERN OMElement * WSF_CALL request(OMElement * payload, std::string operation, std::string action) throw (WSFault);
 
     /**
      * Gets the last response SOAP envelope.

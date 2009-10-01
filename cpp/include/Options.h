@@ -21,7 +21,7 @@
 #include <axis2_options.h>
 #include <axis2_const.h>
 #include <axiom_soap_const.h>
-#include <AxisFault.h>
+#include <WSFault.h>
 #include <OMElement.h>
 #include <Property.h>
 #include <string>

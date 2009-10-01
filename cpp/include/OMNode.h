@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <axutil_utils.h>
 #include <axiom_node.h>
-#include <AxisFault.h>
+#include <WSFault.h>
 #include <string>
 
 /**

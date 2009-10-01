@@ -40,14 +40,14 @@ namespace wso2wsf
      * is used to implement exceptions generated within the Axis2/C core
      * on top of which WSF/C++ is implemented.
      */
-    class AxisFault: public Exception
+    class WSFault: public Exception
     {
     public:
         /**
          * Constructor accepting a reason for the exception.
          * @param reason reason to exception.
          */
-        WSF_CALL AxisFault(char const * reason);
+        WSF_CALL WSFault(char const * reason);
 
         /**
          * Method for doing the required processing, of the Axis Fault.

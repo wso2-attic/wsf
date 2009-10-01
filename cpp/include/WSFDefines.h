@@ -155,4 +155,6 @@
 /** Trace level, Enable with compiler time option AXIS2_TRACE */
 #define WSF_LOG_LEVEL_TRACE AXIS2_LOG_LEVEL_TRACE
 
+#define AxisFault WSFault
+
 #endif // WSFDEFINES_H
