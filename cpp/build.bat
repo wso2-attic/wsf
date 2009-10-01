@@ -1,7 +1,7 @@
 @echo off
 @call vcvars32.bat /nologo
 
-rem @call clean.bat
+@call clean.bat
 
 rem Build WSO2 WSF/C
 @copy configure.in wsf_c\configure.in
