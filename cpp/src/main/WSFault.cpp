@@ -32,5 +32,4 @@ AxisFault::AxisFault(char const * reason)
   */
 void AxisFault::process() const
 {
-    //processing...
 }
