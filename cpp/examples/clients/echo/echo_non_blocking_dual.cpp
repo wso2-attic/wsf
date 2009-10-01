@@ -19,7 +19,7 @@
 #include <ServiceClient.h>
 #include <OMElement.h>
 #include <iostream>
-#include <AxisFault.h>
+#include <WSFault.h>
 #include <WSFDefines.h>
 #include <Environment.h>
 
@@ -76,7 +76,7 @@ int main()
     {
         sc->request(payload, &callback, "http://ws.apache.org/axis2/c/samples/echoString");
     }
-    catch (AxisFault & e)
+    catch (WSFault & e)
     {
         cout << "Error: " << e << endl;
     }

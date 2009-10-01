@@ -19,7 +19,7 @@
 #include <ServiceClient.h>
 #include <OMElement.h>
 #include <iostream>
-#include <AxisFault.h>
+#include <WSFault.h>
 #include <WSFDefines.h>
 #include <Environment.h>
 
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
     {
         sc.request(payload, &callback, "");
     }
-    catch (AxisFault & e)
+    catch (WSFault & e)
     {
         cout << "Error: " << e << endl;
     }

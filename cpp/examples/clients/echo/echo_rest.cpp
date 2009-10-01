@@ -19,7 +19,7 @@
 #include <ServiceClient.h>
 #include <OMElement.h>
 #include <iostream>
-#include <AxisFault.h>
+#include <WSFault.h>
 #include <Environment.h>
 
 using namespace std;
@@ -50,7 +50,7 @@ int main()
             cout << endl << "Response: " << response << endl;
         }
     }
-    catch (AxisFault & e)
+    catch (WSFault & e)
     {
         cout << endl << "Error: " << e << endl;
     }

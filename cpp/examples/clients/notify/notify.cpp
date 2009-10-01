@@ -19,7 +19,7 @@
 #include <ServiceClient.h>
 #include <OMElement.h>
 #include <iostream>
-#include <AxisFault.h>
+#include <WSFault.h>
 #include <Environment.h>
 
 
@@ -51,7 +51,7 @@ int main()
             cout << endl << "notify client invoke FAILED!" << endl;
         }
     }
-    catch (AxisFault & e)
+    catch (WSFault & e)
     {
         cout << endl << "Error: " << e << endl;
     }
