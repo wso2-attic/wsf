@@ -5290,7 +5290,7 @@
                   </xsl:when>
                   <xsl:otherwise>
                     if(<xsl:choose><xsl:when test="@type='std::string'">
-                      !arg_<xsl:value-of select="$CName"/>.empty()
+                      arg_<xsl:value-of select="$CName"/>.empty()
                        </xsl:when>
                        <xsl:otherwise> NULL == arg_<xsl:value-of select="$CName"/></xsl:otherwise>
                   </xsl:choose>
