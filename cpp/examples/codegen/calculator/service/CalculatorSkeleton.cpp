@@ -28,25 +28,22 @@
      #include <AddResponse.h>
     
     using namespace localhost_axis_calculator;
+
+
 		 
         /**
          * Auto generated function definition signature
          * for "mul|http://localhost/axis/Calculator" operation.
          * 
-         * @param _mul of the localhost_axis_calculator::Mul
+         * @param _a of the int
+         * @param _b of the int
          *
-         * @return localhost_axis_calculator::MulResponse*
+         * @return int
          */
-        localhost_axis_calculator::MulResponse* CalculatorSkeleton::mul(wso2wsf::MessageContext *outCtx ,localhost_axis_calculator::Mul* _mul)
+        int CalculatorSkeleton::mul(wso2wsf::MessageContext *outCtx ,int _a,int _b)
 
         {
-			int value1 =0, value2 =0, result =0;
-			value1 = _mul->getA();
-			value2 = _mul->getB();
-			result = value1*value2;
-			localhost_axis_calculator::MulResponse *mulResponse = new localhost_axis_calculator::MulResponse();
-			mulResponse->setMulReturn(result);
-			return mulResponse;
+			return _a*_b;
 		}
      
 
@@ -55,26 +52,24 @@
          * Auto generated function definition signature
          * for "div|http://localhost/axis/Calculator" operation.
          * 
-         * @param _div of the localhost_axis_calculator::Div
+         * @param _a0 of the int
+         * @param _b1 of the int
          *
-         * @return localhost_axis_calculator::DivResponse*
+         * @return int
          */
-        localhost_axis_calculator::DivResponse* CalculatorSkeleton::div(wso2wsf::MessageContext *outCtx ,localhost_axis_calculator::Div* _div)
+        int CalculatorSkeleton::div(wso2wsf::MessageContext *outCtx ,int _a0,int _b1)
 
         {
-			int value1 =0, value2 =0, result =0;
-			value1 = _div->getA();
-			value2 = _div->getB();
-			if(value2 == 0)
+			if(_a0 != 0)
 			{
-				std::cout<<"Cannot divide by Zero"<<std::endl;
-				return NULL;
+				return _a0/_b1;
 			}
-			result = value1/value2;
-			localhost_axis_calculator::DivResponse *divResponse = new localhost_axis_calculator::DivResponse();
-			divResponse->setDivReturn(result);
-	        return divResponse;
-        }
+			else
+			{
+				std::cout<<"Cannot divide by zero";
+				return 0;
+			}
+		}
      
 
 		 
@@ -82,21 +77,16 @@
          * Auto generated function definition signature
          * for "sub|http://localhost/axis/Calculator" operation.
          * 
-         * @param _sub of the localhost_axis_calculator::Sub
+         * @param _a2 of the int
+         * @param _b3 of the int
          *
-         * @return localhost_axis_calculator::SubResponse*
+         * @return int
          */
-        localhost_axis_calculator::SubResponse* CalculatorSkeleton::sub(wso2wsf::MessageContext *outCtx ,localhost_axis_calculator::Sub* _sub)
+        int CalculatorSkeleton::sub(wso2wsf::MessageContext *outCtx ,int _a2,int _b3)
 
         {
-			int value1 =0, value2 = 0, result = 0;
-			value1 = _sub->getA();
-			value2 = _sub->getB();
-			result = value1 - value2;
-			localhost_axis_calculator::SubResponse *subResponse = new localhost_axis_calculator::SubResponse();
-			subResponse->setSubReturn(result);
-			return subResponse;
-        }
+			return _a2 - _b3;
+		}
      
 
 		 
@@ -104,20 +94,15 @@
          * Auto generated function definition signature
          * for "add|http://localhost/axis/Calculator" operation.
          * 
-         * @param _add of the localhost_axis_calculator::Add
+         * @param _a4 of the int
+         * @param _b5 of the int
          *
-         * @return localhost_axis_calculator::AddResponse*
+         * @return int
          */
-        localhost_axis_calculator::AddResponse* CalculatorSkeleton::add(wso2wsf::MessageContext *outCtx ,localhost_axis_calculator::Add* _add)
+        int CalculatorSkeleton::add(wso2wsf::MessageContext *outCtx ,int _a4,int _b5)
 
         {
-			int value1 = 0, value2=0, result = 0;
-			value1 = _add->getA();
-			value2 = _add->getB();
-			result = value1 + value2;
-			localhost_axis_calculator::AddResponse *addResponse = new localhost_axis_calculator::AddResponse();
-			addResponse->setAddReturn(result);
-			return addResponse;
-		}
+			return _a4 + _b5;
+        }
      
 
