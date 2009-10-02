@@ -30,25 +30,46 @@ main(
 	string endpointUri = "http://localhost:9090/axis2/services/Calculator";
 	string clientHome = AXIS2_GETENV("WSFCPP_HOME");
 	if(clientHome.empty())
-		cout<<"Please Set WSFCPP_HOME environment variable"<<endl;
-	/**
-	*  Create a new calculator stub and invokes the methods                                                   
-	*/	
-	CalculatorStub *stub = NULL;
-	stub = new CalculatorStub(clientHome, endpointUri);
-	int addResult = stub->add(10,10);
-	cout<<"Calculation 10 + 10, result is " <<addResult<<endl;
-	
-	int subResult = stub->sub(20,10);
-	cout<<"Calculation 20 - 10, is "<<subResult<<endl;
-	
-	int divResult = stub->div(100,10);
-	cout<<"Calculation 100/10, is "<<divResult<<endl;
+	{
+		cout<<"Please set the WSFCPP_HOME environment variable"<<endl;
+	}
+	CalculatorStub *stub = new CalculatorStub(clientHome, endpointUri);
+	Add *addIn = new Add();
+	addIn->setA(10);
+	addIn->setB(10);
+	AddResponse *addResponse  = stub->add(addIn);
+	if(addResponse)
+	{
+		cout<<"Calculation, 10 + 10 result is "<<addResponse->getAddReturn()<<endl;
+	}
 
-	int mulResult = stub->mul(15,15);
-	cout<<"Calculation 15*15, is "<<mulResult<<endl;
-	
-	delete stub;	
+	Sub *subIn = new Sub();
+	subIn->setA(20);
+	subIn->setB(10);
+	SubResponse *subResponse = stub->sub(subIn);
+	if(subResponse)
+	{
+		cout<<"Calculation, 20 - 10 result is "<<subResponse->getSubReturn()<<endl;
+	}
+
+	Mul *mulIn =  new Mul();
+	mulIn->setA(15);
+	mulIn->setB(15);
+	MulResponse *mulResponse = stub->mul(mulIn);
+	if(mulResponse)
+	{
+		cout<<"Calculation, 15 * 15 result is "<<mulResponse->getMulReturn() <<endl;
+	}
+
+	Div *divIn = new Div();
+	divIn->setA(100);
+	divIn->setB(10);
+	DivResponse *divResponse = stub->div(divIn);
+	if(divResponse)
+	{
+		cout<<"Calculation, 100/10 result is "<<divResponse->getDivReturn()<<endl;
+	}
+	delete stub;
 }
 
 
