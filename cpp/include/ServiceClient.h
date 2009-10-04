@@ -146,6 +146,11 @@ namespace wso2wsf
 	*/
 	MessageContext* WSF_CALL getMessageContext(axis2_wsdl_msg_labels_t message_lebel);
 
+	/**
+	* Reset the OMNamespace for the remove of the Payload Axiom Node                                                   
+	*/
+	void resetAxiomPayloadNamespace(OMElement *payload);
+
     protected:
 
 
