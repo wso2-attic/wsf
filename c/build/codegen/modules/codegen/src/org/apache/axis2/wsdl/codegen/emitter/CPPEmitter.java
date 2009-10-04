@@ -781,7 +781,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
                 : paramType;
 
 
-        if (CPP_DEFAULT_TYPE.equals(typeMappingStr)) {
+        if (JAVA_DEFAULT_TYPE.equals(typeMappingStr)) {
             typeMappingStr = CPP_DEFAULT_TYPE;
         }
 
@@ -882,6 +882,7 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
 
 
         addAttribute(doc, "caps-type", paramType.toUpperCase(), param);
+        addAttribute(doc, "type", paramType, param);
 
         if (!paramType.equals("") && !paramType.equals("void") &&
                 !typeMappingStr.equals(CPP_DEFAULT_TYPE) && typeMappingStr.contains("::") && !typeMappingStr.contains("std::string") ) {
