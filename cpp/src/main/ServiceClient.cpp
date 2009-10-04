@@ -26,6 +26,19 @@
 using namespace std;
 using namespace wso2wsf;
 
+
+void ServiceClient::resetAxiomPayloadNamespace(OMElement *payload)
+{
+	if(payload)
+	{
+		if (payload->getNamespaceLocal(false))
+		{
+			(payload->getNamespaceLocal(false))->setAxiomNamespace(NULL);
+		}
+		payload->setAxiomNode(NULL);
+	}
+}
+
 /** @brief callbackOnComplete
   *
   * onComplete function that is used in a non-blocking scenario.
@@ -337,27 +350,20 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
 {
 	assert(isValid);
     axis2_status_t status = AXIS2_FAILURE;
-    if (!payload)
-    {
-        throw WSFault(EMPTY_PAYLOAD_RECIEVED);
-    }
+	axiom_node_t *payload_axiom_node = NULL;
+	if(payload)
+	{
+		payload_axiom_node = payload->getAxiomNode();
+	}
+   
     if (action != "")
     {
         if (_options->getSoapVersion() == AXIOM_SOAP11)
         {
             axutil_string_t * soap_action = axutil_string_create(Environment::getEnv(), action.c_str());
-
+			/** cannot fail */
             status = axis2_options_set_soap_action(_options->_wsf_options, Environment::getEnv(), soap_action);
             axutil_string_free(soap_action, Environment::getEnv());
-            if (status != AXIS2_SUCCESS)
-            {
-                if (payload->getNamespace())
-                {
-                    (payload->getNamespace())->setAxiomNamespace(NULL);
-                }
-                payload->setAxiomNode(NULL);
-                throw WSFault(SETTING_SOAP_ACTION_FAILED);
-            }
         }
         else
         {
@@ -368,16 +374,9 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
             axutil_qname_free(qname, Environment::getEnv());
             if (engaged)
             {
+				/** cannot fail */
                 status = axis2_options_set_action(_options->_wsf_options, Environment::getEnv(), action.c_str());
-                if (status != AXIS2_SUCCESS)
-                {
-                    if (payload->getNamespace())
-                    {
-                        (payload->getNamespace())->setAxiomNamespace(NULL);
-                    }
-                    payload->setAxiomNode(NULL);
-                    throw WSFault(SETTING_WSA_ACTION_FAILED);
-                }
+                
             }
         }
     }
@@ -388,21 +387,17 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
         {
             axutil_qname_t * qname =  axutil_qname_create(Environment::getEnv(), operation.c_str(), NULL, NULL);
             node = axis2_svc_client_send_receive_with_op_qname(_wsf_service_client, Environment::getEnv(),
-                qname, payload->getAxiomNode());
+                qname, payload_axiom_node);
             axutil_qname_free(qname, Environment::getEnv());
         }
         else
         {
-            node = axis2_svc_client_send_receive(_wsf_service_client, Environment::getEnv(), payload->getAxiomNode());
+            node = axis2_svc_client_send_receive(_wsf_service_client, Environment::getEnv(), payload_axiom_node);
         }
         if (!node)
         {
-            if (payload->getNamespaceLocal(false))
-            {
-                (payload->getNamespaceLocal(false))->setAxiomNamespace(NULL);
-            }
-            payload->setAxiomNode(NULL);
-            throw WSFault(SEND_RECIEVE_OPERATION_FAILED);
+			resetAxiomPayloadNamespace(payload);
+			throw WSFault(SEND_RECIEVE_OPERATION_FAILED);
         }
         else
         {
@@ -413,11 +408,7 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
             }
             if (!element)
             {
-                if (payload->getNamespace())
-                {
-                    (payload->getNamespace())->setAxiomNamespace(NULL);
-                }
-                payload->setAxiomNode(NULL);
+               resetAxiomPayloadNamespace(payload);
                 throw WSFault(UNABLE_TO_RETRIEVE_RESPONSE_ELEMENT);
             }
             axis2_bool_t has_fault =
@@ -430,11 +421,7 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
                     delete _last_soap_fault;
                 }
                 _last_soap_fault = new OMElement(NULL, node);
-                if (payload->getNamespace())
-                {
-                    (payload->getNamespace())->setAxiomNamespace(NULL);
-                }
-                payload->setAxiomNode(NULL);
+                resetAxiomPayloadNamespace(payload);
                 throw WSFault(SOAP_FAULT_RECIEVED);
             }
             if (_last_response_soap_envelope_element)
@@ -443,11 +430,7 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
                 delete _last_response_soap_envelope_element;
             }
             _last_response_soap_envelope_element = new OMElement(NULL, node);
-            if (payload->getNamespace())
-            {
-                (payload->getNamespace())->setAxiomNamespace(NULL);
-            }
-            payload->setAxiomNode(NULL);
+			resetAxiomPayloadNamespace(payload);
             return _last_response_soap_envelope_element;
         }
     }
@@ -471,19 +454,15 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
         {
             axutil_qname_t * qname =  axutil_qname_create(Environment::getEnv(), operation.c_str(), NULL, NULL);
             axis2_svc_client_send_receive_non_blocking_with_op_qname(_wsf_service_client, Environment::getEnv(),
-                qname, payload->getAxiomNode(), callback_c);
+                qname, payload_axiom_node, callback_c);
             axutil_qname_free(qname, Environment::getEnv());
         }
         else
         {
-            axis2_svc_client_send_receive_non_blocking(_wsf_service_client, Environment::getEnv(), payload->getAxiomNode(), callback_c);
+            axis2_svc_client_send_receive_non_blocking(_wsf_service_client, Environment::getEnv(), payload_axiom_node, callback_c);
         }
-        if (payload->getNamespace())
-        {
-            (payload->getNamespace())->setAxiomNamespace(NULL);
-        }
-        payload->setAxiomNode(NULL);
-        return NULL;
+        resetAxiomPayloadNamespace(payload);
+		return NULL;
     }
 }
 
@@ -513,10 +492,11 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string operation
 {
 	assert(isValid);
     axis2_status_t status = AXIS2_FAILURE;
-    if (!payload)
+	axiom_node_t *payload_axiom_node = NULL;
+    if (payload)
     {
-        throw WSFault(EMPTY_PAYLOAD_RECIEVED);
-    }
+		payload_axiom_node = payload->getAxiomNode();
+	}
     if (action != "")
     {
         if (_options->getSoapVersion() == AXIOM_SOAP11)
@@ -524,15 +504,6 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string operation
             axutil_string_t * soap_action = axutil_string_create(Environment::getEnv(), action.c_str());
             status = axis2_options_set_soap_action(_options->_wsf_options, Environment::getEnv(), soap_action);
             axutil_string_free(soap_action, Environment::getEnv());
-            if (status != AXIS2_SUCCESS)
-            {
-                    if (payload->getNamespace())
-                    {
-                        (payload->getNamespace())->setAxiomNamespace(NULL);
-                    }
-                    payload->setAxiomNode(NULL);
-                throw WSFault(SETTING_SOAP_ACTION_FAILED);
-            }
         }
         else
         {
@@ -544,15 +515,6 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string operation
             if (engaged)
             {
                 status = axis2_options_set_action(_options->_wsf_options, Environment::getEnv(), action.c_str());
-                if (status != AXIS2_SUCCESS)
-                {
-                    if (payload->getNamespace())
-                    {
-                        (payload->getNamespace())->setAxiomNamespace(NULL);
-                    }
-                    payload->setAxiomNode(NULL);
-                    throw WSFault(SETTING_WSA_ACTION_FAILED);
-                }
             }
         }
     }
@@ -562,32 +524,23 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string operation
         {
             axutil_qname_t * qname =  axutil_qname_create(Environment::getEnv(), operation.c_str(), NULL, NULL);
             status = axis2_svc_client_send_robust_with_op_qname(_wsf_service_client, Environment::getEnv(),
-                qname, payload->getAxiomNode());
+                qname, payload_axiom_node);
             axutil_qname_free(qname, Environment::getEnv());
         }
         else
         {
-            status = axis2_svc_client_send_robust(_wsf_service_client, Environment::getEnv(), payload->getAxiomNode());
+            status = axis2_svc_client_send_robust(_wsf_service_client, Environment::getEnv(), payload_axiom_node);
         }
         if (status != AXIS2_SUCCESS)
         {
-            if (payload->getNamespace())
-            {
-                (payload->getNamespace())->setAxiomNamespace(NULL);
-            }
-            payload->setAxiomNode(NULL);
-            throw WSFault(ROBUST_SEND_OPERATION_FAILED);
+            resetAxiomPayloadNamespace(payload);
+			throw WSFault(ROBUST_SEND_OPERATION_FAILED);
         }
-        axis2_bool_t has_fault =
-            axis2_svc_client_get_last_response_has_fault(_wsf_service_client, Environment::getEnv());
+        axis2_bool_t has_fault = axis2_svc_client_get_last_response_has_fault(_wsf_service_client, Environment::getEnv());
         if (has_fault)
         {
-            if (payload->getNamespace())
-            {
-                (payload->getNamespace())->setAxiomNamespace(NULL);
-            }
-            payload->setAxiomNode(NULL);
-            throw WSFault(SOAP_FAULT_RECIEVED);
+            resetAxiomPayloadNamespace(payload);
+			throw WSFault(SOAP_FAULT_RECIEVED);
         }
     }
     else
@@ -596,20 +549,16 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string operation
         {
             axutil_qname_t * qname =  axutil_qname_create(Environment::getEnv(), operation.c_str(), NULL, NULL);
             axis2_svc_client_fire_and_forget_with_op_qname(_wsf_service_client, Environment::getEnv(),
-                qname, payload->getAxiomNode());
+                qname, payload_axiom_node);
             axutil_qname_free(qname, Environment::getEnv());
         }
         else
         {
-            axis2_svc_client_fire_and_forget(_wsf_service_client, Environment::getEnv(), payload->getAxiomNode());
+            axis2_svc_client_fire_and_forget(_wsf_service_client, Environment::getEnv(), payload_axiom_node);
         }
     }
-    if (payload->getNamespace())
-    {
-        (payload->getNamespace())->setAxiomNamespace(NULL);
-    }
-    payload->setAxiomNode(NULL);
-    return true;
+    resetAxiomPayloadNamespace(payload);
+	return true;
 }
 
 /** @brief send
