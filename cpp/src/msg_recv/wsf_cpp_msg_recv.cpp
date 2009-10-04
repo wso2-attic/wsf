@@ -156,6 +156,7 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
 	axiom_node_t *fault_node = NULL;
 	axiom_soap_fault_detail_t *fault_detail;
 	axis2_bool_t is_fault = AXIS2_FALSE;
+	axis2_char_t *soapEnvelopePrefix = "soapenv";
 
 	AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
 	AXIS2_PARAM_CHECK(env->error, new_msg_ctx, AXIS2_FAILURE);
@@ -196,8 +197,12 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
 		{
 			axiom_soap_envelope_t *envelope = NULL;
 			axiom_soap_body_t *body = NULL;
+			axiom_namespace_t *envNs = NULL;
 
 			envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
+			envNs = axiom_soap_envelope_get_namespace(envelope, Environment::getEnv());
+			soapEnvelopePrefix = axiom_namespace_get_prefix(envNs, Environment::getEnv());
+
 			body = axiom_soap_envelope_get_body(envelope, env);
 			om_node = axiom_soap_body_get_base_node(body, env);
 			om_element = (axiom_element_t*)axiom_node_get_data_element(om_node, env);
@@ -210,8 +215,12 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
 			axiom_soap_body_t *body = NULL;
 			axiom_node_t *op_node = NULL;
 			axiom_element_t *op_element = NULL;
+			axiom_namespace_t *envNs = NULL;
 
 			envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
+			envNs = axiom_soap_envelope_get_namespace(envelope, Environment::getEnv());
+			soapEnvelopePrefix = axiom_namespace_get_prefix(envNs, Environment::getEnv());
+
 			body = axiom_soap_envelope_get_body(envelope, env);
 			om_node = axiom_soap_body_get_base_node(body, env);
 		}
@@ -224,12 +233,19 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
 		if (status == AXIS2_SUCCESS)
 		{
 			skel_invoked = AXIS2_TRUE;
-			OMElement *ele = new OMElement(NULL, om_node);
+			OMElement *inputEle = NULL;
+			if(om_node)
+			{
+				inputEle = new OMElement(NULL, om_node);
+			}
 			MessageContext *outCtx = new MessageContext(new_msg_ctx);
-			OMElement *resultEle = skel->invoke(ele, outCtx);
+			OMElement *resultEle = skel->invoke(inputEle, outCtx);
 			/** Remove the newly created CPP Request Element wrapper */
-			ele->setAxiomNode(NULL);
-			delete ele;
+			if(inputEle)
+			{
+				inputEle->setAxiomNode(NULL);
+				delete inputEle;
+			}
 			
 			/** Remove the resultant CPP Response Element after extracting the axiom node contained within */
 			if(resultEle){
@@ -281,16 +297,26 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
 					axis2_msg_ctx_set_status_code(msg_ctx, env,	
 						axis2_msg_ctx_get_status_code(new_msg_ctx, env));
 				}
-				OMElement *newele = new OMElement(NULL,om_node);
-
+				OMElement *inputEle = NULL;
+				if(om_node)
+				{	
+					inputEle = new OMElement(NULL,om_node);
+				}
 
 				if(skel)
 				{
-					OMElement *faultEle = skel->onFault(newele);
+					OMElement *faultEle = skel->onFault(inputEle);
 					if(faultEle)
 					{
 						fault_node = faultEle->getAxiomNode();
+						faultEle->setAxiomNode(NULL);
+						delete faultEle;
 					}
+				}
+				if(inputEle)
+				{
+					inputEle->setAxiomNode(NULL);
+					delete inputEle;
 				}
 				is_fault = AXIS2_TRUE;
 			}
@@ -308,14 +334,26 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
 						axis2_msg_ctx_get_status_code(new_msg_ctx, env));
 					if (!axutil_strcmp(mep, AXIS2_MEP_URI_ROBUST_IN_ONLY))
 					{
-						OMElement *newele = new OMElement(NULL,om_node);
+						OMElement *inputEle = NULL;
+						if(om_node)
+						{
+							inputEle = new OMElement(NULL,om_node);
+						}
+
 						if(skel)
 						{
-							OMElement *faultEle = skel->onFault(newele);
+							OMElement *faultEle = skel->onFault(inputEle);
 							if(faultEle)
 							{
 								fault_node = faultEle->getAxiomNode();
+								faultEle->setAxiomNode(NULL);
+								delete faultEle;
 							}
+						}
+						if(inputEle)
+						{
+							inputEle->setAxiomNode(NULL);
+							delete inputEle;
 						}
 						is_fault = AXIS2_TRUE;
 					}
@@ -335,8 +373,7 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
 		Environment::removeEnv();
 		return AXIS2_SUCCESS;
 	}
-
-	env_ns = axiom_namespace_create(env, soap_ns, "soapenv");
+	env_ns = axiom_namespace_create(env, soap_ns, soapEnvelopePrefix );
 	if (!env_ns)
 	{
 		Environment::removeEnv();
@@ -374,7 +411,7 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
 
 	if (status != AXIS2_SUCCESS || is_fault)
 	{
-		const axis2_char_t *fault_value_str = "soapenv:Sender";
+		const axis2_char_t *fault_value_str = axutil_stracat(Environment::getEnv(),soapEnvelopePrefix, ":Sender");
 		const axis2_char_t *fault_reason_str = NULL;
 		const axis2_char_t *err_msg = NULL;
 
@@ -406,6 +443,8 @@ wsf_cpp_msg_recv_invoke_business_logic_sync(
 
 		soap_fault = axiom_soap_fault_create_default_fault(env, out_body, fault_value_str, 
 			fault_reason_str, soap_version);
+
+		AXIS2_FREE((Environment::getEnv()->allocator), (void*)fault_value_str);
 
 		if (fault_node)
 		{
