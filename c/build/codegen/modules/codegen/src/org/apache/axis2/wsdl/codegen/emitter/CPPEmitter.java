@@ -19,16 +19,12 @@
 
 package org.apache.axis2.wsdl.codegen.emitter;
 
-import org.apache.axis2.description.AxisBindingOperation;
-import org.apache.axis2.description.AxisMessage;
-import org.apache.axis2.description.AxisOperation;
-import org.apache.axis2.description.PolicyInclude;
 import org.apache.axis2.util.JavaUtils;
 import org.apache.axis2.util.PolicyUtil;
 import org.apache.axis2.util.Utils;
 import org.apache.axis2.wsdl.WSDLConstants;
 import org.apache.axis2.wsdl.WSDLUtil;
-import org.apache.axis2.description.WSDL2Constants;
+import org.apache.axis2.description.*;
 import org.apache.axis2.wsdl.SOAPHeaderMessage;
 import org.apache.axis2.wsdl.codegen.CodeGenConfiguration;
 import org.apache.axis2.wsdl.codegen.CodeGenerationException;
@@ -98,11 +94,50 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
     public void emitStub() throws CodeGenerationException {
 
         try {
-            // write interface implementations
-            writeCPPStub();
-            writeCallback();
-            emitBuildScript();
-            writeVCProjectFile();
+            Map originalTypeMap = getNewCopy(mapper.getAllMappedNames());
+            for (Iterator axisServicesIter = this.axisServices.iterator();
+                 axisServicesIter.hasNext();) {
+                this.axisService = (AxisService) axisServicesIter.next();
+                //we have to generate the code for each bininding
+                //for the moment lets genrate the stub name with the service name and end point name
+                this.axisBinding = axisService.getEndpoint(axisService.getEndpointName()).getBinding();
+
+                Map endpoints = this.axisService.getEndpoints();
+                for (Iterator endPointsIter = endpoints.values().iterator();
+                     endPointsIter.hasNext();) {
+                    // set the end point details.
+                    this.axisEndpoint = (AxisEndpoint) endPointsIter.next();
+                    this.axisBinding = this.axisEndpoint.getBinding();
+                    axisService.setEndpointName(this.axisEndpoint.getName());
+                    axisService.setBindingName(
+                            this.axisEndpoint.getBinding().getName().getLocalPart());
+
+                    // see the comment at updateMapperClassnames for details and reasons for
+                    // calling this method
+                    if (mapper.isObjectMappingPresent()) {
+                        // initialize the map to original one
+                        copyMap(originalTypeMap, mapper.getAllMappedNames());
+                        updateMapperForStub();
+                    } else {
+                        copyToFaultMap();
+                    }
+
+                    //generate and populate the fault names before hand. We need that for
+                    //the smooth opration of the thing
+                    //first reset the fault names and recreate it
+                    resetFaultNames();
+                    generateAndPopulateFaultNames();
+                    updateFaultPackageForStub();
+
+                   /** Generate Code for CPP Stubs */
+                   writeCPPStub();
+                   writeCallback();
+                   emitBuildScript();
+                   writeVCProjectFile();
+                }
+
+            }
+
         } catch (Exception e) {
             //log the error here
             e.printStackTrace();
@@ -313,22 +348,26 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
     }
 
     protected Document createDOMDocumentForCallback() {
-       Document doc = getEmptyDocument();
-       Element rootElement = doc.createElement("callback");
+    Document doc = getEmptyDocument();
+    Element rootElement = doc.createElement("callback");
 
-       addAttribute(doc, "cppNamespace", CUtils.makeCPPNamespace(codeGenConfiguration.getPackageName()), rootElement);
-       String name ="";
-        if (codeGenConfiguration.isPackClasses() && this.axisService.getEndpoints().size() > 1) {
-            name  =     makeCClassName(CPP_CALLBACK_PREFIX +axisService.getName() + axisService.getEndpointName())
-                        + CPP_CALLBACK_SUFFIX;
+    addAttribute(doc, "cppNamespace", CUtils.makeCPPNamespace(codeGenConfiguration.getPackageName()), rootElement);
+    String name ="";
+    String serviceName ="";
+    if(this.axisService.getEndpoints().size() > 1) {
+        name  =  makeCClassName(CPP_CALLBACK_PREFIX +axisService.getName() + axisService.getEndpointName())
+                + CPP_CALLBACK_SUFFIX;
+        serviceName = this.axisService.getName() + this.axisService.getEndpointName();
 
-        } else {
-            name = makeCClassName(CPP_CALLBACK_PREFIX+ axisService.getName()) + CPP_CALLBACK_SUFFIX;
-        }
-        addAttribute(doc, "name", name, rootElement);
-        addAttribute(doc, "servicename",axisService.getName(), rootElement);
-        addAttribute(doc, "caps-name",name.toUpperCase(),rootElement);
-    // TODO JAXRPC mapping support should be considered here ??
+    } else {
+        name = makeCClassName(CPP_CALLBACK_PREFIX+ axisService.getName()) + CPP_CALLBACK_SUFFIX;
+        serviceName = this.axisService.getName();
+    }
+
+    addAttribute(doc, "name", name, rootElement);
+    addAttribute(doc, "servicename",serviceName, rootElement);
+    addAttribute(doc, "caps-name",name.toUpperCase(),rootElement);
+    //TODO JAXRPC mapping support should be considered here ??
     this.loadOperations(doc, rootElement, null);
 
     doc.appendChild(rootElement);
@@ -341,7 +380,19 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
         String serviceName = axisService.getName();
         String serviceTns = axisService.getTargetNamespace();
         String serviceCName = makeCClassName(axisService.getName());
+
+        String callbackName ="";
+
+        if (this.axisService.getEndpoints().size() > 1) {
+            callbackName  =     makeCClassName(CPP_CALLBACK_PREFIX +axisService.getName() + axisService.getEndpointName())
+                        + CPP_CALLBACK_SUFFIX;
+             serviceCName = makeCClassName(this.axisService.getName() + this.axisService.getEndpointName());
+        } else {
+            callbackName = makeCClassName(CPP_CALLBACK_PREFIX+ axisService.getName()) + CPP_CALLBACK_SUFFIX;
+        }
+       
         String stubName = serviceCName + CPP_STUB_SUFFIX;
+
         Document doc = getEmptyDocument();
         Element rootElement = doc.createElement("class");
 
@@ -350,19 +401,13 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
         addAttribute(doc, "caps-name", stubName.toUpperCase(), rootElement);
         addAttribute(doc, "prefix", stubName, rootElement); //prefix to be used by the functions
         addAttribute(doc, "qname", serviceName + "|" + serviceTns, rootElement);
+
+
         addAttribute(doc, "servicename", serviceCName, rootElement);
         addAttribute(doc, "cppNamespace", CUtils.makeCPPNamespace(codeGenConfiguration.getPackageName()), rootElement);
 
         addAttribute(doc, "namespace", serviceTns, rootElement);
         addAttribute(doc, "interfaceName", serviceCName, rootElement);
-        String callbackName ="";
-        if (codeGenConfiguration.isPackClasses() && this.axisService.getEndpoints().size() > 1) {
-            callbackName  =     makeCClassName(CPP_CALLBACK_PREFIX +axisService.getName() + axisService.getEndpointName())
-                        + CPP_CALLBACK_SUFFIX;
-
-        } else {
-            callbackName = makeCClassName(CPP_CALLBACK_PREFIX+ axisService.getName()) + CPP_CALLBACK_SUFFIX;
-        }
         addAttribute(doc, "callbackName", callbackName, rootElement);
 
 
