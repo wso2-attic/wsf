@@ -49,6 +49,13 @@ namespace wso2wsf
          */
         WSF_CALL WSFault(char const * reason);
 
+		/**
+		* Constructor accepting a reason and a code for the exception.                                                   
+		* @param reason, Reason explaning the exception.
+		* @param code,    Exception code
+		*/
+		WSF_CALL WSFault(char const* reason, char const *code);
+
         /**
          * Method for doing the required processing, of the Axis Fault.
          */

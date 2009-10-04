@@ -91,12 +91,30 @@ namespace wso2wsf
          */
         virtual WSF_CALL operator std::string() const;
 
+		/**
+		* Method to obtain the exception fault reason                                                   
+		* @return Returns the fault reason string
+		*/
+		std::string WSF_CALL getFaultReason();
+		/**
+		* Method to get the exception fault code                                                   
+		* @return Returns the fault code
+		*/
+		std::string WSF_CALL getFaultCode();
+
     protected:
         /**
          * Constructor accepting a reason for the exception.
          * @param reason reason to exception.
          */
         WSF_CALL Exception(char const * reason);
+		/**
+		* Constructor accepting both the reason and code the exception                                                   
+		* @param reason Reason for the exception.
+		* @param code   The Fault code corresponding to the exception.
+		*/
+		WSF_CALL Exception(char const *reason, char const *code);
+		
     };
     /** @} */
 
