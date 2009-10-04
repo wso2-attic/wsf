@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
     int count = 0;
     while((count < timeout) && (!callback.isComplete))
     {
-       	WSF_USLEEP(100);
+       	WSF_USLEEP(1000);
         count++;
     }
 
