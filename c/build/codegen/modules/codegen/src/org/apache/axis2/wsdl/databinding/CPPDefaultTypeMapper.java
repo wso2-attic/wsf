@@ -10,7 +10,7 @@ import javax.xml.namespace.QName;
  * To change this template use File | Settings | File Templates.
  */
 public class CPPDefaultTypeMapper  extends TypeMappingAdapter {
-    private String defautClassName = "wso2wsf::OMElement*";
+    private String CPPClassName = "wso2wsf::OMElement*";
 
     public CPPDefaultTypeMapper() {
     }
@@ -23,7 +23,7 @@ public class CPPDefaultTypeMapper  extends TypeMappingAdapter {
     public String getTypeMappingName(QName qname) {
 
         if ((qname != null)) {
-            return defaultClassName;
+            return CPPClassName;
         } else {
             return null;
         }
