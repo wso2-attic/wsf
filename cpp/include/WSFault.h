@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-#ifndef AXISFAULT_H
-#define AXISFAULT_H
+#ifndef WSFAULT_H
+#define WSFAULT_H
 
 #include <WSFDefines.h>
 #include <WSFException.h>
 
 /**
- * @file AxisFault.h
+ * @file WSFault.h
  */
 
 /**
@@ -30,37 +30,92 @@
 namespace wso2wsf
 {
     /**
-     * @defgroup axis_fault Axis Fault
+     * @defgroup WSFault WS Fault
      * @ingroup wso2wsf
      * @{
      */
 
     /**
-     * @brief class AxisFault This Class is a derivation of the Exception Class, and
-     * is used to implement exceptions generated within the Axis2/C core
-     * on top of which WSF/C++ is implemented.
+     * @brief class WSFault. This class is a derivation of the Exception Class, and
+     * is used to implement exceptions generated from WSF/C++ Framework when a client 
+	 * or a server error happens.
      */
     class WSFault: public Exception
     {
+	
+	private:
+		/**
+		* _detail corresponds to SOAP Fault detail string                                                   
+		*/
+		std::string _detail;
+
+		/**
+		* _role Corresponds to SOAP Fault role                             
+		*/
+		std::string _role;
+
+		/**
+		*  Initialize private variables
+		*/
+		void init();
+
     public:
         /**
          * Constructor accepting a reason for the exception.
          * @param reason reason to exception.
          */
-        WSF_CALL WSFault(char const * reason);
+        WSF_EXTERN WSF_CALL WSFault(char const * reason);
 
 		/**
 		* Constructor accepting a reason and a code for the exception.                                                   
-		* @param reason, Reason explaning the exception.
+		* @param reason, Reason explaining the exception or soap fault reason
 		* @param code,    Exception code
 		*/
-		WSF_CALL WSFault(char const* reason, char const *code);
+		WSF_EXTERN WSF_CALL WSFault(char const* reason, char const *detail);
 
-        /**
+		/**
+		* Constructor accepting a reason and a code for the exception.                                                   
+		* @param reason, Reason explaining the exception.
+		* @param code,   Fault code
+		* @param detail  Fault Detail
+		*/
+		WSF_EXTERN WSF_CALL WSFault(char const *reason, char const *detail, char const* code);
+
+		/**
+		* Constructor accepting a reason and a code for the exception.                                                   
+		* @param reason, Reason explaining the exception.
+		* @param code,   Fault code
+		* @param detail  Fault Detail
+		* @param role    Role
+		*/
+
+		WSF_EXTERN WSF_CALL WSFault(char const *reason, char const *detail, char const* code, char const *role);
+
+		/**
+		* @returns Returns the soap fault detail string                                                  
+		*/
+		WSF_EXTERN std::string WSF_CALL getFaultDetail();
+		
+		/**
+		* @returns Returns the soap fault role string                                                  
+		*/
+		WSF_EXTERN std::string WSF_CALL getFaultRole();
+
+		/**
+		* Sets Soap Fault detail information
+		* @param detail SOAP Fault detail information.
+		*/
+		WSF_EXTERN void WSF_CALL setFaultDetail(char const* detail);
+		/**
+		* Sets Soap Fault detail information
+		* @param role SOAPFault role information
+		*/
+		WSF_EXTERN void WSF_CALL setFaultRole(char const* role);
+		/**
          * Method for doing the required processing, of the Axis Fault.
          */
         WSF_EXTERN void WSF_CALL process() const;
     };
     /** @} */
 }
-#endif // AXISFAULT_H
+#endif // WSFAULT_H
