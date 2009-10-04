@@ -27,7 +27,14 @@ WSF_SERVICE_INIT(Echo)
 
 OMElement* Echo::echoString(OMElement *msg)
 {
-	OMElement *echoEle = new OMElement(msg->getLocalname(), new OMNamespace(msg->getNamespace()->getURI(),msg->getNamespace()->getPrefix()));
+	OMNamespace *inputNamespace = msg->getNamespace();
+	OMNamespace *ns = NULL;
+	if(inputNamespace)
+	{
+		ns = new OMNamespace(inputNamespace->getURI(), inputNamespace->getPrefix());
+	}
+	
+	OMElement *echoEle = new OMElement(msg->getLocalname(), ns);
 	OMElement *text = new OMElement("text");
 	echoEle->addChild(text);
 	text->setText("Hello World");
@@ -37,7 +44,9 @@ OMElement* Echo::echoString(OMElement *msg)
 OMElement* Echo::invoke(OMElement *ele, MessageContext *msgCtx)
 {
 	/** Since this is the only method in the service, it can be directly invoked. Please refer to the math
-	 * sample to check how to selectively invoke a mehtod */
+	 * sample to check how to selectively invoke a method */
+	if(!ele)
+		return NULL;
 	return echoString(ele);
 }
 
