@@ -23,11 +23,28 @@ Exception::~Exception()
 
 Exception::operator std::string() const
 {
-    return _reason;
+	return _reason;
 }
 
 Exception::Exception(char const * reason)
     : _reason(reason)
 {}
+
+Exception::Exception(char const *reason, char const *code)
+:_reason(reason), _code(code)
+{
+
+}
+
+std::string Exception::getFaultCode()
+{
+	return _code;
+}
+
+std::string Exception::getFaultReason()
+{
+	return _reason;
+}
+
 
 

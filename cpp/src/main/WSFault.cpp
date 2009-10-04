@@ -26,6 +26,11 @@ WSFault::WSFault(char const * reason)
     : Exception(reason)
 {}
 
+WSFault::WSFault(char const *reason, char const *code):Exception(reason, code)
+{
+
+}
+
  /** @brief (one liner)
   *
   * (documentation goes here)
