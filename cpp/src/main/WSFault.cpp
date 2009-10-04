@@ -18,17 +18,80 @@
 #include <WSFault.h>
 using namespace wso2wsf;
 
+void WSFault::init()
+{
+	_detail = "";
+	_role = "";
+}
+
 /** @brief (one liner)
   *
   * (documentation goes here)
   */
 WSFault::WSFault(char const * reason)
     : Exception(reason)
-{}
-
-WSFault::WSFault(char const *reason, char const *code):Exception(reason, code)
 {
+	init();
+}
 
+WSFault::WSFault(char const *reason, char const *detail):Exception(reason)
+{
+	init();
+	if(detail)
+		_detail = detail;
+
+}
+
+WSFault::WSFault(char const *reason, char const *detail, char const *code):Exception(reason, code)
+{
+	init();
+	if(detail)
+		_detail = detail;
+}
+
+WSFault::WSFault(char const *reason, char const* detail, char const *code,  char const *role):Exception(reason, code)
+{
+	init();
+	if(detail)
+		_detail = detail;
+	if(role)
+		_role = role;
+
+}
+
+/**
+* @returns Returns the soap fault detail string                                                  
+*/
+std::string WSFault::getFaultDetail()
+{
+	return _detail;
+}
+
+/**
+* @returns Returns the soap fault role string                                                  
+*/
+std::string WSFault::getFaultRole()
+{
+	return _role;
+}
+
+/**
+* Sets Soap Fault detail information
+* @param detail SOAP Fault detail information.
+*/
+void WSFault::setFaultDetail(char const* detail)
+{
+	if(detail)
+		_detail = detail;
+}
+/**
+* Sets Soap Fault detail information
+* @param role SOAPFault role information
+*/
+void WSFault::setFaultRole(char const* role)
+{
+	if(role)
+		_role = role;
 }
 
  /** @brief (one liner)
