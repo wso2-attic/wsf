@@ -168,7 +168,7 @@ class <xsl:value-of select="@name"/> : public wso2wsf::Stub
                 <xsl:otherwise>
                       <xsl:for-each select="input/param[@type!='']">
                           <xsl:if test="position() > 1"><xsl:text>,</xsl:text></xsl:if>
-                          <xsl:value-of select="@type"/><xsl:text>* _</xsl:text><xsl:value-of select="@name"/>
+                          <xsl:value-of select="@type"/><xsl:if test="@type!='wso2wsf::OMElement*'"><xsl:text>* </xsl:text></xsl:if> _<xsl:value-of select="@name"/>
                       </xsl:for-each>
                 </xsl:otherwise>
                 </xsl:choose>
@@ -224,7 +224,7 @@ class <xsl:value-of select="@name"/> : public wso2wsf::Stub
             <xsl:otherwise>
                                               <xsl:for-each select="input/param[@type!='']">
                                                   <xsl:if test="position() > 1"><xsl:text>,</xsl:text></xsl:if>
-                                                  <xsl:value-of select="@type"/><xsl:text>* _</xsl:text><xsl:value-of select="@name"/>
+                                                  <xsl:value-of select="@type"/><xsl:if test="@type! ='wso2wsf::OMElement*'"><xsl:text>* </xsl:text></xsl:if> _<xsl:value-of select="@name"/>
                                               </xsl:for-each>
             </xsl:otherwise>
             </xsl:choose>

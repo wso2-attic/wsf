@@ -243,7 +243,7 @@
              <xsl:otherwise>
                                            <xsl:for-each select="input/param[@type!='']">
                                                <xsl:if test="position() > 1"><xsl:text>,</xsl:text></xsl:if>
-                                               <xsl:value-of select="@type"/><xsl:text>* _</xsl:text><xsl:value-of select="@name"/>
+                                               <xsl:value-of select="@type"/><xsl:if test="@type!='wso2wsf::OMElement*'"><xsl:text>* </xsl:text></xsl:if> _<xsl:value-of select="@name"/>
                                            </xsl:for-each>
              </xsl:otherwise>
              </xsl:choose>
@@ -326,7 +326,7 @@
                        </xsl:choose>
                    </xsl:when>
                    <xsl:otherwise>
-                       payload = _<xsl:value-of select="$firstParam/@name"/>;
+                       payload = _<xsl:value-of select="$firstParam/@name"/>->getAxiomNode();
                    </xsl:otherwise>
                </xsl:choose>
             </xsl:if>
@@ -635,13 +635,13 @@
                                 ret_val->get<xsl:value-of select="output/param/param/@partname"/>()<xsl:if test="output/param/@complextype">)</xsl:if>;
                        </xsl:when>
                        <xsl:otherwise>
-                            return ret_val;
+                            return new wso2wsf::OMElement(NULL, ret_val);
                        </xsl:otherwise>
                    </xsl:choose>
 
                 </xsl:when>
                 <xsl:otherwise>
-                    return ret_node;
+                    return new wso2wsf::OMElement(NULL, ret_node);
                 </xsl:otherwise>
             </xsl:choose>
         }
@@ -674,7 +674,7 @@
         <xsl:otherwise>
                                           <xsl:for-each select="input/param[@type!='']">
                                               <xsl:if test="position() > 1"><xsl:text>,</xsl:text></xsl:if>
-                                              <xsl:value-of select="@type"/><!--xsl:if test="input/param/@ours"></xsl:if--><xsl:text>*</xsl:text><xsl:text> _</xsl:text><xsl:value-of select="@name"/>
+                                              <xsl:value-of select="@type"/><xsl:if test="@type!='wso2wsf::OMElement*'"><xsl:text>* </xsl:text></xsl:if><xsl:text> _</xsl:text><xsl:value-of select="@name"/>
                                           </xsl:for-each>
         </xsl:otherwise>
         </xsl:choose>
@@ -958,7 +958,7 @@
                      </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
-                     callback->receiveResult_<xsl:value-of select="@name"/>(ret_node<xsl:for-each select="output/param[@location='soap_header']">,
+                     callback->receiveResult_<xsl:value-of select="@name"/>(new OMElement(NULL, ret_node)<xsl:for-each select="output/param[@location='soap_header']">,
                                               <xsl:text>_</xsl:text><xsl:value-of select="@name"/>
                                               </xsl:for-each>);
                 </xsl:otherwise>
@@ -1045,7 +1045,7 @@
                        </xsl:choose>
                    </xsl:when>
                    <xsl:otherwise>
-                       payload = _<xsl:value-of select="$firstParam/@name"/>;
+                       payload = _<xsl:value-of select="$firstParam/@name"/>->getAxiomNode();
                    </xsl:otherwise>
                </xsl:choose>
             </xsl:if>
@@ -1113,7 +1113,7 @@
             </xsl:choose>
 
             callback = axis2_callback_create(Environment::getEnv());
-            /* Set our on_complete fucntion pointer to the callback object */
+            /* Set our on_complete function pointer to the callback object */
             axis2_callback_set_on_complete(callback, axis2_stub_on_complete_<xsl:value-of select="$servicename"/>_<xsl:value-of select="@name"/>);
             /* Set our on_error function pointer to the callback object */
             axis2_callback_set_on_error(callback, axis2_stub_on_error_<xsl:value-of select="$servicename"/>_<xsl:value-of select="@name"/>);
