@@ -28,19 +28,21 @@ using namespace std;
 
 WSF_SERVICE_INIT(NotifyService)
 
-OMElement* NotifyService::invoke(OMElement *ele, MessageContext *msgCtx)
+OMElement* NotifyService::notify(OMElement *message)
 {
 	try
 	{
-		OMText *text = dynamic_cast<OMText*>(ele->getFirstChild());
+		OMText *text = dynamic_cast<OMText*>(message->getFirstChild());
 		string notifyMessage = text->getValue();
-		//WSF_LOG_DEBUG_MSG(notifyMessage);
 	}
-	catch (bad_cast)
-	{
-		
-	}
-	
+	catch (bad_cast){}
+	return NULL;
+}
+
+OMElement* NotifyService::invoke(OMElement *message, MessageContext *msgCtx)
+{
+	if(message)
+		return notify(message);
 	return NULL;
 }
 

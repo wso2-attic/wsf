@@ -31,6 +31,8 @@ public:
 	OMElement* WSF_CALL invoke(OMElement *message, MessageContext *msgCtx);
 	
 	OMElement* WSF_CALL onFault(OMElement *message);
+
+	OMElement* WSF_CALL notify(OMElement *message);
 	
 	void WSF_CALL init(){};
 };
