@@ -431,6 +431,9 @@ namespace wso2wsf
 	 * user. Before freeing the message context use 
 	 */
 	WSF_EXTERN MessageContext* WSF_CALL	getOutMessageContext();
+    
+    WSF_EXTERN bool WSF_CALL close();
+
     };
     /** @} */
 }

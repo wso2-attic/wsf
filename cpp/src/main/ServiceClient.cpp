@@ -736,3 +736,13 @@ MessageContext* WSF_CALL ServiceClient::getOutMessageContext()
 {
 	return getMessageContext(AXIS2_WSDL_MESSAGE_LABEL_OUT);
 }
+    
+bool WSF_CALL ServiceClient::close()
+{
+    axis2_status_t status = AXIS2_FAILURE;
+
+    status = axis2_svc_client_close(_wsf_service_client, Environment::getEnv());
+	
+    return status ? true: false;
+}
+
