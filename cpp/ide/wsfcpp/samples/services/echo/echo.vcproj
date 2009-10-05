@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="E:\svnwork\cpp\include;&quot;E:\svnwork\cpp\wso2-wsf-cpp-bin-1.1.0-win32\include&quot;;&quot;E:\svnwork\cpp\wso2-wsf-cpp-bin-1.1.0-win32\include\platforms&quot;;E:\svnwork\cpp\examples\services\versioncpp"
+				AdditionalIncludeDirectories="E:\wsfcpp\cpp\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;ECHO_EXPORTS;AXIS2_DECLARE_EXPORT;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,9 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="axutil.lib wso2_wsf.lib"
+				AdditionalDependencies="wso2_wsf.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;E:\svnwork\cpp\wso2-wsf-cpp-bin-1.1.0-win32\lib&quot;"
+				AdditionalLibraryDirectories="$(WSFCPP_HOME)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"

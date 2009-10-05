@@ -40,6 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="E:\wsfcpp\cpp\include;$(WSFCPP_HOME)\include;$(WSFCPP_HOME)\include\platforms;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;AXIS2_DECLARE_EXPORT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,6 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="wso2_wsf.lib wso2_wsf_security.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(WSFCPP_HOME)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"

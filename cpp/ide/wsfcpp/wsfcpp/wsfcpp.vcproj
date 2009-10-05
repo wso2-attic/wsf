@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="E:\wsfcpp\cpp\include;&quot;E:\wsfcpp\cpp\wsf_c\wso2-wsf-c-bin-2.0.0-win32\include&quot;;&quot;E:\wsfcpp\cpp\wsf_c\wso2-wsf-c-bin-2.0.0-win32\include\platforms&quot;"
+				AdditionalIncludeDirectories="E:\wsfcpp\cpp\include;$(WSFCPP_HOME)\include;$(WSFCPP_HOME)\include\platforms"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;WSFCPP_EXPORTS;AXIS2_DECLARE_EXPORT;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="axis2_engine.lib axis2_parser.lib axutil.lib axiom.lib neethi.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;E:\svnwork\cpp\wso2-wsf-cpp-bin-1.1.0-win32\lib&quot;"
+				AdditionalLibraryDirectories="$(WSFCPP_HOME)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -179,10 +179,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\src\main\AxisFault.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\main\Environment.cpp"
 				>
 			</File>
@@ -239,6 +235,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\main\WSFault.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\main\WSFException.cpp"
 				>
 			</File>
@@ -254,10 +254,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\AuthenticationProvider.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\AxisFault.h"
 				>
 			</File>
 			<File
@@ -334,6 +330,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\Stub.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\WSFault.h"
 				>
 			</File>
 			<File

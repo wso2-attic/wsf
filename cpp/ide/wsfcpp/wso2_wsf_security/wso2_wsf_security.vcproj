@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="..\..\..\wso2-wsf-cpp-bin-2.1.0-win32\lib"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -63,6 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="wso2_wsf.lib rampart.lib axutil.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(WSFCPP_HOME)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"

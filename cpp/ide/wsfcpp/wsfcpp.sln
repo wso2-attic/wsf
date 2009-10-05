@@ -2,11 +2,14 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wso2_wsf", "wsfcpp\wsfcpp.vcproj", "{CE366ECF-5420-4B6F-8C10-0AC014031117}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D30AB8C9-3641-4C2D-8A7A-4EF7B0FFBA44} = {D30AB8C9-3641-4C2D-8A7A-4EF7B0FFBA44}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "echo", "samples\echo\echo.vcproj", "{29C5EC95-67EE-4F90-B29B-175A007E6F94}"
 	ProjectSection(ProjectDependencies) = postProject
-		{9C71E767-335E-49B6-94BC-B359038479C1} = {9C71E767-335E-49B6-94BC-B359038479C1}
 		{CE366ECF-5420-4B6F-8C10-0AC014031117} = {CE366ECF-5420-4B6F-8C10-0AC014031117}
+		{9C71E767-335E-49B6-94BC-B359038479C1} = {9C71E767-335E-49B6-94BC-B359038479C1}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "echo_blocking", "samples\echo_blocking\echo_blocking.vcproj", "{D4FA0FA4-EC1F-4FBE-B45C-9BEED251CFC8}"
@@ -22,8 +25,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "echo_non_blocking_dual", "samples\echo_non_blocking_dual\echo_non_blocking_dual.vcproj", "{5B2D3E6D-AABE-4B08-9DF9-28DF3115013C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "echo_rest", "samples\echo_rest\echo_rest.vcproj", "{D7CF2674-D85D-4256-B440-B49F116B1957}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "echo_security", "samples\echo_security\echo_security.vcproj", "{B2AC7AB8-6ABA-45E6-95DA-4E3D8C8193AE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "flickr", "samples\flickr\flickr.vcproj", "{AEEE4D37-BB4D-4B39-B9C9-201A6A2CBA56}"
 EndProject
@@ -42,6 +43,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "security", "security", "{4A183623-2475-4851-BA65-A198B31551AC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sec_echo", "samples\sec_echo\sec_echo.vcproj", "{101DC893-FEAB-45F9-BEFA-93A5CCE58B67}"
+	ProjectSection(ProjectDependencies) = postProject
+		{93908B86-5A97-4D56-A03C-A82F8016F176} = {93908B86-5A97-4D56-A03C-A82F8016F176}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "buildfiles", "buildfiles", "{68459F8C-C2A1-4FDF-AA2B-CB16B8F20DAF}"
 	ProjectSection(SolutionItems) = preProject
@@ -62,6 +66,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "buildfiles", "buildfiles", 
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wsf_cpp_msg_recv", "wsf_cpp_msg_recv\wsf_cpp_msg_recv.vcproj", "{9C71E767-335E-49B6-94BC-B359038479C1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CE366ECF-5420-4B6F-8C10-0AC014031117} = {CE366ECF-5420-4B6F-8C10-0AC014031117}
+		{93908B86-5A97-4D56-A03C-A82F8016F176} = {93908B86-5A97-4D56-A03C-A82F8016F176}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{B73BE2C9-9A9F-49ED-9692-608C15A5B6AA}"
 EndProject
@@ -78,6 +86,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "notify", "samples\services\notify\notify.vcproj", "{53AAA392-CC79-43BC-9D86-15EAD57824E5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wso2_wsf_security", "wso2_wsf_security\wso2_wsf_security.vcproj", "{93908B86-5A97-4D56-A03C-A82F8016F176}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CE366ECF-5420-4B6F-8C10-0AC014031117} = {CE366ECF-5420-4B6F-8C10-0AC014031117}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -121,10 +132,6 @@ Global
 		{D7CF2674-D85D-4256-B440-B49F116B1957}.Debug|Win32.Build.0 = Debug|Win32
 		{D7CF2674-D85D-4256-B440-B49F116B1957}.Release|Win32.ActiveCfg = Release|Win32
 		{D7CF2674-D85D-4256-B440-B49F116B1957}.Release|Win32.Build.0 = Release|Win32
-		{B2AC7AB8-6ABA-45E6-95DA-4E3D8C8193AE}.Debug|Win32.ActiveCfg = Debug|Win32
-		{B2AC7AB8-6ABA-45E6-95DA-4E3D8C8193AE}.Debug|Win32.Build.0 = Debug|Win32
-		{B2AC7AB8-6ABA-45E6-95DA-4E3D8C8193AE}.Release|Win32.ActiveCfg = Release|Win32
-		{B2AC7AB8-6ABA-45E6-95DA-4E3D8C8193AE}.Release|Win32.Build.0 = Release|Win32
 		{AEEE4D37-BB4D-4B39-B9C9-201A6A2CBA56}.Debug|Win32.ActiveCfg = Debug|Win32
 		{AEEE4D37-BB4D-4B39-B9C9-201A6A2CBA56}.Debug|Win32.Build.0 = Debug|Win32
 		{AEEE4D37-BB4D-4B39-B9C9-201A6A2CBA56}.Release|Win32.ActiveCfg = Release|Win32
@@ -194,7 +201,6 @@ Global
 		{D9771CCC-8E30-4B09-A3F8-DC6EE9AB2847} = {B45880FF-9545-487D-BF19-5470A1DF33ED}
 		{5B2D3E6D-AABE-4B08-9DF9-28DF3115013C} = {B45880FF-9545-487D-BF19-5470A1DF33ED}
 		{D7CF2674-D85D-4256-B440-B49F116B1957} = {B45880FF-9545-487D-BF19-5470A1DF33ED}
-		{B2AC7AB8-6ABA-45E6-95DA-4E3D8C8193AE} = {B45880FF-9545-487D-BF19-5470A1DF33ED}
 		{AEEE4D37-BB4D-4B39-B9C9-201A6A2CBA56} = {B45880FF-9545-487D-BF19-5470A1DF33ED}
 		{29C5EC95-67EE-4F90-B29B-175A007E6F94} = {B45880FF-9545-487D-BF19-5470A1DF33ED}
 		{D4FA0FA4-EC1F-4FBE-B45C-9BEED251CFC8} = {B45880FF-9545-487D-BF19-5470A1DF33ED}
