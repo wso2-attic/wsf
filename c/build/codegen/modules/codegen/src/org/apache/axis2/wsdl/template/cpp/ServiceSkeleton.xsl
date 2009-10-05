@@ -45,6 +45,7 @@
         #include &lt;stdio.h&gt;
         #include &lt;axis2_svc.h&gt;
         #include &lt;Environment.h&gt;
+        #include &lt;axiom_soap.h&gt;
 
 
         using namespace wso2wsf;
@@ -374,7 +375,7 @@
                             return NULL;      
                         }
                         </xsl:when>
-                        <xsl:otherwise>content_node;</xsl:otherwise>
+                        <xsl:otherwise>new OMElement(NULL, content_node);</xsl:otherwise>
                         </xsl:choose>
                     </xsl:if>
 
@@ -532,7 +533,11 @@
                                             delete input_val<xsl:value-of select="$position"/>;
                                         </xsl:if>
                                       </xsl:when>
-                                      <xsl:otherwise>delete ret_val<xsl:value-of select="$position"/>;</xsl:otherwise>
+                                      <xsl:otherwise>
+                                          ret_val<xsl:value-of select="$position"/>->getAxiomNode();
+                                          ret_val<xsl:value-of select="$position"/>->setAxiomNode(NULL);
+                                          delete ret_val<xsl:value-of select="$position"/>;
+                                      </xsl:otherwise>
                                     </xsl:choose>
                         <xsl:if test="output/param[@location='soap_header']">
                         res_soap_env = axis2_msg_ctx_get_response_soap_envelope(msg_ctx, Environment::getEnv());
