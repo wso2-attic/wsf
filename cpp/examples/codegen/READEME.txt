@@ -80,9 +80,9 @@ Files
  This is a  simple calculator web service and a client with the service implementing calculation operations addition, substraction, 
  division and multiplication.
 	Client source       ./Calculator/client/Calculator.cpp
-		unwrapped   ./Calculator/client/unwrapped/Calculator.cpp
+		wrapped   ./Calculator/client/wrapped/Calculator.cpp
 	Service Source	    ./Calculator/service/CalculatorSkeleton.cpp
-		unwrapped   ./Calculator/service/unwrapped/CalculatorSkeleton.cpp
+		wrapped   ./Calculator/service/wrapped/CalculatorSkeleton.cpp
 	wsdl		    ./Calculator/Calculator.wsdl
 
 
