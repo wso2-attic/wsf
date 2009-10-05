@@ -91,6 +91,11 @@
         *  <xsl:value-of select="$axis2_name"/> class
         */
 
+        namespace <xsl:value-of select="@cppNamespace"/>{
+            class <xsl:value-of select="$name"/>;
+        }
+        
+
         <xsl:for-each select="property">
           <xsl:if test="@ours">
           <xsl:variable name="propertyType" select="@type"/>
