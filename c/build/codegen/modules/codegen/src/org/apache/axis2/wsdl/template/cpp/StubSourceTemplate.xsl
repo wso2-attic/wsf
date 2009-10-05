@@ -115,7 +115,7 @@
          axiom_node_t *policy_node = NULL;
          axiom_element_t *policy_root_ele = NULL;
          neethi_policy_t *neethi_policy = NULL;
-         axis2_status_t status;
+
 
          /* Modifying the Service */
 	 svc_client = serviceClient->getAxis2SvcClient();
@@ -165,7 +165,7 @@
            policy_root_ele = (axiom_element_t *) axiom_node_get_data_element (policy_node, Environment::getEnv());
 
            neethi_policy = neethi_engine_get_policy (Environment::getEnv(), policy_node, policy_root_ele);
-           status = axis2_svc_client_set_policy(svc_client, Environment::getEnv(), neethi_policy);
+            axis2_status_t status = axis2_svc_client_set_policy(svc_client, Environment::getEnv(), neethi_policy);
 
            if(status == AXIS2_FAILURE)
            {
@@ -635,7 +635,7 @@
                                 ret_val->get<xsl:value-of select="output/param/param/@partname"/>()<xsl:if test="output/param/@complextype">)</xsl:if>;
                        </xsl:when>
                        <xsl:otherwise>
-                            return new wso2wsf::OMElement(NULL, ret_val);
+                            return ret_val;
                        </xsl:otherwise>
                    </xsl:choose>
 
