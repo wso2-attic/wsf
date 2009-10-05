@@ -1,0 +1,166 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.wsf.jython</groupId>
+    <artifactId>org.wso2.wsf.jython.deployer</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-alpha</version>
+    <name>WSO2 WSF Jython Deployer - Parent</name>
+    <url>http://wso2.org</url>
+    <inceptionYear>2008</inceptionYear>
+    <!-- ========== -->
+    <!-- Developers -->
+    <!-- ========== -->
+    <developers>
+        <developer>
+            <name>Keith Chapman</name>
+            <id>keith</id>
+            <email>keith AT wso2.com</email>
+            <organization>WSO2 Inc.</organization>
+            <organizationUrl>http://www.wso2.org</organizationUrl>
+        </developer>
+        <developer>
+            <name>Heshan suriyaarachchi</name>
+            <id>heshan</id>
+            <email>heshan AT wso2.com</email>
+            <organization>WSO2 Inc.</organization>
+            <organizationUrl>http://www.wso2.org</organizationUrl>
+        </developer>
+    </developers>
+
+    <!-- Environmental Settings -->
+    <issueManagement>
+        <system>JIRA</system>
+        <url>https://wso2.org/jira/browse/WSFJYTHON</url>
+    </issueManagement>
+
+    <repositories>
+        <repository>
+            <id>wso2-maven2-repository</id>
+            <url>http://dist.wso2.org/maven2</url>
+        </repository>
+        <repository>
+            <id>ws-zones-repository</id>
+            <url>http://ws.zones.apache.org/repository2</url>
+        </repository>
+        <repository>
+            <id>apache-snapshots</id>
+            <name>Apache Development Repository</name>
+            <url>http://people.apache.org/repo/m2-snapshot-repository</url>
+        </repository>
+        <!--repository>
+            <id>ibiblio repo</id>
+            <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
+        </repository-->
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>wso2-maven2-repository</id>
+            <name>WSO2 Maven2 Repository</name>
+            <url>sftp://maven2@dist.wso2.org/home/httpd/dist.wso2.org/maven2</url>
+        </repository>
+        <snapshotRepository>
+            <id>wso2-maven2-snapshot-repository</id>
+            <name>WSO2 Maven2 Repository</name>
+            <url>sftp://maven2@dist.wso2.org/home/httpd/dist.wso2.org/maven2</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <modules>
+        <module>core</module>
+        <module>distribution</module>
+    </modules>
+
+    <dependencies>
+
+        <!-- Jython dependencies -->
+        <dependency>
+            <groupId>org.python</groupId>
+            <artifactId>jython</artifactId>
+            <version>${jython.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-api</artifactId>
+            <version>${axiom.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-impl</artifactId>
+            <version>${axiom.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-dom</artifactId>
+            <version>${axiom.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.schema</groupId>
+            <artifactId>XmlSchema</artifactId>
+            <version>${XmlSchema.version}</version>
+        </dependency>
+        <!-- STAX implementation used in WSAS -->
+        <dependency>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>wstx-asl</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2</artifactId>
+            <version>${axis2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>${commons.logging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- Build Settings -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0</version>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.2</version>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+        <wsf-jython.version>1.0-alpha</wsf-jython.version>
+        <axis2.version>1.4.1</axis2.version>
+        <axiom.version>1.2.7</axiom.version>
+        <XmlSchema.version>1.4.2</XmlSchema.version>
+        <commons.logging.version>1.1.1</commons.logging.version>
+        <log4j.version>1.2.13</log4j.version>
+        <woodstox.version>3.2.1</woodstox.version>
+        <jython.version>2.2.1</jython.version>        
+    </properties>
+</project>
