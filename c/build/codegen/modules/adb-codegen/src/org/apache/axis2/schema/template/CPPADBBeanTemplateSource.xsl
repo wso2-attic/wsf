@@ -1430,7 +1430,7 @@
                                 </xsl:choose>
                                   if (axutil_qname_equals(element_qname, Environment::getEnv(), mqname)<xsl:if test="not(@nsuri) or @nsuri=''"> || !axutil_strcmp("<xsl:value-of select="$propertyName"/>", axiom_element_get_localname(current_element, Environment::getEnv()))</xsl:if>)
                                   {
-                                       /* found the requried element */
+                                       /* found the required element */
                                        break;
                                   }
                                }
@@ -2356,7 +2356,7 @@
                                   </xsl:otherwise>
                                 </xsl:choose>
                                 /*
-                                 * because elements are not ordered we should surf all the sibling to pick the right one
+                                 * because elements are not ordered we should surf all the siblings to pick the right one
                                  */
                                <!-- For non-ordered arrays we are not using is_early_node_valid? -->
                                for (i = 0, current_node = first_node; current_node != NULL; <xsl:if test="not(@any)">current_node = axiom_node_get_next_sibling(current_node, Environment::getEnv())</xsl:if>)
@@ -2371,17 +2371,17 @@
                                   }
                                   <xsl:if test="not(@any)">
                                   current_element = (axiom_element_t *)axiom_node_get_data_element(current_node, Environment::getEnv());
-                                  qname = axiom_element_get_qname(current_element, Environment::getEnv(), current_node);
+                                  mqname = axiom_element_get_qname(current_element, Environment::getEnv(), current_node);
 
-                                  if (axutil_qname_equals(element_qname, Environment::getEnv(), qname)<xsl:if test="not(@nsuri) or @nsuri=''"> || !axutil_strcmp("<xsl:value-of select="$propertyName"/>", axiom_element_get_localname(current_element, Environment::getEnv()))</xsl:if>)
+                                  if (axutil_qname_equals(element_qname, Environment::getEnv(), mqname)<xsl:if test="not(@nsuri) or @nsuri=''"> || !axutil_strcmp("<xsl:value-of select="$propertyName"/>", axiom_element_get_localname(current_element, Environment::getEnv()))</xsl:if>)
                                   {
                                   </xsl:if>
-                                       /* found the requried element */
+                                       /* found the required element */
                                        is_early_node_valid = true;
                                       <!-- changes to following choose tag should be changed in another 2 places -->
                                      <xsl:choose>
                                         <xsl:when test="@ours">
-                                          <xsl:value-of select="@type"/>* element = <xsl:value-of select="@type"/>();
+                                          <xsl:value-of select="@type"/>* element = new <xsl:value-of select="@type"/>();
                                           
                                           status =  element->deserialize(&amp;current_node, &amp;is_early_node_valid, <xsl:choose><xsl:when test="$choice">true</xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose>);
                                           if(AXIS2_FAILURE ==  status)
@@ -2392,14 +2392,14 @@
                                           }
                                           else
                                           {
-                                             push_back(element);
+                                             arr_list->push_back(element);
                                           }
                                         </xsl:when>
                                         <xsl:when test="$nativePropertyType='std::string'">
                                           text_value = axiom_element_get_text(current_element, Environment::getEnv(), current_node);
                                           if(text_value != NULL)
                                           {
-                                                arr_list->push_back(axutil_strdup(Environment::getEnv(), text_value));
+                                                arr_list->push_back(new std::string(text_value));
                                           }
                                           <xsl:if test="not(@nillable)">
                                           else
@@ -2457,7 +2457,7 @@
                                               else
                                               {
                                                   /* after all, we found this is a empty string */
-                                                  arr_list->push_back(axutil_strdup(Environment::getEnv(), ""));
+                                                  arr_list->push_back(new std::string(""));
                                               }
                                           }
                                           </xsl:if>
@@ -5105,7 +5105,7 @@
             {
                  <xsl:value-of select="$PropertyTypeArrayParam"/> element;
                 int size = 0;
-                int j;
+
                 int non_nil_count;
                 bool non_nil_exists = false;
 
@@ -5143,7 +5143,7 @@
                         if(property_<xsl:value-of select="$CName"/> != NULL)
                         {
                             size = property_<xsl:value-of select="$CName"/>->size();
-                            for(j = 0, non_nil_count = 0; j &lt; size; j ++ )
+                            for(int j = 0, non_nil_count = 0; j &lt; size; j ++ )
                             {
                                 if(i == j) continue; <!-- should not count the ith element -->
                                 if(NULL != (*property_<xsl:value-of select="$CName"/>)[i])
