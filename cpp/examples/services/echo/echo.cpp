@@ -20,7 +20,7 @@
 #include <axutil_env.h>
 #include <Environment.h>
 #include "Echo.h"
-
+#include <typeinfo>
 using namespace wso2wsf;
 /** Load the service into axis2 engine */
 WSF_SERVICE_INIT(Echo)
