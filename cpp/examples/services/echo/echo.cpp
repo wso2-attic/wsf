@@ -16,11 +16,11 @@
 
 
 #include <stdio.h>
+#include <typeinfo>
 #include <OMElement.h>
 #include <axutil_env.h>
 #include <Environment.h>
 #include "Echo.h"
-#include <typeinfo>
 using namespace wso2wsf;
 /** Load the service into axis2 engine */
 WSF_SERVICE_INIT(Echo)
@@ -46,7 +46,7 @@ OMElement* Echo::echoString(OMElement *msg)
 			return echoEle;
 		}
 	}
-	catch (bad_cast)
+	catch(std::bad_cast)
 	{
 		std::cout<<"Caught Bad Cast exception"<<std::endl;
 	}
