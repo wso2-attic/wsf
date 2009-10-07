@@ -45,3 +45,8 @@ The trader util implements Exchange_Trader client which talks to the ExchangeTra
 The TraderClient Service Implements the Trader_Client.wsdl and uses the trader util classes to invoke the Exchange web service for stockmarket activities. 
 
 Note that all the operations in the services are not implemented. Only the necessary operations for demonstration purpose has been implemented. 
+
+5. Viewing the exchanged messages
+----------------------------------
+
+use a tool like tcpmon. Start the server on a different port to port 9090. You will observer how the messages are exchaged between services.
