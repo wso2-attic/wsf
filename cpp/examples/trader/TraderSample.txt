@@ -1,4 +1,4 @@
-Trader Sample is a sample which demostrate how to use codegenerated code alone with multiple services
+Trader Sample is a sample which demonstrate how to use codegenerated code alone with multiple services
 to implement a somewhat complex web service senario.
 
 The main compopents of this sample is as follows.
@@ -37,7 +37,7 @@ stockmarket implemented using a map of users and a map of symbols. The operation
 3. Trader Util
 --------------
 
-The trader util implements Exchange_Trader client which talks to the ExchangeTrader service and invokes the necessary operations.
+The trader util is a codegenerate client of Exchange_Trader WSDL which talks to the ExchangeTrader service and invokes the necessary operations.
 
 4. TraderClient service.
 ------------------------
