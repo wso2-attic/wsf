@@ -33,12 +33,24 @@ OMElement* Echo::echoString(OMElement *msg)
 	{
 		ns = new OMNamespace(inputNamespace->getURI(), inputNamespace->getPrefix());
 	}
-	
-	OMElement *echoEle = new OMElement(msg->getLocalname(), ns);
-	OMElement *text = new OMElement("text");
-	echoEle->addChild(text);
-	text->setText("Hello World");
-	return echoEle;
+	try
+	{
+		OMElement *childEle = dynamic_cast<OMElement*>(msg->getFirstChild());
+		if(childEle)
+		{
+			std::string childtext = childEle->getText();
+			OMElement *echoEle = new OMElement(msg->getLocalname(), ns);
+			OMElement *text = new OMElement(childtext);
+			echoEle->addChild(text);
+			text->setText("Hello World");
+			return echoEle;
+		}
+	}
+	catch (bad_cast)
+	{
+		std::cout<<"Caught Bad Cast exception"<<std::endl;
+	}
+	return NULL;
 }
 
 OMElement* Echo::invoke(OMElement *ele, MessageContext *msgCtx)

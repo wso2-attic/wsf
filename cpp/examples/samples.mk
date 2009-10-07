@@ -240,11 +240,63 @@ copy_scripts:
 
 wsfcpp_callback: password_callback authentication_provider replay_detector sct_provider
 
+######################### Trader Sample
+
+TRADER_HOME = trader
+TRADER_UTIL = $(TRADER_HOME)\util
+TRADER_CLIENT = $(TRADER_HOME)\client
+TRADER_EXCHANGE = $(TRADER_HOME)\exchange
+TRADER_TRADER_UTIL = $(TRADER_HOME)\trader\trader-util
+TRADER_TRADER_CLIENT = $(TRADER_HOME)\trader\trader-client
+
+trader_intdirs:
+	@if not exist $(TRADER_UTIL)\int.msvc mkdir $(TRADER_UTIL)\int.msvc
+	@if not exist $(TRADER_CLIENT)\int.msvc mkdir $(TRADER_CLIENT)\int.msvc
+	@if not exist $(TRADER_EXCHANGE)\int.msvc mkdir $(TRADER_EXCHANGE)\int.msvc
+	@if not exist $(TRADER_TRADER_UTIL)\int.msvc mkdir $(TRADER_TRADER_UTIL)\int.msvc
+	@if not exist $(TRADER_TRADER_CLIENT)\int.msvc mkdir $(TRADER_TRADER_CLIENT)\int.msvc
+
+trader_util:
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) /I$(TRADER_HOME)\include $(TRADER_UTIL)\*.cpp /Fo$(TRADER_UTIL)\int.msvc\ /c
+
+trader_client:
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) /I$(TRADER_HOME)\include /I$(TRADER_CLIENT) $(TRADER_CLIENT)\*.cpp /Fo$(TRADER_CLIENT)\int.msvc\ /c
+	$(LD) $(LDFLAGS) $(TRADER_CLIENT)\int.msvc\*.obj $(TRADER_UTIL)\int.msvc\*.obj $(LIBS) /OUT:$(WSFCPP_SAMPLES_DIR)\TraderClient.exe
+	if exist $(WSFCPP_SAMPLES_DIR)\TraderClient.exe.manifest $(MT) -nologo -manifest $(WSFCPP_SAMPLES_DIR)\TraderClient.exe.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\TraderClient.exe;1
+
+trader_trader_util:
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) /I$(TRADER_HOME)\include /I$(TRADER_TRADER_UTIL)\ $(TRADER_TRADER_UTIL)\*.cpp /Fo$(TRADER_TRADER_UTIL)\int.msvc\ /c
+
+trader_trader_service:
+	@if not exist $(WSFCPP_HOME_DIR)\services\TraderClient mkdir $(WSFCPP_HOME_DIR)\services\TraderClient
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) /I$(TRADER_HOME)\include /I$(TRADER_TRADER_CLIENT)\ /I$(TRADER_TRADER_UTIL)\ $(TRADER_TRADER_CLIENT)\*.cpp /Fo$(TRADER_TRADER_CLIENT)\int.msvc\ /c
+	$(LD) $(LDFLAGS) $(TRADER_TRADER_CLIENT)\int.msvc\*.obj $(TRADER_UTIL)\int.msvc\*.obj $(TRADER_TRADER_UTIL)\int.msvc\*.obj $(LIBS) /DLL \
+	/OUT:$(WSFCPP_HOME_DIR)\services\TraderClient\TraderClient.dll
+	if exist $(WSFCPP_HOME_DIR)\services\TraderClient.dll.manifest $(MT) -nologo -manifest $(WSFCPP_HOME_DIR)\services\TraderClient.dll.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\services\TraderClient.dll;2
+	copy /Y $(TRADER_TRADER_CLIENT)\services.xml $(WSFCPP_HOME_DIR)\services\TraderClient\services.xml
+
+exchange_trader_service:
+	@if not exist $(WSFCPP_HOME_DIR)\services\ExchangeTrader mkdir $(WSFCPP_HOME_DIR)\services\ExchangeTrader
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) /I$(TRADER_HOME)\include /I$(TRADER_EXCHANGE)\ $(TRADER_EXCHANGE)\*.cpp /Fo$(TRADER_EXCHANGE)\int.msvc\ /c
+	$(LD) $(LDFLAGS) $(TRADER_EXCHANGE)\int.msvc\*.obj $(TRADER_UTIL)\int.msvc\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_HOME_DIR)\services\ExchangeTrader\ExchangeTrader.dll
+	if exist $(WSFCPP_HOME_DIR)\services\ExchangeTrader.dll.manifest $(MT) -nologo -manifest $(WSFCPP_HOME_DIR)\services\ExchangeTrader.dll.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\services\ExchangeTrader.dll;2
+	copy /Y $(TRADER_EXCHANGE)\services.xml $(WSFCPP_HOME_DIR)\services\ExchangeTrader\services.xml
+
+trader_clean:
+	@if exist $(TRADER_UTIL)\int.msvc rmdir /S /Q $(TRADER_UTIL)\int.msvc
+	@if exist $(TRADER_CLIENT)\int.msvc rmdir /S /Q $(TRADER_CLIENT)\int.msvc
+	@if exist $(TRADER_EXCHANGE)\int.msvc rmdir /S /Q $(TRADER_EXCHANGE)\int.msvc
+	@if exist $(TRADER_TRADER_UTIL)\int.msvc rmdir /S /Q $(TRADER_TRADER_UTIL)\int.msvc
+	@if exist $(TRADER_TRADER_CLIENT)\int.msvc rmdir /S /Q $(TRADER_TRADER_CLIENT)\int.msvc
+
+
+trader: trader_clean trader_intdirs trader_util trader_client trader_trader_util trader_trader_service exchange_trader_service
+
 clean: 
 	@if exist int.msvc rmdir /s /q int.msvc
 		
 !if "$(ENABLE_RAMPARTC)" == "0"
 dist: clean wsfcpp_samples
 !else
-dist: clean wsfcpp_samples wsfcpp_callback copy_scripts
+dist: clean wsfcpp_samples wsfcpp_callback copy_scripts trader
 !endif

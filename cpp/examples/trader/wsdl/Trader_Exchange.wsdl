@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.wso2.org" xmlns:types="http://www.wso2.org/types" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.wso2.org">
+	<types/>
+	<types/>
+	<types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.wso2.org/types" targetNamespace="http://www.wso2.org/types">
+			<element name="updateRequest">
+				<complexType>
+					<sequence>
+						<element name="stock_quote" type="tns:StockQuote"/>
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="StockQuote">
+				<sequence>
+					<element name="name" type="xsd:string"/>
+					<element name="symbol" type="xsd:string"/>
+					<element name="price" type="xsd:float"/>
+					<element name="high" type="xsd:float"/>
+					<element name="low" type="xsd:float"/>
+				</sequence>
+			</complexType>
+		</schema>
+	</types>
+	<message name="updateRequestMessage">
+		<part name="part1" element="types:updateRequest"/>
+	</message>
+	<portType name="MarketDataPortType">
+		<!-- Update -->
+		<operation name="update">
+			<input message="tns:updateRequestMessage"/>
+		</operation>
+	</portType>
+	<binding name="MarketDataBinding" type="tns:MarketDataPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="update">
+			<soap:operation style="document" soapAction="update"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+		</operation>
+	</binding>
+	<service name="TraderExchange">
+		<port name="MarketDataPort" binding="tns:MarketDataBinding">
+			<soap:address location="http://nagoya.apache.org:5049/axis/services/echo"/>
+		</port>
+	</service>
+</definitions>
