@@ -1,0 +1,47 @@
+Trader Sample is a sample which demostrate how to use codegenerated code alone with multiple services
+to implement a somewhat complex web service senario.
+
+The main compopents of this sample is as follows.
+
+1. Trader Client
+=================
+The trader client initialiates the trade activity. This is a codegenerated client for the WSDL Trader_Client.wsdl. The trader client is a command line
+executable where you can specify the parameters to invoke the TraderClient Web Service. The operations implemented by the trader client are as follows.
+
+create-account
+--------------
+	Allows a user to create an account in the trader system. 
+buy
+---
+	Allows an existing user in the system to provide the username and password, symbol for a stock and quantity of stocks and buy the specified number
+	of stocks. The users ability depends on the amount of credit assigned to the user by the system. Usually at least 100 points of credit is assigned
+	and this is a hard coded value since this is only a demo.
+	The valid simbols as as follows
+	ibm  -> IBM
+	wso2 -> WSO2
+	msft -> MICROSOFT
+	sun  -> SUN
+
+sell
+----
+	Allows an existing user in the system to provide the username and password, symbol for a stock and quantity of stocks and buy the specified number
+	of stocks. The symbols are as listed about in the `buy` operation description.
+
+
+
+2. Exchange
+------------
+The TraderExchange Web Service implements the WSDL Exchange_Trader.wsdl which defines operations registerClient, buy, sell ..... The ExchangeTrader web service uses a mock
+stockmarket implemented using a map of users and a map of symbols. The operations registerClient, buy and sell are implemented by this web service. 
+
+3. Trader Util
+--------------
+
+The trader util implements Exchange_Trader client which talks to the ExchangeTrader service and invokes the necessary operations.
+
+4. TraderClient service.
+------------------------
+
+The TraderClient Service Implements the Trader_Client.wsdl and uses the trader util classes to invoke the Exchange web service for stockmarket activities. 
+
+Note that all the operations in the services are not implemented. Only the necessary operations for demonstration purpose has been implemented. 
