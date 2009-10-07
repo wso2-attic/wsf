@@ -28,7 +28,7 @@ SimpleTrader::~SimpleTrader(void)
 
 void org_wso2_www::SimpleTrader::createStockMarket()
 {
-	char *symbol[] = {{"aa"},{"bb"},{"cc"},{"dd"}};
+	char *symbol[] = {{"ibm"},{"wso2"},{"msft"},{"sun"}};
 	char *symbolName[] = {{"IBM"},{"WSO2"},{"MICROSOFT"},{"SUN"}};
 	for(int i = 0; i < 4; i++)
 	{
@@ -81,7 +81,7 @@ ClientData* org_wso2_www::SimpleTrader::getClientData( std::string username, std
 	{
 		ClientData *clientdata = clientInformation[username];
 		std::string pass = clientdata->getPassword();
-		if(pass.compare(password))
+		if(pass.compare(password) == 0)
 		{
 			return clientdata;
 		}

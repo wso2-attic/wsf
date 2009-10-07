@@ -83,7 +83,7 @@ bool buy(std::string user,
 		TradeStatus *sts = response->getTrade_status();
 		if(sts)
 		{
-			std::cout<<"RESULTS: %s \n" << sts->getReason()<<std::endl;
+			std::cout<<"RESULTS: " << sts->getReason()<<std::endl;
 			status = sts->getStatus();
 		}
 	}
