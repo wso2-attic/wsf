@@ -39,4 +39,4 @@ namespace org_wso2_www
 }
 
 
-#endif SIMPLETRADER_H
+#endif /* SIMPLETRADER_H */

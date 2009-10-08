@@ -1,4 +1,3 @@
-TESTS =
 noinst_LTLIBRARIES = libtrader_trader_util.la
 
 libtrader_trader_util_la_SOURCES = ExchangeTraderStub.cpp SimpleTrader.cpp
