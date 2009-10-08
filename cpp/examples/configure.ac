@@ -58,6 +58,7 @@ AC_CONFIG_FILES([Makefile \
     trader/util/Makefile \
     trader/client/Makefile \
     trader/exchange/Makefile \
+    trader/trader/Makefile \
     trader/trader/trader-util/Makefile \
     trader/trader/trader-client/Makefile  
     ])
