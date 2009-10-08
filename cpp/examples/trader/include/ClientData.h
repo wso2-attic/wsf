@@ -70,4 +70,4 @@ namespace org_wso2_www
 	};
 }
 
-#endif CLIENTDATA_H
+#endif /* CLIENTDATA_H */
