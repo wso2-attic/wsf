@@ -1,6 +1,6 @@
 WSO2 WSF/C++ 2.1.0
 ==================
-On top of WSO2 WSF/C++ 2.0.0, following changes were done.
+On top of WSO2 WSF/C++ 2.0.1, following changes were done.
 1. API documentation Improved
 	* Documented all the classes and methods and fixed the issues found
 	 in the documentation.
@@ -28,7 +28,13 @@ On top of WSO2 WSF/C++ 2.0.0, following changes were done.
 
 7. Many Memory Leaks Fixed.
 	* Many memory leaks have been fixed for this release.
-	
+
+WSO2 WSF/C++ 2.0.1
+==================
+Patch release. 
+1. Added the Stub.cpp file which is missing in the 2.0.0 release.
+2. Fixed an issue in the Environment class which caused crash issues on 
+multithreaded environments.
 
 WSO2 WSF/C++ 2.0.0
 ==================
