@@ -25,6 +25,7 @@
 
 /**
  * @file OMText.h
+ * @brief OMText reperesents text within Axiom
  */
 
 /**

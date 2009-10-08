@@ -25,6 +25,8 @@
 
 /**
  * @file AuthenticationProvider.h
+ * @brief  AuthenticationProvider class, the interface for implementing authentication with WS-Security
+ * is defined here.
  */
 
 /**

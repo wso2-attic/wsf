@@ -25,6 +25,7 @@
 
 /**
 * @file Environment.h
+* @brief Environment wraps the axis2 environment used within axis2/c and wsf/c and manages it with thread local storage
 */
 
 /**
@@ -87,7 +88,10 @@ namespace wso2wsf
 	};
 
 	/**
-	 *@brief Class Environment
+	 *@brief Class Environment wraps the underlying axis2_environment which deals with memory allocation,
+	 * threading, logging and error handling within the framework. Environment class hides all the complexcities of 
+	 * these  and provides a simple inteface. All the methods defined within the environment class are static. The method
+	 * Environment::initialize() must be called before invocking any other methods from the WSF/CPP Framework for client side.
   	 */
 
 	class Environment

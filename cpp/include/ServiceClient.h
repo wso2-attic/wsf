@@ -36,6 +36,7 @@
 
 /**
  * @file ServiceClient.h
+ * @brief Primary client API class Serviceclient is defined here.
  */
 
 /**

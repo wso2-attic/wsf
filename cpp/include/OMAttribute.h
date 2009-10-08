@@ -23,7 +23,9 @@
 
 /**
  * @file OMAttribute.h
+ * @brief Defined the OMAttribute class which represents an xml attribute in axiom.
  */
+
 
 /**
  * @brief namespace wso2wsf Namespace of WSO2 Web Services Framework.

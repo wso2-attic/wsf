@@ -20,8 +20,10 @@
 #include <WSFDefines.h>
 #include <axutil_utils.h>
 #include <string>
+
 /**
  * @file Property.h
+ * @brief Property is a container for storing name,value pairs within axis2 engine.
  */
 
 /**

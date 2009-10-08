@@ -28,6 +28,7 @@
 
 /**
  * @file Options.h
+ * @brief Options class, the primary client configuratator class is defined here.
  */
 
 /**

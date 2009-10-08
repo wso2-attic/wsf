@@ -24,6 +24,7 @@
 
 /**
  * @file Parameter.h
+ * @brief Parameter which is a container class for associating name value pairs within wsf/cpp engine
  */
 
 /**

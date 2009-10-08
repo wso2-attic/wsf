@@ -27,6 +27,10 @@
 
 /**
  * @file OMElement.h
+ * @brief OMElement reperesents an XML element in Axiom.
+ */
+
+/**
  * @brief namespace wso2wsf Namespace of WSO2 Web Services Framework.
  */
 namespace wso2wsf

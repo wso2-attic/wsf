@@ -22,6 +22,7 @@
 
 /**
  * @file OMDataHandler.h
+ * @brief OMDataHandler class reperesents non xml data (text,binary) within axiom.
  */
 
 /**

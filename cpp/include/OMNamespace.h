@@ -24,6 +24,7 @@
 
 /**
  * @file OMNamespace.h
+ * @brief OMNamespace reperesents an xml namespace within Axiom.
  */
 
 /**

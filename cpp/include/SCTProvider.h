@@ -25,6 +25,7 @@
 
 /**
  * @file SCTProvider.h
+ * @brief SCTProvider, the Security Contect Token provider interface is defined here
  */
 
 /**

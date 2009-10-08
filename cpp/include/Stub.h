@@ -23,6 +23,7 @@
 
 /**
  * @file Stub.h
+ * @brief Stub is the client side interface for defining clients. Used primarily by the Code Generator.
  */
 
 /**

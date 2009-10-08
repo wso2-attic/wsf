@@ -24,6 +24,7 @@
 
 /**
  * @file PasswordCallback.h
+ * @brief PasswordCallback class, the interface for implementing callbacks to validate users is defined here
  */
 
 /**

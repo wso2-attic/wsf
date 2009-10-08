@@ -24,6 +24,7 @@
 
 /**
  * @file NeethiPolicy.h
+ * @brief NetthiPolicy is the WS-Policy abstraction in WSF/CPP Framework.
  */
 
 /**

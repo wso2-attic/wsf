@@ -64,6 +64,7 @@ extern "C" \
 
 /**
  * @file ServiceSkeleton.h
+ * @brief ServiceSkeleton, the interface for implementing c++ Web Services with WSF/CPP is defined here.
  */
 
 /**

@@ -26,6 +26,7 @@
 
 /**
  * @file OMNode.h
+ * @brief OMNode is the base class for AXIOM containers.
  */
 
 /**

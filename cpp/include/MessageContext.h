@@ -29,6 +29,7 @@
 
 /**
 * @file MessageContext.h
+* @brief MessageContext stores all state information releated to a message invocation.
 */
 
 /**

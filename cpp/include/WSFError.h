@@ -17,8 +17,10 @@
 #ifndef WSFERROR_H
 #define WSFERROR_H
 #include <Environment.h>
+
 /**
  * @file WSFError.h
+ * @brief Defines WSF/CPP specific error codes.
  */
 
 /**@defgroup WSFError WSFError
