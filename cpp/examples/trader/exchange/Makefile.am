@@ -8,12 +8,12 @@ libExchangeTrader_la_SOURCES = ExchangeTrader.cpp ExchangeTraderMacro.cpp Exchan
 
 libExchangeTrader_la_LIBADD = $(LDFLAGS) \
                     -L$(WSFC_HOME)/lib \
-                    -l./../../../wsf_c/axis2c/util/src/libaxutil.la \
-                    -l./../../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
-                    -l./../../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
-		    -l./../../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
+                    -laxutil \
+                    -laxis2_axiom \
+                    -laxis2_http_sender \
+		    -laxis2_http_receiver \
                     -lpthread \
-		    -l./../util/libtrader_util.la \
+		    ./../util/libtrader_util.la \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
  
@@ -22,4 +22,7 @@ INCLUDES = -I ./../include \
 	   -I ./../../../include \
            -I ./../../../wsf_c/axis2c/include \
            -I ./../../../wsf_c/axis2c/axiom/include \
-           -I ./../../../wsf_c/axis2c/util/include
+           -I ./../../../wsf_c/axis2c/util/include \
+	   -I ./../../../wsf_c/axis2c/util/include/platforms \
+	   -I ./../../../wsf_c/axis2c/neethi/include
+

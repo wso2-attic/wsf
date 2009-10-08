@@ -4,6 +4,7 @@
 #include <BuyRequest_ex.h>
 #include <SellRequest_ex.h>
 #include <Options.h>
+#include <string>
 
 using namespace org_wso2_www;
 using namespace org_wso2_www_types;
@@ -28,8 +29,8 @@ SimpleTrader::~SimpleTrader(void)
 
 void org_wso2_www::SimpleTrader::createStockMarket()
 {
-	char *symbol[] = {{"ibm"},{"wso2"},{"msft"},{"sun"}};
-	char *symbolName[] = {{"IBM"},{"WSO2"},{"MICROSOFT"},{"SUN"}};
+	char symbol[][10] = {{"ibm"},{"wso2"},{"msft"},{"sun"}};
+	char symbolName[][10] = {{"IBM"},{"WSO2"},{"MICROSOFT"},{"SUN"}};
 	for(int i = 0; i < 4; i++)
 	{
 		StockQuote *stockquote = new  StockQuote();
@@ -184,8 +185,8 @@ bool org_wso2_www::SimpleTrader::sell( std::string username, std::string passwor
 
 void org_wso2_www::SimpleTrader::createClientData()
 {
-	char *ssn [] = {("11"),("22"),("33"),("44")};
-	char *name [] = {("damitha"),("nandika"),("shankar"),("sanjaya")};
+	char ssn[][4] = {("11"),("22"),("33"),("44")};
+	char name[][10] = {("damitha"),("nandika"),("shankar"),("sanjaya")};
 
 	for(int i = 0; i < 4; i++)
 	{

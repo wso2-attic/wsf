@@ -4,8 +4,8 @@ using namespace org_wso2_www;
 
 void SimpleExchange::createClientData()
 {
-	char *ssn [] = {("11"),("22"),("33"),("44")};
-	char *name [] = {("damitha"),("nandika"),("shankar"),("sanjaya")};
+	char ssn[][5] = {("11"),("22"),("33"),("44")};
+	char name[][10] = {("damitha"),("nandika"),("shankar"),("sanjaya")};
 
 	for(int i = 0; i < 4; i++)
 	{
