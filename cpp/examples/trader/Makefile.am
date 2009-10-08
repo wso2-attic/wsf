@@ -1,1 +1,1 @@
-SUBDIRS = client util exchange trader
+SUBDIRS = util client exchange trader
