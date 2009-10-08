@@ -1,28 +1,52 @@
-TESTS =
+noinst_LTLIBRARIES = libtrader_util.la
 
-noinst_LTLIBRARIES = libwsf_util.la
-
-libwsf_util_la_SOURCES = axis2_ArrayOfString.c axis2_buyRequest.c axis2_buyRequest_ex.c axis2_buyResponse.c \
-						   axis2_ClientInfo.c axis2_createAccountRequest.c axis2_createAccountResponse.c \
-						   axis2_depositRequest.c axis2_depositResponse.c axis2_getInfoRequest.c \
-						   axis2_getInfoResponse.c axis2_getPortfolioRequest.c axis2_getPortfolioResponse.c \
-						   axis2_getQuoteRequest.c axis2_getQuoteResponse.c axis2_getSymbolsRequest.c \
-						   axis2_getSymbolsResponse.c axis2_loginRequest.c axis2_MarketInfo.c \
-						   axis2_PortFolio.c axis2_PortFolioItem.c axis2_registerClientRequest.c \
-						   axis2_registerClientResponse.c axis2_registerFeedTargetRequest.c axis2_sellRequest.c \
-						   axis2_sellRequest_ex.c axis2_sellResponse.c axis2_StockQuote.c axis2_TradeStatus.c \
-						   axis2_updateRequest.c client_details.c util.c
+libwsf_util_la_SOURCES = ArrayOfString.cpp \
+			BuyRequest.cpp \
+			BuyRequest_ex.cpp \
+			BuyResponse.cpp \
+			ClientData.cpp \
+			ClientInfo.cpp \
+			CreateAccountRequest.cpp \
+			CreateAccountResponse.cpp \
+			DepositRequest.cpp \
+			DepositResponse.cpp \
+			GetPortfolioRequest.cpp \
+			GetPortfolioResponse.cpp \
+			GetQuoteRequest.cpp \
+			GetQuoteResponse.cpp \
+			GetSymbolsRequest.cpp \
+			GetSymbolsResponse.cpp \
+			LoginRequest.cpp \
+			PortFolio.cpp \
+			PortFolioItem.cpp \
+			RegisterClientRequest.cpp \
+			RegisterClientResponse.cpp \
+			RegisterFeedTargetRequest.cpp \
+			SellRequest.cpp \
+			SellRequest_ex.cpp \
+			SellResponse.cpp \
+			StockQuote.cpp \
+			TradeStatus.cpp	
 
 
 libwsf_util_la_LIBADD  = $(LDFLAGS) \
-                    -L$(WSFC_HOME)/lib \
-                    -laxutil \
-                    -laxis2_axiom \
-                    -laxis2_parser \
-                    -laxis2_http_sender \
-                    -laxis2_http_receiver \
-                    $(GUTHTHILA_LIBS) \
-                    $(LIBXML2_LIBS)
+                    -L$(WSFCPP_HOME)/lib \
+       		../../../wsf_c/axis2c/util/src/libaxutil.la \
+                ../../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
+                ../../../wsf_c/axis2c/src/core/engine/libaxis2_engine.la \
+                ../../../wsf_c/axis2c/axiom/src/parser/guththila/libaxis2_parser.la \
+                ../../../wsf_c/axis2c/src/core/transport/http/sender/libaxis2_http_sender.la \
+                ../../../wsf_c/axis2c/src/core/transport/http/receiver/libaxis2_http_receiver.la \
+                -lpthread \
+                ../../../src/main/libwso2_wsf.la \
+                $(GUTHTHILA_LIBS) \
+                $(LIBXML2_LIBS)
  
+INCLUDES = -I ../include \ 
+	   -I ../../../include \
+           -I ../../../wsf_c/axis2c/include \
+           -I ../../../wsf_c/axis2c/neethi/include \
+           -I ../../../wsf_c/axis2c/axiom/include \
+           -I ../../../wsf_c/axis2c/util/include \
+           -I ../../../wsf_c/axis2c/util/include/platforms 
 
-INCLUDES = 	-I ../include 
