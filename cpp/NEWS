@@ -1,7 +1,7 @@
-WSO2 Web Services Framework for C++ (WSO2 WSF/C++) 2.0.0 Released
+WSO2 Web Services Framework for C++ (WSO2 WSF/C++) 2.1.0 Released
 =================================================================
 
-WSO2 WSF/C++ team is pleased to announce the release of WSO2 WSF/C++ 2.0.0.
+WSO2 WSF/C++ team is pleased to announce the release of WSO2 WSF/C++ 2.1.0.
 
 You can download this release from: http://wso2.org/downloads/wsf/cpp
 
@@ -50,6 +50,9 @@ Key Features
 6. Codegeneration Tool
       * By providing a wsdl and options, generate client stubs and service skeletons
         in C++ using the code generation tool. 
+      * Codegeneration tool Eclipse Plugin is also avialable. The codegeneration tool
+	has been intergrated into an eclispe plugin wizzard which allows a user to conveniently 
+	utilse the codegen tool while working within eclipse. 
 
 7. SSL enabled transport layer
 
@@ -60,19 +63,18 @@ Key Features
 --------------------------------
 Major Changes Since Last Release
 ================================
-1. Service API which enable implementing services in C++.
-2. Code Generation tool for C++.
+1. Eclipse Plugin for codegeneration tool added.
+2. Visual Studio project file generation added for codegeneration.
 3. Documentation Improved.
-4. WS-Security Additions.
-    * WS-Secure Conversation
-    * Replay Detection
-5. Many bug fixes.
+4. Many bugs fixed in the codegen tool.
+5. Many memory leak fixes.
+6. More samples have been added. 
+7. The Service API has been enhanced to allow users to extend from the generated ServiceSkelton classes.
 
 -------------------
 Known Issues
 -------------------
-
-Dual channel scenarios could cause crash issues.
+There could be memory leaks in some senarios.
 
 -------------------
 Reporting Problems
