@@ -1,2 +1,2 @@
-SUBDIRS=clients services callbacks
-EXTRA_DIST=samples.mk secscripts codegen
+SUBDIRS=clients services callbacks trader
+EXTRA_DIST=samples.mk secscripts codegen trader

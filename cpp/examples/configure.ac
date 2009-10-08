@@ -53,7 +53,13 @@ AC_CONFIG_FILES([Makefile \
     callbacks/authentication_provider/Makefile \
     callbacks/password_callback/Makefile \
     callbacks/replay_detector/Makefile \
-    callbacks/sct_provider/Makefile
+    callbacks/sct_provider/Makefile \
+    trader/Makefile \
+    trader/util/Makefile \
+    trader/client/Makefile \
+    trader/exchange/Makefile \
+    trader/trader/trader-util/Makefile \
+    trader/trader/trader-client/Makefile  
     ])
     
 AC_OUTPUT
