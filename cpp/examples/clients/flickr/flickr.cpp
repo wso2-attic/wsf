@@ -27,8 +27,8 @@ using namespace wso2wsf;
 
 int main(int argc, char* argv[])
 {
-	char *apiKey= "00000000000000000000000000000000";
-	char *searchString = "home";
+	const char *apiKey= "00000000000000000000000000000000";
+	const char *searchString = "home";
 	Environment::initialize("flicker.log", AXIS2_LOG_LEVEL_TRACE);
 
 	if(argc == 3)

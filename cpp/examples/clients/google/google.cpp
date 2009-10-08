@@ -28,8 +28,8 @@ using namespace wso2wsf;
 
 int main(int argc, char* argv[])
 {
-	char *googleKey = "00000000000000000000000000000000";
-	char *wordToSpell = "salvasion";
+	const char *googleKey = "00000000000000000000000000000000";
+	const char *wordToSpell = "salvasion";
 
 	Environment::initialize("google.log", AXIS2_LOG_LEVEL_TRACE);
 	
