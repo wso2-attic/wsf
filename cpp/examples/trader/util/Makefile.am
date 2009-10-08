@@ -38,7 +38,7 @@ libtrader_util_la_LIBADD  = $(LDFLAGS) \
                 -lpthread \
                 -lwso2_wsf 
  
-INCLUDES = -I ../include \ 
+INCLUDES = -I ../include \
            -I ../../../include \
            -I ../../../wsf_c/axis2c/include \
            -I ../../../wsf_c/axis2c/neethi/include \

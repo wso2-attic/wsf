@@ -3,7 +3,7 @@ noinst_LTLIBRARIES = libtrader_trader_util.la
 libtrader_trader_util_la_SOURCES = ExchangeTraderStub.cpp SimpleTrader.cpp
 
 
-libwsf_trader_util_la_LIBADD  = $(LDFLAGS) \
+libtrader_trader_util_la_LIBADD  = $(LDFLAGS) \
                     -L$(WSFCPP_HOME)/lib \
                     -laxutil \
                     -laxis2_axiom \
