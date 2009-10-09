@@ -3,23 +3,23 @@
 <service name="TraderClient">
 <parameter name="ServiceClass">TraderClient</parameter>
 <description>TraderClientService</description>
-<operation name="deposit" mep="http://www.w3.org/ns/wsdl/in-out">
+<operation name="deposit" mep="http://www.w3.org/2004/08/wsdl/in-out">
 <messageReceiver class="wsf_cpp_msg_recv"/>
 <parameter name="wsamapping">deposit</parameter>
 </operation>
-<operation name="getSymbols" mep="http://www.w3.org/ns/wsdl/in-out">
+<operation name="getSymbols" mep="http://www.w3.org/2004/08/wsdl/in-out">
 <messageReceiver class="wsf_cpp_msg_recv"/>
 <parameter name="wsamapping">getSymbols</parameter>
 </operation>
-<operation name="getQuote" mep="http://www.w3.org/ns/wsdl/in-out">
+<operation name="getQuote" mep="http://www.w3.org/2004/08/wsdl/in-out">
 <messageReceiver class="wsf_cpp_msg_recv"/>
 <parameter name="wsamapping">getQuote</parameter>
 </operation>
-<operation name="createAccount" mep="http://www.w3.org/ns/wsdl/in-out">
+<operation name="createAccount" mep="http://www.w3.org/2004/08/wsdl/in-out">
 <messageReceiver class="wsf_cpp_msg_recv"/>
 <parameter name="wsamapping">createAccount</parameter>
 </operation>
-<operation name="sell" mep="http://www.w3.org/ns/wsdl/in-out">
+<operation name="sell" mep="http://www.w3.org/2004/08/wsdl/in-out">
 <messageReceiver class="wsf_cpp_msg_recv"/>
 <parameter name="wsamapping">sell</parameter>
 </operation>
@@ -27,7 +27,7 @@
 <messageReceiver class="wsf_cpp_msg_recv"/>
 <parameter name="wsamapping">buy</parameter>
 </operation>
-<operation name="getPortfolio" mep="http://www.w3.org/ns/wsdl/in-out">
+<operation name="getPortfolio" mep="http://www.w3.org/2004/08/wsdl/in-out">
 <messageReceiver class="wsf_cpp_msg_recv"/>
 <parameter name="wsamapping">getPortfolio</parameter>
 </operation>
