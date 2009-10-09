@@ -272,14 +272,14 @@ trader_trader_service:
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) /I$(TRADER_HOME)\include /I$(TRADER_TRADER_CLIENT)\ /I$(TRADER_TRADER_UTIL)\ $(TRADER_TRADER_CLIENT)\*.cpp /Fo$(TRADER_TRADER_CLIENT)\int.msvc\ /c
 	$(LD) $(LDFLAGS) $(TRADER_TRADER_CLIENT)\int.msvc\*.obj $(TRADER_UTIL)\int.msvc\*.obj $(TRADER_TRADER_UTIL)\int.msvc\*.obj $(LIBS) /DLL \
 	/OUT:$(WSFCPP_HOME_DIR)\services\TraderClient\TraderClient.dll
-	if exist $(WSFCPP_HOME_DIR)\services\TraderClient.dll.manifest $(MT) -nologo -manifest $(WSFCPP_HOME_DIR)\services\TraderClient.dll.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\services\TraderClient.dll;2
+	if exist $(WSFCPP_HOME_DIR)\services\TraderClient.dll.manifest $(MT) -nologo -manifest $(WSFCPP_HOME_DIR)\services\TraderClient.dll.manifest -outputresource:$(WSFCPP_HOME_DIR)\services\TraderClient.dll;2
 	copy /Y $(TRADER_TRADER_CLIENT)\services.xml $(WSFCPP_HOME_DIR)\services\TraderClient\services.xml
 
 exchange_trader_service:
 	@if not exist $(WSFCPP_HOME_DIR)\services\ExchangeTrader mkdir $(WSFCPP_HOME_DIR)\services\ExchangeTrader
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) /I$(TRADER_HOME)\include /I$(TRADER_EXCHANGE)\ $(TRADER_EXCHANGE)\*.cpp /Fo$(TRADER_EXCHANGE)\int.msvc\ /c
 	$(LD) $(LDFLAGS) $(TRADER_EXCHANGE)\int.msvc\*.obj $(TRADER_UTIL)\int.msvc\*.obj $(LIBS) /DLL /OUT:$(WSFCPP_HOME_DIR)\services\ExchangeTrader\ExchangeTrader.dll
-	if exist $(WSFCPP_HOME_DIR)\services\ExchangeTrader.dll.manifest $(MT) -nologo -manifest $(WSFCPP_HOME_DIR)\services\ExchangeTrader.dll.manifest -outputresource:$(WSFCPP_SAMPLES_DIR)\services\ExchangeTrader.dll;2
+	if exist $(WSFCPP_HOME_DIR)\services\ExchangeTrader.dll.manifest $(MT) -nologo -manifest $(WSFCPP_HOME_DIR)\services\ExchangeTrader.dll.manifest -outputresource:$(WSFCPP_HOME_DIR)\services\ExchangeTrader.dll;2
 	copy /Y $(TRADER_EXCHANGE)\services.xml $(WSFCPP_HOME_DIR)\services\ExchangeTrader\services.xml
 
 trader_clean:
@@ -292,11 +292,15 @@ trader_clean:
 
 trader: trader_clean trader_intdirs trader_util trader_client trader_trader_util trader_trader_service exchange_trader_service
 
+clean_final_bin_folder:
+	del $(WSFCPP_SAMPLES_DIR)\*.lib
+	del $(WSFCPP_SAMPLES_DIR)\*.exp
+
 clean: 
 	@if exist int.msvc rmdir /s /q int.msvc
 		
 !if "$(ENABLE_RAMPARTC)" == "0"
 dist: clean wsfcpp_samples
 !else
-dist: clean wsfcpp_samples wsfcpp_callback copy_scripts trader
+dist: clean wsfcpp_samples wsfcpp_callback copy_scripts trader clean_final_bin_folder
 !endif
