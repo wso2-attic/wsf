@@ -40,9 +40,9 @@ OMElement* Echo::echoString(OMElement *msg)
 		{
 			std::string childtext = childEle->getText();
 			OMElement *echoEle = new OMElement(msg->getLocalname(), ns);
-			OMElement *text = new OMElement(childtext);
+			OMElement *text = new OMElement("text");
 			echoEle->addChild(text);
-			text->setText("Hello World");
+			text->setText(childtext);
 			return echoEle;
 		}
 	}
