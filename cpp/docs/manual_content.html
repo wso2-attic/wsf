@@ -193,7 +193,7 @@ of the service. There can be one or more operation elements. For this sample, we
 <p>You can compile the service sample as shown below.</p>
 <p>On Linux:</p>
 <div class="source">
-<pre>gcc -shared -olibhello.so -I$WSFCPP_HOME/include -I$WSFCPP_HOME/include/axis2-1.6.0/ -L$WSFCPP_HOME/lib -laxutil -laxis2_axiom -laxis2_parser -laxis2_engine -lwso2_wsf -lpthread -laxis2_http_sender -laxis2_http_receiver hello.cpp<br /></pre>
+<pre>g++ -shared -olibhello.so -I$WSFCPP_HOME/include -I$WSFCPP_HOME/include/axis2-1.6.0/ -L$WSFCPP_HOME/lib -laxutil -laxis2_axiom -laxis2_parser -laxis2_engine -lwso2_wsf -lpthread -laxis2_http_sender -laxis2_http_receiver hello.cpp<br /></pre>
 </div>
 <p>On MS Windows:</p>
 <p>to compile,</p>
@@ -354,7 +354,7 @@ response further.</p>
 <p>You can compile the client sample as shown below.</p>
 <p>On Linux:</p>
 <div class="source">
-<pre>gcc -o hello -I$WSFCPP_HOME/include/axis2-1.6.0/ -L$WSFCPP_HOME/lib -laxutil -laxis2_axiom -laxis2_parser -laxis2_engine -lpthread -laxis2_http_sender -laxis2_http_receiver -lwso2_wsf hello.c -ldl -Wl,--rpath -Wl,$WSFCPP_HOME/lib<br /><br /></pre>
+<pre>g++ -o hello -I$WSFCPP_HOME/include/axis2-1.6.0/ -L$WSFCPP_HOME/lib -laxutil -laxis2_axiom -laxis2_parser -laxis2_engine -lpthread -laxis2_http_sender -laxis2_http_receiver -lwso2_wsf hello.c -ldl -Wl,--rpath -Wl,$WSFCPP_HOME/lib<br /><br /></pre>
 </div>
 <p>On MS Windows:</p>
 <p>to compile,</p>
