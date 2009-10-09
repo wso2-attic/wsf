@@ -3,23 +3,23 @@
 <service name="ExchangeTrader">
 <parameter name="ServiceClass">ExchangeTrader</parameter>
 <description>ExchangeTraderService</description>
-<operation name="login" mep="http://www.w3.org/ns/wsdl/in-only">
+<operation name="login" mep="http://www.w3.org/2004/08/wsdl/in-only">
 <messageReceiver class="wsf_cpp_msg_recv"/>
 <parameter name="wsamapping">login</parameter>
 </operation>
-<operation name="registerClient" mep="http://www.w3.org/ns/wsdl/in-out">
+<operation name="registerClient" mep="http://www.w3.org/2004/08/wsdl/in-out">
 <messageReceiver class="wsf_cpp_msg_recv"/>
 <parameter name="wsamapping">registerClient</parameter>
 </operation>
-<operation name="registerFeedTarget" mep="http://www.w3.org/ns/wsdl/in-only">
+<operation name="registerFeedTarget" mep="http://www.w3.org/2004/08/wsdl/in-only">
 <messageReceiver class="wsf_cpp_msg_recv"/>
 <parameter name="wsamapping">registerFeedTarget</parameter>
 </operation>
-<operation name="sell" mep="http://www.w3.org/ns/wsdl/in-only">
+<operation name="sell" mep="http://www.w3.org/2004/08/wsdl/in-only">
 <messageReceiver class="wsf_cpp_msg_recv"/>
 <parameter name="wsamapping">sell</parameter>
 </operation>
-<operation name="buy" mep="http://www.w3.org/ns/wsdl/in-only">
+<operation name="buy" mep="http://www.w3.org/2004/08/wsdl/in-only">
 <messageReceiver class="wsf_cpp_msg_recv"/>
 <parameter name="wsamapping">buy</parameter>
 </operation>
