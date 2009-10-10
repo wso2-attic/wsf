@@ -90,8 +90,8 @@ namespace wso2wsf
 	/**
 	 *@brief Class Environment wraps the underlying axis2_environment which deals with memory allocation,
 	 * threading, logging and error handling within the framework. Environment class hides all the complexcities of 
-	 * these  and provides a simple inteface. All the methods defined within the environment class are static. The method
-	 * Environment::initialize() must be called before invocking any other methods from the WSF/CPP Framework for client side.
+	 * these  and provides a simple interface. All the methods defined within the environment class are static. The method
+	 * Environment::initialize() must be called before invoking any other methods from the WSF/CPP Framework for client side.
   	 */
 
 	class Environment
@@ -139,14 +139,14 @@ namespace wso2wsf
 		/**
 		* Initialize with log file and log level. This function must be called prior to using the framework for client
 		* side. For the server, calling the method for initialization is not required 
-		* @param logFileName name of the logfile name which will be created by the environment and used to write logs.
+		* @param logFileName name of the log file name which will be created by the environment and used to write logs.
 		* @param logLevel The level of details that should be written to the log file. There are several log levels available.
 		* 1. WSF_LOG_LEVEL_CRITICAL Only Critical level logs will be written. Suitable for production deployment.
-		* 2. WSF_LOG_LEVEL_ERROR  Only Error messages will be wrriten to the log.
+		* 2. WSF_LOG_LEVEL_ERROR  Only Error messages will be written to the log.
 		* 3. WSF_LOG_LEVEL_INFO   Logs information 
 		* 4. WSF_LOG_LEVEL_DEBUG  logs everything
-		* 5. WSF_LOG_LEVEL_USER   log user lovel messages.
-		* 6. WSF_LOG_LEVEL_TRACE  Trace Level loggging.
+		* 5. WSF_LOG_LEVEL_USER   log user level messages.
+		* 6. WSF_LOG_LEVEL_TRACE  Trace Level logging.
 		*/
 		static WSF_EXTERN void WSF_CALL initialize(std::string logFileName,  axutil_log_levels_t logLevel);
 		/**
