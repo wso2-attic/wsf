@@ -49,13 +49,15 @@ void OMElement::init(OMNode * parent, std::string localname, OMNamespace * ns)
         _parent = parent;
         if(_parent)
         {
-            try
-            {
                 OMElement * dp = dynamic_cast<OMElement *>(_parent);
+				if(dp)
+				{
                 dp->addChildLocal(this);
-            }
-            catch(bad_cast)
-            {}
+				}
+				else
+				{
+					std::cout<<"Casting failed for parent"<<std::endl;
+				}
         }
         _namespace = ns;
     }
@@ -98,13 +100,11 @@ OMElement::OMElement(OMNode * parent, axiom_node_t * node)
         _parent = parent;
         if (_parent)
         {
-            try
-            {
-                OMElement * dp = dynamic_cast<OMElement *>(_parent);
+            OMElement * dp = dynamic_cast<OMElement *>(_parent);
+			if(dp)
+			{
                 dp->addChildLocal(this);
-            }
-            catch(bad_cast)
-            {}
+			}
         }
         axiom_namespace_t * ns = axiom_element_get_namespace(_wsf_axiom_element, Environment::getEnv(), node);
         if (ns)
@@ -316,13 +316,11 @@ OMElement * OMElement::getFirstElement()
     for (vector<OMNode *>::iterator i = _child_nodes.begin();
         i < _child_nodes.end(); i++)
     {
-        try
-        {
-            OMElement * dp = dynamic_cast<OMElement *>(*i);
-            return dp;
-        }
-        catch(bad_cast)
-        {}
+        OMElement * dp = dynamic_cast<OMElement *>(*i);
+		if(dp)
+		{
+			return dp;
+		}
     }
     return NULL;
 }
@@ -473,30 +471,25 @@ OMElement * OMElement::getChildElement(std::string localname, OMNamespace * ns)
     for (vector<OMNode *>::iterator i = _child_nodes.begin();
         i < _child_nodes.end(); i++)
     {
-        try
+        OMElement * dp = dynamic_cast<OMElement *>(*i);
+        if (dp && dp->getLocalname() == localname)
         {
-            OMElement * dp = dynamic_cast<OMElement *>(*i);
-            if (dp->getLocalname() == localname)
+            OMNamespace *existing_ns = dp->getNamespace();
+            string str_existing_ns;
+            string str_ns;
+            if(existing_ns)
             {
-                OMNamespace *existing_ns = dp->getNamespace();
-                string str_existing_ns;
-                string str_ns;
-                if(existing_ns)
-                {
-                    str_existing_ns = existing_ns->getURI();
-                }
-                if(ns)
-                {
-                    str_ns = ns->getURI();
-                }
-                if(str_existing_ns == str_ns)
-                {
-                    return dp;
-                }
+                str_existing_ns = existing_ns->getURI();
+            }
+            if(ns)
+            {
+                str_ns = ns->getURI();
+            }
+            if(str_existing_ns == str_ns)
+            {
+                return dp;
             }
         }
-        catch(bad_cast)
-        {}
     }
     return NULL;
 }
@@ -629,16 +622,16 @@ void OMElement::setChildren(std::vector<OMNode *> children)
         for (vector<OMNode *>::iterator i = _child_nodes.begin();
             i < _child_nodes.end(); i++)
         {
-            try
-            {
-                OMElement * dp = dynamic_cast<OMElement *>(*i);
+            OMElement * dp = dynamic_cast<OMElement *>(*i);
+			if(dp)
+			{
                 dp->freeTree();
             }
-            catch(bad_cast)
-            {}
-
-            (*i)->setAxiomNode(NULL);
-            delete (*i);
+            if(*i)
+			{
+				(*i)->setAxiomNode(NULL);
+				delete (*i);
+			}
         }
         _child_nodes.clear();
     }

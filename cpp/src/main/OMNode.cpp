@@ -116,14 +116,13 @@ OMNode * OMNode::detach()
 	else
 	{
 		setAxiomNode(node);
-		try
+		OMElement * dp = dynamic_cast<OMElement *>(_parent);
+		if(dp)
 		{
-			OMElement * dp = dynamic_cast<OMElement *>(_parent);
 			dp->removeChildLocal(this);
 			dp = NULL;
 		}
-		catch(bad_cast)
-		{}
+		
 		return this;
 	}
 }
@@ -146,11 +145,8 @@ OMNode *OMNode::getParent()
 OMNode * OMNode::getPreviousSibling()
 {
 	OMElement * dp;
-	try
-	{
-		dp = dynamic_cast<OMElement *>(_parent);
-	}
-	catch(bad_cast)
+	dp = dynamic_cast<OMElement *>(_parent);
+	if(!dp)
 	{
 		return NULL;
 	}
@@ -178,11 +174,8 @@ OMNode * OMNode::getPreviousSibling()
 OMNode * OMNode::getNextSibling()
 {
 	OMElement * dp;
-	try
-	{
-		dp = dynamic_cast<OMElement *>(_parent);
-	}
-	catch(bad_cast)
+	dp = dynamic_cast<OMElement *>(_parent);
+	if(!dp)
 	{
 		return NULL;
 	}

@@ -171,13 +171,11 @@ OMText::OMText(OMNode * parent, OMDataHandler * data_handler)
         _parent = parent;
         if (_parent != NULL)
         {
-            try
-            {
-                OMElement * dp = dynamic_cast<OMElement *>(_parent);
+           OMElement * dp = dynamic_cast<OMElement *>(_parent);
+		   if(dp)
+		   {
                 dp->addChildLocal(this);
             }
-            catch(bad_cast)
-            {}
         }
     }
 }
@@ -228,13 +226,11 @@ OMText::OMText(OMNode * parent, std::string value)
         _parent = parent;
         if (_parent != NULL)
         {
-            try
-            {
-                OMElement * dp = dynamic_cast<OMElement *>(_parent);
+			OMElement * dp = dynamic_cast<OMElement *>(_parent);
+			if(dp)
+			{
                 dp->addChildLocal(this);
             }
-            catch(bad_cast)
-            {}
         }
     }
 }

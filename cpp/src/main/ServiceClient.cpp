@@ -179,7 +179,14 @@ ServiceClient::~ServiceClient()
 	isValid = false;
     _conf_ctx = NULL;
     _endpoint_address = endpoint_address;
-    _repo_home = AXIS2_GETENV("WSFCPP_HOME") ? string(AXIS2_GETENV("WSFCPP_HOME")) : string("");
+	if(AXIS2_GETENV("WSFCPP_HOME"))
+	{
+		_repo_home = string(AXIS2_GETENV("WSFCPP_HOME"));
+	}else
+	{
+		std::cout<<"Warning WSFCPP_HOME not defined"<<std::endl;
+		_repo_home = string(".");
+	}
     _wsf_service_client = NULL;
     _last_soap_fault = NULL;
     _last_response_soap_envelope_element = NULL;
