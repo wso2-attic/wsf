@@ -158,6 +158,8 @@ namespace wso2wsf
     public:
     /**
      * Create a Service Client which is associated with the default repository.
+	 * The service client assumes that WSFCPP_HOME environment variable is defined
+	 * to point to the repo.
      * @param endpoint_address endpoint address which would be invoked using this
      * service Client Object.
      */
