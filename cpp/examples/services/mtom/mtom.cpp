@@ -39,17 +39,22 @@ OMElement* MTOMService::invoke(OMElement *ele, MessageContext *msgCtx)
 		</ns1:image>
 	</ns1:mtomSample>
 	*/
+	int length = 0;
+	axis2_byte_t *data = NULL;
 	if(ele)
 	{	
-		int length = 0;
-		axis2_byte_t *data = NULL;
-		try
-		{	
-			OMElement *fileNameEle = dynamic_cast<OMElement *>(ele->getFirstChild());
-
-			if(fileNameEle && fileNameEle->getFirstChild() && fileNameEle->getFirstChild()->nodeType() == AXIOM_TEXT)
-			{
+		
+		
+		OMElement *fileNameEle = dynamic_cast<OMElement *>(ele->getFirstChild());
+		
+		if(fileNameEle && fileNameEle->getFirstChild() && fileNameEle->getFirstChild()->nodeType() == AXIOM_TEXT)
+		{
 				OMText *text = dynamic_cast<OMText*>(fileNameEle->getFirstChild());
+				if(!text)
+				{
+					std::cout<<"Casting failed"<<std::endl;
+					return NULL;
+				}
 				string filename = text->getValue();
 
 				OMElement *imageEle = dynamic_cast<OMElement*>(fileNameEle->getNextSibling());
@@ -68,11 +73,8 @@ OMElement* MTOMService::invoke(OMElement *ele, MessageContext *msgCtx)
 					}
 				}
 			}
-		}catch (bad_cast) 
-		{
-			return NULL;
+		
 		}
-
 		/** Build the response payload */
 		OMElement *resultEle = new OMElement("response", new OMNamespace("http://ws.apache.org/wsf/cpp/samples","ns1"));
 		/** construct a datahandler with the received binary content */
@@ -87,7 +89,6 @@ OMElement* MTOMService::invoke(OMElement *ele, MessageContext *msgCtx)
 		msgCtx->setDoingMTOM(true);
 		return resultEle;
 
-	}
 	return NULL;
 }
 

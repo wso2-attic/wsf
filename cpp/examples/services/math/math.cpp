@@ -29,147 +29,216 @@ WSF_SERVICE_INIT(MathService)
 
 OMElement* MathService::add(OMElement *ele)
 {
-	try{
-		OMElement *param1 = NULL, *param2 = NULL;
-		OMText *param1Text = NULL, *param2Text = NULL;
+	
+	OMElement *param1 = NULL, *param2 = NULL;
+	OMText *param1Text = NULL, *param2Text = NULL;
 
-		param1 = dynamic_cast<OMElement*>(ele->getFirstChild());
-		param1Text = dynamic_cast<OMText*>(param1->getFirstChild());
-		string param1Str = param1Text->getValue();
+	param1 = dynamic_cast<OMElement*>(ele->getFirstChild());
+	if(!param1)
+	{
+		std::cout<<"Casting Failed"<<std::endl;
+		return NULL;
+	}
+	param1Text = dynamic_cast<OMText*>(param1->getFirstChild());
+	if(!param1Text)
+	{
+		std::cout<<"Casting Failed"<<std::endl;
+		return NULL;
+	}
+	string param1Str = param1Text->getValue();
+	param2 = dynamic_cast<OMElement*>(param1->getNextSibling());
+	if(!param2)
+	{
+		std::cout<<"Casting Failed"<<std::endl;
+		return NULL;
+	}
+	param2Text = dynamic_cast<OMText*>(param2->getFirstChild());
+	if(!param2Text)
+	{
+		std::cout<<"Casting Failed"<<std::endl;
+		return NULL;
+	}
+	string param2Str = param2Text->getValue();
+	if(!param2Str.empty() && !param1Str.empty())
+	{
+		long int value1, value2, result;
+		axis2_char_t result_str[255];
 
-		param2 = dynamic_cast<OMElement*>(param1->getNextSibling());
-		param2Text = dynamic_cast<OMText*>(param2->getFirstChild());
-		string param2Str = param2Text->getValue();
+		value1 = strtol(param1Str.c_str(), NULL, 10);
+		value2 = strtol(param2Str.c_str(), NULL, 10);
+		result = value1 + value2;
 
-		if(!param2Str.empty() && !param1Str.empty())
-		{
-			long int value1, value2, result;
-			axis2_char_t result_str[255];
+		sprintf(result_str, "%ld", result);
 
-			value1 = strtol(param1Str.c_str(), NULL, 10);
-			value2 = strtol(param2Str.c_str(), NULL, 10);
-			result = value1 + value2;
-
-			sprintf(result_str, "%ld", result);
-
-			OMNamespace *ns = new OMNamespace("http://wso2/wsf/cpp/namespace1", "ns1");
-			OMElement   *responseEle  =new OMElement("Result",ns);
-			responseEle->setText(result_str);
-
-			return responseEle;
-
-		}
-	}catch(bad_cast){}
+		OMNamespace *ns = new OMNamespace("http://wso2/wsf/cpp/namespace1", "ns1");
+		OMElement   *responseEle  =new OMElement("Result",ns);
+		responseEle->setText(result_str);
+		return responseEle;
+	}
 	return NULL;	
 }
 
 OMElement* MathService::sub(OMElement *ele)
 {
-	try{
-		OMElement *param1 = NULL, *param2 = NULL;
-		OMText *param1Text = NULL, *param2Text = NULL;
 
-		param1 = dynamic_cast<OMElement*>(ele->getFirstChild());
-		param1Text = dynamic_cast<OMText*>(param1->getFirstChild());
-		string param1Str = param1Text->getValue();
+	OMElement *param1 = NULL, *param2 = NULL;
+	OMText *param1Text = NULL, *param2Text = NULL;
 
-		param2 = dynamic_cast<OMElement*>(param1->getNextSibling());
-		param2Text = dynamic_cast<OMText*>(param2->getFirstChild());
-		string param2Str = param2Text->getValue();
+	param1 = dynamic_cast<OMElement*>(ele->getFirstChild());
+	if(!param1)
+	{
+		std::cout<<"Casting Failed"<<std::endl;
+		return NULL;
+	}
+	param1Text = dynamic_cast<OMText*>(param1->getFirstChild());
+	if(!param1Text)
+	{
+		std::cout<<"Casting Failed"<<std::endl;
+		return NULL;
+	}
+	string param1Str = param1Text->getValue();
 
-		if(!param2Str.empty() && !param1Str.empty())
-		{
-			long int value1, value2, result;
-			axis2_char_t result_str[255];
+	param2 = dynamic_cast<OMElement*>(param1->getNextSibling());
+	if(!param2)
+	{
+		std::cout<<"Casting Failed"<<std::endl;
+		return NULL;
+	}
+	param2Text = dynamic_cast<OMText*>(param2->getFirstChild());
+	if(!param2Text)
+	{
+		std::cout<<"Casting Failed"<<std::endl;
+		return NULL;
+	}
+	string param2Str = param2Text->getValue();
 
-			value1 = strtol(param1Str.c_str(), NULL, 10);
-			value2 = strtol(param2Str.c_str(), NULL, 10);
-			result = value1 - value2;
+	if(!param2Str.empty() && !param1Str.empty())
+	{
+		long int value1, value2, result;
+		axis2_char_t result_str[255];
 
-			sprintf(result_str, "%ld", result);
+		value1 = strtol(param1Str.c_str(), NULL, 10);
+		value2 = strtol(param2Str.c_str(), NULL, 10);
+		result = value1 - value2;
 
-			OMNamespace *ns = new OMNamespace("http://wso2/wsf/cpp/namespace1", "ns1");
-			OMElement   *responseEle  =new OMElement("Result",ns);
-			responseEle->setText(result_str);
+		sprintf(result_str, "%ld", result);
 
-			return responseEle;
+		OMNamespace *ns = new OMNamespace("http://wso2/wsf/cpp/namespace1", "ns1");
+		OMElement   *responseEle  =new OMElement("Result",ns);
+		responseEle->setText(result_str);
 
-		}
-	}catch(bad_cast){}
-	return NULL;	
+		return responseEle;
+
+	}
+return NULL;	
 }
 
 OMElement* MathService::mul(OMElement *ele)
 {
-	try{
-		OMElement *param1 = NULL, *param2 = NULL;
-		OMText *param1Text = NULL, *param2Text = NULL;
+	OMElement *param1 = NULL, *param2 = NULL;
+	OMText *param1Text = NULL, *param2Text = NULL;
 
-		param1 = dynamic_cast<OMElement*>(ele->getFirstChild());
-		param1Text = dynamic_cast<OMText*>(param1->getFirstChild());
-		string param1Str = param1Text->getValue();
+	param1 = dynamic_cast<OMElement*>(ele->getFirstChild());
+	if(!param1)
+	{
+		std::cout<<"Casting Failed"<<std::endl;
+		return NULL;
+	}
+	param1Text = dynamic_cast<OMText*>(param1->getFirstChild());
+	if(!param1Text)
+	{
+		std::cout<<"Casting Failed"<<std::endl;
+		return NULL;
+	}
+	string param1Str = param1Text->getValue();
 
-		param2 = dynamic_cast<OMElement*>(param1->getNextSibling());
-		param2Text = dynamic_cast<OMText*>(param2->getFirstChild());
-		string param2Str = param2Text->getValue();
+	param2 = dynamic_cast<OMElement*>(param1->getNextSibling());
+	if(!param2){
+		std::cout<<"Casting Failed"<<std::endl;
+		return NULL;
+	}
+	param2Text = dynamic_cast<OMText*>(param2->getFirstChild());
+	if(!param2Text)
+	{
+		std::cout<<"Casting Failed"<<std::endl;
+		return NULL;
+	}
+	string param2Str = param2Text->getValue();
 
-		if(!param2Str.empty() && !param1Str.empty())
-		{
-			long int value1, value2, result;
-			axis2_char_t result_str[255];
+	if(!param2Str.empty() && !param1Str.empty())
+	{
+		long int value1, value2, result;
+		axis2_char_t result_str[255];
 
-			value1 = strtol(param1Str.c_str(), NULL, 10);
-			value2 = strtol(param2Str.c_str(), NULL, 10);
-			result = value1 * value2;
+		value1 = strtol(param1Str.c_str(), NULL, 10);
+		value2 = strtol(param2Str.c_str(), NULL, 10);
+		result = value1 * value2;
 
-			sprintf(result_str, "%ld", result);
+		sprintf(result_str, "%ld", result);
 
-			OMNamespace *ns = new OMNamespace("http://wso2/wsf/cpp/namespace1", "ns1");
-			OMElement   *responseEle  =new OMElement("Result",ns);
-			responseEle->setText(result_str);
+		OMNamespace *ns = new OMNamespace("http://wso2/wsf/cpp/namespace1", "ns1");
+		OMElement   *responseEle  =new OMElement("Result",ns);
+		responseEle->setText(result_str);
 
-			return responseEle;
+		return responseEle;
 
-		}
-	}catch(bad_cast){}
+	}
 	return NULL;	
 }
 
 OMElement* MathService::div(OMElement *ele)
 {
-	try{
-		OMElement *param1 = NULL, *param2 = NULL;
-		OMText *param1Text = NULL, *param2Text = NULL;
+	OMElement *param1 = NULL, *param2 = NULL;
+	OMText *param1Text = NULL, *param2Text = NULL;
 
-		param1 = dynamic_cast<OMElement*>(ele->getFirstChild());
-		param1Text = dynamic_cast<OMText*>(param1->getFirstChild());
-		string param1Str = param1Text->getValue();
+	param1 = dynamic_cast<OMElement*>(ele->getFirstChild());
+	if(!param1)
+	{
+		std::cout<<"Casting Failed"<<std::endl;
+		return NULL;
+	}
+	param1Text = dynamic_cast<OMText*>(param1->getFirstChild());
 
-		param2 = dynamic_cast<OMElement*>(param1->getNextSibling());
-		param2Text = dynamic_cast<OMText*>(param2->getFirstChild());
-		string param2Str = param2Text->getValue();
+	string param1Str = param1Text->getValue();
+	if(!param1Text)
+	{
+		std::cout<<"Casting Failed"<<std::endl;
+		return NULL;
+	}
+	param2 = dynamic_cast<OMElement*>(param1->getNextSibling());
+	if(!param2)
+	{
+		std::cout<<"Casting Failed"<<std::endl;
+		return NULL;
+	}
+	param2Text = dynamic_cast<OMText*>(param2->getFirstChild());
+	if(!param2Text)
+	{
+		std::cout<<"Casting Failed"<<std::endl;
+		return NULL;
+	}
+	string param2Str = param2Text->getValue();
 
-		if(!param2Str.empty() && !param1Str.empty())
+	if(!param2Str.empty() && !param1Str.empty())
+	{
+		long int value1, value2, result;
+		axis2_char_t result_str[255];
+
+		value1 = strtol(param1Str.c_str(), NULL, 10);
+		value2 = strtol(param2Str.c_str(), NULL, 10);
+		if(value2)
 		{
-			long int value1, value2, result;
-			axis2_char_t result_str[255];
-
-			value1 = strtol(param1Str.c_str(), NULL, 10);
-			value2 = strtol(param2Str.c_str(), NULL, 10);
-			if(value2)
-			{
-				result = value1 / value2;
-			}
-			sprintf(result_str, "%ld", result);
-
-			OMNamespace *ns = new OMNamespace("http://wso2/wsf/cpp/namespace1", "ns1");
-			OMElement   *responseEle  =new OMElement("Result",ns);
-			responseEle->setText(result_str);
-
-			return responseEle;
-
+			result = value1 / value2;
 		}
-	}catch(bad_cast){}
+		sprintf(result_str, "%ld", result);
+
+		OMNamespace *ns = new OMNamespace("http://wso2/wsf/cpp/namespace1", "ns1");
+		OMElement   *responseEle  =new OMElement("Result",ns);
+		responseEle->setText(result_str);
+
+		return responseEle;
+
+	}
 	return NULL;	
 }
 
@@ -201,6 +270,6 @@ OMElement *MathService::invoke(OMElement *ele, MessageContext *msgCtx)
 OMElement *MathService::onFault(OMElement *ele)
 {
 	OMElement *responseEle = new OMElement("MathServiceErrorResponse");
-	responseEle->setText("Error occured in math Service");
+	responseEle->setText("Error occurred in math Service");
 	return responseEle;
 }

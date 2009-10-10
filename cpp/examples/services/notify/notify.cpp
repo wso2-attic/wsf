@@ -30,13 +30,15 @@ WSF_SERVICE_INIT(NotifyService)
 
 OMElement* NotifyService::notify(OMElement *message)
 {
-	try
+	if(message)
 	{
 		OMText *text = dynamic_cast<OMText*>(message->getFirstChild());
-		string notifyMessage = text->getValue();
+		if(text)
+		{
+			string notifyMessage = text->getValue();
+		}
 	}
-	catch (bad_cast){}
-	return NULL;
+return NULL;
 }
 
 OMElement* NotifyService::invoke(OMElement *message, MessageContext *msgCtx)
