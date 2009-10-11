@@ -12,8 +12,7 @@ CALLBACK_SAMPLES_HOME_DIR=.\callbacks
 WSFCPP_SAMPLES_DIR=$(WSFCPP_HOME_DIR)\samples\bin
 WSFCPP_SAMPLES_LIB_DIR=$(WSFCPP_HOME_DIR)\samples\lib
 
-CFLAGS = /nologo /w /D "WIN32" /D "_WINDOWS" /D "_MBCS" /EHsc
-CFLAGS = /nologo /w /D "WIN32" /D "_WINDOWS" /D "_MBCS" /EHsc
+CFLAGS = /nologo /w /D "WIN32" /D "_WINDOWS" /D "_MBCS" /EHsc /GR
 
 CC=@cl.exe
 LD=@link.exe
