@@ -148,7 +148,7 @@ namespace wso2wsf
 		* 5. WSF_LOG_LEVEL_USER   log user level messages.
 		* 6. WSF_LOG_LEVEL_TRACE  Trace Level logging.
 		*/
-		static WSF_EXTERN void WSF_CALL initialize(std::string logFileName,  axutil_log_levels_t logLevel);
+		static WSF_EXTERN void WSF_CALL initialize(const char* logFileName,  axutil_log_levels_t logLevel);
 		/**
 		 * Destructor for Environment Object
 		 */
