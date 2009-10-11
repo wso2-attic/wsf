@@ -112,7 +112,7 @@ void WSF_CALL Environment::switchToLocalPool()
 	}
 }
 
-void WSF_CALL Environment::initialize(const char* logFileName, axutil_log_levels_t logLevel)
+void WSF_CALL Environment::initialize(std::string logFileName, axutil_log_levels_t logLevel)
 {
 	_logFileName = logFileName;
 	_logLevel = logLevel;
