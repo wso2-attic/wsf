@@ -4,12 +4,12 @@ AUTOCONF = .\..\configure.in
 WSFCPP_HOME_DIR=.\..\wso2-wsf-cpp-bin-$(WSFCPP_VERSION)-win32
 
 CFLAGS = /nologo /w /D "WIN32" /D "_WINDOWS" /D "USE_SANDESHA2" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT" /GR /EHsc
-CC=cl.exe
+CC=@cl.exe
 
 LDFLAGS = /nologo /LIBPATH:$(WSFCPP_HOME_DIR)\lib /LIBPATH:$(LIBXML2_BIN_DIR)\lib /INCREMENTAL:NO
-LD=link.exe
+LD=@link.exe
 
-RC=rc.exe
+RC=@rc.exe
 
 !if "$(ENABLE_LIBXML2)" == "1"
 LIBS = axutil.lib axis2_engine.lib axis2_parser.lib \
