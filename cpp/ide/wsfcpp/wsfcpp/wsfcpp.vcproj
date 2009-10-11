@@ -95,7 +95,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="..\..\..\wso2-wsf-cpp-bin-2.1.0-win32\lib"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -119,7 +119,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="$(WSFCPP_HOME)\include;$(WSFCPP_HOME)\include\platforms"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;WSFCPP_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;WSFCPP_EXPORTS;AXIS2_DECLARE_EXPORT"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -137,7 +137,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="axutil.lib axiom.lib axis2_engine.lib neethi_util.lib neethi.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;E:\wsfcpp\cpp\wso2-wsf-cpp-bin-2.1.0-win32\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
