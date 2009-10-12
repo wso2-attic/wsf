@@ -24,7 +24,7 @@ using namespace std;
 int 
 main(
     int argc,
-    char *argv) 
+    char *argv[]) 
 {
 	Environment::initialize("calculator.log", AXIS2_LOG_LEVEL_TRACE);
 	string endpointUri = "http://localhost:9090/axis2/services/Calculator";
