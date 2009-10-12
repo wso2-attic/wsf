@@ -1,5 +1,7 @@
 noinst_LTLIBRARIES = libtrader_trader_util.la
 EXTRA_DIST=Exchange_Trader.wsdl
+noinst_HEADERS=ExchangeTraderStub.h  IExchangeTraderCallback.h  SimpleTrader.h
+
 libtrader_trader_util_la_SOURCES = ExchangeTraderStub.cpp SimpleTrader.cpp
 
 
