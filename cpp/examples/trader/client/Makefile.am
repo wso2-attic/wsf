@@ -1,7 +1,7 @@
         
 prgbindir=$(prefix)/samples/bin/
 prgbin_PROGRAMS = TraderClient
-inst_HEADERS=ITraderClientCallback.h  TraderClientStub.h
+noinst_HEADERS=ITraderClientCallback.h  TraderClientStub.h
 
 TraderClient_SOURCES = traderclient.cpp TraderClientStub.cpp
 TraderClient_LDADD   = $(LDFLAGS) \
