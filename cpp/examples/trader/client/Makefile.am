@@ -1,8 +1,9 @@
         
 prgbindir=$(prefix)/samples/bin/
 prgbin_PROGRAMS = TraderClient
-TraderClient_SOURCES = traderclient.cpp TraderClientStub.cpp
+inst_HEADERS=ITraderClientCallback.h  TraderClientStub.h
 
+TraderClient_SOURCES = traderclient.cpp TraderClientStub.cpp
 TraderClient_LDADD   = $(LDFLAGS) \
                 -L$(WSFC_HOME)/lib \
                 -laxutil \
