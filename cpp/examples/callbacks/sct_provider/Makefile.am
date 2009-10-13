@@ -7,7 +7,8 @@ libsctprovider_la_LIBADD=../../../wsf_c/axis2c/src/core/description/libaxis2_des
 		     ../../../wsf_c/axis2c/src/core/context/libaxis2_context.la \
 		     ../../../wsf_c/axis2c/util/src/libaxutil.la \
 		     ../../../wsf_c/axis2c/neethi/src/libneethi.la \
-		     ../../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la
+		     ../../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
+   		     ../../../src/security/libwso2_wsf_security.la
 
 libsctprovider_hashdb_la_SOURCES= sct_provider_hashdb.cpp
 libsctprovider_hashdb_la_LIBADD=../../../wsf_c/axis2c/src/core/description/libaxis2_description.la \
@@ -15,7 +16,8 @@ libsctprovider_hashdb_la_LIBADD=../../../wsf_c/axis2c/src/core/description/libax
 		     ../../../wsf_c/axis2c/src/core/context/libaxis2_context.la \
 		     ../../../wsf_c/axis2c/util/src/libaxutil.la \
 		     ../../../wsf_c/axis2c/neethi/src/libneethi.la \
-		     ../../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la
+		     ../../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
+		     ../../../src/security/libwso2_wsf_security.la 
 
 INCLUDES =  -I ../../../wsf_c/axis2c/include \
             -I ../../../wsf_c/axis2c/util/include \

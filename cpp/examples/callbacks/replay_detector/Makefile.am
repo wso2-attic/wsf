@@ -7,7 +7,8 @@ librdflatfile_la_LIBADD=../../../wsf_c/axis2c/src/core/description/libaxis2_desc
 		     ../../../wsf_c/axis2c/src/core/context/libaxis2_context.la \
 		     ../../../wsf_c/axis2c/util/src/libaxutil.la \
 		     ../../../wsf_c/axis2c/neethi/src/libneethi.la \
-		     ../../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la 
+		     ../../../wsf_c/axis2c/axiom/src/om/libaxis2_axiom.la \
+		     ../../../src/security/libwso2_wsf_security.la
 			
 
 INCLUDES =  -I ../../../wsf_c/axis2c/include \
