@@ -36,6 +36,7 @@ WSF_EXTERN axis2_status_t WSF_CALL SCTProvider::storeToken(
         if(sct_global_id)
             str_sct = sct_global_id;
         bool status = callback->storeToken(str_sct, msgctx, sct);
+        msgctx->setAxis2MessageContext(NULL);
         delete msgctx;
         return status;
     }
@@ -58,6 +59,7 @@ WSF_EXTERN void* WSF_CALL SCTProvider::getToken(
         if(sct_id)
             str_sct = sct_id;
         void* sct = callback->getToken(str_sct, msgctx);
+        msgctx->setAxis2MessageContext(NULL);
         delete msgctx;
         return sct;
     }
@@ -79,6 +81,7 @@ WSF_EXTERN axis2_status_t WSF_CALL SCTProvider::removeToken(
         if(sct_id)
             str_sct = sct_id;
         bool status = callback->removeToken(str_sct, msgctx);
+	msgctx->setAxis2MessageContext(NULL);
         delete msgctx;
         return status;
     }
@@ -97,6 +100,7 @@ WSF_EXTERN axis2_status_t WSF_CALL SCTProvider::validateToken(
         MessageContext* msgctx = new MessageContext(msg_ctx);
         OMElement *node = new OMElement(NULL, sct_node);
         bool status = callback->validateToken(node, msgctx);
+        msgctx->setAxis2MessageContext(NULL);
         delete msgctx;
         node->setAxiomNode(NULL); //to prevent original node being deleted. 
         delete node;

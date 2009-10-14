@@ -34,6 +34,7 @@ WSF_EXTERN rampart_authn_provider_status_t WSF_CALL AuthenticationProvider::call
     if(password)
         str_password = password;
     bool status = cb->callback->checkPassword(str_username, str_password, msgctx);
+    msgctx->setAxis2MessageContext(NULL);
     delete msgctx;
     return (status?RAMPART_AUTHN_PROVIDER_GRANTED:RAMPART_AUTHN_PROVIDER_DENIED);
 }
@@ -62,6 +63,7 @@ WSF_EXTERN rampart_authn_provider_status_t WSF_CALL AuthenticationProvider::call
     if(digest)
         str_digest = digest;
     bool status = cb->callback->checkDigestPassword(str_username, str_nonce, str_created, str_digest, msgctx);
+    msgctx->setAxis2MessageContext(NULL);
     delete msgctx;
     return (status?RAMPART_AUTHN_PROVIDER_GRANTED:RAMPART_AUTHN_PROVIDER_DENIED);
 }
