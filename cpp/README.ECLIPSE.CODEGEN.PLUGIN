@@ -1,0 +1,31 @@
+WSF/CPP Codegeneration Plugin for Eclipse.
+=========================================
+
+Note:
+This Codegeneration Wizard Plugin has been developed 
+for eclipse Galilio Version.
+
+
+Installation WSF/CPP Eclipse Codegen Plugin.
+===========================================
+
+Unzip the plugin jar can copy it to your dropins folder of your eclipse installation.
+
+Restart the eclipse IDE.
+
+How to use.
+===========================================
+Go to File->New->Other ( Ctrl + N) to get the Select a Wizard Options Page.
+There you will find the plugin wizard "WSF Codegen Wizard" Option. Select
+it press next. You will get the Codegen Wizard Plugin. 
+
+1. First select the WSDL file for which you want to codegenerate.
+2. From the options page you can select various options that are configurable for code generation.
+3. Then go to next page and select and out put location. 
+4. Now it should generate the code for your selected options. 
+
+Thank  you for using the WSF/CPP Codegeneration Plugin.
+
+If you find any issues, please report to https://wso2.org/jira/browse/WSFCPP.
+
+
