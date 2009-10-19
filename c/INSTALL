@@ -14,6 +14,7 @@ WSO2 Web Services Framework/C - Install Guide
     * iksemel - http://iksemel.jabberstudio.org/ - Required for XMPP transport
     * libiconv - http://www.gnu.org/software/libiconv/
     * zlib - http://www.zlib.net/
+	* Libxslt - http://www.xmlsoft.org/
 
 2. Installing and Running on Linux
 
