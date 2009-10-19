@@ -220,7 +220,6 @@ AC_CONFIG_FILES([Makefile \
     src/subs_mgrs/Makefile\
     src/subs_mgrs/common/Makefile\
     src/subs_mgrs/sqlite/Makefile\
-    src/subs_mgrs/registry/Makefile\
     src/subs_mgrs/service/Makefile\
     src/subs_mgrs/service/subs_mgr_svc/Makefile\
     src/filters/Makefile\
