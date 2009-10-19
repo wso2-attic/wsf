@@ -5,15 +5,15 @@ WSO2 Web Services Framework/C - Install Guide
 
 1.1. Mandatory
 
-    * libiconv - http://www.gnu.org/software/libiconv/
-    * zlib - http://www.zlib.net/
+    * OpenSSL - http://www.openssl.org/ - Required for SSL client transport and WS-Security with Apache Rampart/C
 
 1.2. Optional
 
     * Libxml2 - http://www.xmlsoft.org/
     * Apache2 httpd - http://httpd.apache.org/ - Required for deploying services with httpd
-    * OpenSSL - http://www.openssl.org/ - Required for SSL client transport and WS-Security with Apache Rampart/C
     * iksemel - http://iksemel.jabberstudio.org/ - Required for XMPP transport
+    * libiconv - http://www.gnu.org/software/libiconv/
+    * zlib - http://www.zlib.net/
 
 2. Installing and Running on Linux
 
