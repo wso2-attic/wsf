@@ -23,7 +23,7 @@ copy /Y flickr.exe  ..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples
 
 rem Build Trader sample
 cd ..\trader
-nmake -f trader.mk
+nmake -f trader.mk trader
 cd ..\..
 
 mkdir axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples\src\wsf_c
