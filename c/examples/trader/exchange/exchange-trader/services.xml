@@ -1,8 +1,16 @@
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: #axisVersion# #today# -->
 <service name="exchangetrader">
-    <parameter name="ServiceClass" locked="xsd:false">exchangetrader</parameter>
-    <operation name="buy"/>
-    <operation name="login"/>
-    <operation name="registerClient"/>
-    <operation name="registerFeedTarget"/>
-    <operation name="sell"/>
+<parameter name="ServiceClass">exchangetrader</parameter>
+<description>ExchangeTraderService</description>
+<operation name="login" mep="http://www.w3.org/2004/08/wsdl/in-only">
+</operation>
+<operation name="registerClient" mep="http://www.w3.org/2004/08/wsdl/in-out">
+</operation>
+<operation name="registerFeedTarget" mep="http://www.w3.org/2004/08/wsdl/in-only">
+</operation>
+<operation name="sell" mep="http://www.w3.org/2004/08/wsdl/in-only">
+</operation>
+<operation name="buy" mep="http://www.w3.org/2004/08/wsdl/in-only">
+</operation>
 </service>
