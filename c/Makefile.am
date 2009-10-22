@@ -19,6 +19,7 @@ samples:
 	rm -rf `find $(samplesdir)/ -type d -name *.deps`
 	rm -rf `find $(samplesdir)/ -type f -name Makefile`
 	rm -rf `find $(samplesdir)/ -type d -name autom4te.cache`
+	cp config/axis2.xml $(prefix)
 
 install-data-hook:
 	cp -rf docs/* $(docsdir)
