@@ -114,6 +114,10 @@
     </scm>
 
     <repositories>
+	<repository>
+            <id>wso2-maven2-repository-snapshot</id>
+            <url>http://dist.wso2.org/snapshots/maven2</url>
+        </repository>
         <repository>
             <id>snapshots</id>
             <name>Maven Central Development Repository</name>
@@ -251,7 +255,12 @@
         <name>WSO2 Maven2 Repository</name>
         <url>scp://dist.wso2.org/home/httpd/dist.wso2.org/maven2/</url>
       </repository>
-    </distributionManagement>
+      <snapshotRepository>
+            <id>wso2-maven2-snapshots-repository</id>
+            <name>WSO2 Maven2 Snapshot Repository</name>
+            <url>scp://dist.wso2.org/home/httpd/dist.wso2.org/snapshots/maven2/</url>
+      </snapshotRepository>
+     </distributionManagement>
 
     <properties>
         <axiom.version>SNAPSHOT</axiom.version>                   
