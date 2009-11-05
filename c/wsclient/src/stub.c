@@ -835,27 +835,31 @@ else
 			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
 							"[wsclient] rampart module engaged");
 
-            if (!is_action)
-                axis2_options_set_action (options, env, "http://example.com/ws/2004/09/policy/Test/EchoRequest"/*"http://ws.apache.org/axis2/c"*/);
-            
-            axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+		    if (is_wsa_enabled)
+            {
+                if (!is_action)
+                {
+                    axis2_options_set_action (options, env, "http://example.com/ws/2004/09/policy/Test/EchoRequest"/*"http://ws.apache.org/axis2/c"*/);
+                }
+                axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                             "[wsclient] addressing module engaged");
+            }
+            
 
             /*Create the policy, from file*/
             policy = neethi_util_create_policy_from_file(env, policy_file);
             if(policy)
             {
-                if(!policy)
-                {
-                    printf("\nPolicy creation failed from the file. %s\n", policy_file);
-                }
-
                 status = axis2_svc_client_set_policy(svc_client, env, policy);
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                            "[wsclient] Policy set for the file %s", policy_file);
                 printf("\nPolicy set for the file. %s\n", policy_file);
 
                 if(status == AXIS2_FAILURE)
                 {
+                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                               "[wsclient] Policy setting failed");
                     printf("Policy setting failed\n");
                 }
             }
