@@ -1163,7 +1163,7 @@ wsf_wsdl_do_request(zval *client_zval,
                                     zend_hash_get_current_data_ex (Z_ARRVAL_P(arguments),
                                                             (void **) &param_arg, &pos_arg) == SUCCESS;
                                 zend_hash_move_forward_ex (Z_ARRVAL_P(arguments), &pos_arg)) {
-                                if(Z_ISREF_PP(param_arg)) {
+									if(PZVAL_IS_REF(*param_arg)) {
                                     /* we assign return header pointers to all the references
                                        called with the proxy method */
                                     if(zend_hash_get_current_data_ex (Z_ARRVAL_P(header_params),
@@ -1840,7 +1840,6 @@ void wsf_wsdl_handle_server_security(wsf_svc_info_t *svc_info,
     conf = axis2_conf_ctx_get_conf (wsf_worker_get_conf_ctx(worker, env), env);
     wsf_util_engage_module (conf, WSF_MODULE_SECURITY, env, svc_info->svc);
 }
-
 
 
 void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axutil_env_t *env TSRMLS_DC)
