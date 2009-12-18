@@ -354,6 +354,9 @@ namespace wso2wsf
          */
         WSF_EXTERN axiom_types_t WSF_CALL nodeType();
 
+		static WSF_EXTERN OMElement* WSF_CALL getOMElementFromString(std::string xmlstring);
+
+
     };
     /** @} */
 }
