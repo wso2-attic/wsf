@@ -637,3 +637,14 @@ void OMElement::setChildren(std::vector<OMNode *> children)
     }
     _child_nodes = children;
 }
+
+OMElement* WSF_CALL OMElement::getOMElementFromString(std::string xmlstring)
+{
+	if(xmlstring.empty())
+		return NULL;
+
+	axiom_node_t *node = axiom_node_create_from_buffer(Environment::getEnv(), (axis2_char_t*)xmlstring.c_str());
+	if(!node)
+		return NULL;
+	return new OMElement(NULL, node);
+}
