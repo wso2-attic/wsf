@@ -65,7 +65,7 @@ bool OMDataHandler::write(axis2_byte_t * input_stream, int input_stream_length)
 bool OMDataHandler::read(axis2_byte_t ** output_stream, int * output_stream_length)
 {
     axis2_status_t status =
-        axiom_data_handler_read_from(_wsf_axiom_data_handler, Environment::getEnv(), output_stream, output_stream_length);
+        axiom_data_handler_read_from(_wsf_axiom_data_handler, Environment::getEnv(), output_stream,(size_t*) output_stream_length);
     return (status == AXIS2_SUCCESS);
 }
 
@@ -75,7 +75,7 @@ bool OMDataHandler::read(axis2_byte_t ** output_stream, int * output_stream_leng
   */
 int OMDataHandler::getInputStreamLength()
 {
-    return axiom_data_handler_get_input_stream_len(_wsf_axiom_data_handler, Environment::getEnv());
+    return (int)axiom_data_handler_get_input_stream_len(_wsf_axiom_data_handler, Environment::getEnv());
 }
 
 /** @brief getInputStream
