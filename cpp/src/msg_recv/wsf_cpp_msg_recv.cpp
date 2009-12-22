@@ -58,12 +58,13 @@ wsf_cpp_msg_recv_load_and_init_svc(
 {
 	ServiceSkeleton *impl_class = NULL;
 	axutil_param_t *impl_info_param = NULL;
+	axis2_conf_ctx_t *conf_ctx = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
 	if (!svc)
 	{
 		return AXIS2_FAILURE;
 	}
-
+	conf_ctx = axis2_msg_recv_get_conf_ctx(msg_recv, env);
 	axutil_thread_mutex_lock(axis2_svc_get_mutex(svc, env));
 	impl_class = (ServiceSkeleton*)axis2_svc_get_impl_class(svc, env);
 	if (impl_class)
@@ -83,13 +84,18 @@ wsf_cpp_msg_recv_load_and_init_svc(
 	axutil_allocator_switch_to_global_pool(env->allocator);
 
 	axutil_class_loader_init(env);
-
+	
 	impl_class = (ServiceSkeleton*)axutil_class_loader_create_dll(env, impl_info_param);
-
+	
 
 	if (impl_class)
 	{
-		impl_class->init();
+		const axis2_char_t *svc_name = axis2_svc_get_name(svc, env);
+		axis2_svc_ctx_t *svc_ctx = axis2_conf_ctx_get_svc_ctx(conf_ctx, env, svc_name); 
+		impl_class->setServiceContext(svc_ctx);
+		bool value = impl_class->init();
+		if(!value)
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Service Initinalization Failed");
 	}
 
 	axis2_svc_set_impl_class(svc, env, impl_class);
@@ -540,9 +546,11 @@ wsf_cpp_msg_recv_get_svc_obj(
 
 		if (impl_class)
 		{
-			impl_class->init();
+			impl_class->setServiceContext(svc_ctx);
+			bool value = impl_class->init();
+			if(!value)
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Service Initinalization Failed");
 		}
-
 		axis2_svc_set_impl_class(svc, env, impl_class);
 		axutil_allocator_switch_to_local_pool(env->allocator);
 		axutil_thread_mutex_unlock(axis2_svc_get_mutex(svc, env));
