@@ -65,3 +65,7 @@ OMElement* Echo::onFault(OMElement *ele)
 	return responseEle;
 }
 
+bool Echo::init()
+{
+	return true;
+}

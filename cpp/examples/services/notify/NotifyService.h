@@ -34,7 +34,7 @@ public:
 
 	OMElement* WSF_CALL notify(OMElement *message);
 	
-	void WSF_CALL init(){};
+	bool WSF_CALL init(){ return true;};
 };
 
 
