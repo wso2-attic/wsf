@@ -21,6 +21,7 @@
 #include <OMElement.h>
 #include <string>
 #include <MessageContext.h>
+#include <axis2_conf_ctx.h>
 
 /**
  * WSF_SERVICE_INIT Macro. This macro is used to pass the class name to the class loading methods
@@ -78,6 +79,12 @@ namespace wso2wsf
      * @{
      */
 
+	enum ContextType
+	{
+		SERVICE_CONTEXT = 0,
+		CONFIGURATION_CONTEXT
+	};
+
     /**
      * @brief class ServiceSkeleton represents the Interface that should be implemented by
      * any CPP service to be deployed with WSF/CPP. This class defines 3 virtual methods which should be overridden
@@ -86,7 +93,30 @@ namespace wso2wsf
      */
     class WSF_EXTERN ServiceSkeleton
     {
+	protected :
+		/**
+		 * Stores the service context from axis2 inorder to allow users to store any service specific data.
+		 */
+		axis2_svc_ctx_t *serviceContext;
+
     public:
+		/**
+		 * This method is used to set the service context to the service skeleton. This method should only be used
+		 * by the framework.
+		 * @param svcCtx axis2 service context object.
+		 */
+		void WSF_CALL setServiceContext(axis2_svc_ctx_t *svcCtx);
+		/**
+		 * Stores Property to a given context. This axis2 context hirachy is used for this activitity. 
+		 * @param ContextType ContextType can be one of SERVICE_CONTEXT or CONFIGURATION_CONTEXT.
+		 * @param Parameter Pointer to a parameter instance.
+		 */
+		bool WSF_CALL setProperty(ContextType type,std::string key, Property *prop);
+		/**
+		 * Returns an stored Property from the context hierachy.Specify the property name. 
+		 */
+		Property* WSF_CALL getProperty(std::string key);
+
         /**
          * This method is called for handling the business logic of the service
 	 * Services should implement this method in order to process the soap meesage's content.
@@ -108,10 +138,11 @@ namespace wso2wsf
          */
 	virtual OMElement* WSF_CALL onFault(OMElement* omEle){return NULL;};
 
-        /**
+     /**
          *Initialization method. Any service specific initialization can be done here.                                                    
 	 */
-	virtual void WSF_CALL init(){};
+	virtual bool WSF_CALL init(){ return true;};
+	
 	/**
 	 * Destructor for ServiceSkeleton.			
 	 */ 			

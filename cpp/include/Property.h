@@ -62,23 +62,35 @@ namespace wso2wsf
          * Property scope.
          */
         axis2_scope_t _scope;
+		/**
+		 * Whether the passed value is to be owned by the Property.
+		 */
+		bool _ownValue;
 
     public:
         /**
-         * Creates a node struct.
+         * Creates a Property instance.
          * @param name property key string.
          * @param value pointer to property to be set.
          */
         WSF_EXTERN WSF_CALL Property(std::string name, void * value);
 
         /**
-         * Creates a node struct.
+         * Creates a Property instance.
          * @param name property key string.
          * @param value pointer to property to be set.
          * @param scope scope of property.
          */
         WSF_EXTERN WSF_CALL Property(std::string name, void * value, axis2_scope_t scope);
-
+		
+		/**
+         * Creates a Property instance.
+         * @param name property key string.
+         * @param value pointer to property to be set.
+         * @param scope scope of property.
+         */
+        WSF_EXTERN WSF_CALL Property(std::string name, void * value, axis2_scope_t scope, bool ownValue);
+		
         /**
          * Gets Property name.
          * @return property key string.
@@ -96,6 +108,8 @@ namespace wso2wsf
          * @return scope of property.
          */
         WSF_EXTERN axis2_scope_t WSF_CALL getScope();
+
+		WSF_EXTERN WSF_CALL ~Property();
     };
     /** @} */
 }
