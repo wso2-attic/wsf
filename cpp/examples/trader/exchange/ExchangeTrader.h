@@ -47,7 +47,7 @@ ExchangeTraderSkeleton* wsfGetExchangeTraderSkeleton();
 
               OMElement* WSF_CALL onFault(OMElement *message);
 
-              void WSF_CALL init();
+              bool WSF_CALL init();
 
               ~ExchangeTrader(); 
       };

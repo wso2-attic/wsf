@@ -35,11 +35,11 @@
     }
 
 
-	void WSF_CALL
+	bool WSF_CALL
 	ExchangeTrader::init()
 	{
 		
-      return;
+      return true;
 	}
 
 

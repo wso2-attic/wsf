@@ -35,11 +35,11 @@
     }
 
 
-	void WSF_CALL
+	bool WSF_CALL
 	TraderClient::init()
 	{
 
-      return;
+      return true;
 	}
 
 
