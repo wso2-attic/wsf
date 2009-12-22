@@ -15,6 +15,7 @@ libwso2_wsf_la_SOURCES= WSFault.cpp \
 			Environment.cpp \
 			NeethiPolicy.cpp \
 			MessageContext.cpp \
+			ServiceSkeleton.cpp \
 			Stub.cpp 
 
 

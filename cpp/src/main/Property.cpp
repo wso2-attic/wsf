@@ -55,6 +55,15 @@ string Property::getName()
     _name = name;
     _value = value;
     _scope = scope;
+	_ownValue = false;
+}
+
+  Property::Property(std::string name, void * value, axis2_scope_t scope, bool ownValue)
+{
+    _name = name;
+    _value = value;
+    _scope = scope;
+	_ownValue = ownValue;
 }
 
 /** @brief Property
@@ -66,5 +75,11 @@ string Property::getName()
     _name = name;
     _value = value;
     _scope = AXIS2_SCOPE_APPLICATION;
+	_ownValue = false;
 }
 
+ Property::~Property()
+ {
+	if(_value && _ownValue)
+		delete _value;
+ }
