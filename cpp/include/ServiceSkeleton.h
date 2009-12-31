@@ -90,6 +90,7 @@ namespace wso2wsf
      * any CPP service to be deployed with WSF/CPP. This class defines 3 virtual methods which should be overridden
      * by the implementation class. They are init() which performs any initialization required, invoke() which should handle
      * the business logic processing for the services, and onFault() which should implement the fault handling. 
+	 * A service can be loaded at startup by setting the parameter 	loadServiceAtStartup.
      */
     class WSF_EXTERN ServiceSkeleton
     {
