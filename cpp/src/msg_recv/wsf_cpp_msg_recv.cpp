@@ -64,6 +64,9 @@ wsf_cpp_msg_recv_load_and_init_svc(
 	{
 		return AXIS2_FAILURE;
 	}
+	/** adding the environment */
+	Environment::setEnv(env);
+
 	conf_ctx = axis2_msg_recv_get_conf_ctx(msg_recv, env);
 	axutil_thread_mutex_lock(axis2_svc_get_mutex(svc, env));
 	impl_class = (ServiceSkeleton*)axis2_svc_get_impl_class(svc, env);
@@ -101,6 +104,8 @@ wsf_cpp_msg_recv_load_and_init_svc(
 	axis2_svc_set_impl_class(svc, env, impl_class);
 	axutil_allocator_switch_to_local_pool(env->allocator);
 	axutil_thread_mutex_unlock(axis2_svc_get_mutex(svc, env));
+
+	Environment::removeEnv();
 	return AXIS2_SUCCESS;
 }
 
