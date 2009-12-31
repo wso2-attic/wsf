@@ -30,14 +30,14 @@ cd wsf_c
 
 export WSFCPP_BUILD_DIR=`pwd`
 export WSFCPP_HOME=`pwd`/deploy
-if test -d $REGISTRY_HOME; then 
-cd $REGISTRY_HOME;
-./autogen.sh
-./configure --with-axis2=${WSFCPP_HOME}/include/axis2-1.6.0 --prefix=${WSFCPP_HOME} --enable-tests=yes --with-libcurl=/usr/include/curl
-make
-make install
-cd $WSFCPP_BUILD_DIR
-fi
+#if test -d $REGISTRY_HOME; then 
+#cd $REGISTRY_HOME;
+#./autogen.sh
+#./configure --with-axis2=${WSFCPP_HOME}/include/axis2-1.6.0 --prefix=${WSFCPP_HOME} --enable-tests=yes --with-libcurl=/usr/include/curl
+#make
+#make install
+#cd $WSFCPP_BUILD_DIR
+#fi
 # end registry building
 
 cd ..
