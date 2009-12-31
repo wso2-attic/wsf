@@ -59,7 +59,7 @@ namespace wso2wsf
         /**
          * destructor that can be overridden.
          */
-        WSF_EXTERN virtual WSF_CALL ~MessageReceiver();
+		WSF_EXTERN virtual WSF_CALL ~MessageReceiver(){};
 
         /**
          * Static Handler to be invoked to call invokeMusinessLogicSync
@@ -70,7 +70,7 @@ namespace wso2wsf
 			axis2_msg_ctx_t * msg_ctx,
 			axis2_msg_ctx_t * new_msg_ctx);
 
-		WSF_EXTERN static bool WSF_CALL loadAndInitService(
+		WSF_EXTERN static axis2_status_t WSF_CALL loadAndInitService(
 			axis2_msg_recv_t *msg_recv,
 			const axutil_env_t* env,
 			struct axis2_svc *svc);
@@ -115,18 +115,19 @@ extern "C" \
 		if (!msg_recv)  \
 		{	\
 			AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);	\
-			return NULL;	\
+			return AXIS2_FAILURE;	\
 		}	\
 		status = axis2_msg_recv_set_scope(msg_recv, env, AXIS2_APPLICATION_SCOPE);	\
 		if (!status)	\
 		{	\
 			axis2_msg_recv_free(msg_recv, env);	\
-			return NULL;	\
+			return AXIS2_FAILURE;	\
 		}	\
 		axis2_msg_recv_set_derived(msg_recv, env,  (void*)receiver);	\
 		axis2_msg_recv_set_invoke_business_logic(msg_recv, env, wso2wsf::MessageReceiver::processBusinessLogic); \
 		axis2_msg_recv_set_load_and_init_svc(msg_recv, env,	wso2wsf::MessageReceiver::loadAndInitService);	\
 		*inst = msg_recv;	\
+		return AXIS2_SUCCESS; \
     } \
 } \
 
