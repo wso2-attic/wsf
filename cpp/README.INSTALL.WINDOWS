@@ -32,10 +32,11 @@ You also need have a look at and install the dependencies mentioned in section 1
 
    1. Extract the source zip package to a folder.
 
-   2. If you want to install WSO2 WSF/C++ in a location other than the default, wso2-wsf-cpp-bin-x.x.x-win32,
-      set WSFCPP_HOME environment variable pointing to the location where you want to install WSO2 WSF/C++.
+   2. Set WSFCPP_HOME environment variable to your prefered location where you want to have WSFCPP. After running the build.bat, copy the built binary wso2-wsf-cpp-bin-x.y.z-win32 to that location.
 
         > set WSFCPP_HOME='your_desired_path_to_wsf_c++_installation'
+        > cd 'wsfcpp source directory'
+	> copy wso2-wsf-cpp-bin-x.y.z-win32 %WSFCPP_HOME%
 
    3. Then go to the folder where you extracted the source.
 
