@@ -1,0 +1,2118 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax2107="http://utils.carbon.wso2.org/xsd" xmlns:ax2113="http://util.java/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ax2112="http://neethi.apache.org/xsd" xmlns:ax2110="http://mgt.service.carbon.wso2.org/xsd" xmlns:axis2="http://mgt.service.carbon.wso2.org" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mgt.service.carbon.wso2.org">
+    <wsdl:documentation>ServiceAdmin</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://util.java/xsd">
+            <xs:complexType name="Iterator">
+                <xs:sequence />
+            </xs:complexType>
+            <xs:complexType name="Map">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="empty" type="xs:boolean" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax2115="http://neethi.apache.org/xsd" xmlns:ax2109="http://utils.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax2111="http://mgt.service.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:import namespace="http://utils.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://mgt.service.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://neethi.apache.org/xsd" />
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Exception" nillable="true" type="xs:anyType" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="Exception">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="Exception" nillable="true" type="ns:Exception" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="stopService">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="startService">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setServicePolicy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="policyString" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setServiceParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="parameters" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setServiceOperationPolicy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="policyString" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setServiceOperationMessagePolicy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="messageType" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="policyString" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setPolicy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="policyString" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setModulePolicy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="moduleVersion" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="policyString" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setBindingPolicy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="bindingName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="policyString" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setBindingOperationPolicy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="bindingName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="policyString" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setBindingOperationMessagePolicy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="bindingName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="messageType" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="policyString" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeTransportBinding">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceId" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="transportProtocol" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeTransportBindingResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeServicePoliciesByNamespace">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="namesapce" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeServiceParameter">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="parameterName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ServerException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ServerException" nillable="true" type="ax2109:ServerException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeBindingPolicy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="policyKey" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="moduleNames" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listServiceGroups">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceTypeFilter" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="serviceGroupSearchString" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="pageNumber" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listServiceGroupsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2110:ServiceGroupMetaDataWrapper" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listServiceGroup">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceGroupName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listServiceGroupResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2110:ServiceGroupMetaData" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getWSDL">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getWSDLResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:anyType" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceParametersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceDataResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2110:ServiceMetaData" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceBindings">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceBindingsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPolicy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPolicyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPolicies">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPoliciesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2110:PolicyMetaData" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationPolicy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationPolicyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationMessagePolicy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="messageType" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationMessagePolicyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getNumberOfInactiveServicesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getNumberOfFaultyServicesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getNumberOfActiveServicesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getModulePolicy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="moduleVersion" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getModulePolicyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getFaultyServiceArchives">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="pageNumber" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getFaultyServiceArchivesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2110:FaultyServicesWrapper" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getExposedTransports">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceId" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getExposedTransportsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getBindingPolicy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="bindingName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getBindingPolicyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getBindingOperationPolicy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="bindingName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getBindingOperationPolicyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getBindingOperationMessagePolicy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="bindingName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="messageType" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getBindingOperationMessagePolicyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="engageModuleToService">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="version" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteServiceGroups">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="serviceGroups" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteFaultyServiceGroups">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="fileNames" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteFaultyServiceGroup">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="archiveName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteFaultyServiceGroupResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="configureMTOM">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="flag" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="changeServiceState">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="isActive" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addTransportBinding">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceId" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="transportProtocol" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addTransportBindingResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addPoliciesToService">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="policy" nillable="true" type="ax2112:Policy" />
+                        <xs:element minOccurs="0" name="policyType" type="xs:int" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="modulePaths" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema xmlns:ax2108="http://org.apache.axis2/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://utils.carbon.wso2.org/xsd">
+            <xs:import namespace="http://org.apache.axis2/xsd" />
+            <xs:complexType name="ServerException">
+                <xs:complexContent>
+                    <xs:extension base="ax2108:Exception">
+                        <xs:sequence />
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax2114="http://util.java/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://neethi.apache.org/xsd">
+            <xs:import namespace="http://util.java/xsd" />
+            <xs:complexType name="AbstractPolicyOperator">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="empty" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="firstPolicyComponent" nillable="true" type="ax2112:PolicyComponent" />
+                    <xs:element minOccurs="0" name="policyComponents" nillable="true" type="xs:anyType" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="PolicyComponent">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="type" type="xs:short" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="All">
+                <xs:complexContent>
+                    <xs:extension base="ax2112:AbstractPolicyOperator">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="assertions" nillable="true" type="xs:anyType" />
+                            <xs:element minOccurs="0" name="type" type="xs:short" />
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="Policy">
+                <xs:complexContent>
+                    <xs:extension base="ax2112:All">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="alternatives" nillable="true" type="ax2113:Iterator" />
+                            <xs:element minOccurs="0" name="attributes" nillable="true" type="ax2113:Map" />
+                            <xs:element minOccurs="0" name="id" nillable="true" type="xs:string" />
+                            <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+                            <xs:element minOccurs="0" name="type" type="xs:short" />
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mgt.service.carbon.wso2.org/xsd">
+            <xs:complexType name="ServiceGroupMetaDataWrapper">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="metadataList" nillable="true" type="ax2110:ServiceGroupMetaData" />
+                    <xs:element minOccurs="0" name="numberOfCorrectServiceGroups" type="xs:int" />
+                    <xs:element minOccurs="0" name="numberOfFaultyServiceGroups" type="xs:int" />
+                    <xs:element minOccurs="0" name="numberOfPages" type="xs:int" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="serviceTypes" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ServiceGroupMetaData">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="engagedModules" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="mtomStatus" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="serviceContextPath" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="serviceGroupName" nillable="true" type="xs:string" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="services" nillable="true" type="ax2110:ServiceMetaData" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ServiceMetaData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="active" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="description" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="disableTryit" type="xs:boolean" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="eprs" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="foundWebResources" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="mtomStatus" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="operations" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="scope" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="serviceGroupName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="serviceId" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="serviceType" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="serviceVersion" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="tryitURL" nillable="true" type="xs:string" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="wsdlURLs" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="PolicyMetaData">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="polycies" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="wrapper" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="FaultyServicesWrapper">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="faultyServices" nillable="true" type="ax2110:FaultyService" />
+                    <xs:element minOccurs="0" name="numberOfFaultyServiceGroups" type="xs:int" />
+                    <xs:element minOccurs="0" name="numberOfPages" type="xs:int" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="FaultyService">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="artifact" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="fault" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="serviceType" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getNumberOfInactiveServicesRequest" />
+    <wsdl:message name="getNumberOfInactiveServicesResponse">
+        <wsdl:part name="parameters" element="ns1:getNumberOfInactiveServicesResponse" />
+    </wsdl:message>
+    <wsdl:message name="Exception">
+        <wsdl:part name="parameters" element="ns1:Exception" />
+    </wsdl:message>
+    <wsdl:message name="removeServicePoliciesByNamespaceRequest">
+        <wsdl:part name="parameters" element="ns1:removeServicePoliciesByNamespace" />
+    </wsdl:message>
+    <wsdl:message name="setServicePolicyRequest">
+        <wsdl:part name="parameters" element="ns1:setServicePolicy" />
+    </wsdl:message>
+    <wsdl:message name="setModulePolicyRequest">
+        <wsdl:part name="parameters" element="ns1:setModulePolicy" />
+    </wsdl:message>
+    <wsdl:message name="deleteServiceGroupsRequest">
+        <wsdl:part name="parameters" element="ns1:deleteServiceGroups" />
+    </wsdl:message>
+    <wsdl:message name="getServiceBindingsRequest">
+        <wsdl:part name="parameters" element="ns1:getServiceBindings" />
+    </wsdl:message>
+    <wsdl:message name="getServiceBindingsResponse">
+        <wsdl:part name="parameters" element="ns1:getServiceBindingsResponse" />
+    </wsdl:message>
+    <wsdl:message name="engageModuleToServiceRequest">
+        <wsdl:part name="parameters" element="ns1:engageModuleToService" />
+    </wsdl:message>
+    <wsdl:message name="deleteFaultyServiceGroupsRequest">
+        <wsdl:part name="parameters" element="ns1:deleteFaultyServiceGroups" />
+    </wsdl:message>
+    <wsdl:message name="setBindingPolicyRequest">
+        <wsdl:part name="parameters" element="ns1:setBindingPolicy" />
+    </wsdl:message>
+    <wsdl:message name="removeBindingPolicyRequest">
+        <wsdl:part name="parameters" element="ns1:removeBindingPolicy" />
+    </wsdl:message>
+    <wsdl:message name="ServerException">
+        <wsdl:part name="parameters" element="ns1:ServerException" />
+    </wsdl:message>
+    <wsdl:message name="setServiceOperationPolicyRequest">
+        <wsdl:part name="parameters" element="ns1:setServiceOperationPolicy" />
+    </wsdl:message>
+    <wsdl:message name="getNumberOfActiveServicesRequest" />
+    <wsdl:message name="getNumberOfActiveServicesResponse">
+        <wsdl:part name="parameters" element="ns1:getNumberOfActiveServicesResponse" />
+    </wsdl:message>
+    <wsdl:message name="getBindingOperationPolicyRequest">
+        <wsdl:part name="parameters" element="ns1:getBindingOperationPolicy" />
+    </wsdl:message>
+    <wsdl:message name="getBindingOperationPolicyResponse">
+        <wsdl:part name="parameters" element="ns1:getBindingOperationPolicyResponse" />
+    </wsdl:message>
+    <wsdl:message name="addTransportBindingRequest">
+        <wsdl:part name="parameters" element="ns1:addTransportBinding" />
+    </wsdl:message>
+    <wsdl:message name="addTransportBindingResponse">
+        <wsdl:part name="parameters" element="ns1:addTransportBindingResponse" />
+    </wsdl:message>
+    <wsdl:message name="setPolicyRequest">
+        <wsdl:part name="parameters" element="ns1:setPolicy" />
+    </wsdl:message>
+    <wsdl:message name="listServiceGroupRequest">
+        <wsdl:part name="parameters" element="ns1:listServiceGroup" />
+    </wsdl:message>
+    <wsdl:message name="listServiceGroupResponse">
+        <wsdl:part name="parameters" element="ns1:listServiceGroupResponse" />
+    </wsdl:message>
+    <wsdl:message name="setServiceOperationMessagePolicyRequest">
+        <wsdl:part name="parameters" element="ns1:setServiceOperationMessagePolicy" />
+    </wsdl:message>
+    <wsdl:message name="getPoliciesRequest">
+        <wsdl:part name="parameters" element="ns1:getPolicies" />
+    </wsdl:message>
+    <wsdl:message name="getPoliciesResponse">
+        <wsdl:part name="parameters" element="ns1:getPoliciesResponse" />
+    </wsdl:message>
+    <wsdl:message name="setServiceParametersRequest">
+        <wsdl:part name="parameters" element="ns1:setServiceParameters" />
+    </wsdl:message>
+    <wsdl:message name="getNumberOfFaultyServicesRequest" />
+    <wsdl:message name="getNumberOfFaultyServicesResponse">
+        <wsdl:part name="parameters" element="ns1:getNumberOfFaultyServicesResponse" />
+    </wsdl:message>
+    <wsdl:message name="getServiceParametersRequest">
+        <wsdl:part name="parameters" element="ns1:getServiceParameters" />
+    </wsdl:message>
+    <wsdl:message name="getServiceParametersResponse">
+        <wsdl:part name="parameters" element="ns1:getServiceParametersResponse" />
+    </wsdl:message>
+    <wsdl:message name="getOperationMessagePolicyRequest">
+        <wsdl:part name="parameters" element="ns1:getOperationMessagePolicy" />
+    </wsdl:message>
+    <wsdl:message name="getOperationMessagePolicyResponse">
+        <wsdl:part name="parameters" element="ns1:getOperationMessagePolicyResponse" />
+    </wsdl:message>
+    <wsdl:message name="getModulePolicyRequest">
+        <wsdl:part name="parameters" element="ns1:getModulePolicy" />
+    </wsdl:message>
+    <wsdl:message name="getModulePolicyResponse">
+        <wsdl:part name="parameters" element="ns1:getModulePolicyResponse" />
+    </wsdl:message>
+    <wsdl:message name="setBindingOperationPolicyRequest">
+        <wsdl:part name="parameters" element="ns1:setBindingOperationPolicy" />
+    </wsdl:message>
+    <wsdl:message name="deleteAllNonAdminServiceGroupsRequest" />
+    <wsdl:message name="deleteFaultyServiceGroupRequest">
+        <wsdl:part name="parameters" element="ns1:deleteFaultyServiceGroup" />
+    </wsdl:message>
+    <wsdl:message name="deleteFaultyServiceGroupResponse">
+        <wsdl:part name="parameters" element="ns1:deleteFaultyServiceGroupResponse" />
+    </wsdl:message>
+    <wsdl:message name="getFaultyServiceArchivesRequest">
+        <wsdl:part name="parameters" element="ns1:getFaultyServiceArchives" />
+    </wsdl:message>
+    <wsdl:message name="getFaultyServiceArchivesResponse">
+        <wsdl:part name="parameters" element="ns1:getFaultyServiceArchivesResponse" />
+    </wsdl:message>
+    <wsdl:message name="configureMTOMRequest">
+        <wsdl:part name="parameters" element="ns1:configureMTOM" />
+    </wsdl:message>
+    <wsdl:message name="deleteAllFaultyServiceGroupsRequest" />
+    <wsdl:message name="getExposedTransportsRequest">
+        <wsdl:part name="parameters" element="ns1:getExposedTransports" />
+    </wsdl:message>
+    <wsdl:message name="getExposedTransportsResponse">
+        <wsdl:part name="parameters" element="ns1:getExposedTransportsResponse" />
+    </wsdl:message>
+    <wsdl:message name="getOperationPolicyRequest">
+        <wsdl:part name="parameters" element="ns1:getOperationPolicy" />
+    </wsdl:message>
+    <wsdl:message name="getOperationPolicyResponse">
+        <wsdl:part name="parameters" element="ns1:getOperationPolicyResponse" />
+    </wsdl:message>
+    <wsdl:message name="removeTransportBindingRequest">
+        <wsdl:part name="parameters" element="ns1:removeTransportBinding" />
+    </wsdl:message>
+    <wsdl:message name="removeTransportBindingResponse">
+        <wsdl:part name="parameters" element="ns1:removeTransportBindingResponse" />
+    </wsdl:message>
+    <wsdl:message name="getBindingPolicyRequest">
+        <wsdl:part name="parameters" element="ns1:getBindingPolicy" />
+    </wsdl:message>
+    <wsdl:message name="getBindingPolicyResponse">
+        <wsdl:part name="parameters" element="ns1:getBindingPolicyResponse" />
+    </wsdl:message>
+    <wsdl:message name="startServiceRequest">
+        <wsdl:part name="parameters" element="ns1:startService" />
+    </wsdl:message>
+    <wsdl:message name="stopServiceRequest">
+        <wsdl:part name="parameters" element="ns1:stopService" />
+    </wsdl:message>
+    <wsdl:message name="changeServiceStateRequest">
+        <wsdl:part name="parameters" element="ns1:changeServiceState" />
+    </wsdl:message>
+    <wsdl:message name="getServiceDataRequest">
+        <wsdl:part name="parameters" element="ns1:getServiceData" />
+    </wsdl:message>
+    <wsdl:message name="getServiceDataResponse">
+        <wsdl:part name="parameters" element="ns1:getServiceDataResponse" />
+    </wsdl:message>
+    <wsdl:message name="getWSDLRequest">
+        <wsdl:part name="parameters" element="ns1:getWSDL" />
+    </wsdl:message>
+    <wsdl:message name="getWSDLResponse">
+        <wsdl:part name="parameters" element="ns1:getWSDLResponse" />
+    </wsdl:message>
+    <wsdl:message name="setBindingOperationMessagePolicyRequest">
+        <wsdl:part name="parameters" element="ns1:setBindingOperationMessagePolicy" />
+    </wsdl:message>
+    <wsdl:message name="getBindingOperationMessagePolicyRequest">
+        <wsdl:part name="parameters" element="ns1:getBindingOperationMessagePolicy" />
+    </wsdl:message>
+    <wsdl:message name="getBindingOperationMessagePolicyResponse">
+        <wsdl:part name="parameters" element="ns1:getBindingOperationMessagePolicyResponse" />
+    </wsdl:message>
+    <wsdl:message name="removeServiceParameterRequest">
+        <wsdl:part name="parameters" element="ns1:removeServiceParameter" />
+    </wsdl:message>
+    <wsdl:message name="getPolicyRequest">
+        <wsdl:part name="parameters" element="ns1:getPolicy" />
+    </wsdl:message>
+    <wsdl:message name="getPolicyResponse">
+        <wsdl:part name="parameters" element="ns1:getPolicyResponse" />
+    </wsdl:message>
+    <wsdl:message name="addPoliciesToServiceRequest">
+        <wsdl:part name="parameters" element="ns1:addPoliciesToService" />
+    </wsdl:message>
+    <wsdl:message name="listServiceGroupsRequest">
+        <wsdl:part name="parameters" element="ns1:listServiceGroups" />
+    </wsdl:message>
+    <wsdl:message name="listServiceGroupsResponse">
+        <wsdl:part name="parameters" element="ns1:listServiceGroupsResponse" />
+    </wsdl:message>
+    <wsdl:portType name="ServiceAdminPortType">
+        <wsdl:operation name="getNumberOfInactiveServices">
+            <wsdl:input message="axis2:getNumberOfInactiveServicesRequest" wsaw:Action="urn:getNumberOfInactiveServices" />
+            <wsdl:output message="axis2:getNumberOfInactiveServicesResponse" wsaw:Action="urn:getNumberOfInactiveServicesResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:getNumberOfInactiveServicesException" />
+        </wsdl:operation>
+        <wsdl:operation name="removeServicePoliciesByNamespace">
+            <wsdl:input message="axis2:removeServicePoliciesByNamespaceRequest" wsaw:Action="urn:removeServicePoliciesByNamespace" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:removeServicePoliciesByNamespaceException" />
+        </wsdl:operation>
+        <wsdl:operation name="setServicePolicy">
+            <wsdl:input message="axis2:setServicePolicyRequest" wsaw:Action="urn:setServicePolicy" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:setServicePolicyException" />
+        </wsdl:operation>
+        <wsdl:operation name="setModulePolicy">
+            <wsdl:input message="axis2:setModulePolicyRequest" wsaw:Action="urn:setModulePolicy" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:setModulePolicyException" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteServiceGroups">
+            <wsdl:input message="axis2:deleteServiceGroupsRequest" wsaw:Action="urn:deleteServiceGroups" />
+        </wsdl:operation>
+        <wsdl:operation name="getServiceBindings">
+            <wsdl:input message="axis2:getServiceBindingsRequest" wsaw:Action="urn:getServiceBindings" />
+            <wsdl:output message="axis2:getServiceBindingsResponse" wsaw:Action="urn:getServiceBindingsResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:getServiceBindingsException" />
+        </wsdl:operation>
+        <wsdl:operation name="engageModuleToService">
+            <wsdl:input message="axis2:engageModuleToServiceRequest" wsaw:Action="urn:engageModuleToService" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:engageModuleToServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteFaultyServiceGroups">
+            <wsdl:input message="axis2:deleteFaultyServiceGroupsRequest" wsaw:Action="urn:deleteFaultyServiceGroups" />
+        </wsdl:operation>
+        <wsdl:operation name="setBindingPolicy">
+            <wsdl:input message="axis2:setBindingPolicyRequest" wsaw:Action="urn:setBindingPolicy" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:setBindingPolicyException" />
+        </wsdl:operation>
+        <wsdl:operation name="removeBindingPolicy">
+            <wsdl:input message="axis2:removeBindingPolicyRequest" wsaw:Action="urn:removeBindingPolicy" />
+            <wsdl:fault message="axis2:ServerException" name="ServerException" wsaw:Action="urn:removeBindingPolicyServerException" />
+        </wsdl:operation>
+        <wsdl:operation name="setServiceOperationPolicy">
+            <wsdl:input message="axis2:setServiceOperationPolicyRequest" wsaw:Action="urn:setServiceOperationPolicy" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:setServiceOperationPolicyException" />
+        </wsdl:operation>
+        <wsdl:operation name="getNumberOfActiveServices">
+            <wsdl:input message="axis2:getNumberOfActiveServicesRequest" wsaw:Action="urn:getNumberOfActiveServices" />
+            <wsdl:output message="axis2:getNumberOfActiveServicesResponse" wsaw:Action="urn:getNumberOfActiveServicesResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:getNumberOfActiveServicesException" />
+        </wsdl:operation>
+        <wsdl:operation name="getBindingOperationPolicy">
+            <wsdl:input message="axis2:getBindingOperationPolicyRequest" wsaw:Action="urn:getBindingOperationPolicy" />
+            <wsdl:output message="axis2:getBindingOperationPolicyResponse" wsaw:Action="urn:getBindingOperationPolicyResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="addTransportBinding">
+            <wsdl:input message="axis2:addTransportBindingRequest" wsaw:Action="urn:addTransportBinding" />
+            <wsdl:output message="axis2:addTransportBindingResponse" wsaw:Action="urn:addTransportBindingResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:addTransportBindingException" />
+        </wsdl:operation>
+        <wsdl:operation name="setPolicy">
+            <wsdl:input message="axis2:setPolicyRequest" wsaw:Action="urn:setPolicy" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:setPolicyException" />
+        </wsdl:operation>
+        <wsdl:operation name="listServiceGroup">
+            <wsdl:input message="axis2:listServiceGroupRequest" wsaw:Action="urn:listServiceGroup" />
+            <wsdl:output message="axis2:listServiceGroupResponse" wsaw:Action="urn:listServiceGroupResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="setServiceOperationMessagePolicy">
+            <wsdl:input message="axis2:setServiceOperationMessagePolicyRequest" wsaw:Action="urn:setServiceOperationMessagePolicy" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:setServiceOperationMessagePolicyException" />
+        </wsdl:operation>
+        <wsdl:operation name="getPolicies">
+            <wsdl:input message="axis2:getPoliciesRequest" wsaw:Action="urn:getPolicies" />
+            <wsdl:output message="axis2:getPoliciesResponse" wsaw:Action="urn:getPoliciesResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="setServiceParameters">
+            <wsdl:input message="axis2:setServiceParametersRequest" wsaw:Action="urn:setServiceParameters" />
+        </wsdl:operation>
+        <wsdl:operation name="getNumberOfFaultyServices">
+            <wsdl:input message="axis2:getNumberOfFaultyServicesRequest" wsaw:Action="urn:getNumberOfFaultyServices" />
+            <wsdl:output message="axis2:getNumberOfFaultyServicesResponse" wsaw:Action="urn:getNumberOfFaultyServicesResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getServiceParameters">
+            <wsdl:input message="axis2:getServiceParametersRequest" wsaw:Action="urn:getServiceParameters" />
+            <wsdl:output message="axis2:getServiceParametersResponse" wsaw:Action="urn:getServiceParametersResponse" />
+            <wsdl:fault message="axis2:ServerException" name="ServerException" wsaw:Action="urn:getServiceParametersServerException" />
+        </wsdl:operation>
+        <wsdl:operation name="getOperationMessagePolicy">
+            <wsdl:input message="axis2:getOperationMessagePolicyRequest" wsaw:Action="urn:getOperationMessagePolicy" />
+            <wsdl:output message="axis2:getOperationMessagePolicyResponse" wsaw:Action="urn:getOperationMessagePolicyResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getModulePolicy">
+            <wsdl:input message="axis2:getModulePolicyRequest" wsaw:Action="urn:getModulePolicy" />
+            <wsdl:output message="axis2:getModulePolicyResponse" wsaw:Action="urn:getModulePolicyResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="setBindingOperationPolicy">
+            <wsdl:input message="axis2:setBindingOperationPolicyRequest" wsaw:Action="urn:setBindingOperationPolicy" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:setBindingOperationPolicyException" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteAllNonAdminServiceGroups">
+            <wsdl:input message="axis2:deleteAllNonAdminServiceGroupsRequest" wsaw:Action="urn:deleteAllNonAdminServiceGroups" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteFaultyServiceGroup">
+            <wsdl:input message="axis2:deleteFaultyServiceGroupRequest" wsaw:Action="urn:deleteFaultyServiceGroup" />
+            <wsdl:output message="axis2:deleteFaultyServiceGroupResponse" wsaw:Action="urn:deleteFaultyServiceGroupResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getFaultyServiceArchives">
+            <wsdl:input message="axis2:getFaultyServiceArchivesRequest" wsaw:Action="urn:getFaultyServiceArchives" />
+            <wsdl:output message="axis2:getFaultyServiceArchivesResponse" wsaw:Action="urn:getFaultyServiceArchivesResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="configureMTOM">
+            <wsdl:input message="axis2:configureMTOMRequest" wsaw:Action="urn:configureMTOM" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteAllFaultyServiceGroups">
+            <wsdl:input message="axis2:deleteAllFaultyServiceGroupsRequest" wsaw:Action="urn:deleteAllFaultyServiceGroups" />
+        </wsdl:operation>
+        <wsdl:operation name="getExposedTransports">
+            <wsdl:input message="axis2:getExposedTransportsRequest" wsaw:Action="urn:getExposedTransports" />
+            <wsdl:output message="axis2:getExposedTransportsResponse" wsaw:Action="urn:getExposedTransportsResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getOperationPolicy">
+            <wsdl:input message="axis2:getOperationPolicyRequest" wsaw:Action="urn:getOperationPolicy" />
+            <wsdl:output message="axis2:getOperationPolicyResponse" wsaw:Action="urn:getOperationPolicyResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="removeTransportBinding">
+            <wsdl:input message="axis2:removeTransportBindingRequest" wsaw:Action="urn:removeTransportBinding" />
+            <wsdl:output message="axis2:removeTransportBindingResponse" wsaw:Action="urn:removeTransportBindingResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:removeTransportBindingException" />
+        </wsdl:operation>
+        <wsdl:operation name="getBindingPolicy">
+            <wsdl:input message="axis2:getBindingPolicyRequest" wsaw:Action="urn:getBindingPolicy" />
+            <wsdl:output message="axis2:getBindingPolicyResponse" wsaw:Action="urn:getBindingPolicyResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="startService">
+            <wsdl:input message="axis2:startServiceRequest" wsaw:Action="urn:startService" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:startServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="stopService">
+            <wsdl:input message="axis2:stopServiceRequest" wsaw:Action="urn:stopService" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:stopServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="changeServiceState">
+            <wsdl:input message="axis2:changeServiceStateRequest" wsaw:Action="urn:changeServiceState" />
+        </wsdl:operation>
+        <wsdl:operation name="getServiceData">
+            <wsdl:input message="axis2:getServiceDataRequest" wsaw:Action="urn:getServiceData" />
+            <wsdl:output message="axis2:getServiceDataResponse" wsaw:Action="urn:getServiceDataResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getWSDL">
+            <wsdl:input message="axis2:getWSDLRequest" wsaw:Action="urn:getWSDL" />
+            <wsdl:output message="axis2:getWSDLResponse" wsaw:Action="urn:getWSDLResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="setBindingOperationMessagePolicy">
+            <wsdl:input message="axis2:setBindingOperationMessagePolicyRequest" wsaw:Action="urn:setBindingOperationMessagePolicy" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:setBindingOperationMessagePolicyException" />
+        </wsdl:operation>
+        <wsdl:operation name="getBindingOperationMessagePolicy">
+            <wsdl:input message="axis2:getBindingOperationMessagePolicyRequest" wsaw:Action="urn:getBindingOperationMessagePolicy" />
+            <wsdl:output message="axis2:getBindingOperationMessagePolicyResponse" wsaw:Action="urn:getBindingOperationMessagePolicyResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="removeServiceParameter">
+            <wsdl:input message="axis2:removeServiceParameterRequest" wsaw:Action="urn:removeServiceParameter" />
+        </wsdl:operation>
+        <wsdl:operation name="getPolicy">
+            <wsdl:input message="axis2:getPolicyRequest" wsaw:Action="urn:getPolicy" />
+            <wsdl:output message="axis2:getPolicyResponse" wsaw:Action="urn:getPolicyResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="addPoliciesToService">
+            <wsdl:input message="axis2:addPoliciesToServiceRequest" wsaw:Action="urn:addPoliciesToService" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:addPoliciesToServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="listServiceGroups">
+            <wsdl:input message="axis2:listServiceGroupsRequest" wsaw:Action="urn:listServiceGroups" />
+            <wsdl:output message="axis2:listServiceGroupsResponse" wsaw:Action="urn:listServiceGroupsResponse" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="ServiceAdminSoap11Binding" type="axis2:ServiceAdminPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="setServicePolicy">
+            <soap:operation soapAction="urn:setServicePolicy" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeServicePoliciesByNamespace">
+            <soap:operation soapAction="urn:removeServicePoliciesByNamespace" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getNumberOfInactiveServices">
+            <soap:operation soapAction="urn:getNumberOfInactiveServices" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setModulePolicy">
+            <soap:operation soapAction="urn:setModulePolicy" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteServiceGroups">
+            <soap:operation soapAction="urn:deleteServiceGroups" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceBindings">
+            <soap:operation soapAction="urn:getServiceBindings" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setBindingPolicy">
+            <soap:operation soapAction="urn:setBindingPolicy" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteFaultyServiceGroups">
+            <soap:operation soapAction="urn:deleteFaultyServiceGroups" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="engageModuleToService">
+            <soap:operation soapAction="urn:engageModuleToService" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setServiceOperationPolicy">
+            <soap:operation soapAction="urn:setServiceOperationPolicy" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeBindingPolicy">
+            <soap:operation soapAction="urn:removeBindingPolicy" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="ServerException">
+                <soap:fault use="literal" name="ServerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getBindingOperationPolicy">
+            <soap:operation soapAction="urn:getBindingOperationPolicy" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setPolicy">
+            <soap:operation soapAction="urn:setPolicy" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addTransportBinding">
+            <soap:operation soapAction="urn:addTransportBinding" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getNumberOfActiveServices">
+            <soap:operation soapAction="urn:getNumberOfActiveServices" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listServiceGroup">
+            <soap:operation soapAction="urn:listServiceGroup" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setServiceOperationMessagePolicy">
+            <soap:operation soapAction="urn:setServiceOperationMessagePolicy" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getPolicies">
+            <soap:operation soapAction="urn:getPolicies" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setServiceParameters">
+            <soap:operation soapAction="urn:setServiceParameters" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceParameters">
+            <soap:operation soapAction="urn:getServiceParameters" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ServerException">
+                <soap:fault use="literal" name="ServerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getNumberOfFaultyServices">
+            <soap:operation soapAction="urn:getNumberOfFaultyServices" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationMessagePolicy">
+            <soap:operation soapAction="urn:getOperationMessagePolicy" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getModulePolicy">
+            <soap:operation soapAction="urn:getModulePolicy" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setBindingOperationPolicy">
+            <soap:operation soapAction="urn:setBindingOperationPolicy" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteAllNonAdminServiceGroups">
+            <soap:operation soapAction="urn:deleteAllNonAdminServiceGroups" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getFaultyServiceArchives">
+            <soap:operation soapAction="urn:getFaultyServiceArchives" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteFaultyServiceGroup">
+            <soap:operation soapAction="urn:deleteFaultyServiceGroup" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteAllFaultyServiceGroups">
+            <soap:operation soapAction="urn:deleteAllFaultyServiceGroups" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="configureMTOM">
+            <soap:operation soapAction="urn:configureMTOM" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getExposedTransports">
+            <soap:operation soapAction="urn:getExposedTransports" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationPolicy">
+            <soap:operation soapAction="urn:getOperationPolicy" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="removeTransportBinding">
+            <soap:operation soapAction="urn:removeTransportBinding" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getBindingPolicy">
+            <soap:operation soapAction="urn:getBindingPolicy" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="stopService">
+            <soap:operation soapAction="urn:stopService" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="startService">
+            <soap:operation soapAction="urn:startService" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceData">
+            <soap:operation soapAction="urn:getServiceData" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="changeServiceState">
+            <soap:operation soapAction="urn:changeServiceState" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getWSDL">
+            <soap:operation soapAction="urn:getWSDL" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setBindingOperationMessagePolicy">
+            <soap:operation soapAction="urn:setBindingOperationMessagePolicy" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getBindingOperationMessagePolicy">
+            <soap:operation soapAction="urn:getBindingOperationMessagePolicy" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="removeServiceParameter">
+            <soap:operation soapAction="urn:removeServiceParameter" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getPolicy">
+            <soap:operation soapAction="urn:getPolicy" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listServiceGroups">
+            <soap:operation soapAction="urn:listServiceGroups" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addPoliciesToService">
+            <soap:operation soapAction="urn:addPoliciesToService" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ServiceAdminSoap12Binding" type="axis2:ServiceAdminPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="setServicePolicy">
+            <soap12:operation soapAction="urn:setServicePolicy" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeServicePoliciesByNamespace">
+            <soap12:operation soapAction="urn:removeServicePoliciesByNamespace" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getNumberOfInactiveServices">
+            <soap12:operation soapAction="urn:getNumberOfInactiveServices" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setModulePolicy">
+            <soap12:operation soapAction="urn:setModulePolicy" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteServiceGroups">
+            <soap12:operation soapAction="urn:deleteServiceGroups" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceBindings">
+            <soap12:operation soapAction="urn:getServiceBindings" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setBindingPolicy">
+            <soap12:operation soapAction="urn:setBindingPolicy" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteFaultyServiceGroups">
+            <soap12:operation soapAction="urn:deleteFaultyServiceGroups" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="engageModuleToService">
+            <soap12:operation soapAction="urn:engageModuleToService" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setServiceOperationPolicy">
+            <soap12:operation soapAction="urn:setServiceOperationPolicy" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeBindingPolicy">
+            <soap12:operation soapAction="urn:removeBindingPolicy" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="ServerException">
+                <soap12:fault use="literal" name="ServerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getBindingOperationPolicy">
+            <soap12:operation soapAction="urn:getBindingOperationPolicy" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setPolicy">
+            <soap12:operation soapAction="urn:setPolicy" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addTransportBinding">
+            <soap12:operation soapAction="urn:addTransportBinding" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getNumberOfActiveServices">
+            <soap12:operation soapAction="urn:getNumberOfActiveServices" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listServiceGroup">
+            <soap12:operation soapAction="urn:listServiceGroup" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setServiceOperationMessagePolicy">
+            <soap12:operation soapAction="urn:setServiceOperationMessagePolicy" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getPolicies">
+            <soap12:operation soapAction="urn:getPolicies" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setServiceParameters">
+            <soap12:operation soapAction="urn:setServiceParameters" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceParameters">
+            <soap12:operation soapAction="urn:getServiceParameters" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ServerException">
+                <soap12:fault use="literal" name="ServerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getNumberOfFaultyServices">
+            <soap12:operation soapAction="urn:getNumberOfFaultyServices" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationMessagePolicy">
+            <soap12:operation soapAction="urn:getOperationMessagePolicy" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getModulePolicy">
+            <soap12:operation soapAction="urn:getModulePolicy" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setBindingOperationPolicy">
+            <soap12:operation soapAction="urn:setBindingOperationPolicy" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteAllNonAdminServiceGroups">
+            <soap12:operation soapAction="urn:deleteAllNonAdminServiceGroups" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getFaultyServiceArchives">
+            <soap12:operation soapAction="urn:getFaultyServiceArchives" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteFaultyServiceGroup">
+            <soap12:operation soapAction="urn:deleteFaultyServiceGroup" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteAllFaultyServiceGroups">
+            <soap12:operation soapAction="urn:deleteAllFaultyServiceGroups" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="configureMTOM">
+            <soap12:operation soapAction="urn:configureMTOM" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getExposedTransports">
+            <soap12:operation soapAction="urn:getExposedTransports" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationPolicy">
+            <soap12:operation soapAction="urn:getOperationPolicy" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="removeTransportBinding">
+            <soap12:operation soapAction="urn:removeTransportBinding" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getBindingPolicy">
+            <soap12:operation soapAction="urn:getBindingPolicy" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="stopService">
+            <soap12:operation soapAction="urn:stopService" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="startService">
+            <soap12:operation soapAction="urn:startService" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceData">
+            <soap12:operation soapAction="urn:getServiceData" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="changeServiceState">
+            <soap12:operation soapAction="urn:changeServiceState" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getWSDL">
+            <soap12:operation soapAction="urn:getWSDL" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setBindingOperationMessagePolicy">
+            <soap12:operation soapAction="urn:setBindingOperationMessagePolicy" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getBindingOperationMessagePolicy">
+            <soap12:operation soapAction="urn:getBindingOperationMessagePolicy" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="removeServiceParameter">
+            <soap12:operation soapAction="urn:removeServiceParameter" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getPolicy">
+            <soap12:operation soapAction="urn:getPolicy" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listServiceGroups">
+            <soap12:operation soapAction="urn:listServiceGroups" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addPoliciesToService">
+            <soap12:operation soapAction="urn:addPoliciesToService" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ServiceAdminHttpBinding" type="axis2:ServiceAdminPortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="setServicePolicy">
+            <http:operation location="setServicePolicy" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="setServicePolicy" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="removeServicePoliciesByNamespace">
+            <http:operation location="removeServicePoliciesByNamespace" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="removeServicePoliciesByNamespace" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getNumberOfInactiveServices">
+            <http:operation location="getNumberOfInactiveServices" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getNumberOfInactiveServices" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getNumberOfInactiveServices" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setModulePolicy">
+            <http:operation location="setModulePolicy" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="setModulePolicy" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="deleteServiceGroups">
+            <http:operation location="deleteServiceGroups" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="deleteServiceGroups" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceBindings">
+            <http:operation location="getServiceBindings" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getServiceBindings" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getServiceBindings" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setBindingPolicy">
+            <http:operation location="setBindingPolicy" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="setBindingPolicy" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="deleteFaultyServiceGroups">
+            <http:operation location="deleteFaultyServiceGroups" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="deleteFaultyServiceGroups" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="engageModuleToService">
+            <http:operation location="engageModuleToService" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="engageModuleToService" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="setServiceOperationPolicy">
+            <http:operation location="setServiceOperationPolicy" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="setServiceOperationPolicy" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="removeBindingPolicy">
+            <http:operation location="removeBindingPolicy" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="removeBindingPolicy" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getBindingOperationPolicy">
+            <http:operation location="getBindingOperationPolicy" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getBindingOperationPolicy" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getBindingOperationPolicy" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setPolicy">
+            <http:operation location="setPolicy" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="setPolicy" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addTransportBinding">
+            <http:operation location="addTransportBinding" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="addTransportBinding" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="addTransportBinding" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getNumberOfActiveServices">
+            <http:operation location="getNumberOfActiveServices" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getNumberOfActiveServices" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getNumberOfActiveServices" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listServiceGroup">
+            <http:operation location="listServiceGroup" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="listServiceGroup" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="listServiceGroup" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setServiceOperationMessagePolicy">
+            <http:operation location="setServiceOperationMessagePolicy" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="setServiceOperationMessagePolicy" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getPolicies">
+            <http:operation location="getPolicies" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getPolicies" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getPolicies" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setServiceParameters">
+            <http:operation location="setServiceParameters" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="setServiceParameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceParameters">
+            <http:operation location="getServiceParameters" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getServiceParameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getServiceParameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getNumberOfFaultyServices">
+            <http:operation location="getNumberOfFaultyServices" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getNumberOfFaultyServices" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getNumberOfFaultyServices" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationMessagePolicy">
+            <http:operation location="getOperationMessagePolicy" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getOperationMessagePolicy" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getOperationMessagePolicy" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getModulePolicy">
+            <http:operation location="getModulePolicy" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getModulePolicy" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getModulePolicy" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setBindingOperationPolicy">
+            <http:operation location="setBindingOperationPolicy" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="setBindingOperationPolicy" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="deleteAllNonAdminServiceGroups">
+            <http:operation location="deleteAllNonAdminServiceGroups" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="deleteAllNonAdminServiceGroups" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getFaultyServiceArchives">
+            <http:operation location="getFaultyServiceArchives" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getFaultyServiceArchives" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getFaultyServiceArchives" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteFaultyServiceGroup">
+            <http:operation location="deleteFaultyServiceGroup" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="deleteFaultyServiceGroup" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="deleteFaultyServiceGroup" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteAllFaultyServiceGroups">
+            <http:operation location="deleteAllFaultyServiceGroups" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="deleteAllFaultyServiceGroups" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="configureMTOM">
+            <http:operation location="configureMTOM" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="configureMTOM" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getExposedTransports">
+            <http:operation location="getExposedTransports" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getExposedTransports" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getExposedTransports" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationPolicy">
+            <http:operation location="getOperationPolicy" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getOperationPolicy" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getOperationPolicy" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="removeTransportBinding">
+            <http:operation location="removeTransportBinding" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="removeTransportBinding" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="removeTransportBinding" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getBindingPolicy">
+            <http:operation location="getBindingPolicy" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getBindingPolicy" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getBindingPolicy" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="stopService">
+            <http:operation location="stopService" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="stopService" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="startService">
+            <http:operation location="startService" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="startService" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceData">
+            <http:operation location="getServiceData" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getServiceData" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getServiceData" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="changeServiceState">
+            <http:operation location="changeServiceState" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="changeServiceState" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getWSDL">
+            <http:operation location="getWSDL" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getWSDL" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getWSDL" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setBindingOperationMessagePolicy">
+            <http:operation location="setBindingOperationMessagePolicy" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="setBindingOperationMessagePolicy" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getBindingOperationMessagePolicy">
+            <http:operation location="getBindingOperationMessagePolicy" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getBindingOperationMessagePolicy" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getBindingOperationMessagePolicy" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="removeServiceParameter">
+            <http:operation location="removeServiceParameter" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="removeServiceParameter" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getPolicy">
+            <http:operation location="getPolicy" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getPolicy" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getPolicy" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listServiceGroups">
+            <http:operation location="listServiceGroups" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="listServiceGroups" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="listServiceGroups" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addPoliciesToService">
+            <http:operation location="addPoliciesToService" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="addPoliciesToService" />
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="ServiceAdmin">
+        <wsdl:port name="ServiceAdminHttpsSoap11Endpoint" binding="axis2:ServiceAdminSoap11Binding">
+            <soap:address location="https://192.168.175.1:9443/services/ServiceAdmin.ServiceAdminHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="ServiceAdminHttpsSoap12Endpoint" binding="axis2:ServiceAdminSoap12Binding">
+            <soap12:address location="https://192.168.175.1:9443/services/ServiceAdmin.ServiceAdminHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="ServiceAdminHttpsEndpoint" binding="axis2:ServiceAdminHttpBinding">
+            <http:address location="https://192.168.175.1:9443/services/ServiceAdmin.ServiceAdminHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
