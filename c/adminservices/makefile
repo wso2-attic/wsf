@@ -19,6 +19,7 @@ SERVICE_ADMIN_SERVICE=ServiceAdmin
 ## Service Code SRC
 AUTH_SVC_SRC=$(ADMIN_SVC_SRCDIR)\authentication
 SERVER_ADMIN_SRC=$(ADMIN_SVC_SRCDIR)\server_admin
+SERVICE_ADMIN_SRC=$(ADMIN_SVC_SRCDIR)\service_admin
 ##################### compiler options
 
 CC = @cl.exe 
@@ -145,13 +146,13 @@ endpoint_admin_service: $(ADMIN_SVC_SRCDIR)\endpoint_admin\codegen\*.c $(ADMIN_S
 	-@$(_VC_MANIFEST_EMBED_DLL)
 	copy $(ADMIN_SVC_SRCDIR)\endpoint_admin\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(ENDPOINT_ADMIN_SERVICE)\
 	
-service_admin_service: $(ADMIN_SVC_SRCDIR)\service_admin\codegen\*.c $(ADMIN_SVC_SRCDIR)\service_admin\*.c	
-	$(CC) $(CFLAGS) $(ADMIN_SVC_SRCDIR)\service_admin\codegen\*.c \
-		$(ADMIN_SVC_SRCDIR)\service_admin\*.c /Fo$(ADMIN_SVC_INTDIR)\$(SERVICE_ADMIN_SERVICE)\ /c
+service_admin_service: $(SERVICE_ADMIN_SRC)\codegen\*.c $(SERVICE_ADMIN_SRC)\*.c	
+	$(CC) $(CFLAGS) $(SERVICE_ADMIN_SRC)\codegen\*.c \
+		$(SERVICE_ADMIN_SRC)\*.c /Fo$(ADMIN_SVC_INTDIR)\$(SERVICE_ADMIN_SERVICE)\ /c
 	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(SERVICE_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
 		/OUT:$(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE)\$(SERVICE_ADMIN_SERVICE).dll
 	-@$(_VC_MANIFEST_EMBED_DLL)
-	copy $(ADMIN_SVC_SRCDIR)\service_admin\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE)\
+	copy $(SERVICE_ADMIN_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE)\
 	
 	
 #==================================================================================
@@ -172,7 +173,7 @@ registry_client: $(REGISTRY_CLIENT_SRC)
 	
 #==============================================================================================
 
-admin_svc_all: authentication_service server_admin_service
+admin_svc_all: authentication_service server_admin_service service_admin_service
 #admin_svc_all: authentication_service server_admin_service proxy_admin endpoint_admin_service service_admin_service keystore_admin
 
 install: distdir intdirs admin_svc_all

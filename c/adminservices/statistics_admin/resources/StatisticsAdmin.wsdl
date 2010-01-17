@@ -1,0 +1,1096 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:axis2="http://services.statistics.carbon.wso2.org" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax285="http://util.services.statistics.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.statistics.carbon.wso2.org">
+    <wsdl:documentation>StatisticsAdmin</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax286="http://util.services.statistics.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:import namespace="http://util.services.statistics.carbon.wso2.org/xsd" />
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Exception" nillable="true" type="xs:anyType" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getSystemStatisticsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax286:SystemStatistics" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSystemResponseCountResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSystemRequestCountResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSystemFaultCountResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceStatistics">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceStatisticsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax286:ServiceStatistics" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceResponseCount">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceResponseCountResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceRequestCount">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceRequestCountResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceFaultCount">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceFaultCountResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationStatistics">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationStatisticsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax286:OperationStatistics" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationResponseCount">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationResponseCountResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationRequestCount">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationRequestCountResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationFaultCount">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationFaultCountResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMinSystemResponseTimeResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:long" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMinServiceResponseTime">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMinServiceResponseTimeResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:long" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMinOperationResponseTime">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMinOperationResponseTimeResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:long" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMaxSystemResponseTimeResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:long" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMaxServiceResponseTime">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMaxServiceResponseTimeResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:long" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMaxOperationResponseTime">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMaxOperationResponseTimeResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:long" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAvgSystemResponseTimeResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:double" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAvgServiceResponseTime">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAvgServiceResponseTimeResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:double" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAvgOperationResponseTime">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAvgOperationResponseTimeResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:double" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://util.services.statistics.carbon.wso2.org/xsd">
+            <xs:complexType name="SystemStatistics">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="avgResponseTime" type="xs:double" />
+                    <xs:element minOccurs="0" name="faultCount" type="xs:int" />
+                    <xs:element minOccurs="0" name="javaVersion" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="maxResponseTime" type="xs:long" />
+                    <xs:element minOccurs="0" name="minResponseTime" type="xs:long" />
+                    <xs:element minOccurs="0" name="requestCount" type="xs:int" />
+                    <xs:element minOccurs="0" name="responseCount" type="xs:int" />
+                    <xs:element minOccurs="0" name="serverName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="serverStartTime" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="services" type="xs:int" />
+                    <xs:element minOccurs="0" name="systemUpTime" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="totalMemory" nillable="true" type="ax285:Metric" />
+                    <xs:element minOccurs="0" name="usedMemory" nillable="true" type="ax285:Metric" />
+                    <xs:element minOccurs="0" name="wso2wsasVersion" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Metric">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="unit" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="value" type="xs:double" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ServiceStatistics">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="avgResponseTime" type="xs:double" />
+                    <xs:element minOccurs="0" name="faultCount" type="xs:int" />
+                    <xs:element minOccurs="0" name="maxResponseTime" type="xs:long" />
+                    <xs:element minOccurs="0" name="minResponseTime" type="xs:long" />
+                    <xs:element minOccurs="0" name="requestCount" type="xs:int" />
+                    <xs:element minOccurs="0" name="responseCount" type="xs:int" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="OperationStatistics">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="avgResponseTime" type="xs:double" />
+                    <xs:element minOccurs="0" name="faultCount" type="xs:int" />
+                    <xs:element minOccurs="0" name="maxResponseTime" type="xs:long" />
+                    <xs:element minOccurs="0" name="minResponseTime" type="xs:long" />
+                    <xs:element minOccurs="0" name="requestCount" type="xs:int" />
+                    <xs:element minOccurs="0" name="responseCount" type="xs:int" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getSystemStatisticsRequest" />
+    <wsdl:message name="getSystemStatisticsResponse">
+        <wsdl:part name="parameters" element="ns1:getSystemStatisticsResponse" />
+    </wsdl:message>
+    <wsdl:message name="getMinOperationResponseTimeRequest">
+        <wsdl:part name="parameters" element="ns1:getMinOperationResponseTime" />
+    </wsdl:message>
+    <wsdl:message name="getMinOperationResponseTimeResponse">
+        <wsdl:part name="parameters" element="ns1:getMinOperationResponseTimeResponse" />
+    </wsdl:message>
+    <wsdl:message name="getOperationRequestCountRequest">
+        <wsdl:part name="parameters" element="ns1:getOperationRequestCount" />
+    </wsdl:message>
+    <wsdl:message name="getOperationRequestCountResponse">
+        <wsdl:part name="parameters" element="ns1:getOperationRequestCountResponse" />
+    </wsdl:message>
+    <wsdl:message name="getMaxSystemResponseTimeRequest" />
+    <wsdl:message name="getMaxSystemResponseTimeResponse">
+        <wsdl:part name="parameters" element="ns1:getMaxSystemResponseTimeResponse" />
+    </wsdl:message>
+    <wsdl:message name="getServiceStatisticsRequest">
+        <wsdl:part name="parameters" element="ns1:getServiceStatistics" />
+    </wsdl:message>
+    <wsdl:message name="getServiceStatisticsResponse">
+        <wsdl:part name="parameters" element="ns1:getServiceStatisticsResponse" />
+    </wsdl:message>
+    <wsdl:message name="getServiceFaultCountRequest">
+        <wsdl:part name="parameters" element="ns1:getServiceFaultCount" />
+    </wsdl:message>
+    <wsdl:message name="getServiceFaultCountResponse">
+        <wsdl:part name="parameters" element="ns1:getServiceFaultCountResponse" />
+    </wsdl:message>
+    <wsdl:message name="getSystemRequestCountRequest" />
+    <wsdl:message name="getSystemRequestCountResponse">
+        <wsdl:part name="parameters" element="ns1:getSystemRequestCountResponse" />
+    </wsdl:message>
+    <wsdl:message name="getMinSystemResponseTimeRequest" />
+    <wsdl:message name="getMinSystemResponseTimeResponse">
+        <wsdl:part name="parameters" element="ns1:getMinSystemResponseTimeResponse" />
+    </wsdl:message>
+    <wsdl:message name="getMinServiceResponseTimeRequest">
+        <wsdl:part name="parameters" element="ns1:getMinServiceResponseTime" />
+    </wsdl:message>
+    <wsdl:message name="getMinServiceResponseTimeResponse">
+        <wsdl:part name="parameters" element="ns1:getMinServiceResponseTimeResponse" />
+    </wsdl:message>
+    <wsdl:message name="getAvgServiceResponseTimeRequest">
+        <wsdl:part name="parameters" element="ns1:getAvgServiceResponseTime" />
+    </wsdl:message>
+    <wsdl:message name="getAvgServiceResponseTimeResponse">
+        <wsdl:part name="parameters" element="ns1:getAvgServiceResponseTimeResponse" />
+    </wsdl:message>
+    <wsdl:message name="getSystemResponseCountRequest" />
+    <wsdl:message name="getSystemResponseCountResponse">
+        <wsdl:part name="parameters" element="ns1:getSystemResponseCountResponse" />
+    </wsdl:message>
+    <wsdl:message name="getMaxOperationResponseTimeRequest">
+        <wsdl:part name="parameters" element="ns1:getMaxOperationResponseTime" />
+    </wsdl:message>
+    <wsdl:message name="getMaxOperationResponseTimeResponse">
+        <wsdl:part name="parameters" element="ns1:getMaxOperationResponseTimeResponse" />
+    </wsdl:message>
+    <wsdl:message name="getAvgOperationResponseTimeRequest">
+        <wsdl:part name="parameters" element="ns1:getAvgOperationResponseTime" />
+    </wsdl:message>
+    <wsdl:message name="getAvgOperationResponseTimeResponse">
+        <wsdl:part name="parameters" element="ns1:getAvgOperationResponseTimeResponse" />
+    </wsdl:message>
+    <wsdl:message name="getAvgSystemResponseTimeRequest" />
+    <wsdl:message name="getAvgSystemResponseTimeResponse">
+        <wsdl:part name="parameters" element="ns1:getAvgSystemResponseTimeResponse" />
+    </wsdl:message>
+    <wsdl:message name="getMaxServiceResponseTimeRequest">
+        <wsdl:part name="parameters" element="ns1:getMaxServiceResponseTime" />
+    </wsdl:message>
+    <wsdl:message name="getMaxServiceResponseTimeResponse">
+        <wsdl:part name="parameters" element="ns1:getMaxServiceResponseTimeResponse" />
+    </wsdl:message>
+    <wsdl:message name="getServiceResponseCountRequest">
+        <wsdl:part name="parameters" element="ns1:getServiceResponseCount" />
+    </wsdl:message>
+    <wsdl:message name="getServiceResponseCountResponse">
+        <wsdl:part name="parameters" element="ns1:getServiceResponseCountResponse" />
+    </wsdl:message>
+    <wsdl:message name="getOperationStatisticsRequest">
+        <wsdl:part name="parameters" element="ns1:getOperationStatistics" />
+    </wsdl:message>
+    <wsdl:message name="getOperationStatisticsResponse">
+        <wsdl:part name="parameters" element="ns1:getOperationStatisticsResponse" />
+    </wsdl:message>
+    <wsdl:message name="getServiceRequestCountRequest">
+        <wsdl:part name="parameters" element="ns1:getServiceRequestCount" />
+    </wsdl:message>
+    <wsdl:message name="getServiceRequestCountResponse">
+        <wsdl:part name="parameters" element="ns1:getServiceRequestCountResponse" />
+    </wsdl:message>
+    <wsdl:message name="getSystemFaultCountRequest" />
+    <wsdl:message name="getSystemFaultCountResponse">
+        <wsdl:part name="parameters" element="ns1:getSystemFaultCountResponse" />
+    </wsdl:message>
+    <wsdl:message name="getOperationResponseCountRequest">
+        <wsdl:part name="parameters" element="ns1:getOperationResponseCount" />
+    </wsdl:message>
+    <wsdl:message name="getOperationResponseCountResponse">
+        <wsdl:part name="parameters" element="ns1:getOperationResponseCountResponse" />
+    </wsdl:message>
+    <wsdl:message name="getOperationFaultCountRequest">
+        <wsdl:part name="parameters" element="ns1:getOperationFaultCount" />
+    </wsdl:message>
+    <wsdl:message name="getOperationFaultCountResponse">
+        <wsdl:part name="parameters" element="ns1:getOperationFaultCountResponse" />
+    </wsdl:message>
+    <wsdl:portType name="StatisticsAdminPortType">
+        <wsdl:operation name="getSystemStatistics">
+            <wsdl:input message="axis2:getSystemStatisticsRequest" wsaw:Action="urn:getSystemStatistics" />
+            <wsdl:output message="axis2:getSystemStatisticsResponse" wsaw:Action="urn:getSystemStatisticsResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getMinOperationResponseTime">
+            <wsdl:input message="axis2:getMinOperationResponseTimeRequest" wsaw:Action="urn:getMinOperationResponseTime" />
+            <wsdl:output message="axis2:getMinOperationResponseTimeResponse" wsaw:Action="urn:getMinOperationResponseTimeResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getOperationRequestCount">
+            <wsdl:input message="axis2:getOperationRequestCountRequest" wsaw:Action="urn:getOperationRequestCount" />
+            <wsdl:output message="axis2:getOperationRequestCountResponse" wsaw:Action="urn:getOperationRequestCountResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getMaxSystemResponseTime">
+            <wsdl:input message="axis2:getMaxSystemResponseTimeRequest" wsaw:Action="urn:getMaxSystemResponseTime" />
+            <wsdl:output message="axis2:getMaxSystemResponseTimeResponse" wsaw:Action="urn:getMaxSystemResponseTimeResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getServiceStatistics">
+            <wsdl:input message="axis2:getServiceStatisticsRequest" wsaw:Action="urn:getServiceStatistics" />
+            <wsdl:output message="axis2:getServiceStatisticsResponse" wsaw:Action="urn:getServiceStatisticsResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getServiceFaultCount">
+            <wsdl:input message="axis2:getServiceFaultCountRequest" wsaw:Action="urn:getServiceFaultCount" />
+            <wsdl:output message="axis2:getServiceFaultCountResponse" wsaw:Action="urn:getServiceFaultCountResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getSystemRequestCount">
+            <wsdl:input message="axis2:getSystemRequestCountRequest" wsaw:Action="urn:getSystemRequestCount" />
+            <wsdl:output message="axis2:getSystemRequestCountResponse" wsaw:Action="urn:getSystemRequestCountResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getMinSystemResponseTime">
+            <wsdl:input message="axis2:getMinSystemResponseTimeRequest" wsaw:Action="urn:getMinSystemResponseTime" />
+            <wsdl:output message="axis2:getMinSystemResponseTimeResponse" wsaw:Action="urn:getMinSystemResponseTimeResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getMinServiceResponseTime">
+            <wsdl:input message="axis2:getMinServiceResponseTimeRequest" wsaw:Action="urn:getMinServiceResponseTime" />
+            <wsdl:output message="axis2:getMinServiceResponseTimeResponse" wsaw:Action="urn:getMinServiceResponseTimeResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getAvgServiceResponseTime">
+            <wsdl:input message="axis2:getAvgServiceResponseTimeRequest" wsaw:Action="urn:getAvgServiceResponseTime" />
+            <wsdl:output message="axis2:getAvgServiceResponseTimeResponse" wsaw:Action="urn:getAvgServiceResponseTimeResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getSystemResponseCount">
+            <wsdl:input message="axis2:getSystemResponseCountRequest" wsaw:Action="urn:getSystemResponseCount" />
+            <wsdl:output message="axis2:getSystemResponseCountResponse" wsaw:Action="urn:getSystemResponseCountResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getMaxOperationResponseTime">
+            <wsdl:input message="axis2:getMaxOperationResponseTimeRequest" wsaw:Action="urn:getMaxOperationResponseTime" />
+            <wsdl:output message="axis2:getMaxOperationResponseTimeResponse" wsaw:Action="urn:getMaxOperationResponseTimeResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getAvgOperationResponseTime">
+            <wsdl:input message="axis2:getAvgOperationResponseTimeRequest" wsaw:Action="urn:getAvgOperationResponseTime" />
+            <wsdl:output message="axis2:getAvgOperationResponseTimeResponse" wsaw:Action="urn:getAvgOperationResponseTimeResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getAvgSystemResponseTime">
+            <wsdl:input message="axis2:getAvgSystemResponseTimeRequest" wsaw:Action="urn:getAvgSystemResponseTime" />
+            <wsdl:output message="axis2:getAvgSystemResponseTimeResponse" wsaw:Action="urn:getAvgSystemResponseTimeResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getMaxServiceResponseTime">
+            <wsdl:input message="axis2:getMaxServiceResponseTimeRequest" wsaw:Action="urn:getMaxServiceResponseTime" />
+            <wsdl:output message="axis2:getMaxServiceResponseTimeResponse" wsaw:Action="urn:getMaxServiceResponseTimeResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getServiceResponseCount">
+            <wsdl:input message="axis2:getServiceResponseCountRequest" wsaw:Action="urn:getServiceResponseCount" />
+            <wsdl:output message="axis2:getServiceResponseCountResponse" wsaw:Action="urn:getServiceResponseCountResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getOperationStatistics">
+            <wsdl:input message="axis2:getOperationStatisticsRequest" wsaw:Action="urn:getOperationStatistics" />
+            <wsdl:output message="axis2:getOperationStatisticsResponse" wsaw:Action="urn:getOperationStatisticsResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getServiceRequestCount">
+            <wsdl:input message="axis2:getServiceRequestCountRequest" wsaw:Action="urn:getServiceRequestCount" />
+            <wsdl:output message="axis2:getServiceRequestCountResponse" wsaw:Action="urn:getServiceRequestCountResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getSystemFaultCount">
+            <wsdl:input message="axis2:getSystemFaultCountRequest" wsaw:Action="urn:getSystemFaultCount" />
+            <wsdl:output message="axis2:getSystemFaultCountResponse" wsaw:Action="urn:getSystemFaultCountResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getOperationResponseCount">
+            <wsdl:input message="axis2:getOperationResponseCountRequest" wsaw:Action="urn:getOperationResponseCount" />
+            <wsdl:output message="axis2:getOperationResponseCountResponse" wsaw:Action="urn:getOperationResponseCountResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getOperationFaultCount">
+            <wsdl:input message="axis2:getOperationFaultCountRequest" wsaw:Action="urn:getOperationFaultCount" />
+            <wsdl:output message="axis2:getOperationFaultCountResponse" wsaw:Action="urn:getOperationFaultCountResponse" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="StatisticsAdminSoap11Binding" type="axis2:StatisticsAdminPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getSystemStatistics">
+            <soap:operation soapAction="urn:getSystemStatistics" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMinOperationResponseTime">
+            <soap:operation soapAction="urn:getMinOperationResponseTime" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMaxSystemResponseTime">
+            <soap:operation soapAction="urn:getMaxSystemResponseTime" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationRequestCount">
+            <soap:operation soapAction="urn:getOperationRequestCount" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceFaultCount">
+            <soap:operation soapAction="urn:getServiceFaultCount" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceStatistics">
+            <soap:operation soapAction="urn:getServiceStatistics" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMinSystemResponseTime">
+            <soap:operation soapAction="urn:getMinSystemResponseTime" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemRequestCount">
+            <soap:operation soapAction="urn:getSystemRequestCount" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMinServiceResponseTime">
+            <soap:operation soapAction="urn:getMinServiceResponseTime" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAvgServiceResponseTime">
+            <soap:operation soapAction="urn:getAvgServiceResponseTime" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemResponseCount">
+            <soap:operation soapAction="urn:getSystemResponseCount" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMaxOperationResponseTime">
+            <soap:operation soapAction="urn:getMaxOperationResponseTime" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAvgOperationResponseTime">
+            <soap:operation soapAction="urn:getAvgOperationResponseTime" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAvgSystemResponseTime">
+            <soap:operation soapAction="urn:getAvgSystemResponseTime" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceResponseCount">
+            <soap:operation soapAction="urn:getServiceResponseCount" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMaxServiceResponseTime">
+            <soap:operation soapAction="urn:getMaxServiceResponseTime" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationStatistics">
+            <soap:operation soapAction="urn:getOperationStatistics" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemFaultCount">
+            <soap:operation soapAction="urn:getSystemFaultCount" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceRequestCount">
+            <soap:operation soapAction="urn:getServiceRequestCount" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationResponseCount">
+            <soap:operation soapAction="urn:getOperationResponseCount" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationFaultCount">
+            <soap:operation soapAction="urn:getOperationFaultCount" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="StatisticsAdminSoap12Binding" type="axis2:StatisticsAdminPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getSystemStatistics">
+            <soap12:operation soapAction="urn:getSystemStatistics" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMinOperationResponseTime">
+            <soap12:operation soapAction="urn:getMinOperationResponseTime" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMaxSystemResponseTime">
+            <soap12:operation soapAction="urn:getMaxSystemResponseTime" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationRequestCount">
+            <soap12:operation soapAction="urn:getOperationRequestCount" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceFaultCount">
+            <soap12:operation soapAction="urn:getServiceFaultCount" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceStatistics">
+            <soap12:operation soapAction="urn:getServiceStatistics" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMinSystemResponseTime">
+            <soap12:operation soapAction="urn:getMinSystemResponseTime" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemRequestCount">
+            <soap12:operation soapAction="urn:getSystemRequestCount" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMinServiceResponseTime">
+            <soap12:operation soapAction="urn:getMinServiceResponseTime" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAvgServiceResponseTime">
+            <soap12:operation soapAction="urn:getAvgServiceResponseTime" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemResponseCount">
+            <soap12:operation soapAction="urn:getSystemResponseCount" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMaxOperationResponseTime">
+            <soap12:operation soapAction="urn:getMaxOperationResponseTime" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAvgOperationResponseTime">
+            <soap12:operation soapAction="urn:getAvgOperationResponseTime" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAvgSystemResponseTime">
+            <soap12:operation soapAction="urn:getAvgSystemResponseTime" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceResponseCount">
+            <soap12:operation soapAction="urn:getServiceResponseCount" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMaxServiceResponseTime">
+            <soap12:operation soapAction="urn:getMaxServiceResponseTime" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationStatistics">
+            <soap12:operation soapAction="urn:getOperationStatistics" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemFaultCount">
+            <soap12:operation soapAction="urn:getSystemFaultCount" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceRequestCount">
+            <soap12:operation soapAction="urn:getServiceRequestCount" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationResponseCount">
+            <soap12:operation soapAction="urn:getOperationResponseCount" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationFaultCount">
+            <soap12:operation soapAction="urn:getOperationFaultCount" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="StatisticsAdminHttpBinding" type="axis2:StatisticsAdminPortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="getSystemStatistics">
+            <http:operation location="getSystemStatistics" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getSystemStatistics" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getSystemStatistics" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMinOperationResponseTime">
+            <http:operation location="getMinOperationResponseTime" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getMinOperationResponseTime" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getMinOperationResponseTime" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMaxSystemResponseTime">
+            <http:operation location="getMaxSystemResponseTime" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getMaxSystemResponseTime" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getMaxSystemResponseTime" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationRequestCount">
+            <http:operation location="getOperationRequestCount" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getOperationRequestCount" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getOperationRequestCount" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceFaultCount">
+            <http:operation location="getServiceFaultCount" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getServiceFaultCount" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getServiceFaultCount" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceStatistics">
+            <http:operation location="getServiceStatistics" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getServiceStatistics" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getServiceStatistics" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMinSystemResponseTime">
+            <http:operation location="getMinSystemResponseTime" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getMinSystemResponseTime" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getMinSystemResponseTime" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemRequestCount">
+            <http:operation location="getSystemRequestCount" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getSystemRequestCount" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getSystemRequestCount" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMinServiceResponseTime">
+            <http:operation location="getMinServiceResponseTime" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getMinServiceResponseTime" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getMinServiceResponseTime" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAvgServiceResponseTime">
+            <http:operation location="getAvgServiceResponseTime" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getAvgServiceResponseTime" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getAvgServiceResponseTime" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemResponseCount">
+            <http:operation location="getSystemResponseCount" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getSystemResponseCount" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getSystemResponseCount" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMaxOperationResponseTime">
+            <http:operation location="getMaxOperationResponseTime" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getMaxOperationResponseTime" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getMaxOperationResponseTime" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAvgOperationResponseTime">
+            <http:operation location="getAvgOperationResponseTime" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getAvgOperationResponseTime" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getAvgOperationResponseTime" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAvgSystemResponseTime">
+            <http:operation location="getAvgSystemResponseTime" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getAvgSystemResponseTime" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getAvgSystemResponseTime" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceResponseCount">
+            <http:operation location="getServiceResponseCount" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getServiceResponseCount" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getServiceResponseCount" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMaxServiceResponseTime">
+            <http:operation location="getMaxServiceResponseTime" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getMaxServiceResponseTime" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getMaxServiceResponseTime" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationStatistics">
+            <http:operation location="getOperationStatistics" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getOperationStatistics" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getOperationStatistics" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemFaultCount">
+            <http:operation location="getSystemFaultCount" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getSystemFaultCount" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getSystemFaultCount" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceRequestCount">
+            <http:operation location="getServiceRequestCount" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getServiceRequestCount" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getServiceRequestCount" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationResponseCount">
+            <http:operation location="getOperationResponseCount" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getOperationResponseCount" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getOperationResponseCount" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationFaultCount">
+            <http:operation location="getOperationFaultCount" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getOperationFaultCount" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getOperationFaultCount" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="StatisticsAdmin">
+        <wsdl:port name="StatisticsAdminHttpsSoap11Endpoint" binding="axis2:StatisticsAdminSoap11Binding">
+            <soap:address location="https://192.168.175.1:9443/services/StatisticsAdmin.StatisticsAdminHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="StatisticsAdminHttpsSoap12Endpoint" binding="axis2:StatisticsAdminSoap12Binding">
+            <soap12:address location="https://192.168.175.1:9443/services/StatisticsAdmin.StatisticsAdminHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="StatisticsAdminHttpsEndpoint" binding="axis2:StatisticsAdminHttpBinding">
+            <http:address location="https://192.168.175.1:9443/services/StatisticsAdmin.StatisticsAdminHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

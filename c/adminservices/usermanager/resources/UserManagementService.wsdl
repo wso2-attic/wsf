@@ -1,0 +1,1846 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://service.mgt.user.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax21="http://service.mgt.user.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.mgt.user.carbon.wso2.org">
+    <wsdl:documentation>UserManagementService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax23="http://service.mgt.user.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.mgt.user.carbon.wso2.org">
+            <xs:import namespace="http://service.mgt.user.carbon.wso2.org/xsd" />
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Exception" nillable="true" type="xs:anyType" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="UserMgtException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="UserMgtException" nillable="true" type="ax21:UserMgtException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateUsersOfSpecialInternalRole">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="usersShown" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="usersSelected" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateUsersOfRole">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="usersShown" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="usersSelected" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateUserName">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="newUserName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateSystemPermissionsOfSpecialInternalRole">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="permissions" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateSystemPermissionsOfRole">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="actions" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateSystemPermissionsOfExternalRole">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="permissions" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateRolesofResource">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="roleNames" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="resource" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="action" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateRoleName">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="newRoleName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateExternalUserStoreConfig">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="props" nillable="true" type="ax21:StoreProperty" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="testConnectionResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listInternalUsers">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="filter" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listInternalUsersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listExternalUsers">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="filter" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listExternalUsersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="hasExternalUserStoreResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUsersOfSpecialInternalRole">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUsersOfSpecialInternalRoleResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUsersInRole">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUsersInRoleResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUsersInExternalRole">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUsersInExternalRoleResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserRoles">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserRolesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSystemPermissionsOfSpecialInternalRole">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSystemPermissionsOfSpecialInternalRoleResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSystemPermissionsOfRole">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSystemPermissionsOfRoleResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSystemPermissionsOfExternalRole">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSystemPermissionsOfExternalRoleResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSystemPermissionsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSpecialInternalRolesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getInternalUsersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getInternalRolesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getExternalUsersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getExternalUserStoreConfigResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax21:StoreProperty" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getExternalGroupsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllRolesNamesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteUserFromInternalStore">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteSpecialInternalRole">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteRoleFromInternalStore">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="changePassword">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="newPassword" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addUserToInternalStore">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="password" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="roles" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addSystemPermissionsToRole">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="actions" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addSpecialInternalRole">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="userNames" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="permissions" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addRolesToResource">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="roleNames" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="resource" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="action" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addRoleToInternalStore">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="userNames" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="permissions" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addExternalUserStoreConfig">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="realmType" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="configs" nillable="true" type="ax21:StoreProperty" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema xmlns:ax22="http://service.mgt.user.carbon.wso2.org" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.mgt.user.carbon.wso2.org/xsd">
+            <xs:import namespace="http://service.mgt.user.carbon.wso2.org" />
+            <xs:complexType name="UserMgtException">
+                <xs:complexContent>
+                    <xs:extension base="ax22:Exception">
+                        <xs:sequence />
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="StoreProperty">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="value" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="testConnectionRequest" />
+    <wsdl:message name="testConnectionResponse">
+        <wsdl:part name="parameters" element="ns:testConnectionResponse" />
+    </wsdl:message>
+    <wsdl:message name="UserMgtException">
+        <wsdl:part name="parameters" element="ns:UserMgtException" />
+    </wsdl:message>
+    <wsdl:message name="updateExternalUserStoreConfigRequest">
+        <wsdl:part name="parameters" element="ns:updateExternalUserStoreConfig" />
+    </wsdl:message>
+    <wsdl:message name="deleteRoleFromInternalStoreRequest">
+        <wsdl:part name="parameters" element="ns:deleteRoleFromInternalStore" />
+    </wsdl:message>
+    <wsdl:message name="changePasswordRequest">
+        <wsdl:part name="parameters" element="ns:changePassword" />
+    </wsdl:message>
+    <wsdl:message name="updateSystemPermissionsOfExternalRoleRequest">
+        <wsdl:part name="parameters" element="ns:updateSystemPermissionsOfExternalRole" />
+    </wsdl:message>
+    <wsdl:message name="updateSystemPermissionsOfSpecialInternalRoleRequest">
+        <wsdl:part name="parameters" element="ns:updateSystemPermissionsOfSpecialInternalRole" />
+    </wsdl:message>
+    <wsdl:message name="listExternalUsersRequest">
+        <wsdl:part name="parameters" element="ns:listExternalUsers" />
+    </wsdl:message>
+    <wsdl:message name="listExternalUsersResponse">
+        <wsdl:part name="parameters" element="ns:listExternalUsersResponse" />
+    </wsdl:message>
+    <wsdl:message name="getAllRolesNamesRequest" />
+    <wsdl:message name="getAllRolesNamesResponse">
+        <wsdl:part name="parameters" element="ns:getAllRolesNamesResponse" />
+    </wsdl:message>
+    <wsdl:message name="updateRolesofResourceRequest">
+        <wsdl:part name="parameters" element="ns:updateRolesofResource" />
+    </wsdl:message>
+    <wsdl:message name="updateUsersOfRoleRequest">
+        <wsdl:part name="parameters" element="ns:updateUsersOfRole" />
+    </wsdl:message>
+    <wsdl:message name="addRolesToResourceRequest">
+        <wsdl:part name="parameters" element="ns:addRolesToResource" />
+    </wsdl:message>
+    <wsdl:message name="addRoleToInternalStoreRequest">
+        <wsdl:part name="parameters" element="ns:addRoleToInternalStore" />
+    </wsdl:message>
+    <wsdl:message name="getSystemPermissionsOfExternalRoleRequest">
+        <wsdl:part name="parameters" element="ns:getSystemPermissionsOfExternalRole" />
+    </wsdl:message>
+    <wsdl:message name="getSystemPermissionsOfExternalRoleResponse">
+        <wsdl:part name="parameters" element="ns:getSystemPermissionsOfExternalRoleResponse" />
+    </wsdl:message>
+    <wsdl:message name="addSystemPermissionsToRoleRequest">
+        <wsdl:part name="parameters" element="ns:addSystemPermissionsToRole" />
+    </wsdl:message>
+    <wsdl:message name="getSystemPermissionsOfSpecialInternalRoleRequest">
+        <wsdl:part name="parameters" element="ns:getSystemPermissionsOfSpecialInternalRole" />
+    </wsdl:message>
+    <wsdl:message name="getSystemPermissionsOfSpecialInternalRoleResponse">
+        <wsdl:part name="parameters" element="ns:getSystemPermissionsOfSpecialInternalRoleResponse" />
+    </wsdl:message>
+    <wsdl:message name="updateUsersOfSpecialInternalRoleRequest">
+        <wsdl:part name="parameters" element="ns:updateUsersOfSpecialInternalRole" />
+    </wsdl:message>
+    <wsdl:message name="deleteUserFromInternalStoreRequest">
+        <wsdl:part name="parameters" element="ns:deleteUserFromInternalStore" />
+    </wsdl:message>
+    <wsdl:message name="listInternalUsersRequest">
+        <wsdl:part name="parameters" element="ns:listInternalUsers" />
+    </wsdl:message>
+    <wsdl:message name="listInternalUsersResponse">
+        <wsdl:part name="parameters" element="ns:listInternalUsersResponse" />
+    </wsdl:message>
+    <wsdl:message name="getUsersOfSpecialInternalRoleRequest">
+        <wsdl:part name="parameters" element="ns:getUsersOfSpecialInternalRole" />
+    </wsdl:message>
+    <wsdl:message name="getUsersOfSpecialInternalRoleResponse">
+        <wsdl:part name="parameters" element="ns:getUsersOfSpecialInternalRoleResponse" />
+    </wsdl:message>
+    <wsdl:message name="updateRoleNameRequest">
+        <wsdl:part name="parameters" element="ns:updateRoleName" />
+    </wsdl:message>
+    <wsdl:message name="getSystemPermissionsOfRoleRequest">
+        <wsdl:part name="parameters" element="ns:getSystemPermissionsOfRole" />
+    </wsdl:message>
+    <wsdl:message name="getSystemPermissionsOfRoleResponse">
+        <wsdl:part name="parameters" element="ns:getSystemPermissionsOfRoleResponse" />
+    </wsdl:message>
+    <wsdl:message name="getInternalRolesRequest" />
+    <wsdl:message name="getInternalRolesResponse">
+        <wsdl:part name="parameters" element="ns:getInternalRolesResponse" />
+    </wsdl:message>
+    <wsdl:message name="getUserRolesRequest">
+        <wsdl:part name="parameters" element="ns:getUserRoles" />
+    </wsdl:message>
+    <wsdl:message name="getUserRolesResponse">
+        <wsdl:part name="parameters" element="ns:getUserRolesResponse" />
+    </wsdl:message>
+    <wsdl:message name="getExternalGroupsRequest" />
+    <wsdl:message name="getExternalGroupsResponse">
+        <wsdl:part name="parameters" element="ns:getExternalGroupsResponse" />
+    </wsdl:message>
+    <wsdl:message name="addExternalUserStoreConfigRequest">
+        <wsdl:part name="parameters" element="ns:addExternalUserStoreConfig" />
+    </wsdl:message>
+    <wsdl:message name="updateUserNameRequest">
+        <wsdl:part name="parameters" element="ns:updateUserName" />
+    </wsdl:message>
+    <wsdl:message name="getSpecialInternalRolesRequest" />
+    <wsdl:message name="getSpecialInternalRolesResponse">
+        <wsdl:part name="parameters" element="ns:getSpecialInternalRolesResponse" />
+    </wsdl:message>
+    <wsdl:message name="addUserToInternalStoreRequest">
+        <wsdl:part name="parameters" element="ns:addUserToInternalStore" />
+    </wsdl:message>
+    <wsdl:message name="getInternalUsersRequest" />
+    <wsdl:message name="getInternalUsersResponse">
+        <wsdl:part name="parameters" element="ns:getInternalUsersResponse" />
+    </wsdl:message>
+    <wsdl:message name="getExternalUsersRequest" />
+    <wsdl:message name="getExternalUsersResponse">
+        <wsdl:part name="parameters" element="ns:getExternalUsersResponse" />
+    </wsdl:message>
+    <wsdl:message name="getExternalUserStoreConfigRequest" />
+    <wsdl:message name="getExternalUserStoreConfigResponse">
+        <wsdl:part name="parameters" element="ns:getExternalUserStoreConfigResponse" />
+    </wsdl:message>
+    <wsdl:message name="updateSystemPermissionsOfRoleRequest">
+        <wsdl:part name="parameters" element="ns:updateSystemPermissionsOfRole" />
+    </wsdl:message>
+    <wsdl:message name="getSystemPermissionsRequest" />
+    <wsdl:message name="getSystemPermissionsResponse">
+        <wsdl:part name="parameters" element="ns:getSystemPermissionsResponse" />
+    </wsdl:message>
+    <wsdl:message name="hasExternalUserStoreRequest" />
+    <wsdl:message name="hasExternalUserStoreResponse">
+        <wsdl:part name="parameters" element="ns:hasExternalUserStoreResponse" />
+    </wsdl:message>
+    <wsdl:message name="addSpecialInternalRoleRequest">
+        <wsdl:part name="parameters" element="ns:addSpecialInternalRole" />
+    </wsdl:message>
+    <wsdl:message name="deleteSpecialInternalRoleRequest">
+        <wsdl:part name="parameters" element="ns:deleteSpecialInternalRole" />
+    </wsdl:message>
+    <wsdl:message name="getUsersInExternalRoleRequest">
+        <wsdl:part name="parameters" element="ns:getUsersInExternalRole" />
+    </wsdl:message>
+    <wsdl:message name="getUsersInExternalRoleResponse">
+        <wsdl:part name="parameters" element="ns:getUsersInExternalRoleResponse" />
+    </wsdl:message>
+    <wsdl:message name="getUsersInRoleRequest">
+        <wsdl:part name="parameters" element="ns:getUsersInRole" />
+    </wsdl:message>
+    <wsdl:message name="getUsersInRoleResponse">
+        <wsdl:part name="parameters" element="ns:getUsersInRoleResponse" />
+    </wsdl:message>
+    <wsdl:message name="deleteExternalUserStoreRequest" />
+    <wsdl:portType name="UserManagementServicePortType">
+        <wsdl:operation name="testConnection">
+            <wsdl:input message="ns:testConnectionRequest" wsaw:Action="urn:testConnection" />
+            <wsdl:output message="ns:testConnectionResponse" wsaw:Action="urn:testConnectionResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:testConnectionUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateExternalUserStoreConfig">
+            <wsdl:input message="ns:updateExternalUserStoreConfigRequest" wsaw:Action="urn:updateExternalUserStoreConfig" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:updateExternalUserStoreConfigUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteRoleFromInternalStore">
+            <wsdl:input message="ns:deleteRoleFromInternalStoreRequest" wsaw:Action="urn:deleteRoleFromInternalStore" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:deleteRoleFromInternalStoreUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="changePassword">
+            <wsdl:input message="ns:changePasswordRequest" wsaw:Action="urn:changePassword" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:changePasswordUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateSystemPermissionsOfExternalRole">
+            <wsdl:input message="ns:updateSystemPermissionsOfExternalRoleRequest" wsaw:Action="urn:updateSystemPermissionsOfExternalRole" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:updateSystemPermissionsOfExternalRoleUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateSystemPermissionsOfSpecialInternalRole">
+            <wsdl:input message="ns:updateSystemPermissionsOfSpecialInternalRoleRequest" wsaw:Action="urn:updateSystemPermissionsOfSpecialInternalRole" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:updateSystemPermissionsOfSpecialInternalRoleUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="listExternalUsers">
+            <wsdl:input message="ns:listExternalUsersRequest" wsaw:Action="urn:listExternalUsers" />
+            <wsdl:output message="ns:listExternalUsersResponse" wsaw:Action="urn:listExternalUsersResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:listExternalUsersUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllRolesNames">
+            <wsdl:input message="ns:getAllRolesNamesRequest" wsaw:Action="urn:getAllRolesNames" />
+            <wsdl:output message="ns:getAllRolesNamesResponse" wsaw:Action="urn:getAllRolesNamesResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:getAllRolesNamesUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateRolesofResource">
+            <wsdl:input message="ns:updateRolesofResourceRequest" wsaw:Action="urn:updateRolesofResource" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:updateRolesofResourceUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateUsersOfRole">
+            <wsdl:input message="ns:updateUsersOfRoleRequest" wsaw:Action="urn:updateUsersOfRole" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:updateUsersOfRoleUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="addRolesToResource">
+            <wsdl:input message="ns:addRolesToResourceRequest" wsaw:Action="urn:addRolesToResource" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:addRolesToResourceUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="addRoleToInternalStore">
+            <wsdl:input message="ns:addRoleToInternalStoreRequest" wsaw:Action="urn:addRoleToInternalStore" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:addRoleToInternalStoreUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="getSystemPermissionsOfExternalRole">
+            <wsdl:input message="ns:getSystemPermissionsOfExternalRoleRequest" wsaw:Action="urn:getSystemPermissionsOfExternalRole" />
+            <wsdl:output message="ns:getSystemPermissionsOfExternalRoleResponse" wsaw:Action="urn:getSystemPermissionsOfExternalRoleResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:getSystemPermissionsOfExternalRoleUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="addSystemPermissionsToRole">
+            <wsdl:input message="ns:addSystemPermissionsToRoleRequest" wsaw:Action="urn:addSystemPermissionsToRole" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:addSystemPermissionsToRoleUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="getSystemPermissionsOfSpecialInternalRole">
+            <wsdl:input message="ns:getSystemPermissionsOfSpecialInternalRoleRequest" wsaw:Action="urn:getSystemPermissionsOfSpecialInternalRole" />
+            <wsdl:output message="ns:getSystemPermissionsOfSpecialInternalRoleResponse" wsaw:Action="urn:getSystemPermissionsOfSpecialInternalRoleResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:getSystemPermissionsOfSpecialInternalRoleUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateUsersOfSpecialInternalRole">
+            <wsdl:input message="ns:updateUsersOfSpecialInternalRoleRequest" wsaw:Action="urn:updateUsersOfSpecialInternalRole" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:updateUsersOfSpecialInternalRoleUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteUserFromInternalStore">
+            <wsdl:input message="ns:deleteUserFromInternalStoreRequest" wsaw:Action="urn:deleteUserFromInternalStore" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:deleteUserFromInternalStoreUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="listInternalUsers">
+            <wsdl:input message="ns:listInternalUsersRequest" wsaw:Action="urn:listInternalUsers" />
+            <wsdl:output message="ns:listInternalUsersResponse" wsaw:Action="urn:listInternalUsersResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:listInternalUsersUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="getUsersOfSpecialInternalRole">
+            <wsdl:input message="ns:getUsersOfSpecialInternalRoleRequest" wsaw:Action="urn:getUsersOfSpecialInternalRole" />
+            <wsdl:output message="ns:getUsersOfSpecialInternalRoleResponse" wsaw:Action="urn:getUsersOfSpecialInternalRoleResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:getUsersOfSpecialInternalRoleUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateRoleName">
+            <wsdl:input message="ns:updateRoleNameRequest" wsaw:Action="urn:updateRoleName" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:updateRoleNameUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="getSystemPermissionsOfRole">
+            <wsdl:input message="ns:getSystemPermissionsOfRoleRequest" wsaw:Action="urn:getSystemPermissionsOfRole" />
+            <wsdl:output message="ns:getSystemPermissionsOfRoleResponse" wsaw:Action="urn:getSystemPermissionsOfRoleResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:getSystemPermissionsOfRoleUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="getInternalRoles">
+            <wsdl:input message="ns:getInternalRolesRequest" wsaw:Action="urn:getInternalRoles" />
+            <wsdl:output message="ns:getInternalRolesResponse" wsaw:Action="urn:getInternalRolesResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:getInternalRolesUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="getUserRoles">
+            <wsdl:input message="ns:getUserRolesRequest" wsaw:Action="urn:getUserRoles" />
+            <wsdl:output message="ns:getUserRolesResponse" wsaw:Action="urn:getUserRolesResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:getUserRolesUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="getExternalGroups">
+            <wsdl:input message="ns:getExternalGroupsRequest" wsaw:Action="urn:getExternalGroups" />
+            <wsdl:output message="ns:getExternalGroupsResponse" wsaw:Action="urn:getExternalGroupsResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:getExternalGroupsUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="addExternalUserStoreConfig">
+            <wsdl:input message="ns:addExternalUserStoreConfigRequest" wsaw:Action="urn:addExternalUserStoreConfig" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:addExternalUserStoreConfigUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateUserName">
+            <wsdl:input message="ns:updateUserNameRequest" wsaw:Action="urn:updateUserName" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:updateUserNameUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="getSpecialInternalRoles">
+            <wsdl:input message="ns:getSpecialInternalRolesRequest" wsaw:Action="urn:getSpecialInternalRoles" />
+            <wsdl:output message="ns:getSpecialInternalRolesResponse" wsaw:Action="urn:getSpecialInternalRolesResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:getSpecialInternalRolesUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="addUserToInternalStore">
+            <wsdl:input message="ns:addUserToInternalStoreRequest" wsaw:Action="urn:addUserToInternalStore" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:addUserToInternalStoreUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="getInternalUsers">
+            <wsdl:input message="ns:getInternalUsersRequest" wsaw:Action="urn:getInternalUsers" />
+            <wsdl:output message="ns:getInternalUsersResponse" wsaw:Action="urn:getInternalUsersResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:getInternalUsersUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="getExternalUsers">
+            <wsdl:input message="ns:getExternalUsersRequest" wsaw:Action="urn:getExternalUsers" />
+            <wsdl:output message="ns:getExternalUsersResponse" wsaw:Action="urn:getExternalUsersResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:getExternalUsersUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="getExternalUserStoreConfig">
+            <wsdl:input message="ns:getExternalUserStoreConfigRequest" wsaw:Action="urn:getExternalUserStoreConfig" />
+            <wsdl:output message="ns:getExternalUserStoreConfigResponse" wsaw:Action="urn:getExternalUserStoreConfigResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:getExternalUserStoreConfigUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateSystemPermissionsOfRole">
+            <wsdl:input message="ns:updateSystemPermissionsOfRoleRequest" wsaw:Action="urn:updateSystemPermissionsOfRole" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:updateSystemPermissionsOfRoleUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="getSystemPermissions">
+            <wsdl:input message="ns:getSystemPermissionsRequest" wsaw:Action="urn:getSystemPermissions" />
+            <wsdl:output message="ns:getSystemPermissionsResponse" wsaw:Action="urn:getSystemPermissionsResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:getSystemPermissionsUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="hasExternalUserStore">
+            <wsdl:input message="ns:hasExternalUserStoreRequest" wsaw:Action="urn:hasExternalUserStore" />
+            <wsdl:output message="ns:hasExternalUserStoreResponse" wsaw:Action="urn:hasExternalUserStoreResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:hasExternalUserStoreUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="addSpecialInternalRole">
+            <wsdl:input message="ns:addSpecialInternalRoleRequest" wsaw:Action="urn:addSpecialInternalRole" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:addSpecialInternalRoleUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteSpecialInternalRole">
+            <wsdl:input message="ns:deleteSpecialInternalRoleRequest" wsaw:Action="urn:deleteSpecialInternalRole" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:deleteSpecialInternalRoleUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="getUsersInExternalRole">
+            <wsdl:input message="ns:getUsersInExternalRoleRequest" wsaw:Action="urn:getUsersInExternalRole" />
+            <wsdl:output message="ns:getUsersInExternalRoleResponse" wsaw:Action="urn:getUsersInExternalRoleResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:getUsersInExternalRoleUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="getUsersInRole">
+            <wsdl:input message="ns:getUsersInRoleRequest" wsaw:Action="urn:getUsersInRole" />
+            <wsdl:output message="ns:getUsersInRoleResponse" wsaw:Action="urn:getUsersInRoleResponse" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:getUsersInRoleUserMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteExternalUserStore">
+            <wsdl:input message="ns:deleteExternalUserStoreRequest" wsaw:Action="urn:deleteExternalUserStore" />
+            <wsdl:fault message="ns:UserMgtException" name="UserMgtException" wsaw:Action="urn:deleteExternalUserStoreUserMgtException" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="UserManagementServiceSoap11Binding" type="ns:UserManagementServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="updateExternalUserStoreConfig">
+            <soap:operation soapAction="urn:updateExternalUserStoreConfig" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="testConnection">
+            <soap:operation soapAction="urn:testConnection" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteRoleFromInternalStore">
+            <soap:operation soapAction="urn:deleteRoleFromInternalStore" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateSystemPermissionsOfSpecialInternalRole">
+            <soap:operation soapAction="urn:updateSystemPermissionsOfSpecialInternalRole" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateSystemPermissionsOfExternalRole">
+            <soap:operation soapAction="urn:updateSystemPermissionsOfExternalRole" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="changePassword">
+            <soap:operation soapAction="urn:changePassword" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listExternalUsers">
+            <soap:operation soapAction="urn:listExternalUsers" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllRolesNames">
+            <soap:operation soapAction="urn:getAllRolesNames" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateRolesofResource">
+            <soap:operation soapAction="urn:updateRolesofResource" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateUsersOfRole">
+            <soap:operation soapAction="urn:updateUsersOfRole" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addRolesToResource">
+            <soap:operation soapAction="urn:addRolesToResource" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addRoleToInternalStore">
+            <soap:operation soapAction="urn:addRoleToInternalStore" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemPermissionsOfExternalRole">
+            <soap:operation soapAction="urn:getSystemPermissionsOfExternalRole" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addSystemPermissionsToRole">
+            <soap:operation soapAction="urn:addSystemPermissionsToRole" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemPermissionsOfSpecialInternalRole">
+            <soap:operation soapAction="urn:getSystemPermissionsOfSpecialInternalRole" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateUsersOfSpecialInternalRole">
+            <soap:operation soapAction="urn:updateUsersOfSpecialInternalRole" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUserFromInternalStore">
+            <soap:operation soapAction="urn:deleteUserFromInternalStore" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listInternalUsers">
+            <soap:operation soapAction="urn:listInternalUsers" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUsersOfSpecialInternalRole">
+            <soap:operation soapAction="urn:getUsersOfSpecialInternalRole" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateRoleName">
+            <soap:operation soapAction="urn:updateRoleName" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemPermissionsOfRole">
+            <soap:operation soapAction="urn:getSystemPermissionsOfRole" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getInternalRoles">
+            <soap:operation soapAction="urn:getInternalRoles" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getExternalGroups">
+            <soap:operation soapAction="urn:getExternalGroups" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserRoles">
+            <soap:operation soapAction="urn:getUserRoles" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addExternalUserStoreConfig">
+            <soap:operation soapAction="urn:addExternalUserStoreConfig" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateUserName">
+            <soap:operation soapAction="urn:updateUserName" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSpecialInternalRoles">
+            <soap:operation soapAction="urn:getSpecialInternalRoles" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getInternalUsers">
+            <soap:operation soapAction="urn:getInternalUsers" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addUserToInternalStore">
+            <soap:operation soapAction="urn:addUserToInternalStore" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getExternalUsers">
+            <soap:operation soapAction="urn:getExternalUsers" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateSystemPermissionsOfRole">
+            <soap:operation soapAction="urn:updateSystemPermissionsOfRole" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getExternalUserStoreConfig">
+            <soap:operation soapAction="urn:getExternalUserStoreConfig" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemPermissions">
+            <soap:operation soapAction="urn:getSystemPermissions" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="hasExternalUserStore">
+            <soap:operation soapAction="urn:hasExternalUserStore" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUsersInExternalRole">
+            <soap:operation soapAction="urn:getUsersInExternalRole" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteSpecialInternalRole">
+            <soap:operation soapAction="urn:deleteSpecialInternalRole" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addSpecialInternalRole">
+            <soap:operation soapAction="urn:addSpecialInternalRole" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUsersInRole">
+            <soap:operation soapAction="urn:getUsersInRole" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteExternalUserStore">
+            <soap:operation soapAction="urn:deleteExternalUserStore" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="UserManagementServiceSoap12Binding" type="ns:UserManagementServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="updateExternalUserStoreConfig">
+            <soap12:operation soapAction="urn:updateExternalUserStoreConfig" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="testConnection">
+            <soap12:operation soapAction="urn:testConnection" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteRoleFromInternalStore">
+            <soap12:operation soapAction="urn:deleteRoleFromInternalStore" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateSystemPermissionsOfSpecialInternalRole">
+            <soap12:operation soapAction="urn:updateSystemPermissionsOfSpecialInternalRole" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateSystemPermissionsOfExternalRole">
+            <soap12:operation soapAction="urn:updateSystemPermissionsOfExternalRole" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="changePassword">
+            <soap12:operation soapAction="urn:changePassword" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listExternalUsers">
+            <soap12:operation soapAction="urn:listExternalUsers" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllRolesNames">
+            <soap12:operation soapAction="urn:getAllRolesNames" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateRolesofResource">
+            <soap12:operation soapAction="urn:updateRolesofResource" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateUsersOfRole">
+            <soap12:operation soapAction="urn:updateUsersOfRole" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addRolesToResource">
+            <soap12:operation soapAction="urn:addRolesToResource" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addRoleToInternalStore">
+            <soap12:operation soapAction="urn:addRoleToInternalStore" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemPermissionsOfExternalRole">
+            <soap12:operation soapAction="urn:getSystemPermissionsOfExternalRole" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addSystemPermissionsToRole">
+            <soap12:operation soapAction="urn:addSystemPermissionsToRole" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemPermissionsOfSpecialInternalRole">
+            <soap12:operation soapAction="urn:getSystemPermissionsOfSpecialInternalRole" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateUsersOfSpecialInternalRole">
+            <soap12:operation soapAction="urn:updateUsersOfSpecialInternalRole" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUserFromInternalStore">
+            <soap12:operation soapAction="urn:deleteUserFromInternalStore" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listInternalUsers">
+            <soap12:operation soapAction="urn:listInternalUsers" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUsersOfSpecialInternalRole">
+            <soap12:operation soapAction="urn:getUsersOfSpecialInternalRole" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateRoleName">
+            <soap12:operation soapAction="urn:updateRoleName" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemPermissionsOfRole">
+            <soap12:operation soapAction="urn:getSystemPermissionsOfRole" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getInternalRoles">
+            <soap12:operation soapAction="urn:getInternalRoles" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getExternalGroups">
+            <soap12:operation soapAction="urn:getExternalGroups" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserRoles">
+            <soap12:operation soapAction="urn:getUserRoles" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addExternalUserStoreConfig">
+            <soap12:operation soapAction="urn:addExternalUserStoreConfig" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateUserName">
+            <soap12:operation soapAction="urn:updateUserName" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSpecialInternalRoles">
+            <soap12:operation soapAction="urn:getSpecialInternalRoles" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getInternalUsers">
+            <soap12:operation soapAction="urn:getInternalUsers" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addUserToInternalStore">
+            <soap12:operation soapAction="urn:addUserToInternalStore" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getExternalUsers">
+            <soap12:operation soapAction="urn:getExternalUsers" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateSystemPermissionsOfRole">
+            <soap12:operation soapAction="urn:updateSystemPermissionsOfRole" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getExternalUserStoreConfig">
+            <soap12:operation soapAction="urn:getExternalUserStoreConfig" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemPermissions">
+            <soap12:operation soapAction="urn:getSystemPermissions" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="hasExternalUserStore">
+            <soap12:operation soapAction="urn:hasExternalUserStore" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUsersInExternalRole">
+            <soap12:operation soapAction="urn:getUsersInExternalRole" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteSpecialInternalRole">
+            <soap12:operation soapAction="urn:deleteSpecialInternalRole" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addSpecialInternalRole">
+            <soap12:operation soapAction="urn:addSpecialInternalRole" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUsersInRole">
+            <soap12:operation soapAction="urn:getUsersInRole" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteExternalUserStore">
+            <soap12:operation soapAction="urn:deleteExternalUserStore" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="UserMgtException">
+                <soap12:fault use="literal" name="UserMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="UserManagementServiceHttpBinding" type="ns:UserManagementServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="updateExternalUserStoreConfig">
+            <http:operation location="updateExternalUserStoreConfig" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="updateExternalUserStoreConfig" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="testConnection">
+            <http:operation location="testConnection" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="testConnection" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="testConnection" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteRoleFromInternalStore">
+            <http:operation location="deleteRoleFromInternalStore" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="deleteRoleFromInternalStore" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="updateSystemPermissionsOfSpecialInternalRole">
+            <http:operation location="updateSystemPermissionsOfSpecialInternalRole" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="updateSystemPermissionsOfSpecialInternalRole" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="updateSystemPermissionsOfExternalRole">
+            <http:operation location="updateSystemPermissionsOfExternalRole" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="updateSystemPermissionsOfExternalRole" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="changePassword">
+            <http:operation location="changePassword" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="changePassword" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="listExternalUsers">
+            <http:operation location="listExternalUsers" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="listExternalUsers" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="listExternalUsers" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllRolesNames">
+            <http:operation location="getAllRolesNames" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getAllRolesNames" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getAllRolesNames" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateRolesofResource">
+            <http:operation location="updateRolesofResource" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="updateRolesofResource" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="updateUsersOfRole">
+            <http:operation location="updateUsersOfRole" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="updateUsersOfRole" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addRolesToResource">
+            <http:operation location="addRolesToResource" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="addRolesToResource" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addRoleToInternalStore">
+            <http:operation location="addRoleToInternalStore" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="addRoleToInternalStore" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemPermissionsOfExternalRole">
+            <http:operation location="getSystemPermissionsOfExternalRole" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getSystemPermissionsOfExternalRole" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getSystemPermissionsOfExternalRole" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addSystemPermissionsToRole">
+            <http:operation location="addSystemPermissionsToRole" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="addSystemPermissionsToRole" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemPermissionsOfSpecialInternalRole">
+            <http:operation location="getSystemPermissionsOfSpecialInternalRole" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getSystemPermissionsOfSpecialInternalRole" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getSystemPermissionsOfSpecialInternalRole" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateUsersOfSpecialInternalRole">
+            <http:operation location="updateUsersOfSpecialInternalRole" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="updateUsersOfSpecialInternalRole" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUserFromInternalStore">
+            <http:operation location="deleteUserFromInternalStore" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="deleteUserFromInternalStore" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="listInternalUsers">
+            <http:operation location="listInternalUsers" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="listInternalUsers" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="listInternalUsers" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getUsersOfSpecialInternalRole">
+            <http:operation location="getUsersOfSpecialInternalRole" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getUsersOfSpecialInternalRole" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getUsersOfSpecialInternalRole" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateRoleName">
+            <http:operation location="updateRoleName" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="updateRoleName" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemPermissionsOfRole">
+            <http:operation location="getSystemPermissionsOfRole" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getSystemPermissionsOfRole" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getSystemPermissionsOfRole" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getInternalRoles">
+            <http:operation location="getInternalRoles" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getInternalRoles" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getInternalRoles" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getExternalGroups">
+            <http:operation location="getExternalGroups" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getExternalGroups" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getExternalGroups" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getUserRoles">
+            <http:operation location="getUserRoles" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getUserRoles" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getUserRoles" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addExternalUserStoreConfig">
+            <http:operation location="addExternalUserStoreConfig" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="addExternalUserStoreConfig" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="updateUserName">
+            <http:operation location="updateUserName" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="updateUserName" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getSpecialInternalRoles">
+            <http:operation location="getSpecialInternalRoles" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getSpecialInternalRoles" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getSpecialInternalRoles" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getInternalUsers">
+            <http:operation location="getInternalUsers" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getInternalUsers" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getInternalUsers" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addUserToInternalStore">
+            <http:operation location="addUserToInternalStore" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="addUserToInternalStore" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getExternalUsers">
+            <http:operation location="getExternalUsers" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getExternalUsers" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getExternalUsers" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateSystemPermissionsOfRole">
+            <http:operation location="updateSystemPermissionsOfRole" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="updateSystemPermissionsOfRole" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getExternalUserStoreConfig">
+            <http:operation location="getExternalUserStoreConfig" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getExternalUserStoreConfig" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getExternalUserStoreConfig" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemPermissions">
+            <http:operation location="getSystemPermissions" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getSystemPermissions" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getSystemPermissions" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="hasExternalUserStore">
+            <http:operation location="hasExternalUserStore" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="hasExternalUserStore" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="hasExternalUserStore" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getUsersInExternalRole">
+            <http:operation location="getUsersInExternalRole" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getUsersInExternalRole" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getUsersInExternalRole" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteSpecialInternalRole">
+            <http:operation location="deleteSpecialInternalRole" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="deleteSpecialInternalRole" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addSpecialInternalRole">
+            <http:operation location="addSpecialInternalRole" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="addSpecialInternalRole" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getUsersInRole">
+            <http:operation location="getUsersInRole" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getUsersInRole" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getUsersInRole" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteExternalUserStore">
+            <http:operation location="deleteExternalUserStore" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="deleteExternalUserStore" />
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="UserManagementService">
+        <wsdl:port name="UserManagementServiceHttpsSoap11Endpoint" binding="ns:UserManagementServiceSoap11Binding">
+            <soap:address location="https://192.168.175.1:9443/services/UserManagementService.UserManagementServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="UserManagementServiceHttpsSoap12Endpoint" binding="ns:UserManagementServiceSoap12Binding">
+            <soap12:address location="https://192.168.175.1:9443/services/UserManagementService.UserManagementServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="UserManagementServiceHttpsEndpoint" binding="ns:UserManagementServiceHttpBinding">
+            <http:address location="https://192.168.175.1:9443/services/UserManagementService.UserManagementServiceHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

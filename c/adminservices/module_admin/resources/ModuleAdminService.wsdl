@@ -1,0 +1,1188 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://service.mgt.module.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ax287="http://mgt.module.carbon.wso2.org/xsd" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.mgt.module.carbon.wso2.org">
+    <wsdl:documentation>ModuleAdminService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax288="http://service.mgt.module.carbon.wso2.org" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mgt.module.carbon.wso2.org/xsd">
+            <xs:import namespace="http://service.mgt.module.carbon.wso2.org" />
+            <xs:complexType name="ModuleMgtException">
+                <xs:complexContent>
+                    <xs:extension base="ax288:Exception">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="key" nillable="true" type="xs:string" />
+                            <xs:element minOccurs="0" name="level" type="xs:int" />
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="ModuleMetaData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="description" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="engagedGlobalLevel" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="engagedOperationLevel" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="engagedServiceGroupLevel" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="engagedServiceLevel" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="managedModule" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="moduleId" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="moduleVersion" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="modulename" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax289="http://mgt.module.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.mgt.module.carbon.wso2.org">
+            <xs:import namespace="http://mgt.module.carbon.wso2.org/xsd" />
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Exception" nillable="true" type="xs:anyType" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="uploadModule">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="fileName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="dataHandler" nillable="true" type="xs:base64Binary" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="uploadModuleResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ModuleMgtException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ModuleMgtException" nillable="true" type="ax287:ModuleMgtException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setModuleParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="moduleVersion" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="parameters" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeModuleParameter">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="moduleVersion" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="parameterName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeModuleParameterResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeModule">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="moduleId" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeModuleResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listModulesForServiceGroup">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceGroupName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listModulesForServiceGroupResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax287:ModuleMetaData" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listModulesForService">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listModulesForServiceResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax287:ModuleMetaData" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listModulesForOperation">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listModulesForOperationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax287:ModuleMetaData" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listModulesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax287:ModuleMetaData" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listGloballyEngagedModulesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax287:ModuleMetaData" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="globallyEngageModule">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="moduleId" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="globallyEngageModuleResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="globallyDisengageModule">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="moduleId" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="globallyDisengageModuleResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getModuleParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="moduleVersion" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getModuleParametersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getModuleInfo">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="moduleName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="moduleVersion" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getModuleInfoResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax287:ModuleMetaData" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="engageModuleForServiceGroup">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="moduleID" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="serviceGroupName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="engageModuleForServiceGroupResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="engageModuleForService">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="moduleId" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="engageModuleForServiceResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="engageModuleForOperation">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="moduleId" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="engageModuleForOperationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="disengageModuleFromSystem">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="moduleId" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="disengageModuleFromSystemResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="disengageModuleForServiceGroup">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="moduleId" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="serviceGroupName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="disengageModuleForServiceGroupResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="disengageModuleForService">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="moduleId" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="disengageModuleForServiceResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="disengageModuleForOperation">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="moduleId" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="disengageModuleForOperationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="setModuleParametersRequest">
+        <wsdl:part name="parameters" element="ns:setModuleParameters" />
+    </wsdl:message>
+    <wsdl:message name="ModuleMgtException">
+        <wsdl:part name="parameters" element="ns:ModuleMgtException" />
+    </wsdl:message>
+    <wsdl:message name="listModulesRequest" />
+    <wsdl:message name="listModulesResponse">
+        <wsdl:part name="parameters" element="ns:listModulesResponse" />
+    </wsdl:message>
+    <wsdl:message name="uploadModuleRequest">
+        <wsdl:part name="parameters" element="ns:uploadModule" />
+    </wsdl:message>
+    <wsdl:message name="uploadModuleResponse">
+        <wsdl:part name="parameters" element="ns:uploadModuleResponse" />
+    </wsdl:message>
+    <wsdl:message name="removeModuleRequest">
+        <wsdl:part name="parameters" element="ns:removeModule" />
+    </wsdl:message>
+    <wsdl:message name="removeModuleResponse">
+        <wsdl:part name="parameters" element="ns:removeModuleResponse" />
+    </wsdl:message>
+    <wsdl:message name="disengageModuleForOperationRequest">
+        <wsdl:part name="parameters" element="ns:disengageModuleForOperation" />
+    </wsdl:message>
+    <wsdl:message name="disengageModuleForOperationResponse">
+        <wsdl:part name="parameters" element="ns:disengageModuleForOperationResponse" />
+    </wsdl:message>
+    <wsdl:message name="listGloballyEngagedModulesRequest" />
+    <wsdl:message name="listGloballyEngagedModulesResponse">
+        <wsdl:part name="parameters" element="ns:listGloballyEngagedModulesResponse" />
+    </wsdl:message>
+    <wsdl:message name="getModuleParametersRequest">
+        <wsdl:part name="parameters" element="ns:getModuleParameters" />
+    </wsdl:message>
+    <wsdl:message name="getModuleParametersResponse">
+        <wsdl:part name="parameters" element="ns:getModuleParametersResponse" />
+    </wsdl:message>
+    <wsdl:message name="removeModuleParameterRequest">
+        <wsdl:part name="parameters" element="ns:removeModuleParameter" />
+    </wsdl:message>
+    <wsdl:message name="removeModuleParameterResponse">
+        <wsdl:part name="parameters" element="ns:removeModuleParameterResponse" />
+    </wsdl:message>
+    <wsdl:message name="disengageModuleForServiceRequest">
+        <wsdl:part name="parameters" element="ns:disengageModuleForService" />
+    </wsdl:message>
+    <wsdl:message name="disengageModuleForServiceResponse">
+        <wsdl:part name="parameters" element="ns:disengageModuleForServiceResponse" />
+    </wsdl:message>
+    <wsdl:message name="listModulesForServiceRequest">
+        <wsdl:part name="parameters" element="ns:listModulesForService" />
+    </wsdl:message>
+    <wsdl:message name="listModulesForServiceResponse">
+        <wsdl:part name="parameters" element="ns:listModulesForServiceResponse" />
+    </wsdl:message>
+    <wsdl:message name="engageModuleForServiceGroupRequest">
+        <wsdl:part name="parameters" element="ns:engageModuleForServiceGroup" />
+    </wsdl:message>
+    <wsdl:message name="engageModuleForServiceGroupResponse">
+        <wsdl:part name="parameters" element="ns:engageModuleForServiceGroupResponse" />
+    </wsdl:message>
+    <wsdl:message name="globallyDisengageModuleRequest">
+        <wsdl:part name="parameters" element="ns:globallyDisengageModule" />
+    </wsdl:message>
+    <wsdl:message name="globallyDisengageModuleResponse">
+        <wsdl:part name="parameters" element="ns:globallyDisengageModuleResponse" />
+    </wsdl:message>
+    <wsdl:message name="listModulesForServiceGroupRequest">
+        <wsdl:part name="parameters" element="ns:listModulesForServiceGroup" />
+    </wsdl:message>
+    <wsdl:message name="listModulesForServiceGroupResponse">
+        <wsdl:part name="parameters" element="ns:listModulesForServiceGroupResponse" />
+    </wsdl:message>
+    <wsdl:message name="globallyEngageModuleRequest">
+        <wsdl:part name="parameters" element="ns:globallyEngageModule" />
+    </wsdl:message>
+    <wsdl:message name="globallyEngageModuleResponse">
+        <wsdl:part name="parameters" element="ns:globallyEngageModuleResponse" />
+    </wsdl:message>
+    <wsdl:message name="disengageModuleFromSystemRequest">
+        <wsdl:part name="parameters" element="ns:disengageModuleFromSystem" />
+    </wsdl:message>
+    <wsdl:message name="disengageModuleFromSystemResponse">
+        <wsdl:part name="parameters" element="ns:disengageModuleFromSystemResponse" />
+    </wsdl:message>
+    <wsdl:message name="engageModuleForServiceRequest">
+        <wsdl:part name="parameters" element="ns:engageModuleForService" />
+    </wsdl:message>
+    <wsdl:message name="engageModuleForServiceResponse">
+        <wsdl:part name="parameters" element="ns:engageModuleForServiceResponse" />
+    </wsdl:message>
+    <wsdl:message name="listModulesForOperationRequest">
+        <wsdl:part name="parameters" element="ns:listModulesForOperation" />
+    </wsdl:message>
+    <wsdl:message name="listModulesForOperationResponse">
+        <wsdl:part name="parameters" element="ns:listModulesForOperationResponse" />
+    </wsdl:message>
+    <wsdl:message name="disengageModuleForServiceGroupRequest">
+        <wsdl:part name="parameters" element="ns:disengageModuleForServiceGroup" />
+    </wsdl:message>
+    <wsdl:message name="disengageModuleForServiceGroupResponse">
+        <wsdl:part name="parameters" element="ns:disengageModuleForServiceGroupResponse" />
+    </wsdl:message>
+    <wsdl:message name="getModuleInfoRequest">
+        <wsdl:part name="parameters" element="ns:getModuleInfo" />
+    </wsdl:message>
+    <wsdl:message name="getModuleInfoResponse">
+        <wsdl:part name="parameters" element="ns:getModuleInfoResponse" />
+    </wsdl:message>
+    <wsdl:message name="engageModuleForOperationRequest">
+        <wsdl:part name="parameters" element="ns:engageModuleForOperation" />
+    </wsdl:message>
+    <wsdl:message name="engageModuleForOperationResponse">
+        <wsdl:part name="parameters" element="ns:engageModuleForOperationResponse" />
+    </wsdl:message>
+    <wsdl:portType name="ModuleAdminServicePortType">
+        <wsdl:operation name="setModuleParameters">
+            <wsdl:input message="ns:setModuleParametersRequest" wsaw:Action="urn:setModuleParameters" />
+            <wsdl:fault message="ns:ModuleMgtException" name="ModuleMgtException" wsaw:Action="urn:setModuleParametersModuleMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="listModules">
+            <wsdl:input message="ns:listModulesRequest" wsaw:Action="urn:listModules" />
+            <wsdl:output message="ns:listModulesResponse" wsaw:Action="urn:listModulesResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="uploadModule">
+            <wsdl:input message="ns:uploadModuleRequest" wsaw:Action="urn:uploadModule" />
+            <wsdl:output message="ns:uploadModuleResponse" wsaw:Action="urn:uploadModuleResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="removeModule">
+            <wsdl:input message="ns:removeModuleRequest" wsaw:Action="urn:removeModule" />
+            <wsdl:output message="ns:removeModuleResponse" wsaw:Action="urn:removeModuleResponse" />
+            <wsdl:fault message="ns:ModuleMgtException" name="ModuleMgtException" wsaw:Action="urn:removeModuleModuleMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="disengageModuleForOperation">
+            <wsdl:input message="ns:disengageModuleForOperationRequest" wsaw:Action="urn:disengageModuleForOperation" />
+            <wsdl:output message="ns:disengageModuleForOperationResponse" wsaw:Action="urn:disengageModuleForOperationResponse" />
+            <wsdl:fault message="ns:ModuleMgtException" name="ModuleMgtException" wsaw:Action="urn:disengageModuleForOperationModuleMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="listGloballyEngagedModules">
+            <wsdl:input message="ns:listGloballyEngagedModulesRequest" wsaw:Action="urn:listGloballyEngagedModules" />
+            <wsdl:output message="ns:listGloballyEngagedModulesResponse" wsaw:Action="urn:listGloballyEngagedModulesResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getModuleParameters">
+            <wsdl:input message="ns:getModuleParametersRequest" wsaw:Action="urn:getModuleParameters" />
+            <wsdl:output message="ns:getModuleParametersResponse" wsaw:Action="urn:getModuleParametersResponse" />
+            <wsdl:fault message="ns:ModuleMgtException" name="ModuleMgtException" wsaw:Action="urn:getModuleParametersModuleMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="removeModuleParameter">
+            <wsdl:input message="ns:removeModuleParameterRequest" wsaw:Action="urn:removeModuleParameter" />
+            <wsdl:output message="ns:removeModuleParameterResponse" wsaw:Action="urn:removeModuleParameterResponse" />
+            <wsdl:fault message="ns:ModuleMgtException" name="ModuleMgtException" wsaw:Action="urn:removeModuleParameterModuleMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="disengageModuleForService">
+            <wsdl:input message="ns:disengageModuleForServiceRequest" wsaw:Action="urn:disengageModuleForService" />
+            <wsdl:output message="ns:disengageModuleForServiceResponse" wsaw:Action="urn:disengageModuleForServiceResponse" />
+            <wsdl:fault message="ns:ModuleMgtException" name="ModuleMgtException" wsaw:Action="urn:disengageModuleForServiceModuleMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="listModulesForService">
+            <wsdl:input message="ns:listModulesForServiceRequest" wsaw:Action="urn:listModulesForService" />
+            <wsdl:output message="ns:listModulesForServiceResponse" wsaw:Action="urn:listModulesForServiceResponse" />
+            <wsdl:fault message="ns:ModuleMgtException" name="ModuleMgtException" wsaw:Action="urn:listModulesForServiceModuleMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="engageModuleForServiceGroup">
+            <wsdl:input message="ns:engageModuleForServiceGroupRequest" wsaw:Action="urn:engageModuleForServiceGroup" />
+            <wsdl:output message="ns:engageModuleForServiceGroupResponse" wsaw:Action="urn:engageModuleForServiceGroupResponse" />
+            <wsdl:fault message="ns:ModuleMgtException" name="ModuleMgtException" wsaw:Action="urn:engageModuleForServiceGroupModuleMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="globallyDisengageModule">
+            <wsdl:input message="ns:globallyDisengageModuleRequest" wsaw:Action="urn:globallyDisengageModule" />
+            <wsdl:output message="ns:globallyDisengageModuleResponse" wsaw:Action="urn:globallyDisengageModuleResponse" />
+            <wsdl:fault message="ns:ModuleMgtException" name="ModuleMgtException" wsaw:Action="urn:globallyDisengageModuleModuleMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="listModulesForServiceGroup">
+            <wsdl:input message="ns:listModulesForServiceGroupRequest" wsaw:Action="urn:listModulesForServiceGroup" />
+            <wsdl:output message="ns:listModulesForServiceGroupResponse" wsaw:Action="urn:listModulesForServiceGroupResponse" />
+            <wsdl:fault message="ns:ModuleMgtException" name="ModuleMgtException" wsaw:Action="urn:listModulesForServiceGroupModuleMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="globallyEngageModule">
+            <wsdl:input message="ns:globallyEngageModuleRequest" wsaw:Action="urn:globallyEngageModule" />
+            <wsdl:output message="ns:globallyEngageModuleResponse" wsaw:Action="urn:globallyEngageModuleResponse" />
+            <wsdl:fault message="ns:ModuleMgtException" name="ModuleMgtException" wsaw:Action="urn:globallyEngageModuleModuleMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="disengageModuleFromSystem">
+            <wsdl:input message="ns:disengageModuleFromSystemRequest" wsaw:Action="urn:disengageModuleFromSystem" />
+            <wsdl:output message="ns:disengageModuleFromSystemResponse" wsaw:Action="urn:disengageModuleFromSystemResponse" />
+            <wsdl:fault message="ns:ModuleMgtException" name="ModuleMgtException" wsaw:Action="urn:disengageModuleFromSystemModuleMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="engageModuleForService">
+            <wsdl:input message="ns:engageModuleForServiceRequest" wsaw:Action="urn:engageModuleForService" />
+            <wsdl:output message="ns:engageModuleForServiceResponse" wsaw:Action="urn:engageModuleForServiceResponse" />
+            <wsdl:fault message="ns:ModuleMgtException" name="ModuleMgtException" wsaw:Action="urn:engageModuleForServiceModuleMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="listModulesForOperation">
+            <wsdl:input message="ns:listModulesForOperationRequest" wsaw:Action="urn:listModulesForOperation" />
+            <wsdl:output message="ns:listModulesForOperationResponse" wsaw:Action="urn:listModulesForOperationResponse" />
+            <wsdl:fault message="ns:ModuleMgtException" name="ModuleMgtException" wsaw:Action="urn:listModulesForOperationModuleMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="disengageModuleForServiceGroup">
+            <wsdl:input message="ns:disengageModuleForServiceGroupRequest" wsaw:Action="urn:disengageModuleForServiceGroup" />
+            <wsdl:output message="ns:disengageModuleForServiceGroupResponse" wsaw:Action="urn:disengageModuleForServiceGroupResponse" />
+            <wsdl:fault message="ns:ModuleMgtException" name="ModuleMgtException" wsaw:Action="urn:disengageModuleForServiceGroupModuleMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="getModuleInfo">
+            <wsdl:input message="ns:getModuleInfoRequest" wsaw:Action="urn:getModuleInfo" />
+            <wsdl:output message="ns:getModuleInfoResponse" wsaw:Action="urn:getModuleInfoResponse" />
+            <wsdl:fault message="ns:ModuleMgtException" name="ModuleMgtException" wsaw:Action="urn:getModuleInfoModuleMgtException" />
+        </wsdl:operation>
+        <wsdl:operation name="engageModuleForOperation">
+            <wsdl:input message="ns:engageModuleForOperationRequest" wsaw:Action="urn:engageModuleForOperation" />
+            <wsdl:output message="ns:engageModuleForOperationResponse" wsaw:Action="urn:engageModuleForOperationResponse" />
+            <wsdl:fault message="ns:ModuleMgtException" name="ModuleMgtException" wsaw:Action="urn:engageModuleForOperationModuleMgtException" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="ModuleAdminServiceSoap11Binding" type="ns:ModuleAdminServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="setModuleParameters">
+            <soap:operation soapAction="urn:setModuleParameters" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="ModuleMgtException">
+                <soap:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="uploadModule">
+            <soap:operation soapAction="urn:uploadModule" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listModules">
+            <soap:operation soapAction="urn:listModules" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="removeModule">
+            <soap:operation soapAction="urn:removeModule" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listGloballyEngagedModules">
+            <soap:operation soapAction="urn:listGloballyEngagedModules" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="disengageModuleForOperation">
+            <soap:operation soapAction="urn:disengageModuleForOperation" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getModuleParameters">
+            <soap:operation soapAction="urn:getModuleParameters" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeModuleParameter">
+            <soap:operation soapAction="urn:removeModuleParameter" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="engageModuleForServiceGroup">
+            <soap:operation soapAction="urn:engageModuleForServiceGroup" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="globallyDisengageModule">
+            <soap:operation soapAction="urn:globallyDisengageModule" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listModulesForService">
+            <soap:operation soapAction="urn:listModulesForService" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="disengageModuleForService">
+            <soap:operation soapAction="urn:disengageModuleForService" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listModulesForServiceGroup">
+            <soap:operation soapAction="urn:listModulesForServiceGroup" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="globallyEngageModule">
+            <soap:operation soapAction="urn:globallyEngageModule" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="disengageModuleFromSystem">
+            <soap:operation soapAction="urn:disengageModuleFromSystem" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="engageModuleForService">
+            <soap:operation soapAction="urn:engageModuleForService" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listModulesForOperation">
+            <soap:operation soapAction="urn:listModulesForOperation" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getModuleInfo">
+            <soap:operation soapAction="urn:getModuleInfo" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="disengageModuleForServiceGroup">
+            <soap:operation soapAction="urn:disengageModuleForServiceGroup" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="engageModuleForOperation">
+            <soap:operation soapAction="urn:engageModuleForOperation" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ModuleAdminServiceSoap12Binding" type="ns:ModuleAdminServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="setModuleParameters">
+            <soap12:operation soapAction="urn:setModuleParameters" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="ModuleMgtException">
+                <soap12:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="uploadModule">
+            <soap12:operation soapAction="urn:uploadModule" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listModules">
+            <soap12:operation soapAction="urn:listModules" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="removeModule">
+            <soap12:operation soapAction="urn:removeModule" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap12:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listGloballyEngagedModules">
+            <soap12:operation soapAction="urn:listGloballyEngagedModules" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="disengageModuleForOperation">
+            <soap12:operation soapAction="urn:disengageModuleForOperation" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap12:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getModuleParameters">
+            <soap12:operation soapAction="urn:getModuleParameters" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap12:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeModuleParameter">
+            <soap12:operation soapAction="urn:removeModuleParameter" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap12:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="engageModuleForServiceGroup">
+            <soap12:operation soapAction="urn:engageModuleForServiceGroup" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap12:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="globallyDisengageModule">
+            <soap12:operation soapAction="urn:globallyDisengageModule" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap12:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listModulesForService">
+            <soap12:operation soapAction="urn:listModulesForService" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap12:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="disengageModuleForService">
+            <soap12:operation soapAction="urn:disengageModuleForService" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap12:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listModulesForServiceGroup">
+            <soap12:operation soapAction="urn:listModulesForServiceGroup" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap12:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="globallyEngageModule">
+            <soap12:operation soapAction="urn:globallyEngageModule" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap12:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="disengageModuleFromSystem">
+            <soap12:operation soapAction="urn:disengageModuleFromSystem" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap12:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="engageModuleForService">
+            <soap12:operation soapAction="urn:engageModuleForService" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap12:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listModulesForOperation">
+            <soap12:operation soapAction="urn:listModulesForOperation" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap12:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getModuleInfo">
+            <soap12:operation soapAction="urn:getModuleInfo" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap12:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="disengageModuleForServiceGroup">
+            <soap12:operation soapAction="urn:disengageModuleForServiceGroup" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap12:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="engageModuleForOperation">
+            <soap12:operation soapAction="urn:engageModuleForOperation" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ModuleMgtException">
+                <soap12:fault use="literal" name="ModuleMgtException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ModuleAdminServiceHttpBinding" type="ns:ModuleAdminServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="setModuleParameters">
+            <http:operation location="setModuleParameters" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="setModuleParameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="uploadModule">
+            <http:operation location="uploadModule" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="uploadModule" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="uploadModule" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listModules">
+            <http:operation location="listModules" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="listModules" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="listModules" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="removeModule">
+            <http:operation location="removeModule" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="removeModule" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="removeModule" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listGloballyEngagedModules">
+            <http:operation location="listGloballyEngagedModules" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="listGloballyEngagedModules" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="listGloballyEngagedModules" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="disengageModuleForOperation">
+            <http:operation location="disengageModuleForOperation" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="disengageModuleForOperation" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="disengageModuleForOperation" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getModuleParameters">
+            <http:operation location="getModuleParameters" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getModuleParameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getModuleParameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="removeModuleParameter">
+            <http:operation location="removeModuleParameter" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="removeModuleParameter" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="removeModuleParameter" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="engageModuleForServiceGroup">
+            <http:operation location="engageModuleForServiceGroup" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="engageModuleForServiceGroup" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="engageModuleForServiceGroup" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="globallyDisengageModule">
+            <http:operation location="globallyDisengageModule" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="globallyDisengageModule" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="globallyDisengageModule" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listModulesForService">
+            <http:operation location="listModulesForService" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="listModulesForService" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="listModulesForService" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="disengageModuleForService">
+            <http:operation location="disengageModuleForService" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="disengageModuleForService" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="disengageModuleForService" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listModulesForServiceGroup">
+            <http:operation location="listModulesForServiceGroup" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="listModulesForServiceGroup" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="listModulesForServiceGroup" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="globallyEngageModule">
+            <http:operation location="globallyEngageModule" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="globallyEngageModule" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="globallyEngageModule" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="disengageModuleFromSystem">
+            <http:operation location="disengageModuleFromSystem" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="disengageModuleFromSystem" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="disengageModuleFromSystem" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="engageModuleForService">
+            <http:operation location="engageModuleForService" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="engageModuleForService" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="engageModuleForService" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listModulesForOperation">
+            <http:operation location="listModulesForOperation" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="listModulesForOperation" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="listModulesForOperation" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getModuleInfo">
+            <http:operation location="getModuleInfo" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getModuleInfo" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getModuleInfo" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="disengageModuleForServiceGroup">
+            <http:operation location="disengageModuleForServiceGroup" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="disengageModuleForServiceGroup" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="disengageModuleForServiceGroup" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="engageModuleForOperation">
+            <http:operation location="engageModuleForOperation" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="engageModuleForOperation" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="engageModuleForOperation" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="ModuleAdminService">
+        <wsdl:port name="ModuleAdminServiceHttpsSoap11Endpoint" binding="ns:ModuleAdminServiceSoap11Binding">
+            <soap:address location="https://192.168.175.1:9443/services/ModuleAdminService.ModuleAdminServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="ModuleAdminServiceHttpsSoap12Endpoint" binding="ns:ModuleAdminServiceSoap12Binding">
+            <soap12:address location="https://192.168.175.1:9443/services/ModuleAdminService.ModuleAdminServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="ModuleAdminServiceHttpsEndpoint" binding="ns:ModuleAdminServiceHttpBinding">
+            <http:address location="https://192.168.175.1:9443/services/ModuleAdminService.ModuleAdminServiceHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
