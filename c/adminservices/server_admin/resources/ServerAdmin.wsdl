@@ -1,0 +1,541 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:axis2="http://service.admin.server.carbon.wso2.org" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ax272="http://util.service.admin.server.carbon.wso2.org/xsd" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.admin.server.carbon.wso2.org">
+    <wsdl:documentation>ServerAdmin</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax273="http://util.service.admin.server.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:import namespace="http://util.service.admin.server.carbon.wso2.org/xsd" />
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Exception" nillable="true" type="xs:anyType" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="Exception">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="Exception" nillable="true" type="ns:Exception" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="shutdownGracefullyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="shutdownResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="restartGracefullyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="restartResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isAliveResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServerVersionResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServerStatusResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServerDataAsStringResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServerDataResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax272:ServerData" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://util.service.admin.server.carbon.wso2.org/xsd">
+            <xs:complexType name="ServerData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="axis2Location" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="dbDriverName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="dbDriverVersion" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="dbName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="dbURL" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="dbVersion" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="javaHome" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="javaRuntimeName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="javaVMVendor" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="javaVMVersion" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="javaVersion" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="osName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="osVersion" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="registryType" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="remoteRegistryChroot" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="remoteRegistryURL" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="repoLocation" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="serverIp" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="serverName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="serverStartTime" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="systemUpTime" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="userCountry" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="userHome" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="userTimezone" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="wso2wsasVersion" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getServerStatusRequest" />
+    <wsdl:message name="getServerStatusResponse">
+        <wsdl:part name="parameters" element="ns1:getServerStatusResponse" />
+    </wsdl:message>
+    <wsdl:message name="Exception">
+        <wsdl:part name="parameters" element="ns1:Exception" />
+    </wsdl:message>
+    <wsdl:message name="getServerVersionRequest" />
+    <wsdl:message name="getServerVersionResponse">
+        <wsdl:part name="parameters" element="ns1:getServerVersionResponse" />
+    </wsdl:message>
+    <wsdl:message name="endMaintenanceRequest" />
+    <wsdl:message name="shutdownGracefullyRequest" />
+    <wsdl:message name="shutdownGracefullyResponse">
+        <wsdl:part name="parameters" element="ns1:shutdownGracefullyResponse" />
+    </wsdl:message>
+    <wsdl:message name="getServerDataRequest" />
+    <wsdl:message name="getServerDataResponse">
+        <wsdl:part name="parameters" element="ns1:getServerDataResponse" />
+    </wsdl:message>
+    <wsdl:message name="restartRequest" />
+    <wsdl:message name="restartResponse">
+        <wsdl:part name="parameters" element="ns1:restartResponse" />
+    </wsdl:message>
+    <wsdl:message name="getServerDataAsStringRequest" />
+    <wsdl:message name="getServerDataAsStringResponse">
+        <wsdl:part name="parameters" element="ns1:getServerDataAsStringResponse" />
+    </wsdl:message>
+    <wsdl:message name="isAliveRequest" />
+    <wsdl:message name="isAliveResponse">
+        <wsdl:part name="parameters" element="ns1:isAliveResponse" />
+    </wsdl:message>
+    <wsdl:message name="shutdownRequest" />
+    <wsdl:message name="shutdownResponse">
+        <wsdl:part name="parameters" element="ns1:shutdownResponse" />
+    </wsdl:message>
+    <wsdl:message name="restartGracefullyRequest" />
+    <wsdl:message name="restartGracefullyResponse">
+        <wsdl:part name="parameters" element="ns1:restartGracefullyResponse" />
+    </wsdl:message>
+    <wsdl:message name="startMaintenanceRequest" />
+    <wsdl:portType name="ServerAdminPortType">
+        <wsdl:operation name="getServerStatus">
+            <wsdl:input message="axis2:getServerStatusRequest" wsaw:Action="urn:getServerStatus" />
+            <wsdl:output message="axis2:getServerStatusResponse" wsaw:Action="urn:getServerStatusResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:getServerStatusException" />
+        </wsdl:operation>
+        <wsdl:operation name="getServerVersion">
+            <wsdl:input message="axis2:getServerVersionRequest" wsaw:Action="urn:getServerVersion" />
+            <wsdl:output message="axis2:getServerVersionResponse" wsaw:Action="urn:getServerVersionResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="endMaintenance">
+            <wsdl:input message="axis2:endMaintenanceRequest" wsaw:Action="urn:endMaintenance" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:endMaintenanceException" />
+        </wsdl:operation>
+        <wsdl:operation name="shutdownGracefully">
+            <wsdl:input message="axis2:shutdownGracefullyRequest" wsaw:Action="urn:shutdownGracefully" />
+            <wsdl:output message="axis2:shutdownGracefullyResponse" wsaw:Action="urn:shutdownGracefullyResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getServerData">
+            <wsdl:input message="axis2:getServerDataRequest" wsaw:Action="urn:getServerData" />
+            <wsdl:output message="axis2:getServerDataResponse" wsaw:Action="urn:getServerDataResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="restart">
+            <wsdl:input message="axis2:restartRequest" wsaw:Action="urn:restart" />
+            <wsdl:output message="axis2:restartResponse" wsaw:Action="urn:restartResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:restartException" />
+        </wsdl:operation>
+        <wsdl:operation name="getServerDataAsString">
+            <wsdl:input message="axis2:getServerDataAsStringRequest" wsaw:Action="urn:getServerDataAsString" />
+            <wsdl:output message="axis2:getServerDataAsStringResponse" wsaw:Action="urn:getServerDataAsStringResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:getServerDataAsStringException" />
+        </wsdl:operation>
+        <wsdl:operation name="isAlive">
+            <wsdl:input message="axis2:isAliveRequest" wsaw:Action="urn:isAlive" />
+            <wsdl:output message="axis2:isAliveResponse" wsaw:Action="urn:isAliveResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="shutdown">
+            <wsdl:input message="axis2:shutdownRequest" wsaw:Action="urn:shutdown" />
+            <wsdl:output message="axis2:shutdownResponse" wsaw:Action="urn:shutdownResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="restartGracefully">
+            <wsdl:input message="axis2:restartGracefullyRequest" wsaw:Action="urn:restartGracefully" />
+            <wsdl:output message="axis2:restartGracefullyResponse" wsaw:Action="urn:restartGracefullyResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:restartGracefullyException" />
+        </wsdl:operation>
+        <wsdl:operation name="startMaintenance">
+            <wsdl:input message="axis2:startMaintenanceRequest" wsaw:Action="urn:startMaintenance" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:startMaintenanceException" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="ServerAdminSoap11Binding" type="axis2:ServerAdminPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getServerStatus">
+            <soap:operation soapAction="urn:getServerStatus" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServerVersion">
+            <soap:operation soapAction="urn:getServerVersion" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="endMaintenance">
+            <soap:operation soapAction="urn:endMaintenance" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="shutdownGracefully">
+            <soap:operation soapAction="urn:shutdownGracefully" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServerData">
+            <soap:operation soapAction="urn:getServerData" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="restart">
+            <soap:operation soapAction="urn:restart" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="isAlive">
+            <soap:operation soapAction="urn:isAlive" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServerDataAsString">
+            <soap:operation soapAction="urn:getServerDataAsString" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="restartGracefully">
+            <soap:operation soapAction="urn:restartGracefully" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="shutdown">
+            <soap:operation soapAction="urn:shutdown" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="startMaintenance">
+            <soap:operation soapAction="urn:startMaintenance" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ServerAdminSoap12Binding" type="axis2:ServerAdminPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getServerStatus">
+            <soap12:operation soapAction="urn:getServerStatus" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServerVersion">
+            <soap12:operation soapAction="urn:getServerVersion" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="endMaintenance">
+            <soap12:operation soapAction="urn:endMaintenance" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="shutdownGracefully">
+            <soap12:operation soapAction="urn:shutdownGracefully" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServerData">
+            <soap12:operation soapAction="urn:getServerData" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="restart">
+            <soap12:operation soapAction="urn:restart" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="isAlive">
+            <soap12:operation soapAction="urn:isAlive" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServerDataAsString">
+            <soap12:operation soapAction="urn:getServerDataAsString" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="restartGracefully">
+            <soap12:operation soapAction="urn:restartGracefully" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="shutdown">
+            <soap12:operation soapAction="urn:shutdown" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="startMaintenance">
+            <soap12:operation soapAction="urn:startMaintenance" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ServerAdminHttpBinding" type="axis2:ServerAdminPortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="getServerStatus">
+            <http:operation location="getServerStatus" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getServerStatus" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getServerStatus" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServerVersion">
+            <http:operation location="getServerVersion" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getServerVersion" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getServerVersion" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="endMaintenance">
+            <http:operation location="endMaintenance" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="endMaintenance" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="shutdownGracefully">
+            <http:operation location="shutdownGracefully" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="shutdownGracefully" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="shutdownGracefully" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServerData">
+            <http:operation location="getServerData" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getServerData" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getServerData" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="restart">
+            <http:operation location="restart" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="restart" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="restart" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="isAlive">
+            <http:operation location="isAlive" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="isAlive" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="isAlive" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServerDataAsString">
+            <http:operation location="getServerDataAsString" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getServerDataAsString" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getServerDataAsString" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="restartGracefully">
+            <http:operation location="restartGracefully" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="restartGracefully" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="restartGracefully" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="shutdown">
+            <http:operation location="shutdown" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="shutdown" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="shutdown" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="startMaintenance">
+            <http:operation location="startMaintenance" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="startMaintenance" />
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="ServerAdmin">
+        <wsdl:port name="ServerAdminHttpsSoap11Endpoint" binding="axis2:ServerAdminSoap11Binding">
+            <soap:address location="https://10.100.1.101:9443/services/ServerAdmin.ServerAdminHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="ServerAdminHttpsSoap12Endpoint" binding="axis2:ServerAdminSoap12Binding">
+            <soap12:address location="https://10.100.1.101:9443/services/ServerAdmin.ServerAdminHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="ServerAdminHttpsEndpoint" binding="axis2:ServerAdminHttpBinding">
+            <http:address location="https://10.100.1.101:9443/services/ServerAdmin.ServerAdminHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
