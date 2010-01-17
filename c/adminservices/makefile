@@ -1,5 +1,5 @@
 
-AUTOCONF = .\..\configure.in
+AUTOCONF = configure.in
 !include $(AUTOCONF)
 
 ADMIN_SVC_SRCDIR = .\ 
