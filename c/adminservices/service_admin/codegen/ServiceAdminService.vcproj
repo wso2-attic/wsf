@@ -456,7 +456,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\adb_Policy.c"
+				RelativePath="..\adb_Policy.c"
 				>
 			</File>
 			<File
@@ -560,7 +560,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\axis2_skel_ServiceAdmin.c"
+				RelativePath="..\axis2_skel_ServiceAdmin.c"
 				>
 			</File>
 			<File
@@ -958,6 +958,10 @@
 			</File>
 			<File
 				RelativePath=".\axis2_skel_ServiceAdmin.h"
+				>
+			</File>
+			<File
+				RelativePath="..\service_admin_constants.h"
 				>
 			</File>
 		</Filter>

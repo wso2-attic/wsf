@@ -7,6 +7,13 @@
          * by the Apache Axis2/C version: SNAPSHOT  Built on : Mar 10, 2008 (08:35:52 GMT+00:00)
          */
 
+/*
+ * =====================================================================================
+ * NOTE : This WSDL is having schema inheritance. Due to that _type is generated twice
+ * It is manually commented in this file
+ * =====================================================================================
+ */
+
         #include "adb_Policy.h"
         
                 /*
@@ -38,10 +45,10 @@
 
                 
                 axis2_bool_t is_valid_assertions;
-            short property_type;
+           /* short property_type; */
 
                 
-                axis2_bool_t is_valid_type;
+            /*    axis2_bool_t is_valid_type; */
             adb_Iterator_t* property_alternatives;
 
                 
@@ -136,7 +143,6 @@
                 adb_PolicyComponent_t* _firstPolicyComponent,
                 axiom_node_t* _policyComponents,
                 axiom_node_t* _assertions,
-                short _type,
                 adb_Iterator_t* _alternatives,
                 adb_Map_t* _attributes,
                 axis2_char_t* _id,
@@ -2436,7 +2442,7 @@
 
             /**
              * getter for type.
-             */
+             
             short AXIS2_CALL
             adb_Policy_get_type(
                     adb_Policy_t* _Policy,
@@ -2449,10 +2455,11 @@
 
                 return _Policy->property_type;
              }
+			 */
 
             /**
              * setter for type
-             */
+            
             axis2_status_t AXIS2_CALL
             adb_Policy_set_type(
                     adb_Policy_t* _Policy,
@@ -2478,12 +2485,12 @@
                     
                 return AXIS2_SUCCESS;
              }
-
+			*/
              
 
            /**
             * resetter for type
-            */
+           
            axis2_status_t AXIS2_CALL
            adb_Policy_reset_type(
                    adb_Policy_t* _Policy,
@@ -2500,10 +2507,10 @@
                _Policy->is_valid_type = AXIS2_FALSE; 
                return AXIS2_SUCCESS;
            }
-
+			 */
            /**
             * Check whether type is nill
-            */
+          
            axis2_bool_t AXIS2_CALL
            adb_Policy_is_type_nil(
                    adb_Policy_t* _Policy,
@@ -2514,10 +2521,10 @@
                
                return !_Policy->is_valid_type;
            }
-
+			  */
            /**
             * Set type to nill (currently the same as reset)
-            */
+           
            axis2_status_t AXIS2_CALL
            adb_Policy_set_type_nil(
                    adb_Policy_t* _Policy,
@@ -2525,7 +2532,7 @@
            {
                return adb_Policy_reset_type(_Policy, env);
            }
-
+			*/
            
 
             /**
@@ -3057,10 +3064,6 @@
                     const axutil_env_t *env)
              {
                 
-                    AXIS2_ENV_CHECK(env, (short)0);
-                    AXIS2_PARAM_CHECK(env->error, _Policy, (short)0);
-                  
-
                 return _Policy->property_type;
              }
 
