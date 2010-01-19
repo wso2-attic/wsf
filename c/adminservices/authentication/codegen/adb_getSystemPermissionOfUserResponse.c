@@ -406,6 +406,7 @@
                 axis2_char_t *qname_uri = NULL;
                 axis2_char_t *qname_prefix = NULL;
                 axis2_char_t *p_prefix = NULL;
+                axis2_bool_t ns_already_defined;
             
                int i = 0;
                int count = 0;

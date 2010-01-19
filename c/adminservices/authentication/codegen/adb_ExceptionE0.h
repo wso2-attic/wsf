@@ -7,7 +7,7 @@
         * adb_ExceptionE0.h
         *
         * This file was auto-generated from WSDL
-        * by the Apache Axis2/Java version: #axisVersion# #today#
+        * by the Apache Axis2/Java version: SNAPSHOT  Built on : Jan 19, 2010 (01:47:08 IST)
         */
 
        /**

@@ -756,7 +756,7 @@
                         axiom_element_declare_namespace_assume_param_ownership(parent_element, env, element_ns);
                   }
               }
-              type_attrib = axutil_strcat(env, xsi_prefix, ":type=\"ProfileConfiguration\"", NULL);
+              type_attrib = axutil_strcat(env, " ", xsi_prefix, ":type=\"ProfileConfiguration\"", NULL);
               axutil_stream_write(stream, env, type_attrib, axutil_strlen(type_attrib));
 
               AXIS2_FREE(env->allocator, type_attrib);

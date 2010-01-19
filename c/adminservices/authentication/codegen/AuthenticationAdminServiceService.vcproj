@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="AuthenticationAdminService"
-	ProjectGUID="{30034112-CFB7-43B3-B82A-60921D006B97}"
+	ProjectGUID="{F9353372-DCAF-4C66-BAEC-DFECB9121C2B}"
 	RootNamespace="service"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"

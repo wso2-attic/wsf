@@ -4,7 +4,7 @@
          * axis2_svc_skel_AuthenticationAdminService.c
          *
          * This file was auto-generated from WSDL for "AuthenticationAdminService|http://authentication.services.core.carbon.wso2.org" service
-         * by the Apache Axis2 version: #axisVersion# #today#
+         * by the Apache Axis2 version: SNAPSHOT  Built on : Jan 19, 2010 (01:46:42 IST)
          *  axis2_svc_skel_AuthenticationAdminService
          */
 

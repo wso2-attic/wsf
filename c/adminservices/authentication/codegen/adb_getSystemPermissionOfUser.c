@@ -350,6 +350,7 @@
                 axis2_char_t *qname_uri = NULL;
                 axis2_char_t *qname_prefix = NULL;
                 axis2_char_t *p_prefix = NULL;
+                axis2_bool_t ns_already_defined;
             
                     axis2_char_t *text_value_1;
                     axis2_char_t *text_value_1_temp;

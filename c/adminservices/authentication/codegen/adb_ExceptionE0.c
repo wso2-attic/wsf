@@ -359,7 +359,9 @@
                 axis2_char_t *qname_uri = NULL;
                 axis2_char_t *qname_prefix = NULL;
                 axis2_char_t *p_prefix = NULL;
+                axis2_bool_t ns_already_defined;
             
+                    axis2_char_t text_value_1[ADB_DEFAULT_DIGIT_LIMIT];
                     
                axis2_char_t *start_input_str = NULL;
                axis2_char_t *end_input_str = NULL;

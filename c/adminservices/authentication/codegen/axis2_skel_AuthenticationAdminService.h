@@ -4,7 +4,7 @@
      * axis2_skel_AuthenticationAdminService.h
      *
      * This file was auto-generated from WSDL for "AuthenticationAdminService|http://authentication.services.core.carbon.wso2.org" service
-     * by the Apache Axis2/C version: #axisVersion# #today#
+     * by the Apache Axis2/C version: SNAPSHOT  Built on : Jan 19, 2010 (01:46:42 IST)
      * axis2_skel_AuthenticationAdminService Axis2/C skeleton for the axisService- Header file
      */
 
