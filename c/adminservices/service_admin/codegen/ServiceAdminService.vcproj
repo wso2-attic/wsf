@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="ServiceAdmin"
-	ProjectGUID="{EA1E62A2-8F5A-4E01-AE17-92C312675F8A}"
+	ProjectGUID="{1BE531FA-0222-42AB-8003-70AF6A9E0D0B}"
 	RootNamespace="service"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
@@ -970,6 +970,10 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			>
 		</Filter>
+		<File
+			RelativePath=".\build.sh"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
