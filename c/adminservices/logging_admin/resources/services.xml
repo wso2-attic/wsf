@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: #axisVersion# #today# -->
+<service name="LoggingAdmin">
+    <parameter name="ServiceClass">LoggingAdmin</parameter>
+    <description>LoggingAdmin Service
+            </description>
+    <operation name="getAllLoggerData" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getAllLoggerData</parameter>
+    </operation>
+    <operation name="restoreDefaults" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:restoreDefaults</parameter>
+    </operation>
+    <operation name="updateSystemLog" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateSystemLog</parameter>
+    </operation>
+    <operation name="getSystemLog" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getSystemLog</parameter>
+    </operation>
+    <operation name="getAppenderData" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getAppenderData</parameter>
+    </operation>
+    <operation name="updateAllAppenderData" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateAllAppenderData</parameter>
+    </operation>
+    <operation name="getLoggerData" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getLoggerData</parameter>
+    </operation>
+    <operation name="updateLoggerData" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateLoggerData</parameter>
+    </operation>
+</service>

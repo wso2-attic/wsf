@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: #axisVersion# #today# -->
+<service name="ResourceAdminService">
+    <parameter name="ServiceClass">ResourceAdminService</parameter>
+    <description>ResourceAdminService Service
+            </description>
+    <operation name="getMediatypeDefinitions" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getMediatypeDefinitions</parameter>
+    </operation>
+    <operation name="getResourceTreeEntry" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getResourceTreeEntry</parameter>
+    </operation>
+    <operation name="createVersion" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:createVersion</parameter>
+    </operation>
+    <operation name="addRemoteLink" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:addRemoteLink</parameter>
+    </operation>
+    <operation name="changeUserPermissions" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:changeUserPermissions</parameter>
+    </operation>
+    <operation name="delete" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:delete</parameter>
+    </operation>
+    <operation name="updateTextContent" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateTextContent</parameter>
+    </operation>
+    <operation name="renameResource" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:renameResource</parameter>
+    </operation>
+    <operation name="moveResource" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:moveResource</parameter>
+    </operation>
+    <operation name="getResourceData" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getResourceData</parameter>
+    </operation>
+    <operation name="importResource" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:importResource</parameter>
+    </operation>
+    <operation name="addUserPermission" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:addUserPermission</parameter>
+    </operation>
+    <operation name="restoreVersion" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:restoreVersion</parameter>
+    </operation>
+    <operation name="addRolePermission" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:addRolePermission</parameter>
+    </operation>
+    <operation name="getSessionResourcePath" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getSessionResourcePath</parameter>
+    </operation>
+    <operation name="addSymbolicLink" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:addSymbolicLink</parameter>
+    </operation>
+    <operation name="getTextContent" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getTextContent</parameter>
+    </operation>
+    <operation name="getCollectionMediatypeDefinitions" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getCollectionMediatypeDefinitions</parameter>
+    </operation>
+    <operation name="getCollectionContent" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getCollectionContent</parameter>
+    </operation>
+    <operation name="setSessionResourcePath" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:setSessionResourcePath</parameter>
+    </operation>
+    <operation name="changeRolePermissions" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:changeRolePermissions</parameter>
+    </operation>
+    <operation name="getVersionsBean" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getVersionsBean</parameter>
+    </operation>
+    <operation name="setDescription" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:setDescription</parameter>
+    </operation>
+    <operation name="addTextResource" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:addTextResource</parameter>
+    </operation>
+    <operation name="getProperty" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getProperty</parameter>
+    </operation>
+    <operation name="getContentDownloadBean" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getContentDownloadBean</parameter>
+    </operation>
+    <operation name="getContentBean" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getContentBean</parameter>
+    </operation>
+    <operation name="addCollection" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:addCollection</parameter>
+    </operation>
+    <operation name="getMetadata" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getMetadata</parameter>
+    </operation>
+    <operation name="getPermissions" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getPermissions</parameter>
+    </operation>
+    <operation name="copyResource" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:copyResource</parameter>
+    </operation>
+    <operation name="addResource" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:addResource</parameter>
+    </operation>
+    <operation name="getCustomUIMediatypeDefinitions" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getCustomUIMediatypeDefinitions</parameter>
+    </operation>
+</service>

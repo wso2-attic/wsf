@@ -1,0 +1,702 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:axis2="http://mgt.operation.carbon.wso2.org" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax280="http://mgt.operation.carbon.wso2.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mgt.operation.carbon.wso2.org">
+    <wsdl:documentation>OperationAdmin</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax281="http://mgt.operation.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:import namespace="http://mgt.operation.carbon.wso2.org/xsd"/>
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Exception" nillable="true" type="xs:anyType"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="setPolicy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceId" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="operationId" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="policyElement" nillable="true" type="xs:anyType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setOperationParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceId" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="operationId" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="parameters" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeOperationParameter">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="parameterName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listPublishedOperations">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listPublishedOperationsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax280:OperationMetaData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listOperationPhases">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="flow" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listOperationPhasesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listOperationPhaseHandlers">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="flow" type="xs:int"/>
+                        <xs:element minOccurs="0" name="phaseName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listOperationPhaseHandlersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listControlOperations">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listControlOperationsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax280:OperationMetaData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listAllOperations">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listAllOperationsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax280:OperationMetaDataWrapper"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPolicy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceId" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="operationId" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPolicyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:anyType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationStatistics">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationStatisticsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax280:OperationMetaData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceId" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="operationId" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationParametersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationMetaData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationMetaDataResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax280:OperationMetaData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDeclaredOperationParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDeclaredOperationParametersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="configureMTOM">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="flag" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="operationName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mgt.operation.carbon.wso2.org/xsd">
+            <xs:complexType name="OperationMetaData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="controlOperation" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="enableMTOM" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="OperationMetaDataWrapper">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="controlOperations" nillable="true" type="ax280:OperationMetaData"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="publishedOperations" nillable="true" type="ax280:OperationMetaData"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="setOperationParametersRequest">
+        <wsdl:part name="parameters" element="ns1:setOperationParameters"/>
+    </wsdl:message>
+    <wsdl:message name="setPolicyRequest">
+        <wsdl:part name="parameters" element="ns1:setPolicy"/>
+    </wsdl:message>
+    <wsdl:message name="getOperationParametersRequest">
+        <wsdl:part name="parameters" element="ns1:getOperationParameters"/>
+    </wsdl:message>
+    <wsdl:message name="getOperationParametersResponse">
+        <wsdl:part name="parameters" element="ns1:getOperationParametersResponse"/>
+    </wsdl:message>
+    <wsdl:message name="listControlOperationsRequest">
+        <wsdl:part name="parameters" element="ns1:listControlOperations"/>
+    </wsdl:message>
+    <wsdl:message name="listControlOperationsResponse">
+        <wsdl:part name="parameters" element="ns1:listControlOperationsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="listOperationPhaseHandlersRequest">
+        <wsdl:part name="parameters" element="ns1:listOperationPhaseHandlers"/>
+    </wsdl:message>
+    <wsdl:message name="listOperationPhaseHandlersResponse">
+        <wsdl:part name="parameters" element="ns1:listOperationPhaseHandlersResponse"/>
+    </wsdl:message>
+    <wsdl:message name="removeOperationParameterRequest">
+        <wsdl:part name="parameters" element="ns1:removeOperationParameter"/>
+    </wsdl:message>
+    <wsdl:message name="getOperationStatisticsRequest">
+        <wsdl:part name="parameters" element="ns1:getOperationStatistics"/>
+    </wsdl:message>
+    <wsdl:message name="getOperationStatisticsResponse">
+        <wsdl:part name="parameters" element="ns1:getOperationStatisticsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="listPublishedOperationsRequest">
+        <wsdl:part name="parameters" element="ns1:listPublishedOperations"/>
+    </wsdl:message>
+    <wsdl:message name="listPublishedOperationsResponse">
+        <wsdl:part name="parameters" element="ns1:listPublishedOperationsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="listOperationPhasesRequest">
+        <wsdl:part name="parameters" element="ns1:listOperationPhases"/>
+    </wsdl:message>
+    <wsdl:message name="listOperationPhasesResponse">
+        <wsdl:part name="parameters" element="ns1:listOperationPhasesResponse"/>
+    </wsdl:message>
+    <wsdl:message name="configureMTOMRequest">
+        <wsdl:part name="parameters" element="ns1:configureMTOM"/>
+    </wsdl:message>
+    <wsdl:message name="listAllOperationsRequest">
+        <wsdl:part name="parameters" element="ns1:listAllOperations"/>
+    </wsdl:message>
+    <wsdl:message name="listAllOperationsResponse">
+        <wsdl:part name="parameters" element="ns1:listAllOperationsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getDeclaredOperationParametersRequest">
+        <wsdl:part name="parameters" element="ns1:getDeclaredOperationParameters"/>
+    </wsdl:message>
+    <wsdl:message name="getDeclaredOperationParametersResponse">
+        <wsdl:part name="parameters" element="ns1:getDeclaredOperationParametersResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getOperationMetaDataRequest">
+        <wsdl:part name="parameters" element="ns1:getOperationMetaData"/>
+    </wsdl:message>
+    <wsdl:message name="getOperationMetaDataResponse">
+        <wsdl:part name="parameters" element="ns1:getOperationMetaDataResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getPolicyRequest">
+        <wsdl:part name="parameters" element="ns1:getPolicy"/>
+    </wsdl:message>
+    <wsdl:message name="getPolicyResponse">
+        <wsdl:part name="parameters" element="ns1:getPolicyResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="OperationAdminPortType">
+        <wsdl:operation name="setOperationParameters">
+            <wsdl:input message="axis2:setOperationParametersRequest" wsaw:Action="urn:setOperationParameters"/>
+        </wsdl:operation>
+        <wsdl:operation name="setPolicy">
+            <wsdl:input message="axis2:setPolicyRequest" wsaw:Action="urn:setPolicy"/>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationParameters">
+            <wsdl:input message="axis2:getOperationParametersRequest" wsaw:Action="urn:getOperationParameters"/>
+            <wsdl:output message="axis2:getOperationParametersResponse" wsaw:Action="urn:getOperationParametersResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="listControlOperations">
+            <wsdl:input message="axis2:listControlOperationsRequest" wsaw:Action="urn:listControlOperations"/>
+            <wsdl:output message="axis2:listControlOperationsResponse" wsaw:Action="urn:listControlOperationsResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="listOperationPhaseHandlers">
+            <wsdl:input message="axis2:listOperationPhaseHandlersRequest" wsaw:Action="urn:listOperationPhaseHandlers"/>
+            <wsdl:output message="axis2:listOperationPhaseHandlersResponse" wsaw:Action="urn:listOperationPhaseHandlersResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="removeOperationParameter">
+            <wsdl:input message="axis2:removeOperationParameterRequest" wsaw:Action="urn:removeOperationParameter"/>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationStatistics">
+            <wsdl:input message="axis2:getOperationStatisticsRequest" wsaw:Action="urn:getOperationStatistics"/>
+            <wsdl:output message="axis2:getOperationStatisticsResponse" wsaw:Action="urn:getOperationStatisticsResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="listPublishedOperations">
+            <wsdl:input message="axis2:listPublishedOperationsRequest" wsaw:Action="urn:listPublishedOperations"/>
+            <wsdl:output message="axis2:listPublishedOperationsResponse" wsaw:Action="urn:listPublishedOperationsResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="listOperationPhases">
+            <wsdl:input message="axis2:listOperationPhasesRequest" wsaw:Action="urn:listOperationPhases"/>
+            <wsdl:output message="axis2:listOperationPhasesResponse" wsaw:Action="urn:listOperationPhasesResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="configureMTOM">
+            <wsdl:input message="axis2:configureMTOMRequest" wsaw:Action="urn:configureMTOM"/>
+        </wsdl:operation>
+        <wsdl:operation name="listAllOperations">
+            <wsdl:input message="axis2:listAllOperationsRequest" wsaw:Action="urn:listAllOperations"/>
+            <wsdl:output message="axis2:listAllOperationsResponse" wsaw:Action="urn:listAllOperationsResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getDeclaredOperationParameters">
+            <wsdl:input message="axis2:getDeclaredOperationParametersRequest" wsaw:Action="urn:getDeclaredOperationParameters"/>
+            <wsdl:output message="axis2:getDeclaredOperationParametersResponse" wsaw:Action="urn:getDeclaredOperationParametersResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationMetaData">
+            <wsdl:input message="axis2:getOperationMetaDataRequest" wsaw:Action="urn:getOperationMetaData"/>
+            <wsdl:output message="axis2:getOperationMetaDataResponse" wsaw:Action="urn:getOperationMetaDataResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getPolicy">
+            <wsdl:input message="axis2:getPolicyRequest" wsaw:Action="urn:getPolicy"/>
+            <wsdl:output message="axis2:getPolicyResponse" wsaw:Action="urn:getPolicyResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="OperationAdminSoap11Binding" type="axis2:OperationAdminPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="setOperationParameters">
+            <soap:operation soapAction="urn:setOperationParameters" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="setPolicy">
+            <soap:operation soapAction="urn:setPolicy" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="listControlOperations">
+            <soap:operation soapAction="urn:listControlOperations" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationParameters">
+            <soap:operation soapAction="urn:getOperationParameters" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listOperationPhaseHandlers">
+            <soap:operation soapAction="urn:listOperationPhaseHandlers" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="removeOperationParameter">
+            <soap:operation soapAction="urn:removeOperationParameter" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationStatistics">
+            <soap:operation soapAction="urn:getOperationStatistics" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listPublishedOperations">
+            <soap:operation soapAction="urn:listPublishedOperations" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listOperationPhases">
+            <soap:operation soapAction="urn:listOperationPhases" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="configureMTOM">
+            <soap:operation soapAction="urn:configureMTOM" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="listAllOperations">
+            <soap:operation soapAction="urn:listAllOperations" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getDeclaredOperationParameters">
+            <soap:operation soapAction="urn:getDeclaredOperationParameters" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getPolicy">
+            <soap:operation soapAction="urn:getPolicy" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationMetaData">
+            <soap:operation soapAction="urn:getOperationMetaData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="OperationAdminSoap12Binding" type="axis2:OperationAdminPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="setOperationParameters">
+            <soap12:operation soapAction="urn:setOperationParameters" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="setPolicy">
+            <soap12:operation soapAction="urn:setPolicy" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="listControlOperations">
+            <soap12:operation soapAction="urn:listControlOperations" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationParameters">
+            <soap12:operation soapAction="urn:getOperationParameters" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listOperationPhaseHandlers">
+            <soap12:operation soapAction="urn:listOperationPhaseHandlers" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="removeOperationParameter">
+            <soap12:operation soapAction="urn:removeOperationParameter" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationStatistics">
+            <soap12:operation soapAction="urn:getOperationStatistics" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listPublishedOperations">
+            <soap12:operation soapAction="urn:listPublishedOperations" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listOperationPhases">
+            <soap12:operation soapAction="urn:listOperationPhases" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="configureMTOM">
+            <soap12:operation soapAction="urn:configureMTOM" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="listAllOperations">
+            <soap12:operation soapAction="urn:listAllOperations" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getDeclaredOperationParameters">
+            <soap12:operation soapAction="urn:getDeclaredOperationParameters" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getPolicy">
+            <soap12:operation soapAction="urn:getPolicy" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationMetaData">
+            <soap12:operation soapAction="urn:getOperationMetaData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="OperationAdminHttpBinding" type="axis2:OperationAdminPortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="setOperationParameters">
+            <http:operation location="setOperationParameters"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="setOperationParameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="setPolicy">
+            <http:operation location="setPolicy"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="setPolicy"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="listControlOperations">
+            <http:operation location="listControlOperations"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="listControlOperations"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="listControlOperations"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationParameters">
+            <http:operation location="getOperationParameters"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getOperationParameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getOperationParameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listOperationPhaseHandlers">
+            <http:operation location="listOperationPhaseHandlers"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="listOperationPhaseHandlers"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="listOperationPhaseHandlers"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="removeOperationParameter">
+            <http:operation location="removeOperationParameter"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="removeOperationParameter"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationStatistics">
+            <http:operation location="getOperationStatistics"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getOperationStatistics"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getOperationStatistics"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listPublishedOperations">
+            <http:operation location="listPublishedOperations"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="listPublishedOperations"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="listPublishedOperations"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listOperationPhases">
+            <http:operation location="listOperationPhases"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="listOperationPhases"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="listOperationPhases"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="configureMTOM">
+            <http:operation location="configureMTOM"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="configureMTOM"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="listAllOperations">
+            <http:operation location="listAllOperations"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="listAllOperations"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="listAllOperations"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getDeclaredOperationParameters">
+            <http:operation location="getDeclaredOperationParameters"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getDeclaredOperationParameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getDeclaredOperationParameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getPolicy">
+            <http:operation location="getPolicy"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getPolicy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getPolicy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationMetaData">
+            <http:operation location="getOperationMetaData"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getOperationMetaData"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getOperationMetaData"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="OperationAdmin">
+        <wsdl:port name="OperationAdminHttpsSoap11Endpoint" binding="axis2:OperationAdminSoap11Binding">
+            <soap:address location="https://10.100.1.101:9443/services/OperationAdmin.OperationAdminHttpsSoap11Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="OperationAdminHttpsSoap12Endpoint" binding="axis2:OperationAdminSoap12Binding">
+            <soap12:address location="https://10.100.1.101:9443/services/OperationAdmin.OperationAdminHttpsSoap12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="OperationAdminHttpsEndpoint" binding="axis2:OperationAdminHttpBinding">
+            <http:address location="https://10.100.1.101:9443/services/OperationAdmin.OperationAdminHttpsEndpoint/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

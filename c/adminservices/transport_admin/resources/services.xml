@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: #axisVersion# #today# -->
+<service name="TransportAdmin">
+    <parameter name="ServiceClass">TransportAdmin</parameter>
+    <description>TransportAdmin Service
+            </description>
+    <operation name="updateServiceSpecificOutParameters" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateServiceSpecificOutParameters</parameter>
+    </operation>
+    <operation name="getAllTransportData" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getAllTransportData</parameter>
+    </operation>
+    <operation name="getGloballyDefinedOutParameters" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getGloballyDefinedOutParameters</parameter>
+    </operation>
+    <operation name="addExposedTransports" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:addExposedTransports</parameter>
+    </operation>
+    <operation name="listTransports" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listTransports</parameter>
+    </operation>
+    <operation name="listTransportsForService" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listTransportsForService</parameter>
+    </operation>
+    <operation name="getServiceSpecificInParameters" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getServiceSpecificInParameters</parameter>
+    </operation>
+    <operation name="removeExposedTransports" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:removeExposedTransports</parameter>
+    </operation>
+    <operation name="updateServiceSpecificInParameters" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateServiceSpecificInParameters</parameter>
+    </operation>
+    <operation name="disableSender" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:disableSender</parameter>
+    </operation>
+    <operation name="getGloballyDefinedInParameters" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getGloballyDefinedInParameters</parameter>
+    </operation>
+    <operation name="disableListener" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:disableListener</parameter>
+    </operation>
+    <operation name="listExposedTransports" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listExposedTransports</parameter>
+    </operation>
+    <operation name="getServiceSpecificOutParameters" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getServiceSpecificOutParameters</parameter>
+    </operation>
+    <operation name="updateGloballyDefinedOutParameters" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateGloballyDefinedOutParameters</parameter>
+    </operation>
+    <operation name="getTransportDetails" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getTransportDetails</parameter>
+    </operation>
+    <operation name="updateGloballyDefinedInParameters" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateGloballyDefinedInParameters</parameter>
+    </operation>
+    <operation name="dependenciesAvailable" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:dependenciesAvailable</parameter>
+    </operation>
+</service>
