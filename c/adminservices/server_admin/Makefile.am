@@ -1,0 +1,27 @@
+noinst_LTLIBRARIES = libserver_admin.la
+
+libserver_admin_la_SOURCES =    axis2_skel_ServerAdmin.c \
+								codegen/adb_Exception.c \
+								codegen/adb_getServerStatusResponse.c \
+								codegen/adb_restartResponse.c \
+								codegen/axis2_extension_mapper.c \
+								codegen/adb_ExceptionE0.c \
+								codegen/adb_getServerVersionResponse.c \
+								codegen/adb_ServerData.c \
+								codegen/axis2_svc_skel_ServerAdmin.c \
+								codegen/adb_getServerDataAsStringResponse.c \
+								codegen/adb_isAliveResponse.c \
+								codegen/adb_shutdownGracefullyResponse.c \
+								codegen/adb_getServerDataResponse.c \
+								codegen/adb_restartGracefullyResponse.c \
+								codegen/adb_shutdownResponse.c
+libserver_admin_la_LIBADD = 
+
+INCLUDES = -I$(top_builddir)/include \
+			-I. \
+			@AXIS2INC@ \
+		   	@AXIOMINC@ \
+		   	@NEETHIINC@ \
+		   	@UTILINC@
+
+EXTRA_DIST=
