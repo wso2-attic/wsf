@@ -144,9 +144,9 @@ AC_ARG_WITH(axis2,
 AC_DEFINE_UNQUOTED(WSFC_PREFIX, "$prefix",[WSF/C Install Path])
 
 AXIS2INC=$axis2inc
-AXIOMINC=$axis2inc
-UTILINC=$axis2inc
-NEETHIINC=$axis2inc
+AXIOMINC=$axis2inc/../axiom/include
+UTILINC=$axis2inc/../util/include
+NEETHIINC=$axis2inc/../neethi/include
 
 AC_SUBST(AXIS2INC)
 AC_SUBST(AXIOMINC)
