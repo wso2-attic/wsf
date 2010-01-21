@@ -1,1 +1,1 @@
-nmake clean
+nmake -f adminservices.mk clean

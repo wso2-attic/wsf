@@ -1,3 +1,3 @@
 call vcvars32.bat
-nmake dist
+nmake -f adminservices.mk dist
 
