@@ -8,7 +8,7 @@
      * axis2_skel_TransportAdmin Axis2/C skeleton for the axisService
      */
 
-     #include "axis2_skel_TransportAdmin.h"
+     #include "codegen/axis2_skel_TransportAdmin.h"
 
      
 
