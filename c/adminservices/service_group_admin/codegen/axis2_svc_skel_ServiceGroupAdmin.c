@@ -210,7 +210,7 @@
             axis2_status_t ret_val9;
             adb_updateServiceGroupParameter_t* input_val9;
             
-             ret_val10;
+			adb_listServiceGroup_t* ret_val10;
             
             adb_getServiceGroupParametersResponse_t* ret_val11;
             adb_getServiceGroupParameters_t* input_val11;
