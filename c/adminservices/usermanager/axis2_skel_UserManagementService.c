@@ -8,7 +8,7 @@
      * axis2_skel_UserManagementService Axis2/C skeleton for the axisService
      */
 
-     #include "axis2_skel_UserManagementService.h"
+     #include "codegen/axis2_skel_UserManagementService.h"
 
      
 

@@ -27,7 +27,7 @@ liboperation_admin_la_SOURCES = axis2_skel_OperationAdmin.c \
 								codegen/axis2_svc_skel_OperationAdmin.c \
 								codegen/adb_getOperationStatisticsResponse.c \
 								codegen/adb_listOperationPhasesResponse.c \
-								OperationAdminService.vcprojcodegen/adb_getPolicy.c \
+								codegen/adb_getPolicy.c \
 								codegen/adb_listPublishedOperations.c 
 liboperation_admin_la_LIBADD = 
 
