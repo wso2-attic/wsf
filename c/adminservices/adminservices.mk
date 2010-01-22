@@ -24,13 +24,13 @@ SERVICE_ADMIN_SRC=$(ADMIN_SVC_SRCDIR)\service_admin
 SERVICE_GRP_ADMIN_SRC=$(ADMIN_SVC_SRCDIR)\service_group_admin
 ##################### compiler options
 
-CC = @cl.exe 
+CC = cl.exe 
 CFLAGS = /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT"   \
 	 /D "AXIS2_SVR_MULTI_THREADED" /w /nologo $(INCLUDE_PATH) 
 
 ################### linker options
 
-LD = @link.exe
+LD = link.exe
 LDFLAGS = /nologo $(LIBS_PATH)
 
 LIBS = axutil.lib axiom.lib axis2_engine.lib
@@ -86,21 +86,30 @@ intdirs:
 	if not exist $(ADMIN_SVC_INTDIR)\$(SERVICE_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(SERVICE_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_INTDIR)\$(SERVICE_GRP_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)
 
-authentication_service: $(AUTH_SVC_SRC)\codegen\*.c $(AUTH_SVC_SRC)\*.c
+$(ADMIN_SVC_DISTDIR)\$(AUTH_SERVICE)\$(AUTH_SERVICE).dll: $(AUTH_SVC_SRC)\codegen\*.c $(AUTH_SVC_SRC)\*.c
 	$(CC) $(CFLAGS) /I $(AUTH_SVC_SRC) $(AUTH_SVC_SRC)\codegen\*.c \
 		$(AUTH_SVC_SRC)\*.c /Fo$(ADMIN_SVC_INTDIR)\$(AUTH_SERVICE)\ /c
 	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(AUTH_SERVICE)\*.obj $(LIBS) /DLL \
 		/OUT:$(ADMIN_SVC_DISTDIR)\$(AUTH_SERVICE)\$(AUTH_SERVICE).dll
 	-@$(_VC_MANIFEST_EMBED_DLL)
-	copy $(AUTH_SVC_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(AUTH_SERVICE)\
+	copy $(AUTH_SVC_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(AUTH_SERVICE)\ 
+	copy $(AUTH_SVC_SRC)\resources\$(AUTH_SERVICE).wsdl $(ADMIN_SVC_DISTDIR)\$(AUTH_SERVICE)\
 
-server_admin_service: $(SERVER_ADMIN_SRC)\codegen\*.c $(SERVER_ADMIN_SRC)\*.c
+authentication_service : $(ADMIN_SVC_DISTDIR)\$(AUTH_SERVICE)\$(AUTH_SERVICE).dll
+
+$(ADMIN_SVC_DISTDIR)\$(SERVER_ADMIN_SERVICE)\$(SERVER_ADMIN_SERVICE).dll: $(SERVER_ADMIN_SRC)\codegen\*.c $(SERVER_ADMIN_SRC)\*.c
 	$(CC) $(CFLAGS) $(SERVER_ADMIN_SRC)\codegen\*.c \
 	$(SERVER_ADMIN_SRC)\*.c /Fo$(ADMIN_SVC_INTDIR)\$(SERVER_ADMIN_SERVICE)\ /c
 	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(SERVER_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
 		/OUT:$(ADMIN_SVC_DISTDIR)\$(SERVER_ADMIN_SERVICE)\$(SERVER_ADMIN_SERVICE).dll
 	-@$(_VC_MANIFEST_EMBED_DLL)
+	
 	copy $(SERVER_ADMIN_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(SERVER_ADMIN_SERVICE)\
+
+	copy $(SERVER_ADMIN_SRC)\resources\$(SERVER_ADMIN_SERVICE).wsdl $(ADMIN_SVC_DISTDIR)\$(SERVER_ADMIN_SERVICE)\
+
+server_admin_service : $(ADMIN_SVC_DISTDIR)\$(SERVER_ADMIN_SERVICE)\$(SERVER_ADMIN_SERVICE).dll
+
 
 #==================================================================================
 #Proxy Admin Service 
@@ -148,22 +157,25 @@ endpoint_admin_service: $(ADMIN_SVC_SRCDIR)\endpoint_admin\codegen\*.c $(ADMIN_S
 	-@$(_VC_MANIFEST_EMBED_DLL)
 	copy $(ADMIN_SVC_SRCDIR)\endpoint_admin\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(ENDPOINT_ADMIN_SERVICE)\
 	
-service_admin_service: $(SERVICE_ADMIN_SRC)\codegen\*.c $(SERVICE_ADMIN_SRC)\*.c	
+$(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE)\$(SERVICE_ADMIN_SERVICE).dll: $(SERVICE_ADMIN_SRC)\codegen\*.c $(SERVICE_ADMIN_SRC)\*.c	
 	$(CC) $(CFLAGS) $(SERVICE_ADMIN_SRC)\codegen\*.c \
 		$(SERVICE_ADMIN_SRC)\*.c /Fo$(ADMIN_SVC_INTDIR)\$(SERVICE_ADMIN_SERVICE)\ /c
 	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(SERVICE_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
 		/OUT:$(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE)\$(SERVICE_ADMIN_SERVICE).dll
 	-@$(_VC_MANIFEST_EMBED_DLL)
 	copy $(SERVICE_ADMIN_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE)\
-	
-service_grp_admin_service: 	
+
+service_admin_service : $(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE)\$(SERVICE_ADMIN_SERVICE).dll
+
+$(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\$(SERVICE_GRP_ADMIN_SERVICE).dll: 	
 	$(CC) $(CFLAGS) $(SERVICE_GRP_ADMIN_SRC)\codegen\*.c $(SERVICE_GRP_ADMIN_SRC)\*.c \
 		/Fo$(ADMIN_SVC_INTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\ /c
 	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
 		/OUT:$(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\$(SERVICE_GRP_ADMIN_SERVICE).dll
 	-@$(_VC_MANIFEST_EMBED_DLL)
 	copy $(SERVICE_GRP_ADMIN_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\
-	
+
+service_grp_admin_service: $(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\$(SERVICE_GRP_ADMIN_SERVICE).dll	
 	
 #==================================================================================
 #Registry Client 
