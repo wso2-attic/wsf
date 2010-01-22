@@ -10,6 +10,7 @@
 
 #include "codegen/axis2_skel_ServiceGroupAdmin.h"
 #include "service_admin_constants.h"
+#include "axis2_transport_receiver.h"
 
 
 
@@ -21,6 +22,14 @@
 *
 * @return adb_listServiceGroupResponse_t*
 */
+
+static axis2_char_t* 
+axis2_skel_ServiceGroupAdmin_get_wsdl(axutil_env_t *env, 
+									  axis2_char_t *service_name, 
+									  axis2_conf_t *conf);
+
+
+
 adb_listServiceGroupResponse_t* 
 axis2_skel_ServiceGroupAdmin_listServiceGroup(const axutil_env_t *env , 
 											  axis2_msg_ctx_t *msg_ctx,
@@ -95,8 +104,8 @@ axis2_skel_ServiceGroupAdmin_listServiceGroup(const axutil_env_t *env ,
             adb_ServiceMetaData_set_serviceType(adb_svc, env, service_type);
 
             /* TODO fix the wsdl endpoints */
-            adb_ServiceMetaData_add_wsdlURLs(adb_svc, env, "http://localhost:9090/test?wsdl");
-            adb_ServiceMetaData_add_wsdlURLs(adb_svc, env, "http://localhost:9090/test?wsdl2");
+			adb_ServiceMetaData_add_wsdlURLs(adb_svc, env, axis2_skel_ServiceGroupAdmin_get_wsdl(env, svc_name, conf));
+            adb_ServiceMetaData_add_wsdlURLs(adb_svc, env, " ");
 
             axutil_array_list_add(adb_svc_list, env, adb_svc);
     }
@@ -338,12 +347,38 @@ axis2_skel_ServiceGroupAdmin_getServiceGroupParameters(const axutil_env_t *env ,
 	{
 		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Parameter List Not found ");
 		return NULL;
-
-	
 	}
+
 	response = adb_getServiceGroupParametersResponse_create(env);
 	adb_getServiceGroupParametersResponse_add_return(response, env, "optional");
 	return response;
 }
 
 
+static axis2_char_t* 
+axis2_skel_ServiceGroupAdmin_get_wsdl(axutil_env_t *env, 
+									  axis2_char_t *service_name, 
+									  axis2_conf_t *conf)
+{
+	axis2_transport_in_desc_t *transport_in = axis2_conf_get_transport_in(conf, env, AXIS2_TRANSPORT_ENUM_HTTP);
+	if(transport_in)
+	{
+		axis2_endpoint_ref_t *epr = NULL;
+		axis2_char_t *address = NULL;
+		axis2_transport_receiver_t *receiver = axis2_transport_in_desc_get_recv(transport_in, env);
+		if(!receiver)
+		{
+			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Transport Receiver Not found ");
+			return NULL;
+		}
+		epr = axis2_transport_receiver_get_epr_for_service(receiver, env, service_name);
+		if(!epr)
+		{
+			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Endpoint reference null");
+			return NULL;
+		}
+		address = axis2_endpoint_ref_get_address(epr,env);
+		return address;
+	}
+	return NULL;
+}
