@@ -396,10 +396,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\axis2_skel_ModuleAdminService.c"
-				>
-			</File>
-			<File
 				RelativePath=".\axis2_svc_skel_ModuleAdminService.c"
 				>
 			</File>

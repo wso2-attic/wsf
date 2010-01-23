@@ -291,6 +291,10 @@
 				RelativePath=".\axis2_svc_skel_ServiceGroupAdmin.c"
 				>
 			</File>
+			<File
+				RelativePath="..\..\util\service_admin_util.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -408,12 +412,20 @@
 				RelativePath=".\axis2_skel_ServiceGroupAdmin.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\include\service_admin_util.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			>
 		</Filter>
+		<File
+			RelativePath="..\..\adminservices.mk"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

@@ -348,7 +348,6 @@ axis2_skel_ServiceGroupAdmin_getServiceGroupParameters(const axutil_env_t *env ,
 		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Parameter List Not found ");
 		return NULL;
 	}
-
 	response = adb_getServiceGroupParametersResponse_create(env);
 	adb_getServiceGroupParametersResponse_add_return(response, env, "optional");
 	return response;
@@ -361,6 +360,7 @@ axis2_skel_ServiceGroupAdmin_get_wsdl(axutil_env_t *env,
 									  axis2_conf_t *conf)
 {
 	axis2_transport_in_desc_t *transport_in = axis2_conf_get_transport_in(conf, env, AXIS2_TRANSPORT_ENUM_HTTP);
+	
 	if(transport_in)
 	{
 		axis2_endpoint_ref_t *epr = NULL;
@@ -378,6 +378,16 @@ axis2_skel_ServiceGroupAdmin_get_wsdl(axutil_env_t *env,
 			return NULL;
 		}
 		address = axis2_endpoint_ref_get_address(epr,env);
+		if(address)
+		{
+			int length = axutil_strlen(address);
+			if(address[length -1 ] == '\\')
+			{
+				address = axutil_stracat(env, address,"?wsdl");
+			}else{
+					address = axutil_stracat(env, address,"\?wsdl");
+			}
+		}
 		return address;
 	}
 	return NULL;
