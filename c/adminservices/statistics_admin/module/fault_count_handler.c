@@ -19,8 +19,8 @@
 #include <axis2_msg_ctx.h>
 #include <axutil_property.h>
 #include <axis2_svc.h>
-#include "axis2_counter.h"
-#include "axis2_statistics_constants.h"
+#include "../axis2_counter.h"
+#include "../axis2_statistics_admin_constants.h"
 
 axis2_status_t AXIS2_CALL
 axis2_statistics_admin_fault_count_handler_invoke(
@@ -66,6 +66,7 @@ axis2_statistics_admin_fault_count_handler_invoke(struct axis2_handler *handler,
     svc = axis2_msg_ctx_get_svc(msg_ctx, env);
     if(svc)
     {
+        axis2_op_t *op = NULL;
         param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_FAULT_COUNTER);
         if(param)
         {
@@ -88,7 +89,6 @@ axis2_statistics_admin_fault_count_handler_invoke(struct axis2_handler *handler,
                 }
             }
         }
-
         op = axis2_msg_ctx_get_op(msg_ctx, env);
         if(op)
         {
