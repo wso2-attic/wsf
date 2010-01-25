@@ -9,7 +9,7 @@
      */
 
      #include "codegen/axis2_skel_StatisticsAdmin.h"
-     #include "statistics_admin_constants.h"
+     #include "axis2_statistics_admin_constants.h"
      #include "module/axis2_response_time_processor.h"
      #include "module/axis2_counter.h"
 
