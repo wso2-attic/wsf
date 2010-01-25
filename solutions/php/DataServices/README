@@ -1,0 +1,19 @@
+Prerequisites
+=============
+
+1. WSF/PHP should be Installed in your computer. You can download the latest version from http://wso2.org/projects/wsf/php
+2. You should have PDO PHP extension installed corrosponding to your database driver, for an example to use with mysql you 
+   have to use pdo_mysql extensions installed in your PHP
+
+How to Run Samples
+==================
+1. You should set the lib directories to your include_path directives of the php.ini.
+2. Set your database username password in the DB_USERNAME and DB_PASSWORD constants in some constants.php file that you put in the php.ini include_path
+3. Create database 'ds' and run the sql scripts inside the lib/sql directory
+
+Convert WSAS Java Data Services to PHP
+======================================
+Use the dbs2php.xslt inside the dbs2php directory to convert a WSAS Java Data Service(.dbs) file to PHP Data Service. If you have installed xsltproc
+you will use the following command to generate the PHP code.
+
+xsltproc dbs2php/dbs2php.xslt your_java_ds.dbs

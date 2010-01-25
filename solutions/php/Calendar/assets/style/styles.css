@@ -1,0 +1,33 @@
+.simple_popup_div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #fff;
+    width: 300px;
+}
+.simple_popup_inner {
+    padding: 20px;
+    border: #999 2px solid;
+    text-align: left;
+}
+.simple_popup_close {
+    text-align: right;
+}
+table {
+    border: 0;
+    width: 100%;
+    border-top: #ccc 2px solid;
+    border-left: #ccc 2px solid;
+}
+table th, table td {
+    padding: 6px;
+    border-bottom: #ccc 2px solid;
+    border-right: #ccc 2px solid;
+    font-size: .8em;
+}
+table td {
+    text-align: left;
+}
+#feed_me {
+    padding: 0 40px;
+}

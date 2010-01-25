@@ -1,0 +1,32 @@
+<service name="subscription">
+   <description>
+        This is a subscription manager service
+   </description>
+    <module ref="savan"/>
+    <parameter name="ServiceClass" locked="xsd:false">subscription</parameter>
+    <parameter name="loadServiceAtStartup" locked="xsd:false">true</parameter>
+    <parameter name="registry_url" locked="xsd:false">http://localhost:8082/wso2registry/atom</parameter>
+    <parameter name="registry_username" locked="xsd:false">damitha</parameter>
+    <parameter name="registry_password" locked="xsd:false">damitha</parameter>
+
+    <operation name="add_subscriber" mep="http://www.w3.org/2004/08/wsdl/in-only">
+           <parameter name="wsamapping" >http://ws.apache.org/axis2/c/subscription/add_subscriber</parameter>
+   </operation>
+   <operation name="remove_subscriber">
+           <parameter name="wsamapping" >http://ws.apache.org/axis2/c/subscription/remove_subscriber</parameter>
+   </operation>
+   <operation name="get_subscriber">
+           <parameter name="wsamapping" >http://ws.apache.org/axis2/c/subscription/get_subscriber</parameter>
+   </operation>
+   <operation name="get_subscriber_list">
+           <parameter name="wsamapping" >http://ws.apache.org/axis2/c/subscription/get_subscriber_list</parameter>
+   </operation>
+   <operation name="add_topic">
+           <parameter name="wsamapping" >http://ws.apache.org/axis2/c/subscription/add_topic</parameter>
+   </operation>
+   <operation name="get_topic_list">
+           <parameter name="wsamapping" >http://ws.apache.org/axis2/c/subscription/get_topic_list</parameter>
+           <parameter name="wso2" locked="xsd:false">http://localhost:9090/axis2/services/wso2</parameter>
+   </operation>
+
+</service>

@@ -1,0 +1,234 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "CompanyName", "TODO: <Company name>"
+            VALUE "FileDescription", "TODO: <File description>"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
+            VALUE "InternalName", "FlickrUploader.dll"
+            VALUE "OriginalFilename", "FlickrUploader.dll"
+            VALUE "ProductName", "TODO: <Product name>"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// REGISTRY
+//
+
+IDR_FLICKRUPLOADER      REGISTRY                "FlickrUploader.rgs"
+IDR_SHELLEXTINTERFACE   REGISTRY                "ShellExtInterface.rgs"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BITMAP_FLICKR       BITMAP                  "res\\flickr.bmp"
+IDB_BITMAP_WS           BITMAP                  "res\\ws.bmp"
+IDB_BITMAP_HELP         BITMAP                  "res\\help.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG_FILE_UPLOADER DIALOGEX 0, 0, 425, 350
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Flickr File Uploader ..."
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDIT_TITLE,126,23,137,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DESCRIPTION,269,23,144,79,ES_MULTILINE | ES_AUTOHSCROLL | ES_WANTRETURN
+    EDITTEXT        IDC_EDIT_TAGS,126,52,137,49,ES_AUTOHSCROLL
+    CONTROL         "Only me",IDC_RADIO_ONLY_ME,"Button",BS_AUTORADIOBUTTON,156,126,42,10
+    CONTROL         "My family",IDC_CHECK_FAMILY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,182,139,47,10
+    CONTROL         "My friends",IDC_CHECK_FRIENDS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,182,152,49,10
+    CONTROL         "Anyone",IDC_RADIO_ANYONE,"Button",BS_AUTORADIOBUTTON,156,167,41,10
+    COMBOBOX        IDC_COMBO_SAFETY_LEVEL,269,116,144,56,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBO_HIDDEN,269,144,144,56,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBO_CONTENT_TYPE,269,172,144,56,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "Upload",IDC_BUTTON_UPLOAD,366,223,53,27,WS_DISABLED
+    PUSHBUTTON      "API Key >>",IDC_BUTTON_API_KEY,366,256,53,14
+    PUSHBUTTON      "Cancel",IDCANCEL,366,277,53,14
+    EDITTEXT        IDC_EDIT_API_KEY,14,308,296,14,ES_AUTOHSCROLL
+    CONTROL         "Remember this key",IDC_CHECK_REMEMBER_KEY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,330,310,73,10
+    GROUPBOX        "API Key",IDC_STATIC,6,296,413,48
+    LTEXT           "Collapsed Mark",IDC_COLLAPSED_MARK,367,289,49,8
+    LTEXT           "<< API Key",IDC_COLLAPSED_TEXT,314,278,42,8
+    LTEXT           "You need to have a valid flickr API key to upload images to flickr. Please visit http://www.flickr.com to get an API key.",IDC_STATIC,14,328,382,9
+    LTEXT           "Image Thumbnail ListCtrl Reference",IDC_IMAGE_THUMBNAIL_LC_REF,5,7,109,284,NOT WS_VISIBLE | WS_BORDER
+    LTEXT           "Title : ",IDC_STATIC,127,13,18,8
+    LTEXT           "Description :",IDC_STATIC,269,11,48,8
+    LTEXT           "Tags :",IDC_STATIC,126,41,24,8
+    LTEXT           "Safety level :",IDC_STATIC,269,105,44,8
+    GROUPBOX        "Who can see this photo",IDC_STATIC,126,112,137,73
+    GROUPBOX        "Details",IDC_STATIC,120,3,300,213
+    LTEXT           "Hide from public searches :",IDC_STATIC,269,133,87,8
+    LTEXT           "Content Type :",IDC_STATIC,269,161,50,8
+    CONTROL         "",IDC_ANIMATE_FILE_UPLOAD,"SysAnimate32",ACS_CENTER | ACS_TRANSPARENT | NOT WS_VISIBLE | WS_TABSTOP,144,222,196,38,WS_EX_TRANSPARENT
+    LTEXT           "Name :",IDC_STATIC,127,191,24,8
+    LTEXT           "Size :",IDC_STATIC,127,201,18,8
+    LTEXT           "",IDC_FILE_NAME,153,191,260,8
+    LTEXT           "",IDC_FILE_SIZE,148,201,67,8
+    LTEXT           "Upload status ...",IDC_UPLOAD_STATUS,157,260,170,8,NOT WS_VISIBLE
+    LTEXT           "Message Text",IDC_MESSAGE_TEXT,170,233,187,44,NOT WS_VISIBLE
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_DIALOG_FILE_UPLOADER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 418
+        VERTGUIDE, 12
+        VERTGUIDE, 300
+        VERTGUIDE, 306
+        VERTGUIDE, 330
+        VERTGUIDE, 378
+        VERTGUIDE, 406
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 343
+        HORZGUIDE, 70
+        HORZGUIDE, 101
+        HORZGUIDE, 113
+        HORZGUIDE, 185
+        HORZGUIDE, 265
+        HORZGUIDE, 291
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_DIALOG_FILE_UPLOADER DLGINIT
+BEGIN
+    IDC_COMBO_SAFETY_LEVEL, 0x403, 5, 0
+0x6153, 0x6566, "\000" 
+    IDC_COMBO_SAFETY_LEVEL, 0x403, 9, 0
+0x6f4d, 0x6564, 0x6172, 0x6574, "\000" 
+    IDC_COMBO_SAFETY_LEVEL, 0x403, 11, 0
+0x6552, 0x7473, 0x6972, 0x7463, 0x6465, "\000" 
+    IDC_COMBO_HIDDEN, 0x403, 15, 0
+0x6f4e, 0x202c, 0x6f64, 0x276e, 0x2074, 0x6968, 0x6564, "\000" 
+    IDC_COMBO_HIDDEN, 0x403, 10, 0
+0x6559, 0x2c73, 0x6820, 0x6469, 0x0065, 
+    IDC_COMBO_CONTENT_TYPE, 0x403, 6, 0
+0x6850, 0x746f, 0x006f, 
+    IDC_COMBO_CONTENT_TYPE, 0x403, 11, 0
+0x6353, 0x6572, 0x6e65, 0x6873, 0x746f, "\000" 
+    IDC_COMBO_CONTENT_TYPE, 0x403, 6, 0
+0x744f, 0x6568, 0x0072, 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_PROJNAME            "FlickrUploader"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

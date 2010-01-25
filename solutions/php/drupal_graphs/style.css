@@ -1,0 +1,94 @@
+body 
+{
+	text-align: center;
+    font-family: Verdana, Tahoma;
+    font-size: 14px;
+    padding: 18px
+}
+
+ul.topicmenu
+{
+	list-style-image:none;
+	list-style-position:outside;
+	list-style-type:none;
+	margin:0;
+	padding-left:11px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	border-bottom: 1px #aaaabb solid;
+}
+
+ul.topicmenu li 
+{
+	display:inline;
+	line-height:200%;
+	list-style-image:none;
+	list-style-position:outside;
+	list-style-type:none;
+	margin:10;
+	text-align:center;
+
+}
+
+ul.node_comment_checks
+{
+	list-style-image:none;
+	list-style-position:outside;
+	list-style-type:none;
+	margin:0;
+	padding-left:11px;
+}
+
+ul.node_comment_checks li
+{
+	display:inline;
+	line-height:200%;
+	list-style-image:none;
+	list-style-position:outside;
+	list-style-type:none;
+	margin:10;
+	text-align:left;
+}
+
+div#content
+{
+	margin: 15px 5px 5px 5px;
+}
+
+
+div#wrapper 
+{
+    width: 800px;
+    margin:0 auto;
+    border:2px solid #ccccee;
+    background: #ddddff;
+    padding: 15px;
+}
+
+
+div.node
+{
+    border:1px solid #aaaacc;
+    background: #ccccee;
+    padding: 15px;
+    margin: 0px 0px 5px 0px;
+}
+
+div.node h2 
+{
+	font-size: 17px;
+    font-weight:bold;
+}
+
+div.node_content
+{
+	margin: 5px 0px 0px 0px;
+}
+
+div.node_footer
+{
+	margin: 20px 0px 0px 0px;
+	text-align: right;
+    font-family: Verdana, Tahoma;
+    font-size: 13px;
+}

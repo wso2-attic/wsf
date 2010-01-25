@@ -1,0 +1,17 @@
+<service name="wso2">
+    <parameter name="ServiceClass" locked="xsd:false">wso2</parameter>
+    <parameter name="loadServiceAtStartup" locked="xsd:false">true</parameter>
+    <parameter name="registry_url" locked="xsd:false">http://localhost:8082/wso2registry/atom</parameter>
+    <parameter name="registry_username" locked="xsd:false">damitha</parameter>
+    <parameter name="registry_password" locked="xsd:false">damitha</parameter>
+   <description>
+       This is a sample eventing data source which loads as the axis2 engine startup and 
+       start publishing to its subscribers.
+   </description>
+   <module ref="savan"/>
+   <parameter name="TopicURL" locked="xsd:false">http://localhost:9090/axis2/services/wso2</parameter>
+
+   <operation name="start">
+           <parameter name="wsamapping" >http://ws.apache.org/axis2/c/savan/samples/wso2/start</parameter>
+   </operation>
+</service>

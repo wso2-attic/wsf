@@ -1,0 +1,327 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "CompanyName", "TODO: <Company name>"
+            VALUE "FileDescription", "TODO: <File description>"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
+            VALUE "InternalName", "FlickrUploader.dll"
+            VALUE "OriginalFilename", "FlickrUploader.dll"
+            VALUE "ProductName", "TODO: <Product name>"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// REGISTRY
+//
+
+IDR_FLICKRUPLOADER      REGISTRY                "FlickrUploader.rgs"
+IDR_SHELLEXTINTERFACE   REGISTRY                "ShellExtInterface.rgs"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG_FILE_UPLOADER DIALOGEX 0, 0, 425, 443
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "FlickrPal"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Sign In",IDC_BUTTON_SIGN_IN,315,23,85,27
+    LTEXT           "Image Thumbnail ListCtrl Reference",IDC_IMAGE_THUMBNAIL_LC_REF,7,75,109,361,NOT WS_VISIBLE | WS_BORDER
+    EDITTEXT        IDC_EDIT_TITLE,130,92,133,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DESCRIPTION,269,92,143,79,ES_MULTILINE | ES_AUTOHSCROLL | ES_WANTRETURN
+    EDITTEXT        IDC_EDIT_TAGS,130,121,133,49,ES_AUTOHSCROLL
+    CONTROL         "Only me",IDC_RADIO_ONLY_ME,"Button",BS_AUTORADIOBUTTON,156,195,42,10
+    CONTROL         "My family",IDC_CHECK_FAMILY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,182,208,47,10
+    CONTROL         "My friends",IDC_CHECK_FRIENDS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,182,221,49,10
+    CONTROL         "Anyone",IDC_RADIO_ANYONE,"Button",BS_AUTORADIOBUTTON,156,236,41,10
+    COMBOBOX        IDC_COMBO_SAFETY_LEVEL,269,185,143,56,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBO_HIDDEN,269,213,143,56,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBO_CONTENT_TYPE,269,241,143,56,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      ">",IDC_BUTTON_ADD_SET,263,281,16,17,WS_DISABLED
+    PUSHBUTTON      "<",IDC_BUTTON_REMOVE_SET,263,306,16,17,WS_DISABLED
+    DEFPUSHBUTTON   "Upload",IDC_BUTTON_UPLOAD,366,371,53,45,WS_DISABLED
+    PUSHBUTTON      "Cancel",IDCANCEL,366,423,53,14
+    LTEXT           "Title : ",IDC_TITLE_CAPTION,130,82,18,8
+    LTEXT           "Description :",IDC_DESCRIPTION_CAPTION,269,80,48,8
+    LTEXT           "Tags :",IDC_TAGS_CAPTION,131,110,24,8
+    LTEXT           "Safety level :",IDC_SAFETY_LEVEL_CAPTION,269,174,44,8
+    GROUPBOX        "Who can see this photo",IDC_WHO_CAN_SEE_GROUP_BOX,130,181,133,73
+    GROUPBOX        "Image Details",IDC_IMAGE_DETAILS_GROUP_BOX,123,71,296,294
+    LTEXT           "Hide from public searches :",IDC_HIDDEN_CAPTION,269,202,87,8
+    LTEXT           "Content Type :",IDC_CONTENT_TYPE_CAPTION,269,230,50,8
+    CONTROL         "",IDC_ANIMATE_FILE_UPLOAD,"SysAnimate32",ACS_CENTER | ACS_TRANSPARENT | NOT WS_VISIBLE | WS_TABSTOP,144,372,196,38,WS_EX_TRANSPARENT
+    LTEXT           "Name :",IDC_FILE_NAME_CAPTION,130,340,24,8
+    LTEXT           "Size :",IDC_FILE_SIZE_CAPTION,130,350,18,8
+    CONTROL         "",IDC_FILE_NAME,"Static",SS_LEFTNOWORDWRAP | SS_ENDELLIPSIS | WS_GROUP,156,340,257,8
+    LTEXT           "",IDC_FILE_SIZE,151,350,67,8
+    CONTROL         "Upload status ...",IDC_UPLOAD_STATUS,"Static",SS_LEFTNOWORDWRAP | SS_ENDELLIPSIS | NOT WS_VISIBLE | WS_GROUP,157,410,170,8
+    LTEXT           "Message Text",IDC_MESSAGE_TEXT,170,383,187,44,NOT WS_VISIBLE
+    GROUPBOX        "User Details",-1,5,2,414,67
+    CONTROL         221,268,"Static",SS_BITMAP,23,16,43,39
+    LTEXT           "You are working offline ...",259,88,17,115,8
+    LTEXT           "You can stay offline and set image details. But to upload images, you need to connect to your Flickr account. Please sign in to log onto your Flickr account.",267,88,33,208,26
+    LTEXT           "Signed in as",255,88,16,39,8
+    LTEXT           "danushka.menikkumbura",251,129,16,155,8,NOT WS_VISIBLE
+    LTEXT           "View your photos at ",260,88,29,67,8
+    LTEXT           "http://www.flickr.com/photos/bees/",252,156,29,136,8,NOT WS_VISIBLE
+    LTEXT           "View your profile at ",261,88,38,65,8
+    LTEXT           "http://www.flickr.com/profile/bees/",253,153,38,140,8,NOT WS_VISIBLE
+    LTEXT           "Your available quota for this month is",258,88,50,120,8
+    LTEXT           "98.7 MB",254,210,50,67,8,NOT WS_VISIBLE
+    LTEXT           "Available Sets :",IDC_AVAILABLE_SETS_CAPTION,131,258,51,8
+    LTEXT           "Selected Sets :",IDC_SELECTED_SETS_CAPTION,287,257,51,8
+    GROUPBOX        "",-1,6,71,112,367
+    CONTROL         "",IDC_LIST_AVAILABLE_SETS,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SORTASCENDING | LVS_SHAREIMAGELISTS | LVS_NOLABELWRAP | LVS_AUTOARRANGE | LVS_ALIGNLEFT | LVS_NOCOLUMNHEADER | WS_BORDER | WS_TABSTOP,130,270,125,65
+    CONTROL         "",IDC_LIST_SELECTED_SETS,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SORTASCENDING | LVS_SHAREIMAGELISTS | LVS_NOLABELWRAP | LVS_AUTOARRANGE | LVS_ALIGNLEFT | LVS_NOCOLUMNHEADER | WS_BORDER | WS_TABSTOP,287,270,125,65
+    PUSHBUTTON      "Sign Out",IDC_BUTTON_SIGN_OUT,315,23,85,27
+    PUSHBUTTON      "Ready",IDC_BUTTON_READY,315,23,85,27
+    LTEXT           "Awaiting permission to connect to your flickr account...",IDC_AWAIT_MESSAGE,88,16,200,8
+    LTEXT           "When you have given the Flickr Uploader permission to connect to your Flickr account, please click the Ready Button.",IDC_AWAIT_MESSAGE_DETAILS,87,33,208,26
+    CONTROL         247,244,"Static",SS_BITMAP,123,378,32,30
+    LTEXT           "Static",IDC_WAIT_ANIMATION_RECT,109,34,160,8,NOT WS_VISIBLE
+    LTEXT           "",IDC_WAIT_ANIMATION_MESSAGE,109,45,156,8,NOT WS_VISIBLE
+    LTEXT           "Please wait while connecting to your Flickr account",IDC_WAIT_ANIMATION_TITLE,109,16,171,8,NOT WS_VISIBLE
+END
+
+IDD_DIALOG_CREATE_NEW_SET DIALOGEX 0, 0, 168, 130
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Create New Set ..."
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDIT_NAME,4,15,159,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DESCRIPTION,4,43,159,63,ES_MULTILINE | ES_AUTOHSCROLL | ES_WANTRETURN
+    DEFPUSHBUTTON   "OK",IDOK,85,111,37,14
+    PUSHBUTTON      "Cancel",IDCANCEL,126,111,37,14
+    LTEXT           "Name :",IDC_STATIC,4,3,24,8
+    LTEXT           "Description :",IDC_STATIC,4,32,41,8
+END
+
+IDD_DIALOG_SETTINGS DIALOGEX 0, 0, 313, 129
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Settings ..."
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,204,110,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,257,110,50,14
+    GROUPBOX        "WSF/C Home",IDC_STATIC,5,2,302,103
+    CONTROL         "",IDC_WSFC_HOME_LIST_CTRL,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SORTASCENDING | LVS_AUTOARRANGE | LVS_ALIGNLEFT | LVS_NOCOLUMNHEADER | WS_TABSTOP,12,12,287,85
+    GROUPBOX        "",IDC_STATIC,11,8,290,90
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_DIALOG_FILE_UPLOADER, DIALOG
+    BEGIN
+        VERTGUIDE, 5
+        VERTGUIDE, 88
+        VERTGUIDE, 130
+        VERTGUIDE, 412
+        BOTTOMMARGIN, 436
+        HORZGUIDE, 6
+        HORZGUIDE, 270
+        HORZGUIDE, 335
+    END
+
+    IDD_DIALOG_CREATE_NEW_SET, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 161
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 123
+    END
+
+    IDD_DIALOG_SETTINGS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 306
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 122
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_DIALOG_FILE_UPLOADER DLGINIT
+BEGIN
+    IDC_COMBO_SAFETY_LEVEL, 0x403, 5, 0
+0x6153, 0x6566, "\000" 
+    IDC_COMBO_SAFETY_LEVEL, 0x403, 9, 0
+0x6f4d, 0x6564, 0x6172, 0x6574, "\000" 
+    IDC_COMBO_SAFETY_LEVEL, 0x403, 11, 0
+0x6552, 0x7473, 0x6972, 0x7463, 0x6465, "\000" 
+    IDC_COMBO_HIDDEN, 0x403, 15, 0
+0x6f4e, 0x202c, 0x6f64, 0x276e, 0x2074, 0x6968, 0x6564, "\000" 
+    IDC_COMBO_HIDDEN, 0x403, 10, 0
+0x6559, 0x2c73, 0x6820, 0x6469, 0x0065, 
+    IDC_COMBO_CONTENT_TYPE, 0x403, 6, 0
+0x6850, 0x746f, 0x006f, 
+    IDC_COMBO_CONTENT_TYPE, 0x403, 11, 0
+0x6353, 0x6572, 0x6e65, 0x6873, 0x746f, "\000" 
+    IDC_COMBO_CONTENT_TYPE, 0x403, 6, 0
+0x744f, 0x6568, 0x0072, 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BITMAP_TIMER        BITMAP                  "res\\timer.bmp"
+IDB_BITMAP_USER_OFFLINE BITMAP                  "res\\user_offline.bmp"
+IDB_BITMAP_USER_ONLINE  BITMAP                  "res\\user_online.bmp"
+IDB_BITMAP_SET_LIST_ITEM BITMAP                  "res\\set_list_item.bmp"
+IDB_BITMAP_SET_LIST_ITEM_NEW BITMAP                  "res\\set_list_item_new.bmp"
+IDB_BITMAP_HELP         BITMAP                  "res\\help.bmp"
+IDB_BITMAP_ERROR        BITMAP                  "res\\error.bmp"
+IDB_BITMAP_SUCCESS      BITMAP                  "res\\success.bmp"
+IDB_BITMAP_CON_MENU_FLICKR BITMAP                  "res\\con_menu_flickr.bmp"
+IDB_BITMAP_CON_MENU_WS  BITMAP                  "res\\con_menu_ws.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_CONTEXT_MENU MENU 
+BEGIN
+    POPUP "Available Sets Context Menu"
+    BEGIN
+        MENUITEM "Create New",                  ID_CONTEXT_MENU_CREATE_NEW_SET
+        MENUITEM SEPARATOR
+        MENUITEM "Remove",                      ID_CONTEXT_MENU_REMOVE_SET, GRAYED
+    END
+    POPUP "WSFCHome Context Menu"
+    BEGIN
+        MENUITEM "Add New",                     ID_CONTEXT_MENU_ADD_NEW_HOME
+        MENUITEM SEPARATOR
+        MENUITEM "Remove",                      ID_CONTEXT_MENU_REMOVE_HOME, GRAYED
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON_FLICKR_PAL_16  ICON                    "res\\FlickrPal16.ico"
+IDI_ICON_FLICKR_PAL_32  ICON                    "res\\FlickrPal32.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_PROJNAME            "FlickrUploader"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

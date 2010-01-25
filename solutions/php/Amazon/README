@@ -1,0 +1,8 @@
+FILES
+====
+
+AmazonClient.php - The PHP Class library to consume Amazon web service both from REST ans SOAP form
+
+simple_demo.php - Simple demonstration of using the PHP class library for Amazon web services - You should have 'AmazonClient.php' in the same directory to run this
+
+demo_html.php - Sample application of using the PHP class library for Amazon web services - You should have 'AmazonClient.php' in the same directory to run this

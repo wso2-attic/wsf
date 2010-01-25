@@ -1,0 +1,42 @@
+/* simple styles for the demo.php */
+#content {
+    width: 1000px;
+    margin:0 auto;
+    border:2px solid #ccccdd;
+    background: #ddddff;
+    padding: 15px;
+    text-align: center;
+    font-family: Verdana, Tahoma;
+    font-size: 12px;
+
+}
+
+.clear {
+    clear: both;
+}
+
+.content-left {
+    width: 450px;
+    float:left;
+}
+
+.content-middle {
+    float: left;
+}
+
+.content-right {
+    width: 450px;
+    float:right;
+}
+
+.config-textarea {
+    text-align: left;
+    width: 400px;
+    height: 200px;
+}
+
+form {
+    margin:0 auto;
+    width: 600px;
+}
+

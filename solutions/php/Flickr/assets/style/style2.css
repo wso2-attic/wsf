@@ -1,0 +1,303 @@
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+body {
+	padding: 12px 0px;
+	background-color: #c4b8a1;
+	color: #fec3aa;
+	font-family: verdana, arial, sans-serif;
+	font-size: 9px;
+	text-align: center;
+	font-weight: bold;
+}
+
+a {
+	color: #fec3aa;
+	text-decoration: underline;
+}
+
+a:hover {
+	color: #e89978;
+}
+
+span {
+	display: none;
+}
+
+img {
+	border: none;
+}
+
+ul {
+	list-style-type: none;
+}
+
+li {
+	list-style-type: none;
+}
+
+p {
+	margin: 10px 0px 5px;
+	text-align: justify;
+	line-height: 14px;
+}
+
+.clearthis {
+	margin : 0px;
+	height : 1px;
+	clear : both;
+	float : none;
+	font-size : 1px;
+	line-height : 0px;
+	overflow : hidden;
+}
+
+
+
+#container {
+	margin: 0px auto;
+	width: 576px;
+}
+
+#page_header {
+        background: url('images1/header_leftborder.gif') #fff repeat-y 0% 0%;
+        color: #6a604e;
+        float: left;
+}
+
+#page_header h1 {
+        width: 280px;
+        height: 125px;
+        font-size : 20px;
+        margin-top: 30px;
+
+}
+
+#page_header p {
+  margin-left: 15px;
+
+}
+
+
+
+#link{
+margin-left: 300px;
+background-color: white;
+width: 200px;
+font-color: #cccccc;
+}
+
+
+/* Body Containers */
+
+#body_container1 {
+	padding: 8px 10px;
+	background-color: #732604;
+}
+
+#body_container2 {
+	padding: 3px 4px 0px;
+	background-color: #c45423;
+}
+
+#container_top {
+	width: 548px;
+	padding-bottom: 4px;
+}
+
+#container_bottom {
+	padding: 5px 0px 10px 1px;
+	width: 548px;
+	background: url('images2/body_divider.gif') repeat-y 181px 0px;
+	
+}
+
+.horizontal_div {
+	margin: 0px auto;
+	width: 537px;
+	height: 1px;
+	background-color: #ad4618;
+	overflow: hidden;
+}
+
+/* Page Navigation Menu */
+
+#page_menu {
+	padding: 1px 0px 2px;
+	width: 181px;
+	float: left;
+	text-align: right;
+         margin-left: 30px;
+
+}
+#page_menu li {
+	margin-top: 1px;
+	float: left;
+}
+
+#page_menu li a {
+	display: block;
+	background-color: #b5813c;
+}
+
+#page_menu li a:hover {
+	background-color: #956a31;
+}
+
+#page_menu #menu_contact a {
+	width: 31px;
+	height: 54px;
+	background-image: url('images2/menu_contact.gif');
+}
+
+#page_menu #menu_latest a {
+	width: 31px;
+	height: 54px;
+	background-image: url('images2/menu_latest.gif');
+}
+
+#page_menu #menu_gallery a {
+	width: 31px;
+	height: 54px;
+	background-image: url('images2/menu_gallery.gif');
+}
+
+#page_menu #menu_home a {
+	width: 31px;
+	height: 53px;
+	background-image: url('images2/menu_home.gif');
+}
+
+
+
+#info {
+	margin-left: 6px;
+	width: 300px;
+	float: left;
+	text-align: left;
+}
+
+#info h2 {
+	margin-bottom: 3px;
+	width: 361px;
+	height: 20px;
+}
+
+#info_wrap {
+        margin-left: 300px;
+	width: 400px;
+}
+
+#info_wrap p {
+	margin-top: 16px;
+	margin-bottom: 8px;
+}
+
+#info_wrap .link-more {
+	text-align: right;
+	height: 14px;
+}
+
+#info_wrap .link-more a {
+	margin-left: auto;
+	padding-left: 16px;
+	display: block;
+	float: right;
+	height: 14px;
+}
+
+
+
+
+/* Model Profile */
+
+.model_profile_row {
+	padding-top: 9px;
+	padding-bottom: 3px;
+	width: 362px;
+	background: url('images2/body_divider.gif') repeat-x 0px 100%;	
+}
+
+.model_profile_left {
+	width: 167px;
+	float: left;
+}
+
+.model_profile_right {
+	margin-left: 18px;
+	width: 167px;
+	float: left;
+}
+
+.model_profile_image {
+	margin-top: 7px;
+	padding-left: 22px;
+	float: left;
+}
+
+.model_profile_image img {
+	border: 1px solid #e28d68;
+}
+
+.model_profile_details {
+	margin-left: 10px;
+	width: 75px;
+	float: left;
+}
+
+.model_profile_details li {
+	padding-top: 5px;
+	color: #e4e0e0;
+	font-size: 9px;
+	font-weight: bold;
+}
+
+.model_profile_details strong {
+	color: #533a0a;
+}
+
+.model_profile_details br {
+	clear: both;
+}
+
+.model_profile_row .link-more {
+	padding-top: 3px;
+	padding-bottom: 1px;
+	text-align: right;
+	line-height: 9px;
+	clear: both;
+}
+
+
+/* Page Footer */
+
+#page_footer {
+	padding-top: 8px;
+	text-align: center;
+	color: #b08558;
+	font-weight: normal;
+	font-size: 11px;
+}
+
+#page_footer a {
+	color: #b08558;
+	text-decoration: none;
+        margin-top: 600px;
+
+}
+
+#page_footer a:hover {
+	color: #976632;
+}
+
+#page_footer h2 {
+        color: #976632;
+        margin-right: 50px; 
+}
+
+
+
+
+

@@ -1,0 +1,39 @@
+calendar system
+
+Note: 
+User has to add the mysql extention (for Windows, php_mysql.dll and for linux install ext mysql.so).
+Assume that the mysql root password is set as the default password.
+
+Create a database named Calender by using below mysql commands.
+
+   mysql > CREATE DATABASE Calendar;
+
+Then import Calendar/database_scripts/Calendar.sql.
+
+   mysql -u root -p Calendar < Calendar.sql 
+
+Start with the login_client.php.
+
+Basic functionalities:
+
+1. First of all user has to log in to the system by entering username and password. If the user is not a already registered user
+then user has to register with system. After registering he will be directed to the login page.Then he can enter username,password and 
+enter to the basic page for handle events. 
+
+2. Then it will Display the calendar with days related to the specific month and year.And the current day will be highlighted.
+User can move through the months of a year and also through the weeks of a month.  
+
+3. User can add events for specific days of a month by clicking on 'Create Event' link. Here there are some fields for the user
+to fill. User has to add the event information.
+
+* Event Name-> Specific name of the event(ex: Meeting)
+* Start Time-> Start time for the event(ex: 2008-02-08 11:30:00)
+* End Time-> End time for the event(ex: 2008-02-08 12:00:00)
+* Description-> Description for the event
+:
+Then click on save buttion. When user go back to the calendar and click on the specific week and then user can see the added event in the table.
+
+4. User can also delete a event by clicking 'Delete Event' link. The information has to enter same as the above scenario and deleted 
+events will no longer appear in the calendar table. 
+
+

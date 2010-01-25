@@ -1,0 +1,34 @@
+// FlickrUploader.idl : IDL source for FlickrUploader
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (FlickrUploader.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(AACDC34F-5042-4334-BA80-7BFE0C7E5BF9),
+	helpstring("IShellExtInterface Interface"),
+	pointer_default(unique)
+]
+interface IShellExtInterface : IUnknown{
+};
+[
+	uuid(2A51F128-D45B-448B-88AF-FED7E8858B64),
+	version(1.0),
+	helpstring("FlickrUploader 1.0 Type Library")
+]
+library FlickrUploaderLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(01F2BC2E-AAA8-4B80-89AA-C43D27F648D3),
+		helpstring("ShellExtInterface Class")
+	]
+	coclass ShellExtInterface
+	{
+		[default] interface IShellExtInterface;
+	};
+};

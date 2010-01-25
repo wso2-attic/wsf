@@ -1,0 +1,498 @@
+<html>
+<head>
+<title> PHP Web Services DEMO </title>
+
+<LINK href="style/style.css" rel="stylesheet" type="text/css"/>
+<LINK href="style/rounded.css" rel="stylesheet" type="text/css"/>
+
+<script language="javascript" src="js/tab.js"></script>
+<script language="javascript" src="js/ajax.js"></script>
+
+<script language="javascript">
+    var flickrTabPanel;
+    var flickrKey;
+    var amazonKey;
+
+    var currentFlickrTab;
+    var currentYahooTab;
+    var currentAmazonTab;
+
+    var flickrTabBody;
+    var yahooTabBody;
+    var amazonTabBody;
+
+    /* Initialization */
+    function init()
+    {
+        window.onscroll = adjust2Scroll;
+        window.onresize = adjustTabOnResize;
+        initTabs();
+    }
+
+    /* Adjust the tabs when resizing */
+    function adjustTabOnResize()
+    {
+        var flickrTabContent =
+                document.getElementById(flickrTabBody).innerHTML;
+        var yahooTabContent = document.getElementById(yahooTabBody).innerHTML;
+
+        /** call the init for Tabs */
+        initTabs();
+        
+        document.getElementById(flickrTabBody).innerHTML = flickrTabContent;
+        document.getElementById(yahooTabBody).innerHTML = yahooTabContent;
+
+    }
+    /* Some code to keep the 'Loading' label inplace while scrolling */
+    function adjust2Scroll()
+    {
+        var scrollTop = Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+        var scrollLeft = Math.max(document.documentElement.scrollLeft, document.body.scrollLeft);
+    
+        var loading_div = document.getElementById('loading_div');
+        loading_div.style.top =  scrollTop;
+        loading_div.style.left =  scrollLeft;
+    }
+
+    /* Flickr Request with the page, the query will be taken from
+       input html component with the id flickr_query */
+    function flickrRequest(page)
+    {
+        var query = document.getElementById("flickr_query").value;
+	var key = document.getElementById("flickr_key").value;
+
+        method = "";
+        setTo = flickrTabBody;
+        if(currentFlickrTab.id == 1)
+        {
+            method = "tag";
+        }
+        else if(currentFlickrTab.id == 2)
+        {
+            method = "text";
+        }
+
+        if(page == null)
+        {
+            page = 1;
+        }
+
+        if(currentFlickrTab.id == 3)
+        {
+
+            /* Make Flickr Search more configurable by 
+               adjusting following parameters */
+            method = "text";
+            flickrTabBody = "flickrMoreResults";
+
+            var date_params = [
+                        "taken_start_year",
+                        "taken_start_month",
+                        "taken_start_day",
+
+                        "taken_end_year",
+                        "taken_end_month",
+                        "taken_end_day",
+
+                        "uploaded_start_year",
+                        "uploaded_start_month",
+                        "uploaded_start_day",
+
+                        "uploaded_end_year",
+                        "uploaded_end_month",
+                        "uploaded_end_day" ];
+
+            var request_params = [];
+ 
+            for(var i = 0; i < date_params.length; i ++)
+            {
+                request_params[2*i] = date_params[i];
+                request_params[2*i +1] = document.getElementById(date_params[i]).value;
+            }
+            request_params = request_params.concat(["flickr_query",
+                                    query,
+
+                                    "flickr_method",
+                                    method,
+				    
+				    "flickr_key",
+				    key,
+				    
+                                    "page",
+                                    page]);
+            
+            Ajax.request("flickr_demo.php", { params: request_params,
+                                          set_to: flickrTabBody });
+        }
+        else
+        {
+            Ajax.request("flickr_demo.php",{ params: [
+                                            "flickr_query",
+                                            query,
+
+                                            "flickr_method",
+                                            method,
+					    
+					    "flickr_key",
+					    key,
+
+                                            "page",
+                                            page],
+                                          set_to: flickrTabBody });
+        }
+    }
+    
+    /* Yahoo Request with the page, the query will be taken from
+       input html component with the id yahoo_query */
+    function yahooRequest(method, page)
+    {
+        var query = document.getElementById("yahoo_query").value;
+        
+        method = "";
+        if(currentYahooTab.id == 2)
+        {
+            method = "image";
+        }
+        else if(currentYahooTab.id == 3)
+        {
+            method = "news";
+        }
+        else
+        {
+            method = "web";
+        }
+
+        if(page == null)
+        {
+            page = 1;
+        }
+
+
+	Ajax.request("yahoo_demo.php", { params: [
+                                            "yahoo_query",
+                                            query,
+
+                                            "yahoo_method",
+                                            method,
+
+                                            "page",
+                                            page ],
+
+                                          set_to: yahooTabBody });
+    }
+
+    /* Request Amazon with the page */
+    function amazonRequest(page)
+    {
+        var query = document.getElementById("amazon_query").value;
+        var index = document.getElementById("amazon_index").value;
+        var key   = document.getElementById("amazon_key").value;
+
+        Ajax.request("amazon_demo.php",{ params: [
+                                            "amazon_query",
+                                            query,
+
+                                            "amazon_index",
+                                            index,
+
+                                            "amazon_key",
+                                            key,
+
+                                            "page",
+                                            page],
+                                          set_to: "amazonResult"});
+    }
+
+    
+
+    /* Initialize tabs for Flickr and Yahoo */
+    function initTabs()
+    {
+        var flickrTabDiv = document.getElementById("flickr_tab");
+        var tabWidth = 120;
+        if(tabWidth * 3 >  document.getElementById("flickr_tab").offsetWidth)
+        {
+            tabWidth = document.getElementById("flickr_tab").offsetWidth/3 -5;
+        }
+        flickrTabPanel = new Widget.TabPanel(flickrTabDiv,   // the container..
+                             "flickrTabPanel", // the name of the global variable
+                             document.getElementById("flickr_tab").offsetWidth,
+                             tabWidth); // width;
+        var tab1 = new Widget.Tab("By Tag", "", 1);
+        var tab2 = new Widget.Tab("By Text", "", 2);
+        var tab3 = new Widget.Tab("More", "", 3);
+
+        flickrTabPanel.addTab(tab1);
+        flickrTabPanel.addTab(tab2);
+        flickrTabPanel.addTab(tab3);
+
+        flickrTabPanel.selectTab(0);
+        flickrTabPanel.show();
+        flickrTabBody = flickrTabPanel.getTabBodyId();
+        flickrTabPanel.onSelect = function(t)
+        {
+            currentFlickrTab = t;
+            if(t.id != 3)
+            {
+                flickrRequest();
+            }
+            else
+            {
+                Ajax.request("flickr_more.php",
+                                    { params: [ ],
+                                      set_to: flickrTabBody });
+            }
+        }
+        currentFlickrTab = tab1;
+
+        var yahooTabDiv = document.getElementById("yahoo_tab");
+        var tabWidth = 120;
+        if(tabWidth * 3 >  document.getElementById("yahoo_tab").offsetWidth)
+        {
+            tabWidth = document.getElementById("yahoo_tab").offsetWidth/3 -5;
+        }
+        yahooTabPanel = new Widget.TabPanel(yahooTabDiv, // the container..
+                             "yahooTabPanel", // the name of the global variable
+                             document.getElementById("yahoo_tab").offsetWidth,
+                             tabWidth); // width;
+        tab1 = new Widget.Tab("Web", "", 1);
+        tab2 = new Widget.Tab("Image", "", 2);
+        tab3 = new Widget.Tab("News", "", 3);
+
+        yahooTabPanel.addTab(tab1);
+        yahooTabPanel.addTab(tab2);
+        yahooTabPanel.addTab(tab3);
+
+        yahooTabPanel.selectTab(0);
+        yahooTabPanel.show();
+        yahooTabBody = yahooTabPanel.getTabBodyId();
+        yahooTabPanel.onSelect = function(t)
+        {
+            currentYahooTab = t;
+            yahooRequest();   
+        }
+        currentYahooTab = tab1;
+
+    }
+
+    function adjust2Scroll()
+    {
+        var scrollTop = Math.max(document.documentElement.scrollTop,
+                            document.body.scrollTop);
+        var scrollLeft = Math.max(document.documentElement.scrollLeft,
+                            document.body.scrollLeft);
+    
+        var loading_div = document.getElementById('loading_div');
+        loading_div.style.top =  scrollTop;
+        loading_div.style.left =  scrollLeft;
+    }
+</script>
+
+
+</head>
+<body>
+<div style="visibility:hidden" id="loading_div">
+    <font id="loading_text">Loading..</font>
+</div>
+
+<form method="POST" action="demo.php">
+
+<div id="wrapper">
+	<div id="header">
+            <div class="bottom2">
+                <div class="rright2">
+                    <div class="left2">
+                        <div class="top2">
+                            <div class="bl2">
+                                <div class="br2">
+                                    <div class="tl2">
+                                        <div class="tr2">
+                                            <h1>WSF/PHP Demo</h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear">&nbsp;</div>
+	</div>
+	<div id="container">
+		<div id="side-a">
+                      <div class="bottom2">
+                          <div class="rright2">
+                              <div class="left2">
+                                  <div class="top2">
+                                      <div class="bl2">
+                                          <div class="br2">
+                                              <div class="tl2">
+                                                  <div style="position:relative;height:650px" class="tttr2">
+                                                    <div class="rounded_title">
+                                                       Flickr Search
+                                                    </div>
+                                                    <div class="rounded_inner_container">
+<div style="text-align:left; padding: 5px">
+    <div>
+        <div style="width:50%; float:left;">
+            <input id="flickr_query" onchange="flickrRequest()" name="flickr_query" type="text"></input>
+            <input type="button" onclick="flickrRequest()" value="Search"></input>
+        </div>
+        <div style="width:50%; float:right;">
+            <strong>key</strong>
+            <input id="flickr_key" name="flickr_key" type="text"></input>
+        </div>
+        <div class="clear:both">&nbsp;</div>
+    </div>
+</div>
+<div style="text-align:center; padding: 5px">
+</div>
+<div id="flickr_tab">
+</div>
+<div id="flickr_result">
+</div>
+                                                    </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                               </div>
+                          </div>
+                      </div>
+		</div>
+		
+		<div id="content_middle">
+                      <div class="bottom2">
+                          <div class="rright2">
+                              <div class="left2">
+                                  <div class="top2">
+                                      <div class="bl2">
+                                          <div class="br2">
+                                              <div class="tl2">
+                                                  <div style="position:relative;height:650px" class="tttr2">
+                                                    <div class="rounded_title">
+                                                       Yahoo Search
+                                                    </div>
+                                                    <div class="rounded_inner_container">
+
+<div style="text-align:center; padding: 5px">
+    <input id="yahoo_query" onchange="yahooRequest()" name="yahoo_query" type="text"></input>
+    <input type="button" value="Search" onclick="yahooRequest()"></input>
+</div>
+<div style="text-align:center; padding: 5px">
+</div>
+<div id="yahoo_result">
+</div>
+<div id="yahoo_tab">
+</div>
+                                                    </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+		</div>
+		
+		<div id="side-b">
+                      <div class="bottom2">
+                          <div class="rright2">
+                              <div class="left2">
+                                  <div class="top2">
+                                      <div class="bl2">
+                                          <div class="br2">
+                                              <div class="tl2">
+                                                  <div style="position:relative;height:650px" class="tttr2">
+                                                    <div class="rounded_title">
+                                                       Amazon Search
+                                                    </div>
+                                                    <div class="rounded_inner_container">
+
+<div style="text-align:left; padding: 5px">
+    <select id="amazon_index">
+        <option value="All">All</option>
+        <option value="Apparel">Apparel</option>
+        <option value="Automotive">Automotive</option>
+        <option value="Baby">Baby</option>
+        <option value="Beauty">Beauty</option>
+        <option value="Blended">Blended</option>
+        <option value="Books">Books</option>
+        <option value="Classical">Classical</option>
+        <option value="DVD">DVD</option>
+        <option value="DigitalMusic">Digital Music</option>
+        <option value="Electronics">Electronics</option>
+        <option value="GourmetFood">Gourmet Food</option>
+        <option value="Grocery">Grocery</option>
+        <option value="HealthPersonalCare">Health Personal Care</option>
+        <option value="HomeGarden">Home Garden</option>
+        <option value="Jewelry">Jewelry</option>
+        <option value="Kitchen">Kitchen</option>
+        <option value="MP3Downloads">MP3 Downloads</option>
+        <option value="Magazines">Magazines</option>
+        <option value="Marketplace">Marketplace</option>
+        <option value="Merchants">Merchants</option>
+        <option value="Miscellaneous">Miscellaneous</option>
+        <option value="Music">Music</option>
+        <option value="MusicTracks">Music Tracks</option>
+        <option value="MusicalInstruments">Musical Instruments</option>
+        <option value="OfficeProducts">Office Products</option>
+        <option value="OutdoorLiving">Outdoor Living</option>
+        <option value="PCHardware">PC Hardware</option>
+        <option value="PetSupplies">Pet Supplies</option>
+        <option value="Photo">Photo</option>
+        <option value="SilverMerchants">Silver Merchants</option>
+        <option value="Software">Software</option>
+        <option value="SportingGoods">Sporting Goods</option>
+        <option value="Tools">Tools</option>
+        <option value="Toys">Toys</option>
+        <option value="UnboxVideo">Unbox Video</option>
+        <option value="VHS">VHS</option>
+        <option value="Video">Video</option>
+        <option value="VideoGames">Video Games</option>
+        <option value="Wireless">Wireless</option>
+        <option value="WirelessAccessories">Wireless Accessories</option>
+    </select>
+</div>
+<div style="text-align:left; padding: 5px">
+    <div>
+        <div style="width:50%; float:left;">
+            <input id="amazon_query" onchange="amazonRequest(1)" name="amazon_query" type="text"></input>
+            <input type="button" value="Search"
+                onclick="amazonRequest(1)"></input>
+        </div>
+        <div style="width:50%; float:right;">
+            <strong>  key</strong>
+            <input id="amazon_key" name="amazon_key" type="text"></input>
+        </div>
+    </div>
+    <div class="clear:both">&nbsp;</div>
+  
+</div>
+<div style="text-align:center; padding: 5px">
+<div id="amazonResult" style="height:500px; overflow:auto;">
+</div>
+</div>
+                                                    </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+		</div>
+	</div>
+	<div id="footer">
+		WSF/PHP- DEMO
+	</div>
+</div>
+</form>
+<script>
+    init();
+</script>
+</body>
+</html>

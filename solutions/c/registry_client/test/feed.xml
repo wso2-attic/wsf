@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:ns="http://wso2.org/registry">
+    <id>urn:uuid:91fad327-8ffa-4ada-9fc5-85d14bef51d9</id><title type="text">test123</title><link href="" />
+    <link href="" rel="self" />
+    <author>
+        <name>admin</name>
+    </author>
+    <updated>2009-01-27T01:26:34.394Z</updated>
+    <ns:properties>
+        <ns:property>
+            <ns:name>registry.lifecycle.Lifecycle.state</ns:name><ns:value>Tested</ns:value>
+        </ns:property>
+        <ns:property>
+            <ns:name>propertyx</ns:name><ns:value>propertyx</ns:value>
+        </ns:property>
+        <ns:property>
+            <ns:name>registry.Aspects</ns:name><ns:value>Lifecycle</ns:value>
+        </ns:property>
+        <ns:property>
+            <ns:name>property2</ns:name><ns:value>value2</ns:value>
+        </ns:property>
+        <ns:property>
+            <ns:name>property1</ns:name><ns:value>value1</ns:value>
+        </ns:property>
+    </ns:properties>
+    <ns:lastUpdatedUser>admin</ns:lastUpdatedUser><ns:childCount>3</ns:childCount><link href="/test" rel="path" />
+    <subtitle type="text">test123</subtitle>
+    <entry>
+        <link href="https://localhost:9443/registry/atom/test/collection1" rel="alternate" /><link href="/test/collection1" rel="path" />
+        <lastUpdatedUser xmlns="http://wso2.org/registry">admin</lastUpdatedUser><mediaType xmlns="http://wso2.org/registry">dir</mediaType><ns:properties />
+        <link href="https://localhost:9443/registry/atom/test/collection1" rel="edit" />
+        <id>urn:uuid:043e5838-5c19-4019-8b01-c6afde164cb4</id><title type="text">/test/collection1</title><updated>2009-01-21T02:31:15.572Z</updated>
+        <author>
+            <name>admin</name>
+        </author>
+        <summary type="text">collection</summary>
+    </entry>
+    <entry>
+        <link href="https://localhost:9443/registry/atom/test/feed.xml" rel="alternate" /><link href="/test/feed.xml" rel="path" />
+        <snapshotID xmlns="http://wso2.org/registry">125</snapshotID><lastUpdatedUser xmlns="http://wso2.org/registry">admin</lastUpdatedUser><mediaType xmlns="http://wso2.org/registry">application/xml</mediaType>
+        <ns:properties>
+            <ns:property>
+                <ns:name>filter</ns:name><ns:value>value1</ns:value>
+            </ns:property>
+            <ns:property>
+                <ns:name>property1</ns:name><ns:value>value1</ns:value>
+            </ns:property>
+        </ns:properties>
+        <link href="https://localhost:9443/registry/atom/test/feed.xml" rel="edit" />
+        <id>urn:uuid:d94b3a43-0d54-4276-9caf-64b9ff3b24c5</id><title type="text">/test/feed.xml</title><updated>2009-01-21T04:14:00.614Z</updated>
+        <author>
+            <name>admin</name>
+        </author>
+        <summary type="text">xml</summary><content type="application/xml" src="https://localhost:9443/registry/resource/test/feed.xml" />
+        <link href="https://localhost:9443/registry/resource/test/feed.xml" rel="edit-media" />
+    </entry>
+    <entry>
+        <link href="https://localhost:9443/registry/atom/test/w2p.sh" rel="alternate" /><link href="/test/w2p.sh" rel="path" />
+        <snapshotID xmlns="http://wso2.org/registry">122</snapshotID><lastUpdatedUser xmlns="http://wso2.org/registry">admin</lastUpdatedUser><mediaType xmlns="http://wso2.org/registry">text/x-sh</mediaType><ns:properties />
+        <link href="https://localhost:9443/registry/atom/test/w2p.sh" rel="edit" />
+        <id>urn:uuid:78d64faf-85de-435b-b04c-9c0e75eb0476</id><title type="text">/test/w2p.sh</title><updated>2009-01-21T02:24:22.539Z</updated>
+        <author>
+            <name>admin</name>
+        </author>
+        <summary type="text">test</summary><content type="text/x-sh" src="https://localhost:9443/registry/resource/test/w2p.sh" />
+        <link href="https://localhost:9443/registry/resource/test/w2p.sh" rel="edit-media" />
+    </entry>
+</feed>

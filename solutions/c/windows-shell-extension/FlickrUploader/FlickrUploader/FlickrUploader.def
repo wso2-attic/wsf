@@ -1,0 +1,9 @@
+; FlickrUploader.def : Declares the module parameters.
+
+LIBRARY      "FlickrUploader.DLL"
+
+EXPORTS
+	DllCanUnloadNow		PRIVATE
+	DllGetClassObject	PRIVATE
+	DllRegisterServer	PRIVATE
+	DllUnregisterServer	PRIVATE

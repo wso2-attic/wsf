@@ -1,0 +1,14 @@
+<savan:Subscriber xmlns:savan="http://ws.apache.org/axis2/services/subscription">
+    <savan:Identifier>subs2</savan:Identifier>
+    <savan:Topic>http://localhost:9090/axis2/services/wso2</savan:Topic>
+    <wse:Subscribe xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing">
+        <wse:Filter>//wsfc</wse:Filter>
+        <wse:Renew>0</wse:Renew>
+        <wse:Mode></wse:Mode>
+        <wse:Expires></wse:Expires>
+        <wse:EndTo>http://127.0.0.1/8082/wso2</wse:EndTo>
+        <wse:Delivery>
+            <wse:NotifyTo>http://127.0.0.1:9090/axis2/services/wsfc</wse:NotifyTo>
+        </wse:Delivery>
+    </wse:Subscribe>
+<savan:Subscriber>

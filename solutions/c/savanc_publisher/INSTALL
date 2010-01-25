@@ -1,0 +1,36 @@
+This implementation consists of a demo Axis2/C service implemetation which acts as a Savan/C publisher service.
+When deployed it will connect to the WSO2 registry and retrieve the subscribers registered for this service. Then it
+will populate the Savan/C database with those subscribers. After that when service started it will publish sample
+data to those subscribers. 
+In this demo implemtation the subscribers registered in the registry has the endpoint listener service as wsfc which is
+another sample service implemented here.
+
+To install this you need to follow the following steps.
+1. Install Axis2/C
+   - Define and export AXIS2C_HOME environment variable to indicate your repository location. I assume it to be <axis2c_home> for 
+     the instructions purposes in this document.
+   - Download Axis2/C source
+   - cofigure --prefix=<axis2c_home> --enable-tests=no
+     make
+     make install
+
+    For more information on installing Axis2/C see http://ws.apache.org/axis2/c/docs/installationguide.html
+2. Install Savan/C
+
+    ./configure --prefix=<axis2c_home> --enable-static=no --with-axis2=${AXIS2C_HOME}/include/axis2-1.5.0 --enable-filtering=no
+    make
+    make install
+
+    For more information on installing Savan/C see http://svn.apache.org/repos/asf/webservices/savan/trunk/c/INSTALL
+3. Install this demo
+    This demo needs libcurl and libraptor libraries in the LD_LIBRARRY_PATH. 
+    libcurl is used to make requests to the
+    registry. It can be downloaded from http://curl.haxx.se/download.html
+    libraptor is an atom parser which can be downloaded from http://librdf.org/raptor/
+
+    configure --prefix=<axis2c_home> --with-axis2=${AXIS2C_HOME}/include/axis2-1.5.0 --with-savan=${AXIS2C_HOME}/include/savan-0.90
+    make
+    make install
+
+   This will install wso2 sample publisher service and wsfc sample listener service at <axis2c_home>/services repository
+   service folder.

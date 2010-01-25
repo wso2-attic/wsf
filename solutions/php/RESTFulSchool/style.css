@@ -1,0 +1,32 @@
+body
+{
+    background: #ddddff;
+    padding: 45px 0px 0px 0px;
+    width: 900px;
+    margin:0 auto;
+    text-align: left;
+    font-family: Verdana, Tahoma;
+    font-size: 14px;
+}
+
+p
+{
+    padding: 5px;
+}
+
+table {
+    border: 1px solid #333333;
+}
+
+table tr#title {
+    font-family: Verdana, Tahoma;
+    font-size: 13px;
+    padding: 5px;
+    background: #9999ff;
+}
+
+table tr td {
+    font-family: Verdana, Tahoma;
+    font-size: 13px;
+    padding: 5px;
+}

@@ -1,0 +1,11 @@
+<wse:Subscribe xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing">
+    <wse:Identifier>subs1</wse:Identifier>
+    <wse:Filter>wsf-c</wse:Filter>
+    <wse:Renew>false</wse:Renew>
+    <wse:Mode></wse:Mode>
+    <wse:Expires></wse:Expires>
+    <wse:EndTo>http://127.0.0.1/8082/publisher</wse:EndTo>
+    <wse:Delivery>
+        <wse:NotifyTo>http://127.0.0.1/9090/axis2/services/listener</wse:NotifyTo>
+    </wse:Delivery>
+</wse:Subscribe>

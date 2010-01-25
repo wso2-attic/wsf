@@ -1,0 +1,32 @@
+this is the solution using Savan/C that use WSO2 Registry to populate Savan/C database tables namely subscriber and topic.
+The purpose of the solution is to provide a Savan/C service that acts as a wrapper event source for WSO2 ESB. The
+interested subscribers are retrieved from WSO2 Registry at service start up.
+
+This has two Axis2/C services called wso2 and wsfc. wso2 acts as publisher service. wsfc acts as the listner service.
+You need following resource structure in your registry for this demo to run
+/topics/wso2/wsfc/system.subscriptions/
+
+Within this subscriptions folder you should have subs1.xml and subs2.xml which can be copied there from subscribers folder in this source structure.
+
+Then you need to install Axis2/C, Savan/C and this demo application. See for the installation instructions in the INSTALL file.
+
+Then once you start the Axis2/C server the wso2 publisher service starts to publish to the wsfc listner service.
+Following is a sample publisher service configuration xml file where you need to specify registry specific information
+
+<service name="wso2">
+    <parameter name="ServiceClass" locked="xsd:false">wso2</parameter>
+    <parameter name="loadServiceAtStartup" locked="xsd:false">true</parameter>
+    <parameter name="registry_url" locked="xsd:false">http://localhost:8082/wso2registry/atom</parameter>
+    <parameter name="registry_username" locked="xsd:false">damitha</parameter>
+    <parameter name="registry_password" locked="xsd:false">damitha</parameter>
+   <description>
+       This is a sample eventing data source which loads as the axis2 engine startup and
+       start publishing to its subscribers.
+   </description>
+   <module ref="savan"/>
+   <parameter name="TopicURL" locked="xsd:false">http://localhost:9090/axis2/services/wso2</parameter>
+
+   <operation name="start">
+           <parameter name="wsamapping" >http://ws.apache.org/axis2/c/savan/samples/wso2/start</parameter>
+   </operation>
+</service>

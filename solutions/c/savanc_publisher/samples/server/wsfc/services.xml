@@ -1,0 +1,6 @@
+<service name="wsfc">
+    <parameter name="ServiceClass" locked="xsd:false">wsfc</parameter>
+    <operation name="notify" mep="http://www.w3.org/2004/08/wsdl/in-only">
+           <parameter name="wsamapping">http://ws.apache.org/axis2/c/samples/notify</parameter>
+   </operation>
+</service>

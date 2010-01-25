@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "registry_client", "registry_client.vcproj", "{878C9F8C-741D-400B-8519-B18AE671841D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "registry_client_test", "..\registry_client_test\registry_client_test.vcproj", "{1C3F9A43-8307-4068-99F7-9C8BC3487ABF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{878C9F8C-741D-400B-8519-B18AE671841D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{878C9F8C-741D-400B-8519-B18AE671841D}.Debug|Win32.Build.0 = Debug|Win32
+		{878C9F8C-741D-400B-8519-B18AE671841D}.Release|Win32.ActiveCfg = Release|Win32
+		{878C9F8C-741D-400B-8519-B18AE671841D}.Release|Win32.Build.0 = Release|Win32
+		{1C3F9A43-8307-4068-99F7-9C8BC3487ABF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1C3F9A43-8307-4068-99F7-9C8BC3487ABF}.Debug|Win32.Build.0 = Debug|Win32
+		{1C3F9A43-8307-4068-99F7-9C8BC3487ABF}.Release|Win32.ActiveCfg = Release|Win32
+		{1C3F9A43-8307-4068-99F7-9C8BC3487ABF}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

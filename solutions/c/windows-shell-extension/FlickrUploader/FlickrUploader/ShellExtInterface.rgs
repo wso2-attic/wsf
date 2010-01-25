@@ -1,0 +1,24 @@
+HKCR
+{
+	NoRemove CLSID
+	{
+		ForceRemove {01F2BC2E-AAA8-4B80-89AA-C43D27F648D3} = s 'ShellExtInterface Class'
+		{
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}			
+		}
+	}
+	
+	NoRemove jpegfile
+    {
+		NoRemove ShellEx
+		{
+			NoRemove ContextMenuHandlers
+			{
+				ForceRemove FlickrUploader = s '{01F2BC2E-AAA8-4B80-89AA-C43D27F648D3}'
+			} 
+		}
+	}
+}

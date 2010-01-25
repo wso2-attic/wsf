@@ -1,0 +1,26 @@
+*************************************************
+CHANGELOG 1.22.1 - 1.26
+*************************************************
+
+Requested new features:
+=======================
+CR#465 - Add option for vertical text in graphic tables
+
+
+Reported Defect fixes:
+======================
+PR#461 - Windroses does not handle title correctly
+PR#463 - Wrong handling of small slices
+PR#466 - Further wrong handling of small slices in Pie
+PR#000 - Removed color debug code that prohibited alpha blending from working
+
+
+Reported Defect fixes:
+======================
+PR#445 - Example code: Image::SetAntiAliasing() expects boolean
+PR#456 - German locale problem with punctuation
+PR#457 - Array with non-consequtive indexes are not handled as 
+         URL argument for CSIM
+PR#458 - Add additional error check for accumulated line plot
+
+

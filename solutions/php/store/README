@@ -1,0 +1,10 @@
+How to deploy service?
+----------------------
+1. Copy the service.php, policy.xml and keys directory to APACHE2_HTTPD/htdocs/samples/security
+2. Start the server 
+    %cd APACHE2_HTTPD/bin
+    %./httpd -k start
+
+How to run the client?
+----------------------
+1. %sh store_deamon.sh

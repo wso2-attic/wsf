@@ -1,0 +1,36 @@
+
+                          Apache Savan/C Samples
+                         ------------------------
+
+  What Is It?
+  -----------
+
+  This package consists the samples of Apache Savan/C.
+  
+  As a project of the Apache Software Foundation, the
+  developers aim to collaboratively develop and maintain a robust,
+  commercial-grade, standards-based Web services stack implementation with 
+  freely available source code.
+
+  The Latest Version
+  ------------------
+
+  You can get the latest svn checkout of Apache Savan/C samples from
+
+  https://svn.apache.org/repos/asf/webservices/savan/trunk/c/samples
+
+  Installation
+  ------------
+
+  Please see the file called INSTALL.
+
+  Licensing
+  ---------
+
+  Please see the file called LICENSE.
+
+  Acknowledgements
+  ----------------
+
+  Apache Savan/C samples rely heavily on the use of autoconf and libtool to provide
+  a build environment. 

@@ -1,0 +1,11 @@
+HKCR
+{
+	NoRemove AppID
+	{
+		'%APPID%' = s 'FlickrUploader'
+		'FlickrUploader.DLL'
+		{
+			val AppID = s '%APPID%'
+		}
+	}
+}
