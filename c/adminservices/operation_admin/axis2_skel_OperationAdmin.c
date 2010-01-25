@@ -114,13 +114,26 @@
             adb_listPublishedOperations_t *list_published_ops = NULL;
             adb_listPublishedOperationsResponse_t *list_published_ops_res = NULL;
 
+            if(!_listAllOperations)
+            {
+                return NULL;
+            }
             list_published_ops = adb_listPublishedOperations_create_with_values(env, adb_listAllOperations_get_serviceName (_listAllOperations, env));
-            list_published_ops_res = axis2_skel_OperationAdmin_listPublishedOperations(env, msg_ctx, list_published_ops);
-            op_list = adb_listPublishedOperationsResponse_get_return(list_published_ops_res, env);
+            if(list_published_ops)
+            {
+                list_published_ops_res = axis2_skel_OperationAdmin_listPublishedOperations(env, msg_ctx, list_published_ops);
+                if(list_published_ops_res)
+                {
+                    op_list = adb_listPublishedOperationsResponse_get_return(list_published_ops_res, env);
+                    adb_listPublishedOperationsResponse_free(list_published_ops_res, env);
+                    
+                }
+                adb_listPublishedOperations_free(list_published_ops, env);
+                op_metadata_wrapper = adb_OperationMetaDataWrapper_create(env);
+                adb_OperationMetaDataWrapper_set_publishedOperations (op_metadata_wrapper, env, op_list);
+                adb_OperationMetaDataWrapper_set_controlOperations (op_metadata_wrapper, env, NULL);
+            }
 
-            op_metadata_wrapper = adb_OperationMetaDataWrapper_create(env);
-            adb_OperationMetaDataWrapper_set_publishedOperations (op_metadata_wrapper, env, op_list);
-            adb_OperationMetaDataWrapper_set_controlOperations (op_metadata_wrapper, env, NULL);
             return (adb_listAllOperationsResponse_t*) op_metadata_wrapper;
         }
      
@@ -157,7 +170,12 @@
             axis2_char_t *svc_name = NULL;
             axis2_char_t *op_name = NULL;
             adb_OperationMetaData_t * op_metadata = NULL;
-            adb_getOperationMetaDataResponse_t * op_metadata_res = NULL;
+            adb_getOperationMetaDataResponse_t * get_op_metadata_res = NULL;
+
+            if(!_getOperationMetaData)
+            {
+                return NULL;
+            }
             svc_name = adb_getOperationMetaData_get_serviceName(_getOperationMetaData, env);
             op_name = adb_getOperationMetaData_get_operationName(_getOperationMetaData, env);
 
@@ -165,8 +183,8 @@
             adb_OperationMetaData_set_name(op_metadata, env, op_name);
             adb_OperationMetaData_set_controlOperation(op_metadata, env, AXIS2_FALSE);
             adb_OperationMetaData_set_enableMTOM(op_metadata, env, NULL);
-            op_metadata_res = adb_getOperationMetaDataResponse_create_with_values (env, op_metadata); 
-            return (adb_getOperationMetaDataResponse_t*) op_metadata_res;
+            get_op_metadata_res = adb_getOperationMetaDataResponse_create_with_values (env, op_metadata); 
+            return (adb_getOperationMetaDataResponse_t*) get_op_metadata_res;
         }
      
 
@@ -222,7 +240,6 @@
             adb_getOperationStatisticsResponse_t* get_op_stat_res = NULL;
             axutil_array_list_t *op_list = NULL;
 
-            op_list = axutil_array_list_create(env, 0);
             conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
             conf = axis2_conf_ctx_get_conf(conf_ctx, env);
             svc_name = adb_getOperationStatistics_get_serviceName(_getOperationStatistics, env);
@@ -234,13 +251,20 @@
                 adb_getOperationMetaDataResponse_t *get_op_meta_data_res = NULL;
                 adb_OperationMetaData_t *op_meta_data = NULL;
 
+                op_list = axutil_array_list_create(env, 0);
                 op_name = adb_getOperationStatistics_get_operationName(_getOperationStatistics, env);
                 get_op_meta_data = adb_getOperationMetaData_create_with_values(env, svc_name, op_name);
-                get_op_meta_data_res = axis2_skel_OperationAdmin_getOperationMetaData(env, msg_ctx, get_op_meta_data); 
-                op_meta_data = adb_getOperationMetaDataResponse_get_return(get_op_meta_data_res, env);
-                adb_getOperationMetaData_free(get_op_meta_data, env);
-                adb_getOperationMetaDataResponse_free(get_op_meta_data_res, env);
-                get_op_stat_res = adb_getOperationStatisticsResponse_create_with_values(env, op_meta_data);
+                if(get_op_meta_data)
+                {
+                    get_op_meta_data_res = axis2_skel_OperationAdmin_getOperationMetaData(env, msg_ctx, get_op_meta_data); 
+                    if(get_op_meta_data_res)
+                    {
+                        op_meta_data = adb_getOperationMetaDataResponse_get_return(get_op_meta_data_res, env);
+                        adb_getOperationMetaDataResponse_free(get_op_meta_data_res, env);
+                    }
+                    adb_getOperationMetaData_free(get_op_meta_data, env);
+                    get_op_stat_res = adb_getOperationStatisticsResponse_create_with_values(env, op_meta_data);
+                }
             }
 
             return (adb_getOperationStatisticsResponse_t*) get_op_stat_res;
@@ -286,31 +310,39 @@
             adb_listPublishedOperationsResponse_t* published_op_list_res = NULL;
             axutil_array_list_t *op_list = NULL;
 
-            op_list = axutil_array_list_create(env, 0);
             conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
             conf = axis2_conf_ctx_get_conf(conf_ctx, env);
             svc_name = adb_listPublishedOperations_get_serviceName(_listPublishedOperations, env);
             svc = axis2_conf_get_svc(conf, env, svc_name);
-            op_map = axis2_svc_get_all_ops(svc, env);
-            for (index = axutil_hash_first(op_map, env); index; index = axutil_hash_next(env, index))
+            if(svc)
             {
-                adb_getOperationMetaData_t *get_op_meta_data = NULL;
-                adb_getOperationMetaDataResponse_t *get_op_meta_data_res = NULL;
-                void *v = NULL;
-                axis2_op_t *op = NULL;
-                axis2_char_t *op_name = NULL;
+                op_list = axutil_array_list_create(env, 0);
+                op_map = axis2_svc_get_all_ops(svc, env);
+                for (index = axutil_hash_first(op_map, env); index; index = axutil_hash_next(env, index))
+                {
+                    adb_getOperationMetaData_t *get_op_meta_data = NULL;
+                    adb_getOperationMetaDataResponse_t *get_op_meta_data_res = NULL;
+                    void *v = NULL;
+                    axis2_op_t *op = NULL;
+                    axis2_char_t *op_name = NULL;
 
-                axutil_hash_this(index, NULL, NULL, &v);
-                op = (axis2_op_t *) v;
-                op_name = axutil_qname_get_localpart(axis2_op_get_qname(op, env), env);
-                get_op_meta_data = adb_getOperationMetaData_create_with_values(env, svc_name, op_name);
-                get_op_meta_data_res = axis2_skel_OperationAdmin_getOperationMetaData(env, msg_ctx, get_op_meta_data); 
-                axutil_array_list_add(op_list, env, adb_getOperationMetaDataResponse_get_return(get_op_meta_data_res, env));
-                adb_getOperationMetaData_free(get_op_meta_data, env);
-                adb_getOperationMetaDataResponse_free(get_op_meta_data_res, env);
+                    axutil_hash_this(index, NULL, NULL, &v);
+                    op = (axis2_op_t *) v;
+                    op_name = axutil_qname_get_localpart(axis2_op_get_qname(op, env), env);
+                    get_op_meta_data = adb_getOperationMetaData_create_with_values(env, svc_name, op_name);
+                    if(get_op_meta_data)
+                    {
+                        get_op_meta_data_res = axis2_skel_OperationAdmin_getOperationMetaData(env, msg_ctx, get_op_meta_data);
+                        if(get_op_meta_data_res)
+                        {
+                            axutil_array_list_add(op_list, env, adb_getOperationMetaDataResponse_get_return(get_op_meta_data_res, env));
+                            adb_getOperationMetaDataResponse_free(get_op_meta_data_res, env);
+                        }
+                        adb_getOperationMetaData_free(get_op_meta_data, env);
+                    }
+                }
+                published_op_list_res = adb_listPublishedOperationsResponse_create_with_values(env, op_list);
             }
-            published_op_list_res = adb_listPublishedOperationsResponse_create_with_values(env, op_list);
-
             return (adb_listPublishedOperationsResponse_t*) published_op_list_res;
         }
      
