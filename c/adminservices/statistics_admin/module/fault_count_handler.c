@@ -1,0 +1,121 @@
+/*
+ * Copyright 2004,2005 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include <axis2_handler_desc.h>
+#include <axis2_op.h>
+#include <axis2_msg_ctx.h>
+#include <axutil_property.h>
+#include <axis2_svc.h>
+
+axis2_status_t AXIS2_CALL
+axis2_statistics_admin_fault_handler_invoke(
+        struct axis2_handler *handler, 
+        const axutil_env_t *env,
+        struct axis2_msg_ctx *msg_ctx);
+
+
+AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
+axis2_statistics_admin_fault_handler_create(
+        const axutil_env_t *env, 
+        axutil_qname_t *qname) 
+{
+    axis2_handler_t *handler = NULL;
+    
+    handler = axis2_handler_create(env);
+    if (!handler)
+    {
+        return NULL;
+    }
+   
+    /* Handler init is handled by conf loading, so no need to do it here */
+    
+    /* Set the base struct's invoke op */
+	axis2_handler_set_invoke(handler, env, axis2_statistics_admin_fault_handler_invoke);
+
+    return handler;
+}
+
+axis2_status_t AXIS2_CALL
+axis2_statistics_admin_fault_handler_invoke(struct axis2_handler *handler, 
+                        const axutil_env_t *env,
+                        struct axis2_msg_ctx *msg_ctx)
+{
+    axis2_status_t status = AXIS2_SUCCESS;
+    axis2_counter_t *counter = NULL;
+    axutil_param_t *param = NULL;
+    
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[savan] Start:axis2_statistics_admin_fault_handler_invoke");
+    AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
+
+    svc = axis2_msg_ctx_get_svc(msg_ctx, env);
+    if(svc)
+    {
+        param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_FAULT_COUNTER);
+        if(param)
+        {
+            counter = axutil_param_get_value(param, env);
+            if(counter)
+            {
+                axis2_counter_increment(counter, env);
+            }
+        }
+        else
+        {
+            counter = axis2_counter_create(env);
+            if(counter)
+            {
+                axis2_counter_increment(counter, env);
+                param = axutil_param_create(env, AXIS2_SERVICE_FAULT_COUNTER, counter);
+                if(param)
+                {
+                    axis2_svc_add_param(svc, env, param);
+                }
+            }
+        }
+
+        op = axis2_msg_ctx_get_op(msg_ctx, env);
+        if(op)
+        {
+            param = axis2_op_get_param(op, env, AXIS2_OPERATION_FAULT_COUNTER);
+            if(param)
+            {
+                counter = axutil_param_get_value(param, env);
+                if(counter)
+                {
+                    axis2_counter_increment(counter, env);
+                }
+            }
+            else
+            {
+                axis2_counter_create(env);
+                if(counter)
+                {
+                    axis2_counter_increment(counter, env);
+                    param = axutil_param_create(env, AXIS2_OPERATION_FAULT_COUNTER, counter);
+                    if(param)
+                    {
+                        axis2_op_add_param(op, env, param);
+                    }
+                }
+            }
+        }
+    }
+    
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[savan] End:axis2_statistics_admin_fault_handler_invoke");
+    
+    return status;
+}
+
