@@ -1,6 +1,6 @@
 logsdir=$(prefix)/logs
 confdir=$(prefix)
-SUBDIRS = util authentication keystore_admin logging_admin module_admin resource_admin server_admin service_admin statistics_admin transport_admin usermanager
+SUBDIRS = util authentication keystore_admin logging_admin module_admin resource_admin server_admin service_admin statistics_admin transport_admin usermanager operation_admin
 data_DATA= README INSTALL CREDITS COPYING NEWS
 logs_DATA=
 EXTRA_DIST = build.sh autogen.sh CREDITS LICENSE build.sh adminservices.mk docs
