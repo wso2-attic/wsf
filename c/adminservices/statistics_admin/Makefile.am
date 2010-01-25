@@ -1,3 +1,4 @@
+SUBDIRS = module
 noinst_LTLIBRARIES = libstatistics_admin.la
 
 libstatistics_admin_la_SOURCES = axis2_skel_StatisticsAdmin.c \
@@ -41,7 +42,7 @@ libstatistics_admin_la_SOURCES = axis2_skel_StatisticsAdmin.c \
 								 codegen/adb_getServiceRequestCountResponse.c \
 								 codegen/axis2_svc_skel_StatisticsAdmin.c \
 								 codegen/adb_getMinServiceResponseTimeResponse.c \
-								 codegen/adb_getServiceResponseCount.c 
+								 codegen/adb_getServiceResponseCount.c
 libstatistics_admin_la_LIBADD = 
 
 INCLUDES = -I$(top_builddir)/include \
