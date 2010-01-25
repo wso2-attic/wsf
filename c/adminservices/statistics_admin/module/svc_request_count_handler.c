@@ -23,14 +23,14 @@
 #include "../axis2_statistics_admin_constants.h"
 
 axis2_status_t AXIS2_CALL
-axis2_statistics_admin_in_op_count_handler_invoke(
+axis2_statistics_admin_svc_request_count_handler_invoke(
         struct axis2_handler *handler, 
         const axutil_env_t *env,
         struct axis2_msg_ctx *msg_ctx);
 
 
 AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
-axis2_statistics_admin_in_op_count_handler_create(
+axis2_statistics_admin_svc_request_count_handler_create(
         const axutil_env_t *env, 
         axutil_qname_t *qname) 
 {
@@ -45,28 +45,28 @@ axis2_statistics_admin_in_op_count_handler_create(
     /* Handler init is handled by conf loading, so no need to do it here */
     
     /* Set the base struct's invoke op */
-	axis2_handler_set_invoke(handler, env, axis2_statistics_admin_in_op_count_handler_invoke);
+	axis2_handler_set_invoke(handler, env, axis2_statistics_admin_svc_request_count_handler_invoke);
 
     return handler;
 }
 
 axis2_status_t AXIS2_CALL
-axis2_statistics_admin_in_op_count_handler_invoke(struct axis2_handler *handler, 
+axis2_statistics_admin_svc_request_count_handler_invoke(struct axis2_handler *handler, 
                         const axutil_env_t *env,
                         struct axis2_msg_ctx *msg_ctx)
 {
     axis2_status_t status = AXIS2_SUCCESS;
     axis2_counter_t *counter = NULL;
     axutil_param_t *param = NULL;
-    axis2_op_t *op = NULL;
+    axis2_svc_t *svc = NULL;
     
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[adminservices] Start:axis2_statistics_admin_in_op_count_handler_invoke");
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[adminservices] Start:axis2_statistics_admin_svc_request_count_handler_invoke");
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
 
-    op = axis2_msg_ctx_get_op(msg_ctx, env);
-    if(op)
+    svc = axis2_msg_ctx_get_svc(msg_ctx, env);
+    if(svc)
     {
-        param = axis2_op_get_param(op, env, AXIS2_IN_OPERATION_COUNTER);
+        param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_REQUEST_COUNTER);
         if(param)
         {
             counter = axutil_param_get_value(param, env);
@@ -81,16 +81,16 @@ axis2_statistics_admin_in_op_count_handler_invoke(struct axis2_handler *handler,
             if(counter)
             {
                 axis2_counter_increment(counter, env);
-                param = axutil_param_create(env, AXIS2_IN_OPERATION_COUNTER, counter);
+                param = axutil_param_create(env, AXIS2_SERVICE_REQUEST_COUNTER, counter);
                 if(param)
                 {
-                    axis2_op_add_param(op, env, param);
+                    axis2_svc_add_param(svc, env, param);
                 }
             }
         }
     }
     
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[adminservices] End:axis2_statistics_admin_in_op_count_handler_invoke");
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[adminservices] End:axis2_statistics_admin_svc_request_count_handler_invoke");
     
     return status;
 }

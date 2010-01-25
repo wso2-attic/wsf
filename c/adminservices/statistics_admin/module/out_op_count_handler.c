@@ -81,7 +81,7 @@ axis2_statistics_admin_out_op_count_handler_invoke(struct axis2_handler *handler
             if(counter)
             {
                 axis2_counter_increment(counter, env);
-                param = axutil_param_create(env, AXIS2_LOG_TRACE, counter);
+                param = axutil_param_create(env, AXIS2_OUT_OPERATION_COUNTER, counter);
                 if(param)
                 {
                     axis2_op_add_param(op, env, param);
