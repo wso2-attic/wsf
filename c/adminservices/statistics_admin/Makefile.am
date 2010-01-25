@@ -2,6 +2,7 @@ SUBDIRS = module
 noinst_LTLIBRARIES = libstatistics_admin.la
 
 libstatistics_admin_la_SOURCES = axis2_skel_StatisticsAdmin.c \
+								 counter.c \
 								 codegen/adb_getAvgOperationResponseTime.c \
 								 codegen/adb_getMinSystemResponseTimeResponse.c \
 								 codegen/adb_getServiceResponseCountResponse.c \
