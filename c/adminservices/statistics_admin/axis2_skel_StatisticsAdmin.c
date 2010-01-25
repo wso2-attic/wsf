@@ -27,8 +27,36 @@
         adb_getMaxServiceResponseTimeResponse_t* axis2_skel_StatisticsAdmin_getMaxServiceResponseTime(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
                                               adb_getMaxServiceResponseTime_t* _getMaxServiceResponseTime )
         {
-          /* TODO fill this with the necessary business logic */
-          return (adb_getMaxServiceResponseTimeResponse_t*)NULL;
+            adb_getMaxServiceResponseTimeResponse_t *max_svc_res_time_res = NULL;
+            axis2_conf_ctx_t *conf_ctx = NULL;
+            axis2_conf_t *conf = NULL;
+            axis2_svc_t *svc = NULL;
+            axis2_char_t *svc_name = NULL;
+
+            if(!_getMaxServiceResponseTime)
+            {
+                return NULL;
+            }
+            conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+            conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+            svc_name = adb_getMaxServiceResponseTime_get_serviceName(_getMaxServiceResponseTime, env);
+            svc = axis2_conf_get_svc(conf, env, svc_name);
+            if(svc)
+            {
+                axutil_param_t *param = NULL;
+                param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_RESPONSE_TIME_PROCESSOR);
+                if(param)
+                {
+                    axis2_response_time_processor_t *res_time_proc = NULL;
+                    res_time_proc = axutil_param_get_value(param, env);
+                    if(res_time_proc)
+                    {
+                        max_svc_res_time_res = adb_getMaxServiceResponseTimeResponse_create_with_values(env, res_time_proc->max_response_time);
+                    }
+                }
+            }
+ 
+            return (adb_getMaxServiceResponseTimeResponse_t*) max_svc_res_time_res;
         }
      
 
@@ -243,8 +271,36 @@
         adb_getMinServiceResponseTimeResponse_t* axis2_skel_StatisticsAdmin_getMinServiceResponseTime(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
                                               adb_getMinServiceResponseTime_t* _getMinServiceResponseTime )
         {
-          /* TODO fill this with the necessary business logic */
-          return (adb_getMinServiceResponseTimeResponse_t*)NULL;
+            adb_getMinServiceResponseTimeResponse_t *min_svc_res_time_res = NULL;
+            axis2_conf_ctx_t *conf_ctx = NULL;
+            axis2_conf_t *conf = NULL;
+            axis2_svc_t *svc = NULL;
+            axis2_char_t *svc_name = NULL;
+
+            if(!_getMinServiceResponseTime)
+            {
+                return NULL;
+            }
+            conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+            conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+            svc_name = adb_getMinServiceResponseTime_get_serviceName(_getMinServiceResponseTime, env);
+            svc = axis2_conf_get_svc(conf, env, svc_name);
+            if(svc)
+            {
+                axutil_param_t *param = NULL;
+                param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_RESPONSE_TIME_PROCESSOR);
+                if(param)
+                {
+                    axis2_response_time_processor_t *res_time_proc = NULL;
+                    res_time_proc = axutil_param_get_value(param, env);
+                    if(res_time_proc)
+                    {
+                        min_svc_res_time_res = adb_getMinServiceResponseTimeResponse_create_with_values(env, res_time_proc->min_response_time);
+                    }
+                }
+            }
+ 
+            return (adb_getMinServiceResponseTimeResponse_t*) min_svc_res_time_res;
         }
      
 
@@ -281,11 +337,17 @@
             adb_ServiceStatistics_t *svc_stat = NULL;
             axis2_char_t *svc_name = NULL;
             double avg_res_time = 0;
+            long max_res_time = 0;
+            long min_res_time = 0;
             int res_count = 0;
             int req_count = 0;
             int fault_count = 0;
             adb_getAvgServiceResponseTime_t *get_avg_svc_res_time = NULL;
             adb_getAvgServiceResponseTimeResponse_t *get_avg_svc_res_time_res = NULL;
+            adb_getMaxServiceResponseTime_t *get_max_svc_res_time = NULL;
+            adb_getMaxServiceResponseTimeResponse_t *get_max_svc_res_time_res = NULL;
+            adb_getMinServiceResponseTime_t *get_min_svc_res_time = NULL;
+            adb_getMinServiceResponseTimeResponse_t *get_min_svc_res_time_res = NULL;
             adb_getServiceResponseCount_t *get_svc_res_count = NULL;
             adb_getServiceResponseCountResponse_t *get_svc_res_count_res = NULL;
             adb_getServiceRequestCount_t *get_svc_req_count = NULL;
@@ -315,6 +377,30 @@
                     adb_getAvgServiceResponseTimeResponse_free(get_avg_svc_res_time_res, env);
                 }
                 adb_getAvgServiceResponseTime_free(get_avg_svc_res_time, env);
+            }
+            
+            if(get_max_svc_res_time)
+            {
+                get_max_svc_res_time_res = axis2_skel_StatisticsAdmin_getMaxServiceResponseTime(env, msg_ctx, get_max_svc_res_time);
+                if(get_max_svc_res_time_res)
+                {
+                    max_res_time = adb_getMaxServiceResponseTimeResponse_get_return(get_max_svc_res_time_res, env);
+                    adb_ServiceStatistics_set_maxResponseTime(svc_stat, env, max_res_time);
+                    adb_getMaxServiceResponseTimeResponse_free(get_max_svc_res_time_res, env);
+                }
+                adb_getMaxServiceResponseTime_free(get_max_svc_res_time, env);
+            }
+            
+            if(get_min_svc_res_time)
+            {
+                get_min_svc_res_time_res = axis2_skel_StatisticsAdmin_getMinServiceResponseTime(env, msg_ctx, get_min_svc_res_time);
+                if(get_min_svc_res_time_res)
+                {
+                    min_res_time = adb_getMinServiceResponseTimeResponse_get_return(get_min_svc_res_time_res, env);
+                    adb_ServiceStatistics_set_minResponseTime(svc_stat, env, min_res_time);
+                    adb_getMinServiceResponseTimeResponse_free(get_min_svc_res_time_res, env);
+                }
+                adb_getMinServiceResponseTime_free(get_min_svc_res_time, env);
             }
 
             get_svc_res_count = adb_getServiceResponseCount_create_with_values(env, svc_name);
@@ -407,7 +493,6 @@
             if(svc)
             {
                 axutil_param_t *param = NULL;
-                double avg_res_time = 0.0;
                 param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_RESPONSE_TIME_PROCESSOR);
                 if(param)
                 {
