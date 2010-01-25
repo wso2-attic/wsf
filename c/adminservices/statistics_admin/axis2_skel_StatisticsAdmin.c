@@ -68,12 +68,12 @@
                     counter = axutil_param_get_value(param, env);
                     if(counter)
                     {
-                        svc_req_count_res = adb_getServiceRequestCountResponse_create_with_values(env, counter->count);
+                        get_svc_req_count_res = adb_getServiceRequestCountResponse_create_with_values(env, counter->count);
                     }
                 }
             }
 
-            return (adb_getServiceRequestCountResponse_t*) svc_req_count_res;
+            return (adb_getServiceRequestCountResponse_t*) get_svc_req_count_res;
         }
      
 
