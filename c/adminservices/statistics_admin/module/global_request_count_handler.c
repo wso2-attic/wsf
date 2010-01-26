@@ -22,20 +22,15 @@
 #include "../axis2_counter.h"
 #include "../axis2_statistics_admin_constants.h"
 
-static axis2_status_t AXIS2_CALL
-axis2_statistics_admin_calculate_response_times( 
-                        const axutil_env_t *env,
-                        struct axis2_msg_ctx *msg_ctx);
-
 axis2_status_t AXIS2_CALL
-axis2_statistics_admin_response_time_handler_invoke(
+axis2_statistics_admin_global_request_count_handler_invoke(
         struct axis2_handler *handler, 
         const axutil_env_t *env,
         struct axis2_msg_ctx *msg_ctx);
 
 
 AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
-axis2_statistics_admin_response_time_handler_create(
+axis2_statistics_admin_global_request_count_handler_create(
         const axutil_env_t *env, 
         axutil_qname_t *qname) 
 {
@@ -50,57 +45,35 @@ axis2_statistics_admin_response_time_handler_create(
     /* Handler init is handled by conf loading, so no need to do it here */
     
     /* Set the base struct's invoke op */
-	axis2_handler_set_invoke(handler, env, axis2_statistics_admin_response_time_handler_invoke);
+	axis2_handler_set_invoke(handler, env, axis2_statistics_admin_global_request_count_handler_invoke);
 
     return handler;
 }
 
 axis2_status_t AXIS2_CALL
-axis2_statistics_admin_response_time_handler_invoke(struct axis2_handler *handler, 
+axis2_statistics_admin_global_request_count_handler_invoke(struct axis2_handler *handler, 
                         const axutil_env_t *env,
                         struct axis2_msg_ctx *msg_ctx)
 {
     axis2_status_t status = AXIS2_SUCCESS;
     axis2_svc_t *svc = NULL;
     
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[adminservices] Start:axis2_statistics_admin_response_time_handler_invoke");
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[adminservices] Start:axis2_statistics_admin_global_request_count_handler_invoke");
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
 
     svc = axis2_msg_ctx_get_svc(msg_ctx, env);
     if(svc)
     {
-        status = axis2_statistics_admin_calculate_response_times(env, msg_ctx);
-    }
+        long *time_now = NULL;
+        axutil_property_t *property = NULL;
         
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[adminservices] End:axis2_statistics_admin_response_time_handler_invoke");
+        *time_now = sandesha2_utils_get_current_time_in_millis(env);
+        property = axutil_property_create_with_args(env, 0, 0, 0, time_now);
+        axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_REQUEST_RECEIVED_TIME, property);
+    }
+    
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[adminservices] End:axis2_statistics_admin_global_request_count_handler_invoke");
     
     return status;
-}
-
-
-static axis2_status_t AXIS2_CALL
-axis2_statistics_admin_calculate_response_times( 
-                        const axutil_env_t *env,
-                        struct axis2_msg_ctx *msg_ctx)
-{
-    axis2_status_t status = AXIS2_SUCCESS;
-    axis2_counter_t *counter = NULL;
-    axutil_param_t *param = NULL;
-    axis2_op_ctx_t *op_ctx = NULL;
-
-    op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-    if(op_ctx)
-    {
-        axis2_msg_ctx_t *in_msg_ctx = NULL;
-        in_msg_ctx =  axis2_op_ctx_get_msg_ctx(op_ctx, env, AXIS2_WSDL_MESSAGE_LABEL_IN);
-        if(in_msg_ctx)
-        {
-            axutil_property_t *property = NULL;
-            long *received_time = NULL;
-
-            property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_REQUEST_RECEIVED_TIME);
-            received_time = axutil_property_get_value(property, env);
-        }
-    }
 }
 

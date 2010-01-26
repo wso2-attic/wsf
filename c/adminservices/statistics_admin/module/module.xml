@@ -3,6 +3,9 @@
         This module handles server statistics
     </Description>
     <inflow>
+        <handler name="global_request_count_handler" class="statistics">
+            <order phase="Transport"/>
+        </handler>
         <handler name="svc_request_count_handler" class="statistics">
             <order phase="Dispatch"/>
         </handler>
