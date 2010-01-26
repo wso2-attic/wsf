@@ -1,0 +1,29 @@
+<module name="statistics" class="statistics">
+    <Description>
+        This module handles server statistics
+    </Description>
+    <inflow>
+        <handler name="svc_request_count_handler" class="statistics">
+            <order phase="Dispatch"/>
+        </handler>
+        <handler name="in_op_count_handler" class="statistics">
+            <order phase="OpPhase"/>
+        </handler>
+        <handler name="response_time_handler" class="statistics">
+            <order phase="Transport"/>
+        </handler>
+    </inflow>
+    <outflow>        
+        <handler name="out_op_count_handler" class="statistics">
+            <order phase="OpPhase"/>
+        </handler>   
+        <handler name="response_time_handler" class="statistics">
+            <order phase="MessageOut"/>
+        </handler>   
+    </outflow>
+    <OUTfaultflow>        
+        <handler name="fault_count_handler" class="statistics">
+            <order phase="MessageOut"/>
+        </handler>   
+    </OUTfaultflow>
+</module>
