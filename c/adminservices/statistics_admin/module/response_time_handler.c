@@ -102,5 +102,6 @@ axis2_statistics_admin_calculate_response_times(
             received_time = axutil_property_get_value(property, env);
         }
     }
+    return status;
 }
 
