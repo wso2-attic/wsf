@@ -59,10 +59,17 @@ axis2_statistics_admin_out_op_count_handler_invoke(struct axis2_handler *handler
     axis2_counter_t *counter = NULL;
     axutil_param_t *param = NULL;
     axis2_op_t *op = NULL;
+    axis2_svc_t *svc = NULL;
+    const axis2_char_t *svc_name = NULL;
     
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[adminservices] Start:axis2_statistics_admin_out_op_count_handler_invoke");
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
 
+    svc = axis2_msg_ctx_get_svc(msg_ctx, env);
+    if(svc)
+    {
+        svc_name = axis2_svc_get_name(svc, env);
+    }
     op = axis2_msg_ctx_get_op(msg_ctx, env);
     if(op)
     {
@@ -72,15 +79,18 @@ axis2_statistics_admin_out_op_count_handler_invoke(struct axis2_handler *handler
             counter = axutil_param_get_value(param, env);
             if(counter)
             {
-                axis2_counter_increment(counter, env);
+                axis2_counter_increment(counter, env, msg_ctx);
             }
         }
         else
         {
-            axis2_counter_create(env);
+            axis2_char_t *op_name = NULL;
+
+            op_name = axutil_qname_get_localpart(axis2_op_get_qname(op, env), env);
+            axis2_counter_create(env, svc_name, op_name);
             if(counter)
             {
-                axis2_counter_increment(counter, env);
+                axis2_counter_increment(counter, env, msg_ctx);
                 param = axutil_param_create(env, AXIS2_OUT_OPERATION_COUNTER, counter);
                 if(param)
                 {

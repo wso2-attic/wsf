@@ -11,7 +11,7 @@
      #include "codegen/axis2_skel_StatisticsAdmin.h"
      #include "axis2_statistics_admin_constants.h"
      #include "module/axis2_response_time_processor.h"
-     #include "module/axis2_counter.h"
+     #include "axis2_counter.h"
 
      
 
@@ -96,7 +96,7 @@
                     counter = axutil_param_get_value(param, env);
                     if(counter)
                     {
-                        get_svc_req_count_res = adb_getServiceRequestCountResponse_create_with_values(env, counter->count);
+                        get_svc_req_count_res = adb_getServiceRequestCountResponse_create_with_values(env, axis2_counter_get_count(counter, env, msg_ctx));
                     }
                 }
             }
@@ -163,7 +163,8 @@
                         counter = axutil_param_get_value(param, env);
                         if(counter)
                         {
-                            get_op_res_count_res = adb_getOperationResponseCountResponse_create_with_values(env, counter->count);
+                            get_op_res_count_res = adb_getOperationResponseCountResponse_create_with_values(env, 
+                                    axis2_counter_get_count(counter, env, msg_ctx));
                         }
                     }
                 }
@@ -435,7 +436,7 @@
             if(param)
             {
                 counter = axutil_param_get_value(param, env);
-                svc_fault_count_res = adb_getServiceFaultCountResponse_create_with_values(env, counter->count);
+                svc_fault_count_res = adb_getServiceFaultCountResponse_create_with_values(env, axis2_counter_get_count(counter, env, msg_ctx));
             }
 
             return (adb_getServiceFaultCountResponse_t*) svc_fault_count_res;
@@ -708,7 +709,8 @@
                         counter = axutil_param_get_value(param, env);
                         if(counter)
                         {
-                            get_op_fault_count_res = adb_getOperationFaultCountResponse_create_with_values(env, counter->count);
+                            get_op_fault_count_res = adb_getOperationFaultCountResponse_create_with_values(env, 
+                                    axis2_counter_get_count(counter, env, msg_ctx));
                         }
                     }
                 }
@@ -812,7 +814,7 @@
                     {
                         axis2_counter_t *counter = NULL;
                         counter = axutil_param_get_value(param, env);
-                        count += counter->count;
+                        count += axis2_counter_get_count(counter, env, msg_ctx);
                     }
                 }
             }
@@ -960,7 +962,8 @@
                         counter = axutil_param_get_value(param, env);
                         if(counter)
                         {
-                            get_op_req_count_res = adb_getOperationRequestCountResponse_create_with_values(env, counter->count);
+                            get_op_req_count_res = adb_getOperationRequestCountResponse_create_with_values(env, 
+                                    axis2_counter_get_count(counter, env, msg_ctx));
                         }
                     }
                 }

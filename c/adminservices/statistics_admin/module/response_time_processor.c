@@ -38,7 +38,7 @@ axis2_response_time_processor_create(
 	return res_time_proc;
 }
 
-axis2_status_t AXIS2_CALL 
+void AXIS2_CALL 
 axis2_response_time_processor_free(
     axis2_response_time_processor_t *res_time_proc, 
     const axutil_env_t *env)

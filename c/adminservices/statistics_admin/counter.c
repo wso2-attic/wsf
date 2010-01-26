@@ -15,10 +15,21 @@
  */
 
 #include <axis2_counter.h>
+#include <axutil_string.h>
+#include <axis2_msg_ctx.h>
+
+struct axis2_counter_t
+{
+    int count;
+    axis2_char_t *svc_name;
+    axis2_char_t *op_name;
+};
 
 AXIS2_EXTERN axis2_counter_t* AXIS2_CALL
 axis2_counter_create(
-    const axutil_env_t *env)
+    const axutil_env_t *env,
+    const axis2_char_t *svc_name,
+    const axis2_char_t *op_name)
 {
     axis2_counter_t *counter = NULL;
     
@@ -31,26 +42,23 @@ axis2_counter_create(
         return NULL;
 	}
     counter->count = 0;
-    counter->mutex = axutil_thread_mutex_create(env->allocator, AXIS2_THREAD_MUTEX_DEFAULT);
-    if(!counter->mutex)
+    if(svc_name)
     {
-        axis2_counter_free(counter, env);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Counter mutex creation failed");
-        return NULL;
+        counter->svc_name = axutil_strdup(env, svc_name);
+    }
+    if(op_name)
+    {
+        counter->op_name = axutil_strdup(env, op_name);
     }
 
 	return counter;
 }
 
-axis2_status_t AXIS2_CALL 
+void AXIS2_CALL 
 axis2_counter_free(
     axis2_counter_t *counter, 
     const axutil_env_t *env)
 {
-    if(counter->mutex)
-    {
-        axutil_thread_mutex_destroy(counter->mutex);
-    }
     if(counter)
     {
         AXIS2_FREE(env->allocator, counter);
@@ -60,10 +68,31 @@ axis2_counter_free(
 void AXIS2_CALL
 axis2_counter_increment (
     axis2_counter_t *counter,
-    const axutil_env_t *env)
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx)
 {
-    axutil_thread_mutex_lock(counter->mutex);
+    void *stat_count_fn_arg = NULL;
+    axutil_property_t *property = NULL;
+    
+    property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_STATISTICS_COUNT_ARG);
+    stat_count_fn_arg = axutil_property_get_value(property, env);
+    counter->count = env->get_statistics_count_fn(stat_count_fn_arg, counter->op_name, counter->svc_name);
     counter->count++;
-    axutil_thread_mutex_unlock(counter->mutex);
+    env->set_statistics_count_fn(stat_count_fn_arg, counter->op_name, counter->svc_name, counter->count);
 }
  
+int AXIS2_CALL
+axis2_counter_get_count (
+    axis2_counter_t *counter,
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx)
+{
+    void *stat_count_fn_arg = NULL;
+    axutil_property_t *property = NULL;
+    
+    property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_STATISTICS_COUNT_ARG);
+    stat_count_fn_arg = axutil_property_get_value(property, env);
+    counter->count = env->get_statistics_count_fn(stat_count_fn_arg, counter->op_name, counter->svc_name);
+    return counter->count;
+}
+

@@ -66,22 +66,25 @@ axis2_statistics_admin_fault_count_handler_invoke(struct axis2_handler *handler,
     svc = axis2_msg_ctx_get_svc(msg_ctx, env);
     if(svc)
     {
+        const axis2_char_t *svc_name = NULL;
         axis2_op_t *op = NULL;
+
+        svc_name = axis2_svc_get_name(svc, env);
         param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_FAULT_COUNTER);
         if(param)
         {
             counter = axutil_param_get_value(param, env);
             if(counter)
             {
-                axis2_counter_increment(counter, env);
+                axis2_counter_increment(counter, env, msg_ctx);
             }
         }
         else
         {
-            counter = axis2_counter_create(env);
+            counter = axis2_counter_create(env, svc_name, NULL);
             if(counter)
             {
-                axis2_counter_increment(counter, env);
+                axis2_counter_increment(counter, env, msg_ctx);
                 param = axutil_param_create(env, AXIS2_SERVICE_FAULT_COUNTER, counter);
                 if(param)
                 {
@@ -98,15 +101,17 @@ axis2_statistics_admin_fault_count_handler_invoke(struct axis2_handler *handler,
                 counter = axutil_param_get_value(param, env);
                 if(counter)
                 {
-                    axis2_counter_increment(counter, env);
+                    axis2_counter_increment(counter, env, msg_ctx);
                 }
             }
             else
             {
-                axis2_counter_create(env);
+                axis2_char_t *op_name = NULL;
+                op_name = axutil_qname_get_localpart(axis2_op_get_qname(op, env), env);
+                axis2_counter_create(env, svc_name, op_name);
                 if(counter)
                 {
-                    axis2_counter_increment(counter, env);
+                    axis2_counter_increment(counter, env, msg_ctx);
                     param = axutil_param_create(env, AXIS2_OPERATION_FAULT_COUNTER, counter);
                     if(param)
                     {

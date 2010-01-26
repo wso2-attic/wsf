@@ -39,18 +39,16 @@ extern "C"
  * @brief counter struct impl
  *	Counter Struct
  */
-typedef struct axis2_counter
-{
-    int count;
-    axutil_thread_mutex_t *mutex;
-} axis2_counter_t;
-
+typedef struct axis2_counter_t axis2_counter_t;
+struct axis2_msg_ctx;
 
 AXIS2_EXTERN axis2_counter_t* AXIS2_CALL
 axis2_counter_create(
-    const axutil_env_t *env);
+    const axutil_env_t *env,
+    const axis2_char_t *svc_name,
+    const axis2_char_t *op_name);
 
-axis2_status_t AXIS2_CALL 
+void AXIS2_CALL 
 axis2_counter_free(
     axis2_counter_t *counter, 
     const axutil_env_t *env);
@@ -58,7 +56,14 @@ axis2_counter_free(
 void AXIS2_CALL
 axis2_counter_increment (
     axis2_counter_t *counter,
-    const axutil_env_t *env);
+    const axutil_env_t *env,
+    struct axis2_msg_ctx *msg_ctx);
+
+int AXIS2_CALL
+axis2_counter_get_count (
+    axis2_counter_t *counter,
+    const axutil_env_t *env,
+    struct axis2_msg_ctx *msg_ctx);
  
 /** @} */
 #ifdef __cplusplus

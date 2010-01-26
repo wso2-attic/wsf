@@ -72,15 +72,18 @@ axis2_statistics_admin_svc_request_count_handler_invoke(struct axis2_handler *ha
             counter = axutil_param_get_value(param, env);
             if(counter)
             {
-                axis2_counter_increment(counter, env);
+                axis2_counter_increment(counter, env, msg_ctx);
             }
         }
         else
         {
-            axis2_counter_create(env);
+            const axis2_char_t *svc_name = NULL;
+
+            svc_name = axis2_svc_get_name(svc, env);
+            axis2_counter_create(env, svc_name, NULL);
             if(counter)
             {
-                axis2_counter_increment(counter, env);
+                axis2_counter_increment(counter, env, msg_ctx);
                 param = axutil_param_create(env, AXIS2_SERVICE_REQUEST_COUNTER, counter);
                 if(param)
                 {
