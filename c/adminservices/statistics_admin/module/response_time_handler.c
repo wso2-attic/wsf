@@ -21,6 +21,7 @@
 #include <axis2_op.h>
 #include "../axis2_counter.h"
 #include "../axis2_statistics_admin_constants.h"
+#include "axis2_response_time_processor.h"
 
 static axis2_status_t AXIS2_CALL
 axis2_statistics_admin_calculate_response_times( 
@@ -84,8 +85,6 @@ axis2_statistics_admin_calculate_response_times(
                         struct axis2_msg_ctx *msg_ctx)
 {
     axis2_status_t status = AXIS2_SUCCESS;
-    axis2_counter_t *counter = NULL;
-    axutil_param_t *param = NULL;
     axis2_op_ctx_t *op_ctx = NULL;
 
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
@@ -105,7 +104,7 @@ axis2_statistics_admin_calculate_response_times(
             property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_REQUEST_RECEIVED_TIME);
             received_time = axutil_property_get_value(property, env);
             current_time = sandesha2_utils_get_current_time_in_millis(env);
-            response_time = current_time - received_time;
+            response_time = current_time - *received_time;
             svc = axis2_msg_ctx_get_svc(msg_ctx, env);
             if(svc)
             {
@@ -118,14 +117,15 @@ axis2_statistics_admin_calculate_response_times(
                 src_param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_REQUEST_COUNTER);
                 if(src_param)
                 {
-                    src_count = axutil_param_get_value(src_param, env);
+                    counter = axutil_param_get_value(src_param, env);
+                    src_count = axis2_counter_get_count(counter, env, msg_ctx);
                 }
                 param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_RESPONSE_TIME_PROCESSOR);
                 if(param)
                 {
                     res_time_processor = axutil_param_get_value(param, env);
                     axis2_response_time_processor_add_response_time(res_time_processor, env, 
-                            response_time, src_count, msg_ctx);
+                            response_time, src_count);
                 }
                 else
                 {
@@ -133,7 +133,7 @@ axis2_statistics_admin_calculate_response_times(
                     if(res_time_processor)
                     {
                         axis2_response_time_processor_add_response_time(res_time_processor, env, 
-                            response_time, src_count, msg_ctx);
+                            response_time, src_count);
                         param = axutil_param_create(env, AXIS2_SERVICE_RESPONSE_TIME_PROCESSOR, 
                                 res_time_processor);
                         axis2_svc_add_param(svc, env, param);
@@ -152,14 +152,15 @@ axis2_statistics_admin_calculate_response_times(
                 op_req_counter_param = axis2_op_get_param(op, env, AXIS2_IN_OPERATION_COUNTER);
                 if(op_req_counter_param)
                 {
-                    op_req_count = axutil_param_get_value(op_req_counter_param, env);
+                    counter = axutil_param_get_value(op_req_counter_param, env);
+                    op_req_count = axis2_counter_get_count(counter, env, msg_ctx);
                 }
                 param = axis2_op_get_param(op, env, AXIS2_OPERATION_RESPONSE_TIME_PROCESSOR);
                 if(param)
                 {
                     res_time_processor = axutil_param_get_value(param, env);
                     axis2_response_time_processor_add_response_time(res_time_processor, env, 
-                            response_time, op_req_count, msg_ctx);
+                            response_time, op_req_count);
                 }
                 else
                 {
@@ -167,7 +168,7 @@ axis2_statistics_admin_calculate_response_times(
                     if(res_time_processor)
                     {
                         axis2_response_time_processor_add_response_time(res_time_processor, env, 
-                            response_time, op_req_count, msg_ctx);
+                            response_time, op_req_count);
                         param = axutil_param_create(env, AXIS2_OPERATION_RESPONSE_TIME_PROCESSOR, 
                                 res_time_processor);
                         axis2_op_add_param(op, env, param);
