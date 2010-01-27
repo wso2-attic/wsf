@@ -1,0 +1,12 @@
+<service name="statistics_svc">
+    <parameter name="ServiceClass" locked="xsd:false">statistics_svc</parameter>
+   <description>
+       This is a eventing data source which can be started and stopped remotely by making
+       soap calles to it's start and stop functions respectively.
+   </description>
+   <module ref="savan"/>
+   <operation name="send">
+            <messageReceiver class="savan_msgreceivers" />
+           <parameter name="wsamapping" >http://ws.apache.org/savan/samples/statistics_svc/send</parameter>
+   </operation>
+</service>
