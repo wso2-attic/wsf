@@ -162,6 +162,7 @@ AC_SUBST(SAMPLES)
 AM_CONDITIONAL(AXIS2_SSL_ENABLED, test x$ssl_enabled = xtrue)
 
 AC_CONFIG_FILES([Makefile \
+    util/Makefile \
     authentication/Makefile \
     keystore_admin/Makefile \
     logging_admin/Makefile \
