@@ -19,4 +19,4 @@ INCLUDES = -I$(top_builddir)/include \
 		   	@NEETHIINC@ \
 		   	@UTILINC@
 
-EXTRA_DIST=
+EXTRA_DIST=services.xml axis2_counter.h axis2_statistics_admin_constants.h

@@ -1,5 +1,8 @@
+prglibdir=$(prefix)/services/statistics_admin
+prglib_LTLIBRARIES = libstatistics_admin.la
+prglib_DATA= resources/services.xml
+noinst_HEADERS = axis2_counter.h axis2_statistics_admin_constants.h
 SUBDIRS = module
-noinst_LTLIBRARIES = libstatistics_admin.la
 
 libstatistics_admin_la_SOURCES = axis2_skel_StatisticsAdmin.c \
 								 counter.c \
@@ -53,4 +56,4 @@ INCLUDES = -I$(top_builddir)/include \
 		   	@NEETHIINC@ \
 		   	@UTILINC@
 
-EXTRA_DIST=
+EXTRA_DIST=resources/services.xml axis2_counter.h axis2_statistics_admin_constants.h codegen/adb_getAvgOperationResponseTime.h codegen/adb_getMinSystemResponseTimeResponse.h codegen/adb_getServiceResponseCountResponse.h codegen/adb_getAvgOperationResponseTimeResponse.h codegen/adb_getOperationFaultCount.h codegen/adb_getServiceStatistics.h codegen/adb_getAvgServiceResponseTime.h codegen/adb_getOperationFaultCountResponse.h codegen/adb_getServiceStatisticsResponse.h codegen/adb_getAvgServiceResponseTimeResponse.h codegen/adb_getOperationRequestCount.h codegen/adb_getSystemFaultCountResponse.h codegen/adb_getAvgSystemResponseTimeResponse.h codegen/adb_getOperationRequestCountResponse.h codegen/adb_getSystemRequestCountResponse.h codegen/adb_getMaxOperationResponseTime.h codegen/adb_getOperationResponseCount.h codegen/adb_getSystemResponseCountResponse.h codegen/adb_getMaxOperationResponseTimeResponse.h codegen/adb_getOperationResponseCountResponse.h codegen/adb_getSystemStatisticsResponse.h codegen/adb_getMaxServiceResponseTime.h codegen/adb_getOperationStatistics.h codegen/adb_Metric.h codegen/adb_getMaxServiceResponseTimeResponse.h codegen/adb_getOperationStatisticsResponse.h codegen/adb_OperationStatistics.h codegen/adb_getMaxSystemResponseTimeResponse.h codegen/adb_getServiceFaultCount.h codegen/adb_ServiceStatistics.h codegen/adb_getMinOperationResponseTime.h codegen/adb_getServiceFaultCountResponse.h codegen/adb_SystemStatistics.h codegen/adb_getMinOperationResponseTimeResponse.h codegen/adb_getServiceRequestCount.h codegen/axis2_extension_mapper.h codegen/adb_getMinServiceResponseTime.h codegen/adb_getServiceRequestCountResponse.h codegen/axis2_skel_StatisticsAdmin.h codegen/adb_getMinServiceResponseTimeResponse.h codegen/adb_getServiceResponseCount.h
