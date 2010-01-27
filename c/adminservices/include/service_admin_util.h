@@ -32,6 +32,11 @@ service_admin_util_get_wsdl_for_service(axutil_env_t *env,
 									   axis2_char_t *service_name, 
 									   axis2_conf_t *conf);
 
+AXIS2_EXTERN axis2_svc_t* AXIS2_CALL
+service_admin_util_get_service(axutil_env_t *env,
+							   axis2_msg_ctx_t *msg_ctx,
+							   axis2_char_t *service_name);
+
 #ifdef __cplusplus
 }
 #endif
