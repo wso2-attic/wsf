@@ -13,7 +13,7 @@ LIBS_PATH = /LIBPATH:$(WSFC_HOME)\lib
 
 AUTH_SERVICE=AuthenticationAdminService
 SERVER_ADMIN_SERVICE=ServerAdmin
-ENDPOINT_ADMIN_SERVICE=EndpointAdmin
+OP_ADMIN_SERVICE=OperationAdmin
 SERVICE_ADMIN_SERVICE=ServiceAdmin
 SERVICE_GRP_ADMIN_SERVICE=ServiceGroupAdmin
 
@@ -21,7 +21,8 @@ SERVICE_GRP_ADMIN_SERVICE=ServiceGroupAdmin
 AUTH_SVC_SRC=$(ADMIN_SVC_SRCDIR)\authentication
 SERVER_ADMIN_SRC=$(ADMIN_SVC_SRCDIR)\server_admin
 SERVICE_ADMIN_SRC=$(ADMIN_SVC_SRCDIR)\service_admin
-SERVICE_GRP_ADMIN_SRC=$(ADMIN_SVC_SRCDIR)\service_group_admin
+SERVICE_ADMIN_UTIL_SRC=$(ADMIN_SVC_SRCDIR)\util
+
 ##################### compiler options
 
 CC = cl.exe 
@@ -73,7 +74,8 @@ distdir:
 	if not exist $(ADMIN_SVC_DISTDIR)\$(SERVER_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(SERVER_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)
-	
+	if not exist $(ADMIN_SVC_DISTDIR)\$(OP_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(OP_ADMIN_SERVICE)
+
 
 clean: 
 	if exist $(ADMIN_SVC_DISTDIR) rmdir /S /Q $(ADMIN_SVC_DISTDIR)
@@ -85,6 +87,8 @@ intdirs:
 	if not exist $(ADMIN_SVC_INTDIR)\$(SERVER_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(SERVER_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_INTDIR)\$(SERVICE_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(SERVICE_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_INTDIR)\$(SERVICE_GRP_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)
+	if not exist $(ADMIN_SVC_INTDIR)\$(OP_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(OP_ADMIN_SERVICE)
+
 
 $(ADMIN_SVC_DISTDIR)\$(AUTH_SERVICE)\$(AUTH_SERVICE).dll: $(AUTH_SVC_SRC)\codegen\*.c $(AUTH_SVC_SRC)\*.c
 	$(CC) $(CFLAGS) /I $(AUTH_SVC_SRC) $(AUTH_SVC_SRC)\codegen\*.c \
@@ -148,18 +152,26 @@ keystore_admin: $(KEYSTORE_ADMIN_SRC)
 	copy $(ADMIN_SVC_SRCDIR)\keystore_admin\resources\services.xml $(KEYSTORE_ADMIN_DISTDIR)
 	
 #==============================================================================================
+OP_ADMIN_SRC=$(ADMIN_SVC_SRCDIR)\operation_admin
 
-endpoint_admin_service: $(ADMIN_SVC_SRCDIR)\endpoint_admin\codegen\*.c $(ADMIN_SVC_SRCDIR)\endpoint_admin\*.c	
-	$(CC) $(CFLAGS) $(ADMIN_SVC_SRCDIR)\endpoint_admin\codegen\*.c \
-		$(ADMIN_SVC_SRCDIR)\endpoint_admin\*.c /Fo$(ADMIN_SVC_INTDIR)\$(ENDPOINT_ADMIN_SERVICE)\ /c
-	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(ENDPOINT_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
-		/OUT:$(ADMIN_SVC_DISTDIR)\$(ENDPOINT_ADMIN_SERVICE)\$(ENDPOINT_ADMIN_SERVICE).dll
+$(ADMIN_SVC_DISTDIR)\$(OP_ADMIN_SERVICE)\$(OP_ADMIN_SERVICE).dll : 
+	$(CC) $(CFLAGS) $(OP_ADMIN_SRC)\codegen\*.c $(OP_ADMIN_SRC)\*.c $(SERVICE_ADMIN_UTIL_SRC)\*.c /Fo$(ADMIN_SVC_INTDIR)\$(OP_ADMIN_SERVICE)\ /c
+	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(OP_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
+		/OUT:$(ADMIN_SVC_DISTDIR)\$(OP_ADMIN_SERVICE)\$(OP_ADMIN_SERVICE).dll
 	-@$(_VC_MANIFEST_EMBED_DLL)
-	copy $(ADMIN_SVC_SRCDIR)\endpoint_admin\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(ENDPOINT_ADMIN_SERVICE)\
-	
-$(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE)\$(SERVICE_ADMIN_SERVICE).dll: $(SERVICE_ADMIN_SRC)\codegen\*.c $(SERVICE_ADMIN_SRC)\*.c	
+	copy $(OP_ADMIN_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(OP_ADMIN_SERVICE)\
+
+	copy $(OP_ADMIN_SRC)\resources\$(OP_ADMIN_SERVICE).wsdl $(ADMIN_SVC_DISTDIR)\$(OP_ADMIN_SERVICE)\
+
+op_admin_service: $(ADMIN_SVC_DISTDIR)\$(OP_ADMIN_SERVICE)\$(OP_ADMIN_SERVICE).dll
+
+#=====================================================================================================
+
+
+#=====================================================================================================
+$(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE)\$(SERVICE_ADMIN_SERVICE).dll: 	
 	$(CC) $(CFLAGS) $(SERVICE_ADMIN_SRC)\codegen\*.c \
-		$(SERVICE_ADMIN_SRC)\*.c /Fo$(ADMIN_SVC_INTDIR)\$(SERVICE_ADMIN_SERVICE)\ /c
+		$(SERVICE_ADMIN_SRC)\*.c $(SERVICE_ADMIN_UTIL_SRC)\*.c /Fo$(ADMIN_SVC_INTDIR)\$(SERVICE_ADMIN_SERVICE)\ /c
 	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(SERVICE_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
 		/OUT:$(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE)\$(SERVICE_ADMIN_SERVICE).dll
 	-@$(_VC_MANIFEST_EMBED_DLL)
@@ -167,8 +179,11 @@ $(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE)\$(SERVICE_ADMIN_SERVICE).dll: $(SE
 
 service_admin_service : $(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE)\$(SERVICE_ADMIN_SERVICE).dll
 
+#=====================================================================================================
+SERVICE_GRP_ADMIN_SRC=$(ADMIN_SVC_SRCDIR)\service_group_admin
+
 $(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\$(SERVICE_GRP_ADMIN_SERVICE).dll: 	
-	$(CC) $(CFLAGS) $(SERVICE_GRP_ADMIN_SRC)\codegen\*.c $(SERVICE_GRP_ADMIN_SRC)\*.c \
+	$(CC) $(CFLAGS) $(SERVICE_GRP_ADMIN_SRC)\codegen\*.c $(SERVICE_ADMIN_UTIL_SRC)\*.c $(SERVICE_GRP_ADMIN_SRC)\*.c \
 		/Fo$(ADMIN_SVC_INTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\ /c
 	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
 		/OUT:$(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\$(SERVICE_GRP_ADMIN_SERVICE).dll
@@ -195,8 +210,8 @@ registry_client: $(REGISTRY_CLIENT_SRC)
 	
 #==============================================================================================
 
-admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service
-#admin_svc_all: authentication_service server_admin_service proxy_admin endpoint_admin_service service_admin_service keystore_admin
+admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service
+#admin_svc_all: authentication_service server_admin_service proxy_admin op_admin_service service_admin_service keystore_admin
 
 install: distdir intdirs admin_svc_all
 
