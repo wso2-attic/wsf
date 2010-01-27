@@ -9,6 +9,7 @@
 */
 
 #include "service_admin_util.h"
+#include "axiom.h"
 
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL 
@@ -71,4 +72,62 @@ service_admin_util_get_service(
 		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI , "service not found");
 	}
 	return NULL;
+}
+
+
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+service_admin_util_get_epr_address(axutil_env_t *env,
+						   axis2_msg_ctx_t *msg_ctx,
+						   axis2_char_t *service_name)
+{
+	axis2_endpoint_ref_t *epr = NULL;
+	axis2_char_t *address = NULL;
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf = NULL;
+	axis2_transport_in_desc_t *transport_in = NULL;
+
+	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+	
+	transport_in = axis2_conf_get_transport_in(conf, env, AXIS2_TRANSPORT_ENUM_HTTP);
+
+	if(transport_in)
+	{
+		axis2_transport_receiver_t *receiver = NULL;
+		receiver = axis2_transport_in_desc_get_recv(transport_in, env);
+		if(!receiver)
+		{
+			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Transport Receiver Not found ");
+			return NULL;
+		}
+		epr = axis2_transport_receiver_get_epr_for_service(receiver, env, service_name);
+		if(!epr)
+		{
+			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Endpoint reference null");
+			return NULL;
+		}
+		address = (axis2_char_t*)axis2_endpoint_ref_get_address(epr,env);
+	}
+	return address;
+}
+
+AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+service_admin_util_serialize_param(axutil_env_t *env,
+								   axutil_param_t *param)
+{
+	axis2_char_t *name = NULL, *value = NULL;
+	axiom_node_t *param_node = NULL;
+	axiom_element_t *param_ele = NULL;
+	axiom_attribute_t *attri = NULL;
+
+
+	name = axutil_param_get_name(param, env);
+	value = axutil_param_get_value(param, env);
+
+	param_ele = axiom_element_create(env, NULL, "parameter", NULL, &param_node);
+	
+	attri = axiom_attribute_create(env, "name", name, NULL);
+	axiom_element_add_attribute(param_ele, env, attri, param_node);
+	axiom_element_set_text(param_ele, env, value, param_node);
+	return param_node;
 }
