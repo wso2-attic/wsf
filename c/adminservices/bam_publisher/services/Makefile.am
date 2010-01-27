@@ -7,8 +7,14 @@ SUBDIRS =
 
 libstatistics_svc_la_SOURCES = statistics_svc.c statistics_svc_skeleton.c
 
-libstatistics_svc_la_LIBADD  = -L$(AXIS2C_HOME)/lib -lsavan_client
+libstatistics_svc_la_LIBADD  = 
 
-INCLUDES =  @AXIS2INC@ @SAVANINC@
+INCLUDES = -I$(top_builddir)/include \
+			-I. \
+			@AXIS2INC@ \
+			@SAVANINC@ \
+		   	@AXIOMINC@ \
+		   	@NEETHIINC@ \
+		   	@UTILINC@
 
 EXTRA_DIST=services.xml statistics_svc.h

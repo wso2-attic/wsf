@@ -15,7 +15,6 @@
  */
 #include <axis2_module.h>
 #include <axis2_conf_ctx.h>
-#include <bam_publisher.h>
 
 /*#include <sqlite3.h>*/
 
@@ -108,11 +107,11 @@ bam_publisher_fill_handler_create_func_map(axis2_module_t *module,
         return AXIS2_FAILURE;
     }
     /* Remove the hard coded strings. Instead use macros */
-    axutil_hash_set(module->handler_create_func_map, BAM_PUBLISHER_SVC_STAT_HANDLER, 
+    /*axutil_hash_set(module->handler_create_func_map, BAM_PUBLISHER_SVC_STAT_HANDLER, 
         AXIS2_HASH_KEY_STRING, bam_publisher_svc_stat_handler_create);
 
     axutil_hash_set(module->handler_create_func_map, BAM_PUBLISHER_OP_STAT_HANDLER, 
-        AXIS2_HASH_KEY_STRING, bam_publisher_op_stat_handler_create);
+        AXIS2_HASH_KEY_STRING, bam_publisher_op_stat_handler_create);*/
     
     return AXIS2_SUCCESS;
 }

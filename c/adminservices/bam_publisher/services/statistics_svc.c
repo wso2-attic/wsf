@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-#include <axiom_xml_writer.h>
-#include <axiom_element.h>
 #include <stdio.h>
-
 #include "statistics_svc.h"
 

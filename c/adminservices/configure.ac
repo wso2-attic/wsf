@@ -132,7 +132,7 @@ AC_ARG_WITH(axis2,
         axis2inc="-I$withval"
     dnl else find the axis2inc include dir in $(AXIS2C_HOME)/include
     elif test -d '$(AXIS2C_HOME)/include'; then
-        axis2inc="-I$(AXIS2C_HOME)/include/axis2-1.1"
+        axis2inc="-I$(AXIS2C_HOME)/include/axis2-1.6.0"
     else
         AC_MSG_ERROR(could not find axis2inc. stop)
     fi
@@ -147,7 +147,9 @@ AXIS2INC=$axis2inc
 AXIOMINC=$axis2inc/../axiom/include
 UTILINC=$axis2inc/../util/include
 NEETHIINC=$axis2inc/../neethi/include
+SAVANINC=$axis2inc/../../savanc/include
 
+AC_SUBST(SAVANINC)
 AC_SUBST(AXIS2INC)
 AC_SUBST(AXIOMINC)
 AC_SUBST(UTILINC)
