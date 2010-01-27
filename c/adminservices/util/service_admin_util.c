@@ -50,3 +50,25 @@ service_admin_util_get_wsdl_for_service(axutil_env_t *env,
 	}
 	return NULL;
 }
+
+AXIS2_EXTERN axis2_svc_t* AXIS2_CALL
+service_admin_util_get_service(
+	axutil_env_t *env,
+	axis2_msg_ctx_t *msg_ctx,
+	axis2_char_t *service_name)
+{
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf = NULL;
+	axis2_svc_t *service = NULL;
+	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+	service = axis2_conf_get_svc(conf, env, service_name);
+	if(service)
+	{
+		return service;
+	}else
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI , "service not found");
+	}
+	return NULL;
+}
