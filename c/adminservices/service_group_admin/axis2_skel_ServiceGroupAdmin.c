@@ -11,6 +11,7 @@
 #include "codegen/axis2_skel_ServiceGroupAdmin.h"
 #include "service_admin_constants.h"
 #include "axis2_transport_receiver.h"
+#include "service_admin_util.h"
 
 
 
@@ -22,13 +23,6 @@
 *
 * @return adb_listServiceGroupResponse_t*
 */
-
-static axis2_char_t* 
-axis2_skel_ServiceGroupAdmin_get_wsdl(axutil_env_t *env, 
-									  axis2_char_t *service_name, 
-									  axis2_conf_t *conf);
-
-
 
 adb_listServiceGroupResponse_t* 
 axis2_skel_ServiceGroupAdmin_listServiceGroup(const axutil_env_t *env , 
@@ -58,8 +52,7 @@ axis2_skel_ServiceGroupAdmin_listServiceGroup(const axutil_env_t *env ,
 	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
 	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
 	svc_grp = axis2_conf_get_svc_grp(conf, env, svc_grp_name);
-/*	svc_grp = axis2_msg_ctx_get_svc_grp(msg_ctx, env); */
-	
+
 	if(!svc_grp)
 	{
 		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Service Group not found for %s.", svc_grp_name);
@@ -104,7 +97,8 @@ axis2_skel_ServiceGroupAdmin_listServiceGroup(const axutil_env_t *env ,
             adb_ServiceMetaData_set_serviceType(adb_svc, env, service_type);
 
             /* TODO fix the wsdl endpoints */
-			adb_ServiceMetaData_add_wsdlURLs(adb_svc, env, axis2_skel_ServiceGroupAdmin_get_wsdl(env, svc_name, conf));
+			
+			adb_ServiceMetaData_add_wsdlURLs(adb_svc, env,service_admin_util_get_wsdl_for_service(env, svc_name, conf));
             adb_ServiceMetaData_add_wsdlURLs(adb_svc, env, " ");
 
             axutil_array_list_add(adb_svc_list, env, adb_svc);
@@ -119,7 +113,7 @@ axis2_skel_ServiceGroupAdmin_listServiceGroup(const axutil_env_t *env ,
         adb_ServiceGroupMetaData_set_serviceGroupName(svc_grp_metadata, env, svc_grp_name);
         adb_ServiceGroupMetaData_set_services(svc_grp_metadata, env, adb_svc_list);
 		adb_ServiceGroupMetaData_set_engagedModules_nil(svc_grp_metadata, env);
-		adb_ServiceGroupMetaData_set_serviceContextPath(svc_grp_metadata, env ,"http://localhost:9090/axis2/service/ServiceGroupAdmin");
+		adb_ServiceGroupMetaData_set_serviceContextPath(svc_grp_metadata, env ,"");
 		adb_ServiceGroupMetaData_set_mtomStatus(svc_grp_metadata, env, "optional");
         
     }
@@ -127,7 +121,6 @@ axis2_skel_ServiceGroupAdmin_listServiceGroup(const axutil_env_t *env ,
     {
         axutil_array_list_free(adb_svc_list, env);
     }
-	
 	{	
 		axutil_param_t *param = axis2_svc_grp_get_param(svc_grp, env, AXIS2_ENABLE_MTOM);
 		if(param)
@@ -135,9 +128,7 @@ axis2_skel_ServiceGroupAdmin_listServiceGroup(const axutil_env_t *env ,
 			adb_ServiceGroupMetaData_set_mtomStatus(svc_grp_metadata, env, axutil_param_get_value(param, env));
 		}
 	}
-
 	adb_listServiceGroupResponse_set_return(response, env, svc_grp_metadata);
-
 	return response;
 }
 
@@ -152,10 +143,15 @@ axis2_skel_ServiceGroupAdmin_listServiceGroup(const axutil_env_t *env ,
 * @return 
 */
 axis2_status_t  
-axis2_skel_ServiceGroupAdmin_setServiceGroupParameters(const axutil_env_t *env , 
-													   axis2_msg_ctx_t *msg_ctx,
-													   adb_setServiceGroupParameters_t* _setServiceGroupParameters )
+axis2_skel_ServiceGroupAdmin_setServiceGroupParameters(
+	const axutil_env_t *env , 
+    axis2_msg_ctx_t *msg_ctx,
+    adb_setServiceGroupParameters_t* _setServiceGroupParameters )
 {
+	axutil_array_list_t *parameter_list = NULL;
+	parameter_list = adb_setServiceGroupParameters_get_parameterElement(_setServiceGroupParameters, env);
+
+
 	return AXIS2_SUCCESS;
 }
 
@@ -175,7 +171,8 @@ axis2_skel_ServiceGroupAdmin_getServiceGroupParameter(const axutil_env_t *env ,
 													  adb_getServiceGroupParameter_t* _getServiceGroupParameter,
 													  axis2_skel_ServiceGroupAdmin_getServiceGroupParameter_fault *fault )
 {
-	/* TODO fill this with the necessary business logic */
+	adb_getServiceGroupParameterResponse_t *response = NULL;
+
 	return (adb_getServiceGroupParameterResponse_t*)NULL;
 }
 
@@ -268,7 +265,8 @@ adb_dumpAARResponse_t* axis2_skel_ServiceGroupAdmin_dumpAAR(const axutil_env_t *
 *
 * @return 
 */
-axis2_status_t  axis2_skel_ServiceGroupAdmin_setServiceGroupParameter(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
+axis2_status_t  
+axis2_skel_ServiceGroupAdmin_setServiceGroupParameter(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
 																	  adb_setServiceGroupParameter_t* _setServiceGroupParameter )
 {
 	/* TODO fill this with the necessary business logic */
@@ -286,13 +284,51 @@ axis2_status_t  axis2_skel_ServiceGroupAdmin_setServiceGroupParameter(const axut
 * @return 
 */
 axis2_status_t  
-axis2_skel_ServiceGroupAdmin_updateServiceGroupParameter(const axutil_env_t *env , 
-														 axis2_msg_ctx_t *msg_ctx,
-														 adb_updateServiceGroupParameter_t* _updateServiceGroupParameter,
-														 axis2_skel_ServiceGroupAdmin_updateServiceGroupParameter_fault *fault )
+axis2_skel_ServiceGroupAdmin_updateServiceGroupParameter(
+const axutil_env_t *env , 
+axis2_msg_ctx_t *msg_ctx,
+adb_updateServiceGroupParameter_t* _updateServiceGroupParameter,
+axis2_skel_ServiceGroupAdmin_updateServiceGroupParameter_fault *fault )
 {
-	/* TODO fill this with the necessary business logic */
-	return AXIS2_SUCCESS;
+	axis2_char_t *service_group_name = NULL;
+	adb_ParameterMetaData_t *meta_data = NULL;
+	axis2_char_t *param_value = NULL, *param_name = NULL;
+	axis2_bool_t editable = AXIS2_FALSE, locked = AXIS2_FALSE;
+	axis2_svc_grp_t *svc_grp = NULL;
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf = NULL;
+	
+	service_group_name = adb_updateServiceGroupParameter_get_serviceGroupName(_updateServiceGroupParameter, env);
+	meta_data = adb_updateServiceGroupParameter_get_paramMetaData(_updateServiceGroupParameter, env);
+	if(meta_data)
+	{
+		editable =	adb_ParameterMetaData_get_editable(meta_data, env);
+		locked   =  adb_ParameterMetaData_get_locked(meta_data, env);
+		param_name = adb_ParameterMetaData_get_name(meta_data, env);
+		param_value = adb_ParameterMetaData_get_value(meta_data, env);
+	}else{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Paramater Meta Data not present in the message");
+		return AXIS2_FAILURE;
+	}	
+	if(service_group_name)
+	{
+		axutil_param_t *param = NULL;
+		conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+		conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+		svc_grp = axis2_conf_get_svc_grp(conf, env, service_group_name);
+		if(svc_grp){
+			param = axutil_param_create(env, param_name, param_value);
+			axis2_svc_grp_add_param(svc_grp, env, param);
+			return AXIS2_SUCCESS;
+		}else{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"service group not found ");
+			return AXIS2_FAILURE;
+		}
+	}else{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "service group name not found");
+		return AXIS2_FAILURE;
+	}
+	return AXIS2_FAILURE;
 }
 
 
@@ -307,7 +343,7 @@ axis2_skel_ServiceGroupAdmin_updateServiceGroupParameter(const axutil_env_t *env
 axis2_status_t  
 axis2_skel_ServiceGroupAdmin_listServiceGroups(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx )
 {
-	/* TODO fill this with the necessary business logic */
+	
 	return AXIS2_SUCCESS;
 }
 
@@ -332,7 +368,8 @@ axis2_skel_ServiceGroupAdmin_getServiceGroupParameters(const axutil_env_t *env ,
 	axis2_svc_grp_t* svc_grp = NULL;
 	axutil_array_list_t *param_list = NULL;
 	adb_getServiceGroupParametersResponse_t *response = NULL;
-
+	int i = 0;
+	int size = 0;
 	axis2_char_t *svc_grp_name = adb_getServiceGroupParameters_get_serviceGroupName(_getServiceGroupParameters, env);
 	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
 	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
@@ -349,46 +386,23 @@ axis2_skel_ServiceGroupAdmin_getServiceGroupParameters(const axutil_env_t *env ,
 		return NULL;
 	}
 	response = adb_getServiceGroupParametersResponse_create(env);
-	adb_getServiceGroupParametersResponse_add_return(response, env, "optional");
+	size = axutil_array_list_size(param_list, env);
+	for(i =0; i < size; i++)
+	{
+		axis2_char_t *param_str = NULL;
+		axiom_node_t *param_node = NULL;
+		axutil_param_t *param = NULL;
+		param = axutil_array_list_get(param_list,env, i);
+		if(param)
+		{	
+			param_node = service_admin_util_serialize_param(env, param);
+			if(param_node)
+			{
+				param_str = axiom_node_to_string(param_node, env);
+				adb_getServiceGroupParametersResponse_add_return(response, env, param_str);
+			}
+		}
+	}
 	return response;
 }
 
-
-static axis2_char_t* 
-axis2_skel_ServiceGroupAdmin_get_wsdl(axutil_env_t *env, 
-									  axis2_char_t *service_name, 
-									  axis2_conf_t *conf)
-{
-	axis2_transport_in_desc_t *transport_in = axis2_conf_get_transport_in(conf, env, AXIS2_TRANSPORT_ENUM_HTTP);
-	
-	if(transport_in)
-	{
-		axis2_endpoint_ref_t *epr = NULL;
-		axis2_char_t *address = NULL;
-		axis2_transport_receiver_t *receiver = axis2_transport_in_desc_get_recv(transport_in, env);
-		if(!receiver)
-		{
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Transport Receiver Not found ");
-			return NULL;
-		}
-		epr = axis2_transport_receiver_get_epr_for_service(receiver, env, service_name);
-		if(!epr)
-		{
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Endpoint reference null");
-			return NULL;
-		}
-		address = axis2_endpoint_ref_get_address(epr,env);
-		if(address)
-		{
-			int length = axutil_strlen(address);
-			if(address[length -1 ] == '\\')
-			{
-				address = axutil_stracat(env, address,"?wsdl");
-			}else{
-					address = axutil_stracat(env, address,"\?wsdl");
-			}
-		}
-		return address;
-	}
-	return NULL;
-}
