@@ -125,10 +125,8 @@
                 if(list_published_ops_res)
                 {
                     op_list = adb_listPublishedOperationsResponse_get_return(list_published_ops_res, env);
-                    adb_listPublishedOperationsResponse_free(list_published_ops_res, env);
                     
                 }
-                adb_listPublishedOperations_free(list_published_ops, env);
                 op_metadata_wrapper = adb_OperationMetaDataWrapper_create(env);
                 adb_OperationMetaDataWrapper_set_publishedOperations (op_metadata_wrapper, env, op_list);
                 adb_OperationMetaDataWrapper_set_controlOperations (op_metadata_wrapper, env, NULL);
