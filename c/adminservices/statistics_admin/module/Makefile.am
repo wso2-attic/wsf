@@ -1,4 +1,6 @@
-noinst_LTLIBRARIES = libstatistics.la
+prglibdir=$(prefix)/modules/statistics
+prglib_LTLIBRARIES = libstatistics.la
+prglib_DATA= module.xml
 
 libstatistics_la_SOURCES = response_time_processor.c \
 								 response_time_handler.c \
