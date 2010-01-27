@@ -10,6 +10,7 @@
 
 #include "codegen/axis2_skel_ServiceAdmin.h"
 #include "service_admin_constants.h"
+#include "service_admin_util.h"
 
 static axis2_char_t *axis2_skel_ServiceAdmin_get_service_type(
     const axutil_env_t *env,
@@ -23,9 +24,11 @@ static axis2_char_t *axis2_skel_ServiceAdmin_get_service_type(
 *
 * @return 
 */
-axis2_status_t  axis2_skel_ServiceAdmin_startService(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-													 adb_startService_t* _startService,
-													 axis2_skel_ServiceAdmin_startService_fault *fault )
+axis2_status_t  
+axis2_skel_ServiceAdmin_startService(const axutil_env_t *env , 
+									 axis2_msg_ctx_t *msg_ctx,
+									 adb_startService_t* _startService,
+									 axis2_skel_ServiceAdmin_startService_fault *fault )
 {
 	/* TODO fill this with the necessary business logic */
 	return AXIS2_SUCCESS;
@@ -41,8 +44,10 @@ axis2_status_t  axis2_skel_ServiceAdmin_startService(const axutil_env_t *env , a
 *
 * @return adb_getExposedTransportsResponse_t*
 */
-adb_getExposedTransportsResponse_t* axis2_skel_ServiceAdmin_getExposedTransports(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-																				 adb_getExposedTransports_t* _getExposedTransports )
+adb_getExposedTransportsResponse_t* 
+axis2_skel_ServiceAdmin_getExposedTransports(const axutil_env_t *env , 
+											 axis2_msg_ctx_t *msg_ctx,
+											 adb_getExposedTransports_t* _getExposedTransports )
 {
 	/* TODO fill this with the necessary business logic */
 	return (adb_getExposedTransportsResponse_t*)NULL;
@@ -58,8 +63,10 @@ adb_getExposedTransportsResponse_t* axis2_skel_ServiceAdmin_getExposedTransports
 *
 * @return adb_listServiceGroupResponse_t*
 */
-adb_listServiceGroupResponse_t* axis2_skel_ServiceAdmin_listServiceGroup(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-																		 adb_listServiceGroup_t* _listServiceGroup )
+adb_listServiceGroupResponse_t* 
+axis2_skel_ServiceAdmin_listServiceGroup(const axutil_env_t *env , 
+										 axis2_msg_ctx_t *msg_ctx,
+										 adb_listServiceGroup_t* _listServiceGroup )
 {
 	/* TODO fill this with the necessary business logic */
 	return (adb_listServiceGroupResponse_t*)NULL;
@@ -75,9 +82,11 @@ adb_listServiceGroupResponse_t* axis2_skel_ServiceAdmin_listServiceGroup(const a
 *
 * @return adb_addTransportBindingResponse_t*
 */
-adb_addTransportBindingResponse_t* axis2_skel_ServiceAdmin_addTransportBinding(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-																			   adb_addTransportBinding_t* _addTransportBinding,
-																			   axis2_skel_ServiceAdmin_addTransportBinding_fault *fault )
+adb_addTransportBindingResponse_t* 
+axis2_skel_ServiceAdmin_addTransportBinding(const axutil_env_t *env , 
+											axis2_msg_ctx_t *msg_ctx,
+											adb_addTransportBinding_t* _addTransportBinding,
+											axis2_skel_ServiceAdmin_addTransportBinding_fault *fault )
 {
 	/* TODO fill this with the necessary business logic */
 	return (adb_addTransportBindingResponse_t*)NULL;
@@ -93,11 +102,31 @@ adb_addTransportBindingResponse_t* axis2_skel_ServiceAdmin_addTransportBinding(c
 *
 * @return adb_getWSDLResponse_t*
 */
-adb_getWSDLResponse_t* axis2_skel_ServiceAdmin_getWSDL(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-													   adb_getWSDL_t* _getWSDL )
+adb_getWSDLResponse_t* 
+axis2_skel_ServiceAdmin_getWSDL(const axutil_env_t *env , 
+								axis2_msg_ctx_t *msg_ctx,
+								adb_getWSDL_t* _getWSDL )
 {
-	/* TODO fill this with the necessary business logic */
-	return (adb_getWSDLResponse_t*)NULL;
+	axis2_char_t *service_name = NULL;
+	adb_getWSDLResponse_t *wsdlResponse = NULL;
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf = NULL;
+	axiom_node_t *response_node = NULL;
+
+	service_name = adb_getWSDL_get_serviceName(_getWSDL, env);
+	if(service_name)
+	{
+		conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+		conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+		if(conf)
+		{
+			axis2_char_t *wsdlurl = service_admin_util_get_wsdl_for_service(env, service_name, conf);
+			/**TODO READ WSDL and convert to an axiom node */
+			wsdlResponse = adb_getWSDLResponse_create(env);
+			adb_getWSDLResponse_set_return(wsdlResponse, env, NULL);
+		}
+	}
+	return wsdlResponse;
 }
 
 
@@ -109,7 +138,9 @@ adb_getWSDLResponse_t* axis2_skel_ServiceAdmin_getWSDL(const axutil_env_t *env ,
 *
 * @return adb_getNumberOfFaultyServicesResponse_t*
 */
-adb_getNumberOfFaultyServicesResponse_t* axis2_skel_ServiceAdmin_getNumberOfFaultyServices(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx )
+adb_getNumberOfFaultyServicesResponse_t* 
+axis2_skel_ServiceAdmin_getNumberOfFaultyServices(const axutil_env_t *env , 
+												  axis2_msg_ctx_t *msg_ctx )
 {
 	/* TODO fill this with the necessary business logic */
 	return (adb_getNumberOfFaultyServicesResponse_t*)NULL;
@@ -125,11 +156,46 @@ adb_getNumberOfFaultyServicesResponse_t* axis2_skel_ServiceAdmin_getNumberOfFaul
 *
 * @return 
 */
-axis2_status_t  axis2_skel_ServiceAdmin_configureMTOM(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-													  adb_configureMTOM_t* _configureMTOM )
+axis2_status_t  
+axis2_skel_ServiceAdmin_configureMTOM(const axutil_env_t *env , 
+									  axis2_msg_ctx_t *msg_ctx,
+									  adb_configureMTOM_t* _configureMTOM )
 {
-	/* TODO fill this with the necessary business logic */
-	return AXIS2_SUCCESS;
+	axis2_char_t *service_name = NULL, *flag = NULL;
+	axis2_svc_t *service = NULL;
+	axutil_param_t *parameter = NULL;
+
+	flag = adb_configureMTOM_get_flag(_configureMTOM, env);
+	service_name = adb_configureMTOM_get_serviceName(_configureMTOM, env);
+	if(!service_name)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "service name null");
+		return AXIS2_FAILURE;
+	}
+	service = service_admin_util_get_service(env, msg_ctx, service_name);
+	
+	if(service)
+	{
+		axutil_hash_index_t *hi = NULL;
+		axutil_hash_t *ops = NULL;
+		parameter = axutil_param_create(env, AXIS2_ENABLE_MTOM, flag);
+		axis2_svc_add_param(service, env, parameter);
+
+		ops = axis2_svc_get_all_ops(service, env);
+		for(hi = axutil_hash_first(ops, env); hi; hi = axutil_hash_next(env, hi))
+		{
+			axutil_param_t *param = NULL;
+			const void *key = NULL;
+			axis2_op_t *op = NULL;
+			const void *value = NULL;
+			axutil_hash_this(hi, &key, NULL, &value);
+			op = (axis2_op_t *)value;
+			param = axutil_param_create(env, AXIS2_ENABLE_MTOM, flag);
+			axis2_op_add_param(op, env, param);
+		}
+			return AXIS2_SUCCESS;
+	}
+	return AXIS2_FAILURE;
 }
 
 
@@ -142,9 +208,11 @@ axis2_status_t  axis2_skel_ServiceAdmin_configureMTOM(const axutil_env_t *env , 
 *
 * @return 
 */
-axis2_status_t  axis2_skel_ServiceAdmin_setServicePolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-														 adb_setServicePolicy_t* _setServicePolicy,
-														 axis2_skel_ServiceAdmin_setServicePolicy_fault *fault )
+axis2_status_t  
+axis2_skel_ServiceAdmin_setServicePolicy(const axutil_env_t *env , 
+										 axis2_msg_ctx_t *msg_ctx,
+										 adb_setServicePolicy_t* _setServicePolicy,
+										 axis2_skel_ServiceAdmin_setServicePolicy_fault *fault)
 {
 	/* TODO fill this with the necessary business logic */
 	return AXIS2_SUCCESS;
@@ -160,8 +228,10 @@ axis2_status_t  axis2_skel_ServiceAdmin_setServicePolicy(const axutil_env_t *env
 *
 * @return adb_getPolicyResponse_t*
 */
-adb_getPolicyResponse_t* axis2_skel_ServiceAdmin_getPolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-														   adb_getPolicy_t* _getPolicy )
+adb_getPolicyResponse_t* 
+axis2_skel_ServiceAdmin_getPolicy(const axutil_env_t *env , 
+								  axis2_msg_ctx_t *msg_ctx,
+								  adb_getPolicy_t* _getPolicy)
 {
 	/* TODO fill this with the necessary business logic */
 	return (adb_getPolicyResponse_t*)NULL;
@@ -177,8 +247,10 @@ adb_getPolicyResponse_t* axis2_skel_ServiceAdmin_getPolicy(const axutil_env_t *e
 *
 * @return adb_getFaultyServiceArchivesResponse_t*
 */
-adb_getFaultyServiceArchivesResponse_t* axis2_skel_ServiceAdmin_getFaultyServiceArchives(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-																						 adb_getFaultyServiceArchives_t* _getFaultyServiceArchives )
+adb_getFaultyServiceArchivesResponse_t* 
+axis2_skel_ServiceAdmin_getFaultyServiceArchives(const axutil_env_t *env , 
+												 axis2_msg_ctx_t *msg_ctx,
+												 adb_getFaultyServiceArchives_t* _getFaultyServiceArchives )
 {
 	/* TODO fill this with the necessary business logic */
 	return (adb_getFaultyServiceArchivesResponse_t*)NULL;
@@ -194,9 +266,11 @@ adb_getFaultyServiceArchivesResponse_t* axis2_skel_ServiceAdmin_getFaultyService
 *
 * @return 
 */
-axis2_status_t  axis2_skel_ServiceAdmin_addPoliciesToService(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-															 adb_addPoliciesToService_t* _addPoliciesToService,
-															 axis2_skel_ServiceAdmin_addPoliciesToService_fault *fault )
+axis2_status_t  
+axis2_skel_ServiceAdmin_addPoliciesToService(const axutil_env_t *env , 
+											 axis2_msg_ctx_t *msg_ctx,
+											 adb_addPoliciesToService_t* _addPoliciesToService,
+											 axis2_skel_ServiceAdmin_addPoliciesToService_fault *fault )
 {
 	/* TODO fill this with the necessary business logic */
 	return AXIS2_SUCCESS;
@@ -212,9 +286,11 @@ axis2_status_t  axis2_skel_ServiceAdmin_addPoliciesToService(const axutil_env_t 
 *
 * @return adb_getServiceParametersResponse_t*
 */
-adb_getServiceParametersResponse_t* axis2_skel_ServiceAdmin_getServiceParameters(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-																				 adb_getServiceParameters_t* _getServiceParameters,
-																				 axis2_skel_ServiceAdmin_getServiceParameters_fault *fault )
+adb_getServiceParametersResponse_t* 
+axis2_skel_ServiceAdmin_getServiceParameters(const axutil_env_t *env , 
+											 axis2_msg_ctx_t *msg_ctx,
+											 adb_getServiceParameters_t* _getServiceParameters,
+											 axis2_skel_ServiceAdmin_getServiceParameters_fault *fault )
 {
 	/* TODO fill this with the necessary business logic */
 	return (adb_getServiceParametersResponse_t*)NULL;
@@ -230,9 +306,11 @@ adb_getServiceParametersResponse_t* axis2_skel_ServiceAdmin_getServiceParameters
 *
 * @return 
 */
-axis2_status_t  axis2_skel_ServiceAdmin_setBindingOperationMessagePolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-																		 adb_setBindingOperationMessagePolicy_t* _setBindingOperationMessagePolicy,
-																		 axis2_skel_ServiceAdmin_setBindingOperationMessagePolicy_fault *fault )
+axis2_status_t  
+axis2_skel_ServiceAdmin_setBindingOperationMessagePolicy(const axutil_env_t *env , 
+														 axis2_msg_ctx_t *msg_ctx,
+														 adb_setBindingOperationMessagePolicy_t* _setBindingOperationMessagePolicy,
+														 axis2_skel_ServiceAdmin_setBindingOperationMessagePolicy_fault *fault )
 {
 	/* TODO fill this with the necessary business logic */
 	return AXIS2_SUCCESS;
@@ -248,9 +326,11 @@ axis2_status_t  axis2_skel_ServiceAdmin_setBindingOperationMessagePolicy(const a
 *
 * @return 
 */
-axis2_status_t  axis2_skel_ServiceAdmin_setBindingPolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-														 adb_setBindingPolicy_t* _setBindingPolicy,
-														 axis2_skel_ServiceAdmin_setBindingPolicy_fault *fault )
+axis2_status_t  
+axis2_skel_ServiceAdmin_setBindingPolicy(const axutil_env_t *env , 
+										 axis2_msg_ctx_t *msg_ctx,
+										 adb_setBindingPolicy_t* _setBindingPolicy,
+										 axis2_skel_ServiceAdmin_setBindingPolicy_fault *fault )
 {
 	/* TODO fill this with the necessary business logic */
 	return AXIS2_SUCCESS;
@@ -266,9 +346,11 @@ axis2_status_t  axis2_skel_ServiceAdmin_setBindingPolicy(const axutil_env_t *env
 *
 * @return 
 */
-axis2_status_t  axis2_skel_ServiceAdmin_removeServicePoliciesByNamespace(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-																		 adb_removeServicePoliciesByNamespace_t* _removeServicePoliciesByNamespace,
-																		 axis2_skel_ServiceAdmin_removeServicePoliciesByNamespace_fault *fault )
+axis2_status_t  
+axis2_skel_ServiceAdmin_removeServicePoliciesByNamespace(const axutil_env_t *env , 
+														 axis2_msg_ctx_t *msg_ctx,
+														 adb_removeServicePoliciesByNamespace_t* _removeServicePoliciesByNamespace,
+														 axis2_skel_ServiceAdmin_removeServicePoliciesByNamespace_fault *fault )
 {
 	/* TODO fill this with the necessary business logic */
 	return AXIS2_SUCCESS;
@@ -284,9 +366,11 @@ axis2_status_t  axis2_skel_ServiceAdmin_removeServicePoliciesByNamespace(const a
 *
 * @return 
 */
-axis2_status_t  axis2_skel_ServiceAdmin_setBindingOperationPolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-																  adb_setBindingOperationPolicy_t* _setBindingOperationPolicy,
-																  axis2_skel_ServiceAdmin_setBindingOperationPolicy_fault *fault )
+axis2_status_t  
+axis2_skel_ServiceAdmin_setBindingOperationPolicy(const axutil_env_t *env , 
+												  axis2_msg_ctx_t *msg_ctx,
+												  adb_setBindingOperationPolicy_t* _setBindingOperationPolicy,
+												  axis2_skel_ServiceAdmin_setBindingOperationPolicy_fault *fault )
 {
 	/* TODO fill this with the necessary business logic */
 	return AXIS2_SUCCESS;
@@ -302,9 +386,11 @@ axis2_status_t  axis2_skel_ServiceAdmin_setBindingOperationPolicy(const axutil_e
 *
 * @return 
 */
-axis2_status_t  axis2_skel_ServiceAdmin_setModulePolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-														adb_setModulePolicy_t* _setModulePolicy,
-														axis2_skel_ServiceAdmin_setModulePolicy_fault *fault )
+axis2_status_t  
+axis2_skel_ServiceAdmin_setModulePolicy(const axutil_env_t *env , 
+										axis2_msg_ctx_t *msg_ctx,
+										adb_setModulePolicy_t* _setModulePolicy,
+										axis2_skel_ServiceAdmin_setModulePolicy_fault *fault )
 {
 	/* TODO fill this with the necessary business logic */
 	return AXIS2_SUCCESS;
@@ -320,8 +406,10 @@ axis2_status_t  axis2_skel_ServiceAdmin_setModulePolicy(const axutil_env_t *env 
 *
 * @return adb_getBindingOperationMessagePolicyResponse_t*
 */
-adb_getBindingOperationMessagePolicyResponse_t* axis2_skel_ServiceAdmin_getBindingOperationMessagePolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-																										 adb_getBindingOperationMessagePolicy_t* _getBindingOperationMessagePolicy )
+adb_getBindingOperationMessagePolicyResponse_t* 
+axis2_skel_ServiceAdmin_getBindingOperationMessagePolicy(const axutil_env_t *env , 
+														 axis2_msg_ctx_t *msg_ctx,
+														 adb_getBindingOperationMessagePolicy_t* _getBindingOperationMessagePolicy )
 {
 	/* TODO fill this with the necessary business logic */
 	return (adb_getBindingOperationMessagePolicyResponse_t*)NULL;
@@ -337,8 +425,10 @@ adb_getBindingOperationMessagePolicyResponse_t* axis2_skel_ServiceAdmin_getBindi
 *
 * @return 
 */
-axis2_status_t  axis2_skel_ServiceAdmin_changeServiceState(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-														   adb_changeServiceState_t* _changeServiceState )
+axis2_status_t  
+axis2_skel_ServiceAdmin_changeServiceState(const axutil_env_t *env , 
+										   axis2_msg_ctx_t *msg_ctx,
+										   adb_changeServiceState_t* _changeServiceState )
 {
 	/* TODO fill this with the necessary business logic */
 	return AXIS2_SUCCESS;
@@ -354,8 +444,10 @@ axis2_status_t  axis2_skel_ServiceAdmin_changeServiceState(const axutil_env_t *e
 *
 * @return 
 */
-axis2_status_t  axis2_skel_ServiceAdmin_setServiceParameters(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-															 adb_setServiceParameters_t* _setServiceParameters )
+axis2_status_t  
+axis2_skel_ServiceAdmin_setServiceParameters(const axutil_env_t *env , 
+											 axis2_msg_ctx_t *msg_ctx,
+											 adb_setServiceParameters_t* _setServiceParameters )
 {
 	/* TODO fill this with the necessary business logic */
 	return AXIS2_SUCCESS;
@@ -371,8 +463,10 @@ axis2_status_t  axis2_skel_ServiceAdmin_setServiceParameters(const axutil_env_t 
 *
 * @return adb_getOperationMessagePolicyResponse_t*
 */
-adb_getOperationMessagePolicyResponse_t* axis2_skel_ServiceAdmin_getOperationMessagePolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-																						   adb_getOperationMessagePolicy_t* _getOperationMessagePolicy )
+adb_getOperationMessagePolicyResponse_t* 
+axis2_skel_ServiceAdmin_getOperationMessagePolicy(const axutil_env_t *env , 
+												  axis2_msg_ctx_t *msg_ctx,
+												  adb_getOperationMessagePolicy_t* _getOperationMessagePolicy )
 {
 	/* TODO fill this with the necessary business logic */
 	return (adb_getOperationMessagePolicyResponse_t*)NULL;
@@ -387,8 +481,10 @@ adb_getOperationMessagePolicyResponse_t* axis2_skel_ServiceAdmin_getOperationMes
 *
 * @return adb_getNumberOfActiveServicesResponse_t*
 */
-adb_getNumberOfActiveServicesResponse_t* axis2_skel_ServiceAdmin_getNumberOfActiveServices(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-																						   axis2_skel_ServiceAdmin_getNumberOfActiveServices_fault *fault )
+adb_getNumberOfActiveServicesResponse_t* 
+axis2_skel_ServiceAdmin_getNumberOfActiveServices(const axutil_env_t *env , 
+												  axis2_msg_ctx_t *msg_ctx,
+												  axis2_skel_ServiceAdmin_getNumberOfActiveServices_fault *fault )
 {
 	/* TODO fill this with the necessary business logic */
 	return (adb_getNumberOfActiveServicesResponse_t*)NULL;
@@ -405,10 +501,11 @@ adb_getNumberOfActiveServicesResponse_t* axis2_skel_ServiceAdmin_getNumberOfActi
 * @return adb_getServiceDataResponse_t*
 */
 adb_getServiceDataResponse_t* 
-axis2_skel_ServiceAdmin_getServiceData(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-										adb_getServiceData_t* _getServiceData )
+axis2_skel_ServiceAdmin_getServiceData(const axutil_env_t *env , 
+									   axis2_msg_ctx_t *msg_ctx,
+									   adb_getServiceData_t* _getServiceData )
 {
-	    adb_getServiceDataResponse_t *response = NULL;
+	adb_getServiceDataResponse_t *response = NULL;
     axis2_char_t *service_name = NULL;
     adb_ServiceMetaData_t *adb_svc = NULL;
 
@@ -425,7 +522,6 @@ axis2_skel_ServiceAdmin_getServiceData(const axutil_env_t *env , axis2_msg_ctx_t
             AXIS2_ERROR_SVC_SKEL_INVALID_OPERATION_PARAMETERS_IN_SOAP_REQUEST, AXIS2_FAILURE);
         return NULL;
     }
-
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     axis2_conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     service = axis2_conf_get_svc(axis2_conf, env, service_name);
@@ -440,24 +536,37 @@ axis2_skel_ServiceAdmin_getServiceData(const axutil_env_t *env , axis2_msg_ctx_t
 
     adb_svc = adb_ServiceMetaData_create(env);
     adb_ServiceMetaData_set_active(adb_svc, env, AXIS2_TRUE); /* TODO get this from somewhere */
-    adb_ServiceMetaData_set_description(adb_svc, env, axis2_svc_get_svc_desc(service, env));
+	{
+		axis2_char_t *description = axis2_svc_get_svc_desc(service, env); 
+		adb_ServiceMetaData_set_description(adb_svc, env, description);
+	}
+    
     adb_ServiceMetaData_set_disableTryit(adb_svc, env, AXIS2_TRUE);
-    adb_ServiceMetaData_add_eprs(adb_svc, env, "http://localhost:9090/aaa"); /* TODO fix the epr, get it from somewhere */
+    adb_ServiceMetaData_add_eprs(adb_svc, env, service_admin_util_get_epr_address(env, msg_ctx, service_name )); /* TODO fix the epr, get it from somewhere */
     adb_ServiceMetaData_set_foundWebResources(adb_svc, env, AXIS2_FALSE);
+	
+
     adb_ServiceMetaData_set_mtomStatus(adb_svc, env, "optional");
     adb_ServiceMetaData_set_name(adb_svc, env, service_name);
     adb_ServiceMetaData_add_operations(adb_svc, env, "test 0");
     adb_ServiceMetaData_set_scope(adb_svc, env, "application");
-    adb_ServiceMetaData_set_serviceGroupName(adb_svc, env, "ServieGroup");
+	{
+		axis2_svc_grp_t *svc_grp = NULL;
+		svc_grp = axis2_svc_get_parent(service, env);
+		if(svc_grp)
+		{
+			axis2_char_t *svc_grp_name = NULL;
+			svc_grp_name = axis2_svc_grp_get_name(svc_grp, env);
+			adb_ServiceMetaData_set_serviceGroupName(adb_svc, env, svc_grp_name);
+		}
+	}
     adb_ServiceMetaData_set_serviceId(adb_svc, env, service_name);
-    adb_ServiceMetaData_set_serviceVersion(adb_svc, env, "");
+    adb_ServiceMetaData_set_serviceVersion(adb_svc, env, " ");
     adb_ServiceMetaData_set_serviceType(adb_svc, env,
-        axis2_skel_ServiceAdmin_get_service_type(env, service));
+    axis2_skel_ServiceAdmin_get_service_type(env, service));
     adb_ServiceMetaData_set_tryitURL(adb_svc, env, "http://localhost:9090/tryit");
-    /* TODO fix the wsdl endpoints */
-    adb_ServiceMetaData_add_wsdlURLs(adb_svc, env, "http://localhost:9090/test?wsdl");
-    adb_ServiceMetaData_add_wsdlURLs(adb_svc, env, "http://localhost:9090/test?wsdl2");
-
+    adb_ServiceMetaData_add_wsdlURLs(adb_svc, env, service_admin_util_get_wsdl_for_service(env, service_name, axis2_conf));
+    adb_ServiceMetaData_add_wsdlURLs(adb_svc, env, "");
     response = adb_getServiceDataResponse_create_with_values(env, adb_svc);
     return response;
 }
@@ -472,12 +581,15 @@ axis2_skel_ServiceAdmin_getServiceData(const axutil_env_t *env , axis2_msg_ctx_t
 *
 * @return adb_removeTransportBindingResponse_t*
 */
-adb_removeTransportBindingResponse_t* axis2_skel_ServiceAdmin_removeTransportBinding(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-																					 adb_removeTransportBinding_t* _removeTransportBinding,
-																					 axis2_skel_ServiceAdmin_removeTransportBinding_fault *fault )
+adb_removeTransportBindingResponse_t* 
+axis2_skel_ServiceAdmin_removeTransportBinding(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
+												adb_removeTransportBinding_t* _removeTransportBinding,
+												axis2_skel_ServiceAdmin_removeTransportBinding_fault *fault )
 {
-	/* TODO fill this with the necessary business logic */
-	return (adb_removeTransportBindingResponse_t*)NULL;
+	adb_removeTransportBindingResponse_t *response = NULL;
+	response = adb_removeTransportBindingResponse_create(env);
+	adb_removeTransportBindingResponse_set_return(response, env, "TODO");
+	return response;
 }
 
 
@@ -490,8 +602,10 @@ adb_removeTransportBindingResponse_t* axis2_skel_ServiceAdmin_removeTransportBin
 *
 * @return adb_getPoliciesResponse_t*
 */
-adb_getPoliciesResponse_t* axis2_skel_ServiceAdmin_getPolicies(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-															   adb_getPolicies_t* _getPolicies )
+adb_getPoliciesResponse_t* 
+axis2_skel_ServiceAdmin_getPolicies(const axutil_env_t *env , 
+									axis2_msg_ctx_t *msg_ctx,
+									adb_getPolicies_t* _getPolicies )
 {
 	/* TODO fill this with the necessary business logic */
 	return (adb_getPoliciesResponse_t*)NULL;
@@ -507,8 +621,10 @@ adb_getPoliciesResponse_t* axis2_skel_ServiceAdmin_getPolicies(const axutil_env_
 *
 * @return 
 */
-axis2_status_t  axis2_skel_ServiceAdmin_removeServiceParameter(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-															   adb_removeServiceParameter_t* _removeServiceParameter )
+axis2_status_t  
+axis2_skel_ServiceAdmin_removeServiceParameter(const axutil_env_t *env , 
+											   axis2_msg_ctx_t *msg_ctx,
+												adb_removeServiceParameter_t* _removeServiceParameter )
 {
 	/* TODO fill this with the necessary business logic */
 	return AXIS2_SUCCESS;
@@ -541,10 +657,13 @@ adb_getBindingOperationPolicyResponse_t* axis2_skel_ServiceAdmin_getBindingOpera
 *
 * @return 
 */
-axis2_status_t  axis2_skel_ServiceAdmin_deleteServiceGroups(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-															adb_deleteServiceGroups_t* _deleteServiceGroups )
+axis2_status_t  
+axis2_skel_ServiceAdmin_deleteServiceGroups(const axutil_env_t *env , 
+											axis2_msg_ctx_t *msg_ctx,
+											adb_deleteServiceGroups_t* _deleteServiceGroups )
 {
-	/* TODO fill this with the necessary business logic */
+	
+
 	return AXIS2_SUCCESS;
 }
 
@@ -818,8 +937,8 @@ adb_listServiceGroupsResponse_t *response = NULL;
             adb_ServiceMetaData_set_serviceType(adb_svc, env, service_type);
 
             /* TODO fix the wsdl endpoints */
-            adb_ServiceMetaData_add_wsdlURLs(adb_svc, env, "http://localhost:9090/test?wsdl");
-            adb_ServiceMetaData_add_wsdlURLs(adb_svc, env, "http://localhost:9090/test?wsdl2");
+			adb_ServiceMetaData_add_wsdlURLs(adb_svc, env, service_admin_util_get_wsdl_for_service(env, svc_name, axis2_conf));
+            adb_ServiceMetaData_add_wsdlURLs(adb_svc, env, "");
 
             axutil_array_list_add(adb_svc_list, env, adb_svc);
         }
