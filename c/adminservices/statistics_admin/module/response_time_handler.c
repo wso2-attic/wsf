@@ -97,9 +97,84 @@ axis2_statistics_admin_calculate_response_times(
         {
             axutil_property_t *property = NULL;
             long *received_time = NULL;
+            long response_time = 0;
+            long current_time = 0;
+            axis2_svc_t *svc = NULL;
+            axis2_op_t *op = NULL;
 
             property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_REQUEST_RECEIVED_TIME);
             received_time = axutil_property_get_value(property, env);
+            current_time = sandesha2_utils_get_current_time_in_millis(env);
+            response_time = current_time - received_time;
+            svc = axis2_msg_ctx_get_svc(msg_ctx, env);
+            if(svc)
+            {
+                axutil_param_t *param = NULL;
+                axutil_param_t *src_param = NULL;
+                axis2_response_time_processor_t *res_time_processor = NULL;
+                axis2_counter_t *counter = NULL;
+                int src_count = 0;
+                
+                src_param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_REQUEST_COUNTER);
+                if(src_param)
+                {
+                    src_count = axutil_param_get_value(src_param, env);
+                }
+                param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_RESPONSE_TIME_PROCESSOR);
+                if(param)
+                {
+                    res_time_processor = axutil_param_get_value(param, env);
+                    axis2_response_time_processor_add_response_time(res_time_processor, env, 
+                            response_time, src_count, msg_ctx);
+                }
+                else
+                {
+                    res_time_processor = axis2_response_time_processor_create(env);
+                    if(res_time_processor)
+                    {
+                        axis2_response_time_processor_add_response_time(res_time_processor, env, 
+                            response_time, src_count, msg_ctx);
+                        param = axutil_param_create(env, AXIS2_SERVICE_RESPONSE_TIME_PROCESSOR, 
+                                res_time_processor);
+                        axis2_svc_add_param(svc, env, param);
+                    }
+                }
+            }
+            op = axis2_msg_ctx_get_op(msg_ctx, env);
+            if(op)
+            {
+                axutil_param_t *param = NULL;
+                axutil_param_t *op_req_counter_param = NULL;
+                axis2_response_time_processor_t *res_time_processor = NULL;
+                axis2_counter_t *counter = NULL;
+                int op_req_count = 0;
+                
+                op_req_counter_param = axis2_op_get_param(op, env, AXIS2_IN_OPERATION_COUNTER);
+                if(op_req_counter_param)
+                {
+                    op_req_count = axutil_param_get_value(op_req_counter_param, env);
+                }
+                param = axis2_op_get_param(op, env, AXIS2_OPERATION_RESPONSE_TIME_PROCESSOR);
+                if(param)
+                {
+                    res_time_processor = axutil_param_get_value(param, env);
+                    axis2_response_time_processor_add_response_time(res_time_processor, env, 
+                            response_time, op_req_count, msg_ctx);
+                }
+                else
+                {
+                    res_time_processor = axis2_response_time_processor_create(env);
+                    if(res_time_processor)
+                    {
+                        axis2_response_time_processor_add_response_time(res_time_processor, env, 
+                            response_time, op_req_count, msg_ctx);
+                        param = axutil_param_create(env, AXIS2_OPERATION_RESPONSE_TIME_PROCESSOR, 
+                                res_time_processor);
+                        axis2_op_add_param(op, env, param);
+                    }
+                }
+            }
+
         }
     }
     return status;
