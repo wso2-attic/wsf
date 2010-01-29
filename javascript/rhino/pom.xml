@@ -263,7 +263,7 @@
      </distributionManagement>
 
     <properties>
-        <axiom.version>SNAPSHOT</axiom.version>                   
+        <axiom.version>1.2.9-SNAPSHOT</axiom.version>                   
         <stax.impl.groupid>org.codehaus.woodstox</stax.impl.groupid>
         <stax.impl.artifactid>wstx</stax.impl.artifactid>
         <stax.impl.version>asl-3.2.0</stax.impl.version>
