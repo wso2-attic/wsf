@@ -9,6 +9,7 @@
 */
 
 #include "service_admin_util.h"
+#include "axutil_dll_desc.h"
 #include "axiom.h"
 
 
@@ -115,19 +116,28 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 service_admin_util_serialize_param(axutil_env_t *env,
 								   axutil_param_t *param)
 {
-	axis2_char_t *name = NULL, *value = NULL;
+	axis2_char_t *name = NULL;
+	axis2_char_t *value = NULL;
+	void *param_value = NULL;
 	axiom_node_t *param_node = NULL;
 	axiom_element_t *param_ele = NULL;
 	axiom_attribute_t *attri = NULL;
-
+	axutil_dll_desc_t *dll_des = NULL;
 
 	name = axutil_param_get_name(param, env);
-	value = axutil_param_get_value(param, env);
+	param_value = axutil_param_get_value(param, env);
+	if(name && axutil_strcmp(name, "ServiceClass") ==0)
+	{
+	}else
+	{
+		value = (axis2_char_t*)param_value;
+	}
 
 	param_ele = axiom_element_create(env, NULL, "parameter", NULL, &param_node);
 	
 	attri = axiom_attribute_create(env, "name", name, NULL);
 	axiom_element_add_attribute(param_ele, env, attri, param_node);
-	axiom_element_set_text(param_ele, env, value, param_node);
+	if(value)
+		axiom_element_set_text(param_ele, env, value, param_node);
 	return param_node;
 }

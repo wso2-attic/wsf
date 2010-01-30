@@ -287,13 +287,81 @@ axis2_skel_ServiceAdmin_addPoliciesToService(const axutil_env_t *env ,
 * @return adb_getServiceParametersResponse_t*
 */
 adb_getServiceParametersResponse_t* 
-axis2_skel_ServiceAdmin_getServiceParameters(const axutil_env_t *env , 
-											 axis2_msg_ctx_t *msg_ctx,
-											 adb_getServiceParameters_t* _getServiceParameters,
-											 axis2_skel_ServiceAdmin_getServiceParameters_fault *fault )
+axis2_skel_ServiceAdmin_getServiceParameters(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+	adb_getServiceParameters_t* _getServiceParameters,
+	axis2_skel_ServiceAdmin_getServiceParameters_fault *fault )
 {
-	/* TODO fill this with the necessary business logic */
-	return (adb_getServiceParametersResponse_t*)NULL;
+	adb_getServiceParametersResponse_t *response = NULL;
+	axis2_char_t *service_name = NULL;
+	axis2_svc_t *svc = NULL;
+	service_name = adb_getServiceParameters_get_serviceName(_getServiceParameters, env);
+	if(!service_name)
+	{
+		axiom_node_t *node = NULL;
+		axiom_text_t *text = NULL;
+		adb_ServerException_t *server_exp = NULL;
+
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "service name is empty");
+		server_exp = adb_ServerException_create(env);
+		
+		fault->ServerException = adb_ServerExceptionE1_create(env);
+		text = axiom_text_create(env, NULL, "Service name is empty", &node);
+		
+		adb_ServerException_set_Exception(server_exp,env, node);
+		adb_ServerExceptionE1_set_ServerException(fault->ServerException, env, server_exp);
+		return NULL;
+	}
+	svc = service_admin_util_get_service(env, msg_ctx, service_name);
+	if(!svc)
+	{
+		axiom_node_t *node = NULL;
+		axiom_text_t *text = NULL;
+		adb_ServerException_t *server_exp = NULL;
+
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "service does not exist");
+		
+		server_exp = adb_ServerException_create(env);
+		fault->ServerException = adb_ServerExceptionE1_create(env);
+		text = axiom_text_create(env, NULL, "Service does not exist", &node);
+		adb_ServerException_set_Exception(server_exp,env, node); 
+			
+		adb_ServerExceptionE1_set_ServerException(fault->ServerException, env, server_exp);
+		return NULL;
+	}
+
+	response = adb_getServiceParametersResponse_create(env);
+	{
+		axutil_array_list_t *param_list = NULL;
+		int size = 0;
+		param_list = axis2_svc_get_all_params(svc, env);
+		if(param_list)
+		{
+			axis2_char_t *param_str = NULL;
+			axiom_node_t *param_node = NULL;
+			axutil_param_t *param = NULL;
+			int i = 0;
+			size = axutil_array_list_size(param_list,env);
+			for(i = 0; i < size; i++)
+			{
+				param = axutil_array_list_get(param_list,env, i);
+				if(param)
+				{	
+					param_node = service_admin_util_serialize_param(env, param);
+					if(param_node)
+					{
+						param_str = axiom_node_to_string(param_node, env);
+						adb_getServiceParametersResponse_add_return(response, env, param_str);
+					}
+				}
+			}
+		}
+	
+	
+	}
+
+	return response;
 }
 
 
@@ -312,7 +380,6 @@ axis2_skel_ServiceAdmin_setBindingOperationMessagePolicy(const axutil_env_t *env
 														 adb_setBindingOperationMessagePolicy_t* _setBindingOperationMessagePolicy,
 														 axis2_skel_ServiceAdmin_setBindingOperationMessagePolicy_fault *fault )
 {
-	/* TODO fill this with the necessary business logic */
 	return AXIS2_SUCCESS;
 }
 
@@ -332,7 +399,13 @@ axis2_skel_ServiceAdmin_setBindingPolicy(const axutil_env_t *env ,
 										 adb_setBindingPolicy_t* _setBindingPolicy,
 										 axis2_skel_ServiceAdmin_setBindingPolicy_fault *fault )
 {
-	/* TODO fill this with the necessary business logic */
+	axis2_char_t *binding_policy = NULL;
+	axis2_char_t *binding_policy_string = NULL;
+	axis2_char_t *binding_service_name = NULL;
+	
+	binding_policy			= adb_setBindingPolicy_get_bindingName(_setBindingPolicy, env);
+	binding_policy_string	= adb_setBindingPolicy_get_policyString(_setBindingPolicy, env);
+	binding_service_name	= adb_setBindingPolicy_get_serviceName(_setBindingPolicy, env);
 	return AXIS2_SUCCESS;
 }
 
