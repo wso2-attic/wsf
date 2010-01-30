@@ -1,0 +1,8 @@
+# Set this to 1 if debug code should be generated, 0 otherwise.
+DEBUG = 1
+#CRUNTIME Libaray ( Use /MT or /MD)
+CRUNTIME=/MD
+
+EMBED_MANIFEST=1
+
+WSFC_HOME=..\wso2-wsf-c-bin-2.0.0-win32

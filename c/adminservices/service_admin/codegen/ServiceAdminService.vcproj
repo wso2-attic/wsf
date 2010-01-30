@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="F:\wsfc\wso2-wsf-c-bin-2.0.0-win32\services\ServiceAdmin\"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;$(AXIS2C_HOME)\include;$(AXIS2C_HOME)\include\platforms;"
+				AdditionalIncludeDirectories=".;.\include;$(AXIS2C_HOME)\include;$(AXIS2C_HOME)\include\platforms;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;SERVICE_EXPORTS;AXIS2_DECLARE_EXPORT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -567,6 +567,10 @@
 				RelativePath=".\axis2_svc_skel_ServiceAdmin.c"
 				>
 			</File>
+			<File
+				RelativePath="..\..\util\service_admin_util.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -962,6 +966,10 @@
 			</File>
 			<File
 				RelativePath="..\service_admin_constants.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\service_admin_util.h"
 				>
 			</File>
 		</Filter>
