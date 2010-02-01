@@ -14,11 +14,11 @@
  * limitations under the License.
  */
  
-#ifndef AXIS2_RESPONSE_TIME_PROCESSOR_H
-#define AXIS2_RESPONSE_TIME_PROCESSOR_H
+#ifndef SERVICE_ADMIN_RESPONSE_TIME_PROCESSOR_H
+#define SERVICE_ADMIN_RESPONSE_TIME_PROCESSOR_H
 
 /**
-  * @file axis2_response_time_processor.h
+  * @file service_admin_response_time_processor.h
   * @brief 
   */
 
@@ -31,7 +31,7 @@ extern "C"
 #endif
 
 /** 
- * @ingroup axis2_response_time_processor
+ * @ingroup service_admin_response_time_processor
  * @{
  */
  
@@ -39,27 +39,27 @@ extern "C"
  * @brief response time processor struct impl
  *	Reponse Time Processor Struct
  */
-typedef struct axis2_response_time_processor
+typedef struct service_admin_response_time_processor
 {
     long max_response_time;
     long min_response_time;
     double avg_response_time;
     double total_response_time;
-} axis2_response_time_processor_t;
+} service_admin_response_time_processor_t;
 
 
-AXIS2_EXTERN axis2_response_time_processor_t* AXIS2_CALL
-axis2_response_time_processor_create(
+AXIS2_EXTERN service_admin_response_time_processor_t* AXIS2_CALL
+service_admin_response_time_processor_create(
     const axutil_env_t *env);
 
 void AXIS2_CALL 
-axis2_response_time_processor_free(
-    axis2_response_time_processor_t *res_time_proc, 
+service_admin_response_time_processor_free(
+    service_admin_response_time_processor_t *res_time_proc, 
     const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
-axis2_response_time_processor_add_response_time (
-    axis2_response_time_processor_t *res_time_proc,
+service_admin_response_time_processor_add_response_time (
+    service_admin_response_time_processor_t *res_time_proc,
     const axutil_env_t *env,
     long response_time,
     long request_count);
@@ -69,4 +69,4 @@ axis2_response_time_processor_add_response_time (
 }
 #endif
 
-#endif /*AXIS2_RESPONSE_TIME_PROCESSOR_H*/
+#endif /*SERVICE_ADMIN_RESPONSE_TIME_PROCESSOR_H*/

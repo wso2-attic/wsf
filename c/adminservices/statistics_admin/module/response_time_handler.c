@@ -21,7 +21,7 @@
 #include <axis2_op.h>
 #include <service_admin_counter.h>
 #include <service_admin_constants.h>
-#include "axis2_response_time_processor.h"
+#include <service_admin_response_time_processor.h>
 
 static axis2_status_t AXIS2_CALL
 axis2_statistics_admin_calculate_response_times( 
@@ -110,7 +110,7 @@ axis2_statistics_admin_calculate_response_times(
             {
                 axutil_param_t *param = NULL;
                 axutil_param_t *src_param = NULL;
-                axis2_response_time_processor_t *res_time_processor = NULL;
+                service_admin_response_time_processor_t *res_time_processor = NULL;
                 service_admin_counter_t *counter = NULL;
                 int src_count = 0;
                 
@@ -129,7 +129,7 @@ axis2_statistics_admin_calculate_response_times(
                 }
                 else
                 {
-                    res_time_processor = axis2_response_time_processor_create(env);
+                    res_time_processor = service_admin_response_time_processor_create(env);
                     if(res_time_processor)
                     {
                         axis2_response_time_processor_add_response_time(res_time_processor, env, 
@@ -145,7 +145,7 @@ axis2_statistics_admin_calculate_response_times(
             {
                 axutil_param_t *param = NULL;
                 axutil_param_t *op_req_counter_param = NULL;
-                axis2_response_time_processor_t *res_time_processor = NULL;
+                service_admin_response_time_processor_t *res_time_processor = NULL;
                 service_admin_counter_t *counter = NULL;
                 int op_req_count = 0;
                 

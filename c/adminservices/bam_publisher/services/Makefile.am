@@ -7,7 +7,7 @@ SUBDIRS =
 
 libstatistics_svc_la_SOURCES = statistics_svc.c statistics_svc_skeleton.c
 
-libstatistics_svc_la_LIBADD  = 
+libstatistics_svc_la_LIBADD  = ../../util/libservice_admin_util.la
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \

@@ -47,7 +47,7 @@
                 param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_RESPONSE_TIME_PROCESSOR);
                 if(param)
                 {
-                    axis2_response_time_processor_t *res_time_proc = NULL;
+                    service_admin_response_time_processor_t *res_time_proc = NULL;
                     res_time_proc = axutil_param_get_value(param, env);
                     if(res_time_proc)
                     {
@@ -92,11 +92,11 @@
                 param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_REQUEST_COUNTER);
                 if(param)
                 {
-                    axis2_counter_t *counter = NULL;
+                    service_admin_counter_t *counter = NULL;
                     counter = axutil_param_get_value(param, env);
                     if(counter)
                     {
-                        get_svc_req_count_res = adb_getServiceRequestCountResponse_create_with_values(env, axis2_counter_get_count(counter, env, msg_ctx));
+                        get_svc_req_count_res = adb_getServiceRequestCountResponse_create_with_values(env, service_admin_counter_get_count(counter, env, msg_ctx));
                     }
                 }
             }
@@ -159,12 +159,12 @@
                     param = axis2_op_get_param(op, env, AXIS2_OUT_OPERATION_COUNTER);
                     if(param)
                     {
-                        axis2_counter_t *counter = NULL;
+                        service_admin_counter_t *counter = NULL;
                         counter = axutil_param_get_value(param, env);
                         if(counter)
                         {
                             get_op_res_count_res = adb_getOperationResponseCountResponse_create_with_values(env, 
-                                    axis2_counter_get_count(counter, env, msg_ctx));
+                                    service_admin_counter_get_count(counter, env, msg_ctx));
                         }
                     }
                 }
@@ -213,7 +213,7 @@
                     param = axis2_op_get_param(op, env, AXIS2_OPERATION_RESPONSE_TIME_PROCESSOR);
                     if(param)
                     {
-                        axis2_response_time_processor_t *res_time_proc = NULL;
+                        service_admin_response_time_processor_t *res_time_proc = NULL;
                         res_time_proc = axutil_param_get_value(param, env);
                         if(res_time_proc)
                         {
@@ -418,7 +418,7 @@
             axis2_char_t *svc_name = NULL;
             axutil_param_t *param = NULL;
             adb_getServiceFaultCountResponse_t* svc_fault_count_res = NULL;
-            axis2_counter_t *counter = NULL;
+            service_admin_counter_t *counter = NULL;
 
             if(!_getServiceFaultCount)
             {
@@ -436,7 +436,7 @@
             if(param)
             {
                 counter = axutil_param_get_value(param, env);
-                svc_fault_count_res = adb_getServiceFaultCountResponse_create_with_values(env, axis2_counter_get_count(counter, env, msg_ctx));
+                svc_fault_count_res = adb_getServiceFaultCountResponse_create_with_values(env, service_admin_counter_get_count(counter, env, msg_ctx));
             }
 
             return (adb_getServiceFaultCountResponse_t*) svc_fault_count_res;
@@ -475,7 +475,7 @@
                 param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_RESPONSE_TIME_PROCESSOR);
                 if(param)
                 {
-                    axis2_response_time_processor_t *res_time_proc = NULL;
+                    service_admin_response_time_processor_t *res_time_proc = NULL;
                     res_time_proc = axutil_param_get_value(param, env);
                     if(res_time_proc)
                     {
@@ -527,7 +527,7 @@
                     param = axis2_op_get_param(op, env, AXIS2_OPERATION_RESPONSE_TIME_PROCESSOR);
                     if(param)
                     {
-                        axis2_response_time_processor_t *res_time_proc = NULL;
+                        service_admin_response_time_processor_t *res_time_proc = NULL;
                         res_time_proc = axutil_param_get_value(param, env);
                         if(res_time_proc)
                         {
@@ -705,12 +705,12 @@
                     param = axis2_op_get_param(op, env, AXIS2_OPERATION_FAULT_COUNTER);
                     if(param)
                     {
-                        axis2_counter_t *counter = NULL;
+                        service_admin_counter_t *counter = NULL;
                         counter = axutil_param_get_value(param, env);
                         if(counter)
                         {
                             get_op_fault_count_res = adb_getOperationFaultCountResponse_create_with_values(env, 
-                                    axis2_counter_get_count(counter, env, msg_ctx));
+                                    service_admin_counter_get_count(counter, env, msg_ctx));
                         }
                     }
                 }
@@ -753,7 +753,7 @@
                 param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_RESPONSE_TIME_PROCESSOR);
                 if(param)
                 {
-                    axis2_response_time_processor_t *res_time_proc = NULL;
+                    service_admin_response_time_processor_t *res_time_proc = NULL;
                     res_time_proc = axutil_param_get_value(param, env);
                     if(res_time_proc)
                     {
@@ -812,9 +812,9 @@
                     param = axis2_op_get_param(op, env, AXIS2_OUT_OPERATION_COUNTER);
                     if(param)
                     {
-                        axis2_counter_t *counter = NULL;
+                        service_admin_counter_t *counter = NULL;
                         counter = axutil_param_get_value(param, env);
-                        count += axis2_counter_get_count(counter, env, msg_ctx);
+                        count += service_admin_counter_get_count(counter, env, msg_ctx);
                     }
                 }
             }
@@ -876,7 +876,7 @@
                     param = axis2_op_get_param(op, env, AXIS2_OPERATION_RESPONSE_TIME_PROCESSOR);
                     if(param)
                     {
-                        axis2_response_time_processor_t *res_time_proc = NULL;
+                        service_admin_response_time_processor_t *res_time_proc = NULL;
                         res_time_proc = axutil_param_get_value(param, env);
                         if(res_time_proc)
                         {
@@ -958,12 +958,12 @@
                     param = axis2_op_get_param(op, env, AXIS2_IN_OPERATION_COUNTER);
                     if(param)
                     {
-                        axis2_counter_t *counter = NULL;
+                        service_admin_counter_t *counter = NULL;
                         counter = axutil_param_get_value(param, env);
                         if(counter)
                         {
                             get_op_req_count_res = adb_getOperationRequestCountResponse_create_with_values(env, 
-                                    axis2_counter_get_count(counter, env, msg_ctx));
+                                    service_admin_counter_get_count(counter, env, msg_ctx));
                         }
                     }
                 }
