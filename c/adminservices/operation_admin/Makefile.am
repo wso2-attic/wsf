@@ -3,7 +3,7 @@ prglib_LTLIBRARIES = liboperation_admin.la
 prglib_DATA= resources/services.xml
 noinst_HEADERS = 
 
-liboperation_admin_la_SOURCES = axis2_skel_OperationAdmin.c \ 
+liboperation_admin_la_SOURCES = axis2_skel_OperationAdmin.c \
 								codegen/adb_configureMTOM.c \
 								codegen/adb_getPolicyResponse.c \
 								codegen/adb_listPublishedOperationsResponse.c \

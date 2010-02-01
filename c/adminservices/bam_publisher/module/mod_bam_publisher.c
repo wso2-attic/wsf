@@ -51,7 +51,6 @@ bam_publisher_create(const axutil_env_t *env)
            "[adminservices] Memory allocation failed for Statistics Admin Module");
         return NULL;
     }
-    /* Do the memset*/
     
     module->ops = &statistics_admin_module_ops_var;
     return module;
@@ -64,11 +63,31 @@ bam_publisher_init(
         axis2_conf_ctx_t *conf_ctx,
         axis2_module_desc_t *module_desc)
 {
-    /* Any initialization stuff of bam_publisher goes here */
     axis2_status_t status = AXIS2_SUCCESS;
+    axis2_char_t *str_threshold_count = NULL;
+    axutil_param_t *param = NULL;
+    axis2_conf_t *conf = NULL;
+    
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[adminservices] Entry:bam_publisher_init");
-    /* Add initialization code here */
+        
+    param = axis2_module_desc_get_param(module_desc, env, BAM_PUBLISHER_THRESHOLD_COUNT_PARAM);
+    if(param)
+    {
+        str_threshold_count = axutil_param_get_value(param, env);
+        if(str_threshold_count)
+        {
+            axis2_param_t *threshold_count_param = NULL;
+            threshold_count_param = axutil_param_create(env, BAM_PUBLISHER_THRESHOLD_COUNT_PARAM, 
+                    str_threshold_count);
+            if(threshold_count_param)
+            {
+                axis2_conf_add_param(conf, env, threshold_count_param);
+            }
+        }
+    }
+
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[adminservices] Exit:bam_publisher_init");
 
     return status;

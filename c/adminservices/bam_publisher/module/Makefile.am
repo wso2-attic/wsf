@@ -4,7 +4,8 @@ prglib_DATA= module.xml
 
 libbam_publisher_la_SOURCES = svc_stat_handler.c \
 								 op_stat_handler.c \
-								 mod_bam_publisher.c
+								 mod_bam_publisher.c \
+								 util.c
 libbam_publisher_la_LIBADD = 
 
 INCLUDES = -I$(top_builddir)/include \

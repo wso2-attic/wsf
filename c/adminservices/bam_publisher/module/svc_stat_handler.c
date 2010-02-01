@@ -17,6 +17,7 @@
 #include <axis2_handler_desc.h>
 #include <axis2_msg_ctx.h>
 #include <axutil_property.h>
+#include "../../util/service_admin_counter.h"
 
 axis2_status_t AXIS2_CALL
 bam_publisher_svc_stat_handler_invoke(
@@ -52,7 +53,54 @@ bam_publisher_svc_stat_handler_invoke(struct axis2_handler *handler,
                         struct axis2_msg_ctx *msg_ctx)
 {
     axis2_status_t status = AXIS2_SUCCESS;
-    
+    axis2_char_t *svc_name = NULL;
+    axis2_svc_t *svc = NULL;
+    statistics_admin_svc_t *stat_admin_svc = NULL;
+    adb_getServiceStatistics_t *get_svc_stat = NULL;
+    adb_getServiceStatisticsResponse_t * get_svc_stat_res = NULL;
+    adb_ServiceStatistics_t *svc_stat = NULL;
+    int current_count = 0;
+    int last_count = 0;
+    axis2_char_t *str_threshold_count = NULL;
+    int threshold_count = 0;
+
+    svc = axis2_msg_ctx_get_svc(msg_ctx, env);
+    if(svc)
+    {
+        svc_name = axis2_svc_get_name(svc, env);
+    }
+    get_svc_stat = adb_getServiceStatistics_create_with_values(env, svc_name);
+    get_svc_stat_res = axis2_stub_StatisticsAdmin_getServiceStatistics(env, msg_ctx, get_svc_stat);
+    if(get_svc_stat_res)
+    {
+        current_count = adb_getServiceStatisticsResponse_get_return(get_svc_stat_res, env);
+    }
+    param = axis2_conf_ctx_get_param(conf_ctx, env, BAM_PUBLISHER_THRESHOLD_COUNT_PARAM);
+    if(param)
+    {
+        str_threshhold_count = axutil_param_get_value(param, env);
+        if(str_threshold_count)
+        {
+            threshold_count = axutil_atoi(str_threshold_count);
+        }
+    }
+    last_count = service_admin_counter_get_last_count(env, msg_ctx, svc_name, NULL);
+    if((current_count - last_count) > threshold_count)
+    {
+        adb_Event_t *event = NULL;
+        adb_ServiceStatisticsData_type0_t* svc_stat_data_type = NULL;
+        axis2_char_t *epr = NULL;
+        /* Eventing threshold count reached. So let's fire the event */
+        axis2_counter_set_last_count(env, msg_ctx, svc_name, NULL, current_count);
+        epr = service_admin_util_get_epr_address(env, msg_ctx, svc_name);
+        svc_stat_data_type = adb_ServiceStatisticsData_type0_create_with_values(env, epr, avg_res_time, 
+                min_res_time, max_res_time, request_count, response_count, fault_count, svc_name, op_name);
+        if(svc_stat_data_type)
+        {
+            event = adb_Event_create_with_values(env, svc_stat_data_type);
+        }
+    }
+
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[adminservices] End:bam_publisher_svc_stat_handler_invoke");
     
     return status;
