@@ -19,8 +19,8 @@
 #include <axis2_msg_ctx.h>
 #include <axutil_property.h>
 #include <axis2_op.h>
-#include "../axis2_counter.h"
-#include "../axis2_statistics_admin_constants.h"
+#include <service_admin_counter.h>
+#include <service_admin_constants.h>
 #include "axis2_response_time_processor.h"
 
 static axis2_status_t AXIS2_CALL
@@ -111,7 +111,7 @@ axis2_statistics_admin_calculate_response_times(
                 axutil_param_t *param = NULL;
                 axutil_param_t *src_param = NULL;
                 axis2_response_time_processor_t *res_time_processor = NULL;
-                axis2_counter_t *counter = NULL;
+                service_admin_counter_t *counter = NULL;
                 int src_count = 0;
                 
                 src_param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_REQUEST_COUNTER);
@@ -146,7 +146,7 @@ axis2_statistics_admin_calculate_response_times(
                 axutil_param_t *param = NULL;
                 axutil_param_t *op_req_counter_param = NULL;
                 axis2_response_time_processor_t *res_time_processor = NULL;
-                axis2_counter_t *counter = NULL;
+                service_admin_counter_t *counter = NULL;
                 int op_req_count = 0;
                 
                 op_req_counter_param = axis2_op_get_param(op, env, AXIS2_IN_OPERATION_COUNTER);

@@ -19,8 +19,8 @@
 #include <axis2_msg_ctx.h>
 #include <axutil_property.h>
 #include <axis2_op.h>
-#include "../axis2_counter.h"
-#include "../axis2_statistics_admin_constants.h"
+#include <service_admin_counter.h>
+#include <service_admin_constants.h>
 
 axis2_status_t AXIS2_CALL
 axis2_statistics_admin_global_request_count_handler_invoke(

@@ -19,8 +19,8 @@
 #include <axis2_msg_ctx.h>
 #include <axutil_property.h>
 #include <axis2_svc.h>
-#include "../axis2_counter.h"
-#include "../axis2_statistics_admin_constants.h"
+#include <service_admin_counter.h>
+#include <service_admin_constants.h>
 
 axis2_status_t AXIS2_CALL
 axis2_statistics_admin_fault_count_handler_invoke(
@@ -56,7 +56,7 @@ axis2_statistics_admin_fault_count_handler_invoke(struct axis2_handler *handler,
                         struct axis2_msg_ctx *msg_ctx)
 {
     axis2_status_t status = AXIS2_SUCCESS;
-    axis2_counter_t *counter = NULL;
+    service_admin_counter_t *counter = NULL;
     axutil_param_t *param = NULL;
     axis2_svc_t *svc = NULL;
     
@@ -76,15 +76,15 @@ axis2_statistics_admin_fault_count_handler_invoke(struct axis2_handler *handler,
             counter = axutil_param_get_value(param, env);
             if(counter)
             {
-                axis2_counter_increment(counter, env, msg_ctx);
+                service_admin_counter_increment(counter, env, msg_ctx);
             }
         }
         else
         {
-            counter = axis2_counter_create(env, svc_name, NULL);
+            counter = service_admin_counter_create(env, svc_name, NULL);
             if(counter)
             {
-                axis2_counter_increment(counter, env, msg_ctx);
+                service_admin_counter_increment(counter, env, msg_ctx);
                 param = axutil_param_create(env, AXIS2_SERVICE_FAULT_COUNTER, counter);
                 if(param)
                 {
@@ -101,17 +101,17 @@ axis2_statistics_admin_fault_count_handler_invoke(struct axis2_handler *handler,
                 counter = axutil_param_get_value(param, env);
                 if(counter)
                 {
-                    axis2_counter_increment(counter, env, msg_ctx);
+                    service_admin_counter_increment(counter, env, msg_ctx);
                 }
             }
             else
             {
                 axis2_char_t *op_name = NULL;
                 op_name = axutil_qname_get_localpart(axis2_op_get_qname(op, env), env);
-                axis2_counter_create(env, svc_name, op_name);
+                service_admin_counter_create(env, svc_name, op_name);
                 if(counter)
                 {
-                    axis2_counter_increment(counter, env, msg_ctx);
+                    service_admin_counter_increment(counter, env, msg_ctx);
                     param = axutil_param_create(env, AXIS2_OPERATION_FAULT_COUNTER, counter);
                     if(param)
                     {

@@ -16,7 +16,7 @@
 #include <axis2_module.h>
 #include <axis2_conf_ctx.h>
 #include <mod_statistics_admin.h>
-#include "../axis2_statistics_admin_constants.h"
+#include <service_admin_constants.h>
 
 /*#include <sqlite3.h>*/
 

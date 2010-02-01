@@ -19,8 +19,8 @@
 #include <axis2_msg_ctx.h>
 #include <axutil_property.h>
 #include <axis2_op.h>
-#include "../axis2_counter.h"
-#include "../axis2_statistics_admin_constants.h"
+#include <service_admin_counter.h>
+#include <service_admin_constants.h>
 
 axis2_status_t AXIS2_CALL
 axis2_statistics_admin_svc_request_count_handler_invoke(
@@ -56,7 +56,7 @@ axis2_statistics_admin_svc_request_count_handler_invoke(struct axis2_handler *ha
                         struct axis2_msg_ctx *msg_ctx)
 {
     axis2_status_t status = AXIS2_SUCCESS;
-    axis2_counter_t *counter = NULL;
+    service_admin_counter_t *counter = NULL;
     axutil_param_t *param = NULL;
     axis2_svc_t *svc = NULL;
     
@@ -72,7 +72,7 @@ axis2_statistics_admin_svc_request_count_handler_invoke(struct axis2_handler *ha
             counter = axutil_param_get_value(param, env);
             if(counter)
             {
-                axis2_counter_increment(counter, env, msg_ctx);
+                service_admin_counter_increment(counter, env, msg_ctx);
             }
         }
         else
@@ -80,10 +80,10 @@ axis2_statistics_admin_svc_request_count_handler_invoke(struct axis2_handler *ha
             const axis2_char_t *svc_name = NULL;
 
             svc_name = axis2_svc_get_name(svc, env);
-            axis2_counter_create(env, svc_name, NULL);
+            service_admin_counter_create(env, svc_name, NULL);
             if(counter)
             {
-                axis2_counter_increment(counter, env, msg_ctx);
+                service_admin_counter_increment(counter, env, msg_ctx);
                 param = axutil_param_create(env, AXIS2_SERVICE_REQUEST_COUNTER, counter);
                 if(param)
                 {
