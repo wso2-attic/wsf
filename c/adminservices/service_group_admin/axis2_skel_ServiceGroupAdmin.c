@@ -148,11 +148,75 @@ axis2_skel_ServiceGroupAdmin_setServiceGroupParameters(
     axis2_msg_ctx_t *msg_ctx,
     adb_setServiceGroupParameters_t* _setServiceGroupParameters )
 {
-	axutil_array_list_t *parameter_list = NULL;
-	parameter_list = adb_setServiceGroupParameters_get_parameterElement(_setServiceGroupParameters, env);
+	axis2_char_t *service_name = NULL;
+	axis2_char_t *svc_grp_name = NULL;
+	axutil_array_list_t *param_list = NULL;
+	axis2_char_t *param_str = NULL;
+	axis2_svc_grp_t *svc_grp = NULL;
+	axutil_param_t *param = NULL;
+	int size = 0, i;
 
+	svc_grp_name = adb_setServiceGroupParameters_get_serviceGroupId(_setServiceGroupParameters, env);
+	param_list	 = adb_setServiceGroupParameters_get_parameterElement(_setServiceGroupParameters, env);
+	if(!svc_grp_name)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "service name not found");
+		return AXIS2_FAILURE;
+	}
+	
+	svc_grp = service_admin_util_get_service_group(env, msg_ctx, svc_grp_name);
+	if(!svc_grp)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "service not found");
+		return AXIS2_FAILURE;
+	}
+	if(!param_list)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"Parameter list not found");
+		return AXIS2_FAILURE;
+	}
+	size = axutil_array_list_size(param_list, env);
+	for(i =0; i <size; i++)
+	{
+		axiom_node_t *node = NULL;
+		axiom_element_t *element = NULL;
+		axis2_char_t *name_val = NULL, *locked_val = NULL;
+		param_str = axutil_array_list_get(param_list, env, i);
+	
+		node = axiom_node_create_from_buffer(env, param_str);
+		if(axiom_node_get_node_type(node,env) == AXIOM_ELEMENT)
+		{
+			element = (axiom_element_t*)axiom_node_get_data_element(node, env);
+			if(!element)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Param axiom element null");
+			}
+			name_val = axiom_element_get_attribute_value_by_name(element, env, "name");
+			locked_val = axiom_element_get_attribute_value_by_name(element, env, "locked");
+			param_str = axiom_element_get_text(element, env, node);
 
+			if(name_val)
+			{
+				param = axis2_svc_grp_get_param(svc_grp, env, name_val);
+				/** Parameter exist */
+				if(param)
+				{
+					if((locked_val && strcmp(locked_val,"false") == 0) || !locked_val)
+					{
+						axutil_param_set_value(param, env, param_str);
+					}
+				}else
+				{
+					/** create and add param */
+					param = axutil_param_create(env, name_val, param_str);
+					axutil_param_set_locked(param, env, AXIS2_FALSE);
+					axis2_svc_grp_add_param(svc_grp, env, param);
+				}
+			}
+		}
+	}
 	return AXIS2_SUCCESS;
+
 }
 
 
@@ -187,12 +251,131 @@ axis2_skel_ServiceGroupAdmin_getServiceGroupParameter(const axutil_env_t *env ,
 * @return adb_configureServiceGroupMTOMResponse_t*
 */
 adb_configureServiceGroupMTOMResponse_t* 
-axis2_skel_ServiceGroupAdmin_configureServiceGroupMTOM(const axutil_env_t *env ,
-													   axis2_msg_ctx_t *msg_ctx,
-														adb_configureServiceGroupMTOM_t* _configureServiceGroupMTOM,
-														axis2_skel_ServiceGroupAdmin_configureServiceGroupMTOM_fault *fault )
+axis2_skel_ServiceGroupAdmin_configureServiceGroupMTOM(
+	const axutil_env_t *env ,
+	axis2_msg_ctx_t *msg_ctx,
+	adb_configureServiceGroupMTOM_t* _configureServiceGroupMTOM,
+	axis2_skel_ServiceGroupAdmin_configureServiceGroupMTOM_fault *fault )
+{
+	axis2_char_t *svc_grp_name = NULL;
+	axis2_char_t *mtom_flag = NULL;
+	axis2_svc_grp_t *svc_grp = NULL;
+	axutil_param_t *mtom_param = NULL;
+	adb_configureServiceGroupMTOMResponse_t *mtom_response = NULL;
+	adb_ServiceGroupMetaData_t *mata_data = NULL;
+
+	svc_grp_name = adb_configureServiceGroupMTOM_get_serviceGroupName(_configureServiceGroupMTOM, env);
+ 	mtom_flag = adb_configureServiceGroupMTOM_get_flag(_configureServiceGroupMTOM, env);
+	if(!svc_grp_name)
 	{
-	/* TODO fill this with the necessary business logic */
+		/** TODO add exception */
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "service group null");
+		return NULL;
+	}
+	svc_grp = service_admin_util_get_service_group(env, msg_ctx, svc_grp_name);
+	if(!svc_grp)
+	{
+		/** TODO add exception */
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "service group null");
+		return NULL;
+	}
+	if(!mtom_flag)
+	{
+		/** TODO add exception */
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "service mtom flag null");
+		return NULL;
+	}	
+
+	mtom_param = axis2_svc_grp_get_param(svc_grp, env, AXIS2_ENABLE_MTOM);
+	if(!mtom_param)
+	{
+		mtom_param  = axutil_param_create(env, AXIS2_ENABLE_MTOM, mtom_flag);
+		axis2_svc_grp_add_param(svc_grp, env, mtom_param);
+	}
+
+	mtom_response = adb_configureServiceGroupMTOMResponse_create(env);
+
+	/** Congigure MTOM */
+	{
+
+		axutil_hash_t *svc_map = NULL;
+		axutil_array_list_t *adb_svc_list = NULL; /* contains a list of adb_ServiceMetaData_t */
+		adb_ServiceGroupMetaData_t *svc_grp_metadata = NULL;
+		axutil_hash_index_t *hi_svc = NULL;
+		axis2_conf_ctx_t *conf_ctx = NULL;
+		axis2_conf_t *conf = NULL;
+		conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+		conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+		svc_map = axis2_svc_grp_get_all_svcs(svc_grp, env);
+		adb_svc_list = axutil_array_list_create(env, 0);
+		for(hi_svc = axutil_hash_first(svc_map, env); hi_svc; hi_svc = axutil_hash_next(env, hi_svc))
+		{
+				axis2_svc_t *svc = NULL;
+				axis2_char_t *svc_name = NULL;
+				adb_ServiceMetaData_t *adb_svc = NULL;
+				axis2_char_t *service_type = NULL;
+
+				axutil_hash_this(hi_svc, &svc_name, NULL, &svc);
+				/* Get the service type and filter using the given service type */
+				{
+					axutil_param_t* param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_TYPE);
+					if(!param)
+					{
+						service_type = AXIS2_DEFAULT_SERVICE_TYPE;
+					}else{
+						service_type = (axis2_char_t*)axutil_param_get_value(param, env);
+					}
+					
+				}
+				/*
+				if(!axutil_hash_get(service_types, service_type, AXIS2_HASH_KEY_STRING))
+				{
+					axutil_hash_set(service_types, service_type, AXIS2_HASH_KEY_STRING, service_type);
+				}
+				*/
+				adb_svc = adb_ServiceMetaData_create(env);
+				adb_ServiceMetaData_set_active(adb_svc, env, AXIS2_TRUE); /* TODO get this from somewhere */
+				adb_ServiceMetaData_set_disableTryit(adb_svc, env, AXIS2_TRUE);
+				/*adb_ServiceMetaData_set_tryitURL(adb_svc, env, "http://localhost:9090/test/tryit");*/
+				adb_ServiceMetaData_set_name(adb_svc, env, svc_name);
+				adb_ServiceMetaData_set_serviceType(adb_svc, env, service_type);
+
+				/* TODO fix the wsdl endpoints */
+				
+				adb_ServiceMetaData_add_wsdlURLs(adb_svc, env,service_admin_util_get_wsdl_for_service(env, svc_name, conf));
+				adb_ServiceMetaData_add_wsdlURLs(adb_svc, env, " ");
+
+				axutil_array_list_add(adb_svc_list, env, adb_svc);
+		}
+
+		/* check whether there are atleast one service for this group. There might be empty groups
+		 * due to the filters
+		 */
+		if(axutil_array_list_size(adb_svc_list, env))
+		{
+			svc_grp_metadata = adb_ServiceGroupMetaData_create(env);
+			adb_ServiceGroupMetaData_set_serviceGroupName(svc_grp_metadata, env, svc_grp_name);
+			adb_ServiceGroupMetaData_set_services(svc_grp_metadata, env, adb_svc_list);
+			adb_ServiceGroupMetaData_set_engagedModules_nil(svc_grp_metadata, env);
+			adb_ServiceGroupMetaData_set_serviceContextPath(svc_grp_metadata, env ,"");
+			adb_ServiceGroupMetaData_set_mtomStatus(svc_grp_metadata, env, "optional");
+	        
+		}
+		else
+		{
+			axutil_array_list_free(adb_svc_list, env);
+		}
+		{	
+			axutil_param_t *param = axis2_svc_grp_get_param(svc_grp, env, AXIS2_ENABLE_MTOM);
+			if(param)
+			{
+				adb_ServiceGroupMetaData_set_mtomStatus(svc_grp_metadata, env, axutil_param_get_value(param, env));
+			}
+		}
+	
+	}
+	
+	adb_configureServiceGroupMTOMResponse_set_return(mtom_response, env, NULL);
 	return (adb_configureServiceGroupMTOMResponse_t*)NULL;
 }
 
@@ -211,7 +394,34 @@ axis2_skel_ServiceGroupAdmin_removeServiceGroupParameter(const axutil_env_t *env
 														 axis2_msg_ctx_t *msg_ctx,
 														  adb_removeServiceGroupParameter_t* _removeServiceGroupParameter )
 {
-	/* TODO fill this with the necessary business logic */
+	axis2_char_t *service_group_name = NULL;
+	axis2_char_t *param_name = NULL;
+	axis2_svc_grp_t *svc_grp = NULL;
+	axutil_param_t *param = NULL;
+	
+	service_group_name = adb_removeServiceGroupParameter_get_serviceGroupId(_removeServiceGroupParameter, env);
+	param_name = adb_removeServiceGroupParameter_get_parameterName(_removeServiceGroupParameter, env);
+	if(!service_group_name)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Service Group null");
+		return AXIS2_FAILURE;
+	}
+	svc_grp = service_admin_util_get_service_group(env, msg_ctx, service_group_name);
+	if(!svc_grp)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Service Group does not exist");
+		return AXIS2_FAILURE;
+	}
+		
+	param = axis2_svc_grp_get_param(svc_grp, env, param_name);
+	if(!param)
+	{
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Param does not exist in this service group");	
+		return AXIS2_SUCCESS;
+	}else
+	{
+		/** TODO Implement Remove param method for service and service group */		
+	}
 	return AXIS2_SUCCESS;
 }
 
@@ -226,12 +436,30 @@ axis2_skel_ServiceGroupAdmin_removeServiceGroupParameter(const axutil_env_t *env
 * @return 
 */
 axis2_status_t  
-axis2_skel_ServiceGroupAdmin_updateServiceGroupParamters(const axutil_env_t *env , 
-														 axis2_msg_ctx_t *msg_ctx,
-														 adb_updateServiceGroupParamters_t* _updateServiceGroupParamters,
-														  axis2_skel_ServiceGroupAdmin_updateServiceGroupParamters_fault *fault )
+	axis2_skel_ServiceGroupAdmin_updateServiceGroupParamters(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+	adb_updateServiceGroupParamters_t* _updateServiceGroupParamters,
+	axis2_skel_ServiceGroupAdmin_updateServiceGroupParamters_fault *fault )
 {
-	/* TODO fill this with the necessary business logic */
+	axis2_char_t *svc_grp_name = NULL;
+	axis2_svc_grp_t *svc_grp = NULL;
+	axutil_array_list_t *param_list = NULL;
+	
+	svc_grp_name = adb_updateServiceGroupParamters_get_serviceGroupName(_updateServiceGroupParamters, env);
+	if(!svc_grp_name)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "service group null");
+		return AXIS2_FAILURE;
+	}
+	svc_grp = service_admin_util_get_service_group(env, msg_ctx, svc_grp_name);
+	if(!svc_grp)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "service group null");
+		return AXIS2_FAILURE;
+	}
+
+		 
 	return AXIS2_SUCCESS;
 }
 
@@ -245,8 +473,10 @@ axis2_skel_ServiceGroupAdmin_updateServiceGroupParamters(const axutil_env_t *env
 *
 * @return adb_dumpAARResponse_t*
 */
-adb_dumpAARResponse_t* axis2_skel_ServiceGroupAdmin_dumpAAR(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-															adb_dumpAAR_t* _dumpAAR )
+adb_dumpAARResponse_t* axis2_skel_ServiceGroupAdmin_dumpAAR(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+	adb_dumpAAR_t* _dumpAAR )
 {
 	axis2_char_t *grp_name = adb_dumpAAR_get_serviceGroupName(_dumpAAR, env);
 	adb_dumpAARResponse_t *dump_res = adb_dumpAARResponse_create(env);
@@ -266,10 +496,11 @@ adb_dumpAARResponse_t* axis2_skel_ServiceGroupAdmin_dumpAAR(const axutil_env_t *
 * @return 
 */
 axis2_status_t  
-axis2_skel_ServiceGroupAdmin_setServiceGroupParameter(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-																	  adb_setServiceGroupParameter_t* _setServiceGroupParameter )
+axis2_skel_ServiceGroupAdmin_setServiceGroupParameter(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+	adb_setServiceGroupParameter_t* _setServiceGroupParameter )
 {
-	/* TODO fill this with the necessary business logic */
 	return AXIS2_SUCCESS;
 }
 
@@ -317,9 +548,21 @@ axis2_skel_ServiceGroupAdmin_updateServiceGroupParameter_fault *fault )
 		conf = axis2_conf_ctx_get_conf(conf_ctx, env);
 		svc_grp = axis2_conf_get_svc_grp(conf, env, service_group_name);
 		if(svc_grp){
-			param = axutil_param_create(env, param_name, param_value);
-			axis2_svc_grp_add_param(svc_grp, env, param);
-			return AXIS2_SUCCESS;
+			param = axis2_svc_grp_get_param(svc_grp, env, param_name);
+			if(!param)
+			{
+				param = axutil_param_create(env, param_name, param_value);
+				axis2_svc_grp_add_param(svc_grp, env, param);
+				return AXIS2_SUCCESS;
+			}else
+			{
+				axis2_bool_t is_locked = AXIS2_FALSE;
+				is_locked = axutil_param_is_locked(param,env);
+				if(!is_locked)
+				{
+					axutil_param_set_value(param,env,param_value);
+				}
+			}
 		}else{
 			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"service group not found ");
 			return AXIS2_FAILURE;

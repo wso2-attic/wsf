@@ -166,6 +166,21 @@ $(ADMIN_SVC_DISTDIR)\$(OP_ADMIN_SERVICE)\$(OP_ADMIN_SERVICE).dll :
 op_admin_service: $(ADMIN_SVC_DISTDIR)\$(OP_ADMIN_SERVICE)\$(OP_ADMIN_SERVICE).dll
 
 #=====================================================================================================
+STAT_ADMIN_SERVICE=StatisticsAdmin
+STAT_ADMIN_SRC=$(ADMIN_SVC_SRCDIR)\statistics_admin
+
+$(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE)\$(STAT_ADMIN_SERVICE).dll : 
+    if not exist $(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_SERVICE)
+    if not exist $(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE)
+	$(CC) $(CFLAGS) /I$(STAT_ADMIN_SRC) $(STAT_ADMIN_SRC)\codegen\*.c $(STAT_ADMIN_SRC)\*.c $(SERVICE_ADMIN_UTIL_SRC)\*.c /Fo$(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_SERVICE)\ /c
+	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
+		/OUT:$(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE)\$(STAT_ADMIN_SERVICE).dll
+	-@$(_VC_MANIFEST_EMBED_DLL)
+	copy $(OP_ADMIN_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE)\
+
+	copy $(STAT_ADMIN_SRC)\resources\$(STAT_ADMIN_SERVICE).wsdl $(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE)\
+
+stat_admin_service: $(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE)\$(STAT_ADMIN_SERVICE).dll
 
 
 #=====================================================================================================
@@ -210,7 +225,7 @@ registry_client: $(REGISTRY_CLIENT_SRC)
 	
 #==============================================================================================
 
-admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service
+admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service stat_admin_service
 #admin_svc_all: authentication_service server_admin_service proxy_admin op_admin_service service_admin_service keystore_admin
 
 install: distdir intdirs admin_svc_all

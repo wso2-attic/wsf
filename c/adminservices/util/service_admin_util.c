@@ -141,3 +141,26 @@ service_admin_util_serialize_param(axutil_env_t *env,
 		axiom_element_set_text(param_ele, env, value, param_node);
 	return param_node;
 }
+
+AXIS2_EXTERN axis2_svc_grp_t* AXIS2_CALL
+service_admin_util_get_service_group(
+	axutil_env_t *env,
+	axis2_msg_ctx_t *msg_ctx,
+	axis2_char_t *svc_grp_name)
+{
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf = NULL;
+	axis2_svc_grp_t *service_grp = NULL;
+	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+	service_grp = axis2_conf_get_svc_grp(conf, env, svc_grp_name);
+	if(service_grp)
+	{
+		return service_grp;
+	}else
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI , "service not found");
+	}
+	return NULL;
+
+}

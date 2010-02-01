@@ -406,6 +406,7 @@ axis2_skel_ServiceAdmin_setBindingPolicy(const axutil_env_t *env ,
 	binding_policy			= adb_setBindingPolicy_get_bindingName(_setBindingPolicy, env);
 	binding_policy_string	= adb_setBindingPolicy_get_policyString(_setBindingPolicy, env);
 	binding_service_name	= adb_setBindingPolicy_get_serviceName(_setBindingPolicy, env);
+
 	return AXIS2_SUCCESS;
 }
 
@@ -518,11 +519,78 @@ axis2_skel_ServiceAdmin_changeServiceState(const axutil_env_t *env ,
 * @return 
 */
 axis2_status_t  
-axis2_skel_ServiceAdmin_setServiceParameters(const axutil_env_t *env , 
-											 axis2_msg_ctx_t *msg_ctx,
-											 adb_setServiceParameters_t* _setServiceParameters )
+axis2_skel_ServiceAdmin_setServiceParameters(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+	adb_setServiceParameters_t* _setServiceParameters )
 {
-	/* TODO fill this with the necessary business logic */
+	axis2_char_t *service_name = NULL;
+	axutil_array_list_t *param_list = NULL;
+	axis2_char_t *param_str = NULL;
+	axis2_svc_t *svc = NULL;
+	axutil_param_t *param = NULL;
+	int size = 0, i;
+
+	
+
+	service_name = adb_setServiceParameters_get_serviceName(_setServiceParameters, env);
+	param_list	 = adb_setServiceParameters_get_parameters(_setServiceParameters, env);
+	if(!service_name)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "service name not found");
+		return AXIS2_FAILURE;
+	}
+	svc = service_admin_util_get_service(env, msg_ctx, service_name);
+	if(!svc)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "service not found");
+		return AXIS2_FAILURE;
+	}
+	if(!param_list)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"Parameter list not found");
+		return AXIS2_FAILURE;
+	}
+	size = axutil_array_list_size(param_list, env);
+	for(i =0; i <size; i++)
+	{
+		axiom_node_t *node = NULL;
+		axiom_element_t *element = NULL;
+		axis2_char_t *name_val = NULL, *locked_val = NULL;
+		param_str = axutil_array_list_get(param_list, env, i);
+	
+		node = axiom_node_create_from_buffer(env, param_str);
+		if(axiom_node_get_node_type(node,env) == AXIOM_ELEMENT)
+		{
+			element = (axiom_element_t*)axiom_node_get_data_element(node, env);
+			if(!element)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Param axiom element null");
+			}
+			name_val = axiom_element_get_attribute_value_by_name(element, env, "name");
+			locked_val = axiom_element_get_attribute_value_by_name(element, env, "locked");
+			param_str = axiom_element_get_text(element, env, node);
+
+			if(name_val)
+			{
+				param = axis2_svc_get_param(svc, env, name_val);
+				/** Parameter exist */
+				if(param)
+				{
+					if((locked_val && strcmp(locked_val,"false") == 0) || !locked_val)
+					{
+						axutil_param_set_value(param, env, param_str);
+					}
+				}else
+				{
+					/** create and add param */
+					param = axutil_param_create(env, name_val, param_str);
+					axutil_param_set_locked(param, env, AXIS2_FALSE);
+					axis2_svc_add_param(svc, env, param);
+				}
+			}
+		}
+	}
 	return AXIS2_SUCCESS;
 }
 

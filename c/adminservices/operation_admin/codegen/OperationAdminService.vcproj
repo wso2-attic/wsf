@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="F:\wsfc\wso2-wsf-c-bin-2.0.0-win32\services\OperationAdmin"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -260,6 +260,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\adb_OperationMetaData.c"
+				>
+			</File>
+			<File
+				RelativePath=".\adb_OperationMetaDataWrapper.c"
+				>
+			</File>
+			<File
 				RelativePath=".\adb_removeOperationParameter.c"
 				>
 			</File>
@@ -281,6 +289,10 @@
 			</File>
 			<File
 				RelativePath=".\axis2_svc_skel_OperationAdmin.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\util\service_admin_util.c"
 				>
 			</File>
 		</Filter>
@@ -373,6 +385,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\adb_OperationMetaData.h"
+				>
+			</File>
+			<File
+				RelativePath=".\adb_OperationMetaDataWrapper.h"
+				>
+			</File>
+			<File
 				RelativePath=".\adb_removeOperationParameter.h"
 				>
 			</File>
@@ -392,12 +412,20 @@
 				RelativePath=".\axis2_skel_OperationAdmin.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\include\service_admin_util.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			>
 		</Filter>
+		<File
+			RelativePath="..\..\adminservices.mk"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

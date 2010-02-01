@@ -8,7 +8,8 @@
      * axis2_skel_OperationAdmin Axis2/C skeleton for the axisService
      */
 
-     #include "codegen/axis2_skel_OperationAdmin.h"
+#include "codegen/axis2_skel_OperationAdmin.h"
+#include "service_admin_util.h"
 
      
 
@@ -106,33 +107,53 @@
          *
          * @return adb_listAllOperationsResponse_t*
          */
-        adb_listAllOperationsResponse_t* axis2_skel_OperationAdmin_listAllOperations(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_listAllOperations_t* _listAllOperations )
+        adb_listAllOperationsResponse_t* axis2_skel_OperationAdmin_listAllOperations(
+			const axutil_env_t *env , 
+			axis2_msg_ctx_t *msg_ctx,
+            adb_listAllOperations_t* _listAllOperations )
         {
             adb_OperationMetaDataWrapper_t *op_metadata_wrapper = NULL;
-            axutil_array_list_t *op_list = NULL;
-            adb_listPublishedOperations_t *list_published_ops = NULL;
-            adb_listPublishedOperationsResponse_t *list_published_ops_res = NULL;
-
-            if(!_listAllOperations)
+            axis2_char_t *service_name = NULL;
+			axis2_svc_t *svc = NULL;
+			adb_listAllOperationsResponse_t *response = NULL;
+			axutil_hash_t *op_map = NULL;
+			axutil_hash_index_t *index = NULL;
+			
+			service_name = adb_listAllOperations_get_serviceName(_listAllOperations, env);
+			if(!service_name)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Service not found");
+				return NULL;
+			}
+			
+			svc = service_admin_util_get_service(env, msg_ctx, service_name);
+			
+            if(svc)
             {
-                return NULL;
-            }
-            list_published_ops = adb_listPublishedOperations_create_with_values(env, adb_listAllOperations_get_serviceName (_listAllOperations, env));
-            if(list_published_ops)
-            {
-                list_published_ops_res = axis2_skel_OperationAdmin_listPublishedOperations(env, msg_ctx, list_published_ops);
-                if(list_published_ops_res)
+				response = adb_listAllOperationsResponse_create(env);
+				op_metadata_wrapper = adb_OperationMetaDataWrapper_create(env);
+				op_map = axis2_svc_get_all_ops(svc, env);
+                for (index = axutil_hash_first(op_map, env); index; index = axutil_hash_next(env, index))
                 {
-                    op_list = adb_listPublishedOperationsResponse_get_return(list_published_ops_res, env);
-                    
+                    void *v = NULL;
+                    axis2_op_t *op = NULL;
+                    axis2_char_t *op_name = NULL;
+					adb_OperationMetaData_t *op_metadata = NULL;
+                    axutil_hash_this(index, NULL, NULL, &v);
+                    op = (axis2_op_t *) v;
+                    op_name = axutil_qname_get_localpart(axis2_op_get_qname(op, env), env);
+			        
+					op_metadata = adb_OperationMetaData_create(env);
+					adb_OperationMetaData_set_name(op_metadata, env,op_name);
+					/** TODO Get it from a param */
+					adb_OperationMetaData_set_enableMTOM(op_metadata, env, AXIS2_FALSE);
+					adb_OperationMetaDataWrapper_add_publishedOperations(op_metadata_wrapper, env, op_metadata);
                 }
-                op_metadata_wrapper = adb_OperationMetaDataWrapper_create(env);
-                adb_OperationMetaDataWrapper_set_publishedOperations (op_metadata_wrapper, env, op_list);
-                adb_OperationMetaDataWrapper_set_controlOperations (op_metadata_wrapper, env, NULL);
-            }
-
-            return (adb_listAllOperationsResponse_t*) op_metadata_wrapper;
+				adb_listAllOperationsResponse_set_return(response, env, op_metadata_wrapper);
+				return response;
+			}
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"Service  not available");
+			return NULL;
         }
      
 
@@ -176,13 +197,15 @@
             }
             svc_name = adb_getOperationMetaData_get_serviceName(_getOperationMetaData, env);
             op_name = adb_getOperationMetaData_get_operationName(_getOperationMetaData, env);
+			
+			
 
             op_metadata = adb_OperationMetaData_create(env);
             adb_OperationMetaData_set_name(op_metadata, env, op_name);
-            adb_OperationMetaData_set_controlOperation(op_metadata, env, AXIS2_FALSE);
-            adb_OperationMetaData_set_enableMTOM(op_metadata, env, NULL);
+			adb_OperationMetaData_set_controlOperation(op_metadata, env, AXIS2_FALSE);
+            adb_OperationMetaData_set_enableMTOM(op_metadata, env, "false");
             get_op_metadata_res = adb_getOperationMetaDataResponse_create_with_values (env, op_metadata); 
-            return (adb_getOperationMetaDataResponse_t*) get_op_metadata_res;
+            return  get_op_metadata_res;
         }
      
 
@@ -334,9 +357,7 @@
                         if(get_op_meta_data_res)
                         {
                             axutil_array_list_add(op_list, env, adb_getOperationMetaDataResponse_get_return(get_op_meta_data_res, env));
-                            adb_getOperationMetaDataResponse_free(get_op_meta_data_res, env);
                         }
-                        adb_getOperationMetaData_free(get_op_meta_data, env);
                     }
                 }
                 published_op_list_res = adb_listPublishedOperationsResponse_create_with_values(env, op_list);
