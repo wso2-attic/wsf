@@ -9,9 +9,9 @@
      */
 
      #include "codegen/axis2_skel_StatisticsAdmin.h"
-     #include "axis2_statistics_admin_constants.h"
      #include "module/axis2_response_time_processor.h"
-     #include "axis2_counter.h"
+     #include <service_admin_counter.h>
+     #include <service_admin_constants.h>
 
      
 
