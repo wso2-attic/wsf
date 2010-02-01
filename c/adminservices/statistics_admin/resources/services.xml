@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- This file was auto-generated from WSDL -->
 <!-- by the Apache Axis2 version: #axisVersion# #today# -->
-<service name="statistics_admin">
+<service name="StatisticsAdmin">
     <parameter name="ServiceClass">statistics_admin</parameter>
-    <description>Statistics Admin Service
-            </description>
+    <description>Statistics Admin Service</description>
     <operation name="getMaxServiceResponseTime" mep="http://www.w3.org/ns/wsdl/in-out">
         <parameter name="wsamapping">urn:getMaxServiceResponseTime</parameter>
     </operation>
