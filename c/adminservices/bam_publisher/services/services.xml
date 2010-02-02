@@ -1,12 +1,11 @@
-<service name="statistics_svc">
-    <parameter name="ServiceClass" locked="xsd:false">statistics_svc</parameter>
+<service name="BAMServiceStatisticsSubscriberService">
+    <parameter name="ServiceClass" locked="xsd:false">BAMServiceStatisticsSubscriberService</parameter>
    <description>
-       This is a eventing data source which can be started and stopped remotely by making
-       soap calles to it's start and stop functions respectively.
+       BAM event source service
    </description>
    <module ref="savan"/>
    <operation name="send">
             <messageReceiver class="savan_msgreceivers" />
-           <parameter name="wsamapping" >http://ws.apache.org/savan/samples/statistics_svc/send</parameter>
+           <parameter name="wsamapping" >http://wso2.org/services/BAMServiceStatisticsSubscriberService/send</parameter>
    </operation>
 </service>
