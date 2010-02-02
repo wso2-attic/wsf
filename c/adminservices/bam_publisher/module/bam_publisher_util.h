@@ -35,7 +35,8 @@ extern "C"
  * @ingroup axis2_counter
  * @{
  */
-
+#define BAM_PUBLISHER_SERVICE_STATISTICS_SUBSCRIBER_SERVICE "BAMServiceStatisticsSubscriberService"
+#define BAM_PUBLISHER_SERVICE_ACTION "http://wso2.org/services/BAMServiceStatisticsSubscriberService/send"
 #define TRANSPORT "https" /* TODO: it is not ideal to assume https is always availabe */
 
 #define STATISTICS_DATA_NS_URI "http://wso2.org/ns/2009/09/bam/service/statistics/data"
@@ -63,6 +64,8 @@ extern "C"
  *	Counter Struct
  */
 
+struct axis2_msg_ctx;
+
 axiom_node_t *AXIS2_CALL
 bam_publisher_util_get_payload (
     const axutil_env_t *env,
@@ -75,6 +78,12 @@ bam_publisher_util_get_payload (
     const int _fault_count,
     const axis2_char_t *svc_name,
     const axis2_char_t *op_name);
+
+void AXIS2_CALL
+bam_publisher_util_publish(
+        const axutil_env_t *env,
+        struct axis2_msg_ctx *msg_ctx,
+        axiom_node_t *node);
 
 /** @} */
 #ifdef __cplusplus

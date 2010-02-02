@@ -116,7 +116,18 @@ bam_publisher_svc_stat_handler_invoke(struct axis2_handler *handler,
         axis2_counter_set_last_count(env, msg_ctx, svc_name, NULL, current_count);
         server_name = service_admin_util_get_epr_address(env, msg_ctx, svc_name);
         payload = bam_publisher_util_get_payload(env, server_name, avg_res_time, 
-                min_res_time, max_res_time, request_count, response_count, fault_count, svc_name, NULL);
+                min_res_time, max_res_time, request_count, response_count, fault_count, svc_name, 
+                NULL);
+        if(payload)
+        {
+            bam_publisher_util_publish(env, msg_ctx, payload);
+        }
+        else
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                    "[adminservices] Event payload creation failed");
+            status = AXIS2_FAILURE;
+        }
     }
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[adminservices] End:bam_publisher_svc_stat_handler_invoke");
