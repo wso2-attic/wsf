@@ -114,11 +114,13 @@
 	<phase name="Security"/>
         <phase name="Rahas"/>
         <phase name="RMPhase"/>
+        <phase name="OpPhase"/>
 	<phase name="SavanPhase"/>
     </phaseOrder>
     <phaseOrder type="outflow">
         <!-- User defined phases could be added here -->
         <phase name="RMPhase"/>
+        <phase name="OpPhase"/>
 		<phase name="SavanPhase"/>
         <!--phase name="RMPhase"/-->
         <!--phase name="userphase1"/-->
@@ -130,6 +132,7 @@
         <!-- User defined phases could be added here -->
         <!--phase name="userphase1"/-->
         <phase name="RMPhase"/>
+        <phase name="OpPhase"/>
 		<phase name="SavanPhase"/>
     </phaseOrder>
     <phaseOrder type="Outfaultflow">
