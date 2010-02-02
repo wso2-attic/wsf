@@ -2,7 +2,7 @@
 <!-- This file was auto-generated from WSDL -->
 <!-- by the Apache Axis2 version: #axisVersion# #today# -->
 <service name="StatisticsAdmin">
-    <parameter name="ServiceClass">statistics_admin</parameter>
+    <parameter name="ServiceClass">StatisticsAdmin</parameter>
     <description>Statistics Admin Service</description>
     <operation name="getMaxServiceResponseTime" mep="http://www.w3.org/ns/wsdl/in-out">
         <parameter name="wsamapping">urn:getMaxServiceResponseTime</parameter>

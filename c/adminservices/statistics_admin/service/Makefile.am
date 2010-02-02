@@ -1,8 +1,8 @@
-prglibdir=$(prefix)/services/statistics_admin
-prglib_LTLIBRARIES = libstatistics_admin.la
+prglibdir=$(prefix)/services/StatisticsAdmin
+prglib_LTLIBRARIES = libStatisticsAdmin.la
 prglib_DATA= resources/services.xml
 noinst_HEADERS = 
-libstatistics_admin_la_SOURCES = axis2_skel_StatisticsAdmin.c \
+libStatisticsAdmin_la_SOURCES = axis2_skel_StatisticsAdmin.c \
 								 codegen/adb_getAvgOperationResponseTime.c \
 								 codegen/adb_getMinSystemResponseTimeResponse.c \
 								 codegen/adb_getServiceResponseCountResponse.c \
@@ -44,7 +44,7 @@ libstatistics_admin_la_SOURCES = axis2_skel_StatisticsAdmin.c \
 								 codegen/axis2_svc_skel_StatisticsAdmin.c \
 								 codegen/adb_getMinServiceResponseTimeResponse.c \
 								 codegen/adb_getServiceResponseCount.c
-libstatistics_admin_la_LIBADD = ../../util/libservice_admin_util.la
+libStatisticsAdmin_la_LIBADD = ../../util/libservice_admin_util.la
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
