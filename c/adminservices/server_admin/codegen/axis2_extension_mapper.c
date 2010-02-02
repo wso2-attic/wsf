@@ -51,7 +51,7 @@
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                             "Failed in building adb object : "
                             "NULL elemenet can not be passed to deserialize");
-                return AXIS2_FAILURE;
+				return NULL;
             }
 
             element = (axiom_element_t *)axiom_node_get_data_element(parent, env);
@@ -251,7 +251,7 @@
             }
             
 
-            return AXIS2_FAILURE;
+			return NULL;
         }
     
 

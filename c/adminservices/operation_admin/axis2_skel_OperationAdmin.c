@@ -22,13 +22,16 @@
          *
          * @return adb_listOperationPhaseHandlersResponse_t*
          */
-        adb_listOperationPhaseHandlersResponse_t* axis2_skel_OperationAdmin_listOperationPhaseHandlers(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_listOperationPhaseHandlers_t* _listOperationPhaseHandlers )
-        {
-          /* TODO fill this with the necessary business logic */
-          return (adb_listOperationPhaseHandlersResponse_t*)NULL;
-        }
-     
+adb_listOperationPhaseHandlersResponse_t* 
+axis2_skel_OperationAdmin_listOperationPhaseHandlers(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+    adb_listOperationPhaseHandlers_t* _listOperationPhaseHandlers )
+{
+  /* TODO fill this with the necessary business logic */
+  return (adb_listOperationPhaseHandlersResponse_t*)NULL;
+}
+
 
 		 
         /**

@@ -11,6 +11,8 @@
 #include "codegen/axis2_skel_ServiceAdmin.h"
 #include "service_admin_constants.h"
 #include "service_admin_util.h"
+#include "axis2_policy_include.h"
+#include "neethi_engine.h"
 
 static axis2_char_t *axis2_skel_ServiceAdmin_get_service_type(
     const axutil_env_t *env,
@@ -214,8 +216,66 @@ axis2_skel_ServiceAdmin_setServicePolicy(const axutil_env_t *env ,
 										 adb_setServicePolicy_t* _setServicePolicy,
 										 axis2_skel_ServiceAdmin_setServicePolicy_fault *fault)
 {
-	/* TODO fill this with the necessary business logic */
-	return AXIS2_SUCCESS;
+	axis2_char_t *service_name = NULL;
+	axis2_svc_t *svc = NULL;
+	axis2_desc_t *desc = NULL;
+	axis2_policy_include_t *policy_include = NULL;
+	axis2_char_t *policy_str = NULL;
+	service_name = adb_setServicePolicy_get_serviceName(_setServicePolicy,env);
+	policy_str = adb_setServicePolicy_get_policyString(_setServicePolicy, env);
+
+	if(!service_name)
+	{
+		/** TODO Return Fault */
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Service name not found");
+		return NULL;
+	}
+	if(!policy_str)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Policy string not present");
+	}
+	svc = service_admin_util_get_service(env, msg_ctx, service_name);
+	if(!svc)
+	{
+		/** TODO Return Fault */
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Service not found");
+		return NULL;
+	}
+
+	desc = axis2_svc_get_base(svc, env);
+	if(!desc)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"Serivce Desc not found ");
+		return NULL;
+	}
+	policy_include = axis2_desc_get_policy_include(desc, env);
+	
+	if(policy_include)
+	{
+
+		axiom_node_t *policy_node = NULL;
+		neethi_policy_t *policy = NULL;
+		axiom_element_t *ele = NULL;
+		neethi_policy_t *current_policy = NULL;
+		policy_node = axiom_node_create_from_buffer(env, policy_str);
+		if(!policy_node)
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Policy string serialization filed");
+			return AXIS2_FAILURE;
+		}		
+		ele = (axiom_element_t *)axiom_node_get_data_element(policy_node, env);
+
+		policy = neethi_engine_get_policy(env, policy_node, ele);
+		if(!policy)
+		{
+			/** TODO return an exception */
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "policy deserialization filed");
+			return AXIS2_FAILURE;
+		}
+		axis2_policy_include_set_policy(policy_include, env, policy);
+		return AXIS2_SUCCESS;
+	}
+	return AXIS2_FAILURE;
 }
 
 
@@ -233,8 +293,64 @@ axis2_skel_ServiceAdmin_getPolicy(const axutil_env_t *env ,
 								  axis2_msg_ctx_t *msg_ctx,
 								  adb_getPolicy_t* _getPolicy)
 {
-	/* TODO fill this with the necessary business logic */
-	return (adb_getPolicyResponse_t*)NULL;
+	axis2_char_t *service_name = NULL;
+	axis2_svc_t *svc = NULL;
+	axis2_desc_t *desc = NULL;
+	axis2_policy_include_t *policy_include = NULL;
+	adb_getPolicyResponse_t *response = NULL;
+	neethi_policy_t *effective_policy = NULL;
+
+	service_name = adb_getPolicy_get_serviceName(_getPolicy,env);
+	if(!service_name)
+	{
+		/** TODO Return Fault */
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Service name not found");
+		return NULL;
+	}
+	svc = service_admin_util_get_service(env, msg_ctx, service_name);
+	if(!svc)
+	{
+		/** TODO Return Fault */
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Service not found");
+		return NULL;
+	}
+
+	desc = axis2_svc_get_base(svc, env);
+	if(!desc)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"Serivce Desc not found ");
+		return NULL;
+	}
+	policy_include = axis2_desc_get_policy_include(desc, env);
+	
+	if(policy_include)
+	{
+
+		axiom_node_t *policy_node = NULL;
+		response = adb_getPolicyResponse_create(env);
+		effective_policy = axis2_policy_include_get_effective_policy(policy_include, env);
+
+		if(effective_policy)
+		{
+			axis2_char_t *policy_str = NULL;
+			policy_node = neethi_policy_serialize(effective_policy, NULL, env);
+			if(policy_node)
+			{
+				policy_str = axiom_node_to_string(policy_node, env);
+				if(policy_str)
+				{
+					adb_getPolicyResponse_set_return(response, env, policy_str);
+					return response;
+				}
+			}
+		}else
+		{
+			/** TODO return an exception */
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "effective polcy not available");
+			return NULL;
+		}
+	}
+	return NULL;
 }
 
 
@@ -1161,12 +1277,70 @@ adb_getBindingPolicyResponse_t* axis2_skel_ServiceAdmin_getBindingPolicy(const a
 *
 * @return adb_getServiceBindingsResponse_t*
 */
-adb_getServiceBindingsResponse_t* axis2_skel_ServiceAdmin_getServiceBindings(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-																			 adb_getServiceBindings_t* _getServiceBindings,
-																			 axis2_skel_ServiceAdmin_getServiceBindings_fault *fault )
+adb_getServiceBindingsResponse_t* 
+axis2_skel_ServiceAdmin_getServiceBindings(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+	adb_getServiceBindings_t* _getServiceBindings,
+	axis2_skel_ServiceAdmin_getServiceBindings_fault *fault )
 {
-	/* TODO fill this with the necessary business logic */
-	return (adb_getServiceBindingsResponse_t*)NULL;
+	axis2_char_t *service_name = NULL;
+	axis2_svc_t *svc = NULL;
+	axis2_desc_t *desc = NULL;
+	axis2_policy_include_t *policy_include = NULL;
+	adb_getServiceBindingsResponse_t *response = NULL;
+	neethi_policy_t *effective_policy = NULL;
+
+	service_name = adb_getServiceBindings_get_serviceName(_getServiceBindings,env);
+	if(!service_name)
+	{
+		/** TODO Return Fault */
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Service name not found");
+		return NULL;
+	}
+	svc = service_admin_util_get_service(env, msg_ctx, service_name);
+	if(!svc)
+	{
+		/** TODO Return Fault */
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Service not found");
+		return NULL;
+	}
+
+	desc = axis2_svc_get_base(svc, env);
+	if(!desc)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"Serivce Desc not found ");
+		return NULL;
+	}
+	policy_include = axis2_desc_get_policy_include(desc, env);
+	
+	if(policy_include)
+	{
+
+		axiom_node_t *policy_node = NULL;
+		response = adb_getServiceBindingsResponse_create(env);
+		effective_policy = axis2_policy_include_get_effective_policy(policy_include, env);
+		if(effective_policy)
+		{
+			axis2_char_t *policy_str = NULL;
+			policy_node = neethi_policy_serialize(effective_policy, NULL, env);
+			if(policy_node)
+			{
+				policy_str = axiom_node_to_string(policy_node, env);
+				if(policy_str)
+				{
+					adb_getServiceBindingsResponse_add_return(response, env, policy_str);
+					return response;
+				}
+			}
+		}else
+		{
+			/** TODO return an exception */
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "effective polcy not available");
+			return NULL;
+		}
+	}
+	return NULL;
 }
 
 
