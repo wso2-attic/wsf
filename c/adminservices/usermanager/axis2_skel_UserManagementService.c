@@ -161,8 +161,17 @@
         adb_getAllRolesNamesResponse_t* axis2_skel_UserManagementService_getAllRolesNames(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
                                           axis2_skel_UserManagementService_getAllRolesNames_fault *fault )
         {
-          /* TODO fill this with the necessary business logic */
-          return (adb_getAllRolesNamesResponse_t*)NULL;
+			adb_getAllRolesNamesResponse_t* response = NULL;
+			axis2_char_t* roles = NULL;
+
+			// Fetch roles
+			roles = axutil_string_get_buffer(axutil_string_create(env, "admin"), env);
+
+			// Create response
+			response = adb_getAllRolesNamesResponse_create(env);
+
+			adb_getAllRolesNamesResponse_add_return(response, env, roles);
+			return response;
         }
      
 

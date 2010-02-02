@@ -1,6 +1,6 @@
 
 AUTOCONF = configure.in
-!include $(AUTOCONF)
+#!include $(AUTOCONF)
 
 ADMIN_SVC_SRCDIR = .\ 
 ADMIN_SVC_INTDIR = .\intmsvc
@@ -16,12 +16,16 @@ SERVER_ADMIN_SERVICE=ServerAdmin
 OP_ADMIN_SERVICE=OperationAdmin
 SERVICE_ADMIN_SERVICE=ServiceAdmin
 SERVICE_GRP_ADMIN_SERVICE=ServiceGroupAdmin
+SECURITY_ADMIN_SERVICE=SecurityAdminService
+USER_MANAGER_SERVICE=UserManagementService
 
 ## Service Code SRC
 AUTH_SVC_SRC=$(ADMIN_SVC_SRCDIR)\authentication
 SERVER_ADMIN_SRC=$(ADMIN_SVC_SRCDIR)\server_admin
 SERVICE_ADMIN_SRC=$(ADMIN_SVC_SRCDIR)\service_admin
 SERVICE_ADMIN_UTIL_SRC=$(ADMIN_SVC_SRCDIR)\util
+SECURITY_ADMIN_SVC_SRC=$(ADMIN_SVC_SRCDIR)\security_admin_service
+USER_MANAGER_SVC_SRC=$(ADMIN_SVC_SRCDIR)\usermanager
 
 ##################### compiler options
 
@@ -34,7 +38,7 @@ CFLAGS = /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT"   \
 LD = link.exe
 LDFLAGS = /nologo $(LIBS_PATH)
 
-LIBS = axutil.lib axiom.lib axis2_engine.lib
+LIBS = axutil.lib axiom.lib axis2_engine.lib axis2_parser.lib
 
 
 SSL_LIB_FLAG = "MD"
@@ -75,6 +79,8 @@ distdir:
 	if not exist $(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_DISTDIR)\$(OP_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(OP_ADMIN_SERVICE)
+	if not exist $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)
+	if not exist $(ADMIN_SVC_DISTDIR)\$(USER_MANAGER_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(USER_MANAGER_SERVICE)
 
 
 clean: 
@@ -88,6 +94,8 @@ intdirs:
 	if not exist $(ADMIN_SVC_INTDIR)\$(SERVICE_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(SERVICE_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_INTDIR)\$(SERVICE_GRP_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_INTDIR)\$(OP_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(OP_ADMIN_SERVICE)
+	if not exist $(ADMIN_SVC_INTDIR)\$(SECURITY_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(SECURITY_ADMIN_SERVICE)
+	if not exist $(ADMIN_SVC_INTDIR)\$(USER_MANAGER_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(USER_MANAGER_SERVICE)
 
 
 $(ADMIN_SVC_DISTDIR)\$(AUTH_SERVICE)\$(AUTH_SERVICE).dll: $(AUTH_SVC_SRC)\codegen\*.c $(AUTH_SVC_SRC)\*.c
@@ -172,7 +180,7 @@ STAT_ADMIN_SRC=$(ADMIN_SVC_SRCDIR)\statistics_admin
 $(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE)\$(STAT_ADMIN_SERVICE).dll : 
     if not exist $(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_SERVICE)
     if not exist $(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE)
-	$(CC) $(CFLAGS) /I$(STAT_ADMIN_SRC) $(STAT_ADMIN_SRC)\codegen\*.c $(STAT_ADMIN_SRC)\*.c $(SERVICE_ADMIN_UTIL_SRC)\*.c /Fo$(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_SERVICE)\ /c
+	$(CC) $(CFLAGS) $(STAT_ADMIN_SRC) $(STAT_ADMIN_SRC)\codegen\*.c $(STAT_ADMIN_SRC)\*.c $(SERVICE_ADMIN_UTIL_SRC)\*.c /Fo$(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_SERVICE)\ /c
 	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
 		/OUT:$(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE)\$(STAT_ADMIN_SERVICE).dll
 	-@$(_VC_MANIFEST_EMBED_DLL)
@@ -205,8 +213,28 @@ $(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\$(SERVICE_GRP_ADMIN_SERVICE).d
 	-@$(_VC_MANIFEST_EMBED_DLL)
 	copy $(SERVICE_GRP_ADMIN_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\
 
-service_grp_admin_service: $(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\$(SERVICE_GRP_ADMIN_SERVICE).dll	
-	
+service_grp_admin_service: $(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\$(SERVICE_GRP_ADMIN_SERVICE).dll
+#=====================================================================================================
+$(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)\$(SECURITY_ADMIN_SERVICE).dll: $(SECURITY_ADMIN_SVC_SRC)\codegen\*.c $(SECURITY_ADMIN_SVC_SRC)\*.c
+	$(CC) $(CFLAGS) $(SECURITY_ADMIN_SVC_SRC)\codegen\*.c $(SECURITY_ADMIN_SVC_SRC)\*.c \
+		/Fo$(ADMIN_SVC_INTDIR)\$(SECURITY_ADMIN_SERVICE)\ /c
+	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(SECURITY_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
+		/OUT:$(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)\$(SECURITY_ADMIN_SERVICE).dll
+	-@$(_VC_MANIFEST_EMBED_DLL)
+	copy $(SECURITY_ADMIN_SVC_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)
+	copy $(SECURITY_ADMIN_SVC_SRC)\resources\scenario-config.xml $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)
+
+security_admin_service: $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)\$(SECURITY_ADMIN_SERVICE).dll
+#=====================================================================================================
+$(ADMIN_SVC_DISTDIR)\$(USER_MANAGER_SERVICE)\$(USER_MANAGER_SERVICE).dll: $(USER_MANAGER_SVC_SRC)\codegen\*.c $(USER_MANAGER_SVC_SRC)\*.c
+	$(CC) $(CFLAGS) $(USER_MANAGER_SVC_SRC)\codegen\*.c $(USER_MANAGER_SVC_SRC)\*.c \
+		/Fo$(ADMIN_SVC_INTDIR)\$(USER_MANAGER_SERVICE)\ /c
+	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(USER_MANAGER_SERVICE)\*.obj $(LIBS) /DLL \
+		/OUT:$(ADMIN_SVC_DISTDIR)\$(USER_MANAGER_SERVICE)\$(USER_MANAGER_SERVICE).dll
+	-@$(_VC_MANIFEST_EMBED_DLL)
+	copy $(USER_MANAGER_SVC_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(USER_MANAGER_SERVICE)
+
+user_manager_service: $(ADMIN_SVC_DISTDIR)\$(USER_MANAGER_SERVICE)\$(USER_MANAGER_SERVICE).dll
 #==================================================================================
 #Registry Client 
 #==================================================================================
@@ -225,8 +253,8 @@ registry_client: $(REGISTRY_CLIENT_SRC)
 	
 #==============================================================================================
 
-admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service stat_admin_service
-#admin_svc_all: authentication_service server_admin_service proxy_admin op_admin_service service_admin_service keystore_admin
+admin_svc_all: security_admin_service user_manager_service 
+#admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service 
 
 install: distdir intdirs admin_svc_all
 

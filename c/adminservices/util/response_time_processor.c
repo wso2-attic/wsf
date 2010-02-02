@@ -15,6 +15,7 @@
  */
 
 #include <service_admin_response_time_processor.h>
+#include <axutil_utils.h>
 
 AXIS2_EXTERN service_admin_response_time_processor_t* AXIS2_CALL
 service_admin_response_time_processor_create(
