@@ -9,9 +9,6 @@
         <handler name="op_stat_handler" class="bam_publisher">
             <order phase="OpPhase"/>
         </handler>
-        <handler name="response_time_handler" class="bam_publisher">
-            <order phase="Transport"/>
-        </handler>
     </inflow>
    <parameter name="service_request_count_threshold" locked="false">5</parameter>
    <parameter name="operation_request_count_threshold" locked="false">5</parameter>
