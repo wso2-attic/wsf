@@ -77,7 +77,7 @@ service_admin_util_get_service(
 
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-service_admin_util_get_epr_address(axutil_env_t *env,
+service_admin_util_get_epr_address(const axutil_env_t *env,
 						   axis2_msg_ctx_t *msg_ctx,
 						   axis2_char_t *service_name)
 {
