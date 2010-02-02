@@ -47,4 +47,5 @@
     <operation name="setOperationParameters" mep="http://www.w3.org/ns/wsdl/in-only">
         <parameter name="wsamapping">urn:setOperationParameters</parameter>
     </operation>
+<parameter name="adminService" locked="true">true</parameter>
 </service>

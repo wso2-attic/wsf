@@ -20,6 +20,10 @@
 
 #define DEFAULT_SERVICE_TYPE_FILTER "ALL"
 #define AXIS2_DEFAULT_SERVICE_TYPE "axis2"
+#define ADMIN_SERVICE_PARAM_NAME "adminService"
+#define HIDDEN_SERVICE_PARAM_NAME "hiddenService"
+#define ADMIN_MODULE_PARAM_NAME  "adminModule"
+#define HIDDEN_MODULE_PARAM_NAME "managedModule"
 
 /* Parameters in service.xml needed by admin services */
 #define AXIS2_SERVICE_TYPE "serviceType"

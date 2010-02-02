@@ -38,4 +38,5 @@
     <operation name="shutdownGracefully" mep="http://www.w3.org/ns/wsdl/in-out">
         <parameter name="wsamapping">urn:shutdownGracefully</parameter>
     </operation>
+<parameter name="adminService" locked="true">true</parameter>
 </service>

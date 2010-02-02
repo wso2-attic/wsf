@@ -950,11 +950,19 @@ adb_getNumberOfInactiveServicesResponse_t* axis2_skel_ServiceAdmin_getNumberOfIn
 *
 * @return 
 */
-axis2_status_t  axis2_skel_ServiceAdmin_setServiceOperationPolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-																  adb_setServiceOperationPolicy_t* _setServiceOperationPolicy,
-																  axis2_skel_ServiceAdmin_setServiceOperationPolicy_fault *fault )
+axis2_status_t  axis2_skel_ServiceAdmin_setServiceOperationPolicy(
+	const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
+	adb_setServiceOperationPolicy_t* _setServiceOperationPolicy,
+	axis2_skel_ServiceAdmin_setServiceOperationPolicy_fault *fault )
 {
-	/* TODO fill this with the necessary business logic */
+	axis2_char_t *service_name = NULL;
+	axis2_svc_t *svc = NULL;
+
+	
+	service_name = adb_setServiceOperationPolicy_get_serviceName(_setServiceOperationPolicy, env);
+
+
+
 	return AXIS2_SUCCESS;
 }
 
@@ -1085,11 +1093,12 @@ adb_getModulePolicyResponse_t* axis2_skel_ServiceAdmin_getModulePolicy(const axu
 *
 * @return 
 */
-axis2_status_t  axis2_skel_ServiceAdmin_setPolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-												  adb_setPolicy_t* _setPolicy,
-												  axis2_skel_ServiceAdmin_setPolicy_fault *fault )
+axis2_status_t  axis2_skel_ServiceAdmin_setPolicy(
+	const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
+	adb_setPolicy_t* _setPolicy,
+	axis2_skel_ServiceAdmin_setPolicy_fault *fault )
 {
-	/* TODO fill this with the necessary business logic */
+	
 	return AXIS2_SUCCESS;
 }
 
@@ -1152,14 +1161,10 @@ adb_listServiceGroupsResponse_t *response = NULL;
         axutil_hash_this(hi, &svc_grp_name, NULL, &svc_grp);
 
         /* Check whether service group filter is satisfied */
-        if(svc_grp_filter && axutil_strcmp(svc_grp_filter, ""))
-        {
-            if(!axutil_strstr(svc_grp_name, svc_grp_filter))
-            {
-                /* filter is not satisfied */
-                continue;
-            }
-        }
+		if(svc_grp && service_admin_util_is_filtered_out_service_group(env, svc_grp) == AXIS2_TRUE)
+		{
+			continue;
+		}
 
         svc_map = axis2_svc_grp_get_all_svcs(svc_grp, env);
         adb_svc_list = axutil_array_list_create(env, 0);
@@ -1179,6 +1184,10 @@ adb_listServiceGroupsResponse_t *response = NULL;
                 /* filter is not satisfied */
                 continue;
             }
+			if(svc && service_admin_util_is_filtered_out_service(env, svc) == AXIS2_TRUE)
+			{
+			continue;
+			}
 
             /* check whether service type is already added, if not add it */
             if(!axutil_hash_get(service_types, service_type, AXIS2_HASH_KEY_STRING))
@@ -1242,7 +1251,8 @@ adb_listServiceGroupsResponse_t *response = NULL;
 *
 * @return 
 */
-axis2_status_t  axis2_skel_ServiceAdmin_setServiceOperationMessagePolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
+axis2_status_t  
+axis2_skel_ServiceAdmin_setServiceOperationMessagePolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
 																		 adb_setServiceOperationMessagePolicy_t* _setServiceOperationMessagePolicy,
 																		 axis2_skel_ServiceAdmin_setServiceOperationMessagePolicy_fault *fault )
 {
@@ -1260,7 +1270,8 @@ axis2_status_t  axis2_skel_ServiceAdmin_setServiceOperationMessagePolicy(const a
 *
 * @return adb_getBindingPolicyResponse_t*
 */
-adb_getBindingPolicyResponse_t* axis2_skel_ServiceAdmin_getBindingPolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
+adb_getBindingPolicyResponse_t* 
+axis2_skel_ServiceAdmin_getBindingPolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
 																		 adb_getBindingPolicy_t* _getBindingPolicy )
 {
 	/* TODO fill this with the necessary business logic */

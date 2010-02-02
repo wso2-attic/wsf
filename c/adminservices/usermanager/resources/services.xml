@@ -122,4 +122,5 @@
     <operation name="addSpecialInternalRole" mep="http://www.w3.org/ns/wsdl/robust-in-only">
         <parameter name="wsamapping">urn:addSpecialInternalRole</parameter>
     </operation>
+<parameter name="adminService" locked="true">true</parameter>
 </service>

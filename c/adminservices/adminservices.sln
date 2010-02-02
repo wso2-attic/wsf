@@ -21,8 +21,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServiceAdmin", "service_adm
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServiceGroupAdmin", "service_group_admin\codegen\ServiceGroupAdminService.vcproj", "{C54E2E3D-ACEE-4AC0-85B4-986EBA649BB7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StatisticsAdmin", "statistics_admin\codegen\StatisticsAdminService.vcproj", "{BF56742E-5E90-45D6-B745-FA7666EA3F63}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TransportAdmin", "transport_admin\codegen\TransportAdminService.vcproj", "{7CDE1022-D9E5-49F2-B2D5-3E7CEC0A4E50}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UserManagementService", "usermanager\codegen\UserManagementServiceService.vcproj", "{F16E3A55-8545-4B8C-8DFD-71B9A75631BF}"
@@ -73,10 +71,6 @@ Global
 		{C54E2E3D-ACEE-4AC0-85B4-986EBA649BB7}.Debug|Win32.Build.0 = Debug|Win32
 		{C54E2E3D-ACEE-4AC0-85B4-986EBA649BB7}.Release|Win32.ActiveCfg = Release|Win32
 		{C54E2E3D-ACEE-4AC0-85B4-986EBA649BB7}.Release|Win32.Build.0 = Release|Win32
-		{BF56742E-5E90-45D6-B745-FA7666EA3F63}.Debug|Win32.ActiveCfg = Debug|Win32
-		{BF56742E-5E90-45D6-B745-FA7666EA3F63}.Debug|Win32.Build.0 = Debug|Win32
-		{BF56742E-5E90-45D6-B745-FA7666EA3F63}.Release|Win32.ActiveCfg = Release|Win32
-		{BF56742E-5E90-45D6-B745-FA7666EA3F63}.Release|Win32.Build.0 = Release|Win32
 		{7CDE1022-D9E5-49F2-B2D5-3E7CEC0A4E50}.Debug|Win32.ActiveCfg = Debug|Win32
 		{7CDE1022-D9E5-49F2-B2D5-3E7CEC0A4E50}.Debug|Win32.Build.0 = Debug|Win32
 		{7CDE1022-D9E5-49F2-B2D5-3E7CEC0A4E50}.Release|Win32.ActiveCfg = Release|Win32

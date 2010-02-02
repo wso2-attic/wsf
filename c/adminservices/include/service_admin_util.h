@@ -54,6 +54,17 @@ service_admin_util_get_service_group(
 	axis2_msg_ctx_t *msg_ctx,
 	axis2_char_t *svc_grp_name);
 
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+service_admin_util_is_filtered_out_service(
+	axutil_env_t *env,
+	axis2_svc_t *svc);
+
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+service_admin_util_is_filtered_out_service_group(
+	axutil_env_t *env,
+	axis2_svc_grp_t *svc);
+
+
 
 #ifdef __cplusplus
 }

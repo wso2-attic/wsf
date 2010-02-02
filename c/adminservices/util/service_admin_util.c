@@ -9,6 +9,7 @@
 */
 
 #include "service_admin_util.h"
+#include "service_admin_constants.h"
 #include "axutil_dll_desc.h"
 #include "axiom.h"
 
@@ -164,3 +165,64 @@ service_admin_util_get_service_group(
 	return NULL;
 
 }
+
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+service_admin_util_is_filtered_out_service(
+	axutil_env_t *env,
+	axis2_svc_t *svc)
+{
+	axutil_param_t *param =  NULL;
+	if(!svc)
+		return AXIS2_FALSE;
+
+	param = axis2_svc_get_param(svc, env, ADMIN_SERVICE_PARAM_NAME);
+	if(param)
+	{
+		axis2_char_t *value = NULL;
+		value = axutil_param_get_value(param, env);
+		if(value && axutil_strcmp(value, "true") == 0)
+			return AXIS2_TRUE;
+	}
+	
+	param = axis2_svc_get_param(svc, env, HIDDEN_SERVICE_PARAM_NAME);
+	if(param)
+	{
+		axis2_char_t *value = NULL;
+		value = axutil_param_get_value(param, env);
+		if(value && axutil_strcmp(value, "true") == 0)
+			return AXIS2_TRUE;
+	}
+	return FALSE;
+
+}
+
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+service_admin_util_is_filtered_out_service_group(
+	axutil_env_t *env,
+	axis2_svc_grp_t *svc_grp)
+{
+	axutil_param_t *param =  NULL;
+	if(!svc_grp)
+		return AXIS2_FALSE;
+
+	param = axis2_svc_grp_get_param(svc_grp, env, ADMIN_SERVICE_PARAM_NAME);
+	if(param)
+	{
+		axis2_char_t *value = NULL;
+		value = axutil_param_get_value(param, env);
+		if(value && axutil_strcmp(value, "true") == 0)
+			return AXIS2_TRUE;
+	}
+	
+	param = axis2_svc_grp_get_param(svc_grp, env, HIDDEN_SERVICE_PARAM_NAME);
+	if(param)
+	{
+		axis2_char_t *value = NULL;
+		value = axutil_param_get_value(param, env);
+		if(value && axutil_strcmp(value, "true") == 0)
+			return AXIS2_TRUE;
+	}
+	return FALSE;
+
+}
+

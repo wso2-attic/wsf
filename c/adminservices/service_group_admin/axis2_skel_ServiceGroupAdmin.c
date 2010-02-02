@@ -83,6 +83,8 @@ axis2_skel_ServiceGroupAdmin_listServiceGroup(const axutil_env_t *env ,
 				}
 				
 			}
+			if(svc && service_admin_util_is_filtered_out_service(env, svc) == AXIS2_TRUE)
+				continue;
 			/*
             if(!axutil_hash_get(service_types, service_type, AXIS2_HASH_KEY_STRING))
             {
@@ -96,7 +98,6 @@ axis2_skel_ServiceGroupAdmin_listServiceGroup(const axutil_env_t *env ,
             adb_ServiceMetaData_set_name(adb_svc, env, svc_name);
             adb_ServiceMetaData_set_serviceType(adb_svc, env, service_type);
 
-            /* TODO fix the wsdl endpoints */
 			
 			adb_ServiceMetaData_add_wsdlURLs(adb_svc, env,service_admin_util_get_wsdl_for_service(env, svc_name, conf));
             adb_ServiceMetaData_add_wsdlURLs(adb_svc, env, " ");
@@ -123,7 +124,7 @@ axis2_skel_ServiceGroupAdmin_listServiceGroup(const axutil_env_t *env ,
     }
 	{	
 		axutil_param_t *param = axis2_svc_grp_get_param(svc_grp, env, AXIS2_ENABLE_MTOM);
-		if(param)
+		if(param && svc_grp_metadata)
 		{
 			adb_ServiceGroupMetaData_set_mtomStatus(svc_grp_metadata, env, axutil_param_get_value(param, env));
 		}

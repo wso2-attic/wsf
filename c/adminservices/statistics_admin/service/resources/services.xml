@@ -67,4 +67,5 @@
     <operation name="getOperationRequestCount" mep="http://www.w3.org/ns/wsdl/in-out">
         <parameter name="wsamapping">urn:getOperationRequestCount</parameter>
     </operation>
+<parameter name="adminService" locked="true">true</parameter>
 </service>

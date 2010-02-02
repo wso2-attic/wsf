@@ -38,4 +38,5 @@
     <operation name="getServiceGroupParameters" mep="http://www.w3.org/ns/wsdl/in-out">
         <parameter name="wsamapping">urn:getServiceGroupParameters</parameter>
     </operation>
+    <parameter name="adminService" locked="true">true</parameter>
 </service>

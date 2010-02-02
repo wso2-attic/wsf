@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="axiom.lib axutil.lib axis2_engine.lib"
+				AdditionalDependencies="axiom.lib axutil.lib axis2_engine.lib neethi.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(AXIS2C_HOME)\lib"
 				GenerateDebugInformation="true"
