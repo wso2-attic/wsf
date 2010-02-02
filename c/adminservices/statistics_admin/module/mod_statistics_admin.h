@@ -29,6 +29,18 @@ extern "C"
 {
 #endif
 
+#define AXIS2_MOD_STATISTICS_GLOBAL_REQUEST_COUNT_HANDLER "GlobalRequestCounter"
+#define AXIS2_MOD_STATISTICS_SERVICE_REQUEST_COUNT_HANDLER "ServiceRequestCounter"
+#define AXIS2_MOD_STATISTICS_IN_OP_COUNT_HANDLER "OperationInCounter"
+#define AXIS2_MOD_STATISTICS_OUT_OP_COUNT_HANDLER "OperationOutCounter"
+#define AXIS2_MOD_STATISTICS_FAULT_COUNT_HANDLER "FaultCounter"
+#define AXIS2_MOD_STATISTICS_RESPONSE_TIME_HANDLER "ResponseTimeHandler"
+
+AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
+axis2_statistics_admin_svc_request_count_handler_create(
+        const axutil_env_t *env, 
+        axutil_qname_t *qname);
+
 AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
 axis2_statistics_admin_in_op_count_handler_create(
         const axutil_env_t *env, 
@@ -41,6 +53,11 @@ axis2_statistics_admin_out_op_count_handler_create(
 
 AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
 axis2_statistics_admin_fault_count_handler_create(
+        const axutil_env_t *env, 
+        axutil_qname_t *qname);
+
+AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
+axis2_statistics_admin_response_time_handler_create(
         const axutil_env_t *env, 
         axutil_qname_t *qname);
     

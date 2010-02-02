@@ -108,15 +108,18 @@ mod_statistics_admin_fill_handler_create_func_map(axis2_module_t *module,
            "[adminservices] Memory allocation failed for Statistics Admin Module");
         return AXIS2_FAILURE;
     }
-    /* Remove the hard coded strings. Instead use macros */
-    axutil_hash_set(module->handler_create_func_map, AXIS2_MOD_STATISTICS_ADMIN_IN_OP_COUNT_HANDLER, 
+    /*axutil_hash_set(module->handler_create_func_map, AXIS2_MOD_STATISTICS_GLOBAL_REQUEST_COUNT_HANDLER, 
+        AXIS2_HASH_KEY_STRING, axis2_statistics_admin_global_request_count_handler_create);*/
+    axutil_hash_set(module->handler_create_func_map, AXIS2_MOD_STATISTICS_SERVICE_REQUEST_COUNT_HANDLER, 
+        AXIS2_HASH_KEY_STRING, axis2_statistics_admin_svc_request_count_handler_create);
+    axutil_hash_set(module->handler_create_func_map, AXIS2_MOD_STATISTICS_IN_OP_COUNT_HANDLER, 
         AXIS2_HASH_KEY_STRING, axis2_statistics_admin_in_op_count_handler_create);
-
-    axutil_hash_set(module->handler_create_func_map, AXIS2_MOD_STATISTICS_ADMIN_OUT_OP_COUNT_HANDLER, 
+    axutil_hash_set(module->handler_create_func_map, AXIS2_MOD_STATISTICS_OUT_OP_COUNT_HANDLER, 
         AXIS2_HASH_KEY_STRING, axis2_statistics_admin_out_op_count_handler_create);
-    
-    axutil_hash_set(module->handler_create_func_map, AXIS2_MOD_STATISTICS_ADMIN_FAULT_COUNT_HANDLER, 
+    axutil_hash_set(module->handler_create_func_map, AXIS2_MOD_STATISTICS_FAULT_COUNT_HANDLER, 
         AXIS2_HASH_KEY_STRING, axis2_statistics_admin_fault_count_handler_create);
+    axutil_hash_set(module->handler_create_func_map, AXIS2_MOD_STATISTICS_RESPONSE_TIME_HANDLER, 
+        AXIS2_HASH_KEY_STRING, axis2_statistics_admin_response_time_handler_create);
     
     return AXIS2_SUCCESS;
 }

@@ -90,6 +90,16 @@
 	extern "C" {
 	#endif
 
+        AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
+        bam_publisher_svc_stat_handler_create(
+            const axutil_env_t *env, 
+            axutil_qname_t *qname);
+
+        AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
+        bam_publisher_op_stat_handler_create(
+                const axutil_env_t *env, 
+                axutil_qname_t *qname);
+
         adb_getOperationStatisticsResponse_t* AXIS2_CALL 
         bam_publisher_statistics_get_operation_statistics(
                 const axutil_env_t *env,

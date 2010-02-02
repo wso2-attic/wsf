@@ -38,8 +38,5 @@
 #define AXIS2_REQUEST_RECEIVED_TIME "wso2statistics.request.received.time"
 #define AXIS2_RESPONSE_SENT_TIME "wso2statistics.response.sent.time"
 #define AXIS2_STATISTISTICS_MODULE_NAME "wso2statistics"
-#define AXIS2_MOD_STATISTICS_ADMIN_OUT_OP_COUNT_HANDLER "wso2statistics.out_op_count_handler"
-#define AXIS2_MOD_STATISTICS_ADMIN_IN_OP_COUNT_HANDLER "wso2statistics.in_op_count_handler"
-#define AXIS2_MOD_STATISTICS_ADMIN_FAULT_COUNT_HANDLER "wso2statistics.fault_count_handler"
 
 #endif /* SERVICE_ADMIN_CONSTANTS_H_ */

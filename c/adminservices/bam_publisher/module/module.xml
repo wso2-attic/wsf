@@ -3,10 +3,10 @@
         This module responsible for firing bam_publisher events
     </Description>
     <inflow>
-        <handler name="svc_stat_handler" class="bam_publisher">
+        <handler name="ServiceStatHandler" class="bam_publisher">
             <order phase="Dispatch"/>
         </handler>
-        <handler name="op_stat_handler" class="bam_publisher">
+        <handler name="OperationStatHandler" class="bam_publisher">
             <order phase="OpPhase"/>
         </handler>
     </inflow>

@@ -37,6 +37,9 @@ extern "C"
  */
 #define BAM_PUBLISHER_SERVICE_STATISTICS_SUBSCRIBER_SERVICE "BAMServiceStatisticsSubscriberService"
 #define BAM_PUBLISHER_SERVICE_ACTION "http://wso2.org/services/BAMServiceStatisticsSubscriberService/send"
+#define BAM_PUBLISHER_SERVICE_STAT_HANDLER "ServiceStatHandler"
+#define BAM_PUBLISHER_OPERATION_STAT_HANDLER "OperationStatHandler"
+
 #define TRANSPORT "https" /* TODO: it is not ideal to assume https is always availabe */
 
 #define STATISTICS_DATA_NS_URI "http://wso2.org/ns/2009/09/bam/service/statistics/data"
