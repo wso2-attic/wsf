@@ -14,4 +14,5 @@
         </handler>
     </inflow>
    <parameter name="service_request_count_threshold" locked="false">5</parameter>
+   <parameter name="operation_request_count_threshold" locked="false">5</parameter>
 </module>
