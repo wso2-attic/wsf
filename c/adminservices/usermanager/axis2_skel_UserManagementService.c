@@ -164,10 +164,10 @@
 			adb_getAllRolesNamesResponse_t* response = NULL;
 			axis2_char_t* roles = NULL;
 
-			// Fetch roles
+			/* Fetch roles */
 			roles = axutil_string_get_buffer(axutil_string_create(env, "admin"), env);
 
-			// Create response
+			/* Create response */
 			response = adb_getAllRolesNamesResponse_create(env);
 
 			adb_getAllRolesNamesResponse_add_return(response, env, roles);
