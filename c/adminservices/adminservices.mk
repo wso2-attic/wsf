@@ -38,7 +38,7 @@ CFLAGS = /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT"   \
 LD = link.exe
 LDFLAGS = /nologo $(LIBS_PATH)
 
-LIBS = axutil.lib axiom.lib axis2_engine.lib axis2_parser.lib
+LIBS = axutil.lib axiom.lib axis2_engine.lib axis2_parser.lib neethi.lib neethi_util.lib
 
 
 SSL_LIB_FLAG = "MD"
@@ -253,8 +253,8 @@ registry_client: $(REGISTRY_CLIENT_SRC)
 	
 #==============================================================================================
 
-admin_svc_all: security_admin_service user_manager_service 
-#admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service 
+#admin_svc_all: security_admin_service user_manager_service 
+admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service 
 
 install: distdir intdirs admin_svc_all
 
