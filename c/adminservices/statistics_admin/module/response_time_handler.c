@@ -101,13 +101,16 @@ axis2_statistics_admin_calculate_response_times(
             axis2_svc_t *svc = NULL;
             axis2_op_t *op = NULL;
 
-            property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_REQUEST_RECEIVED_TIME);
+            property = axis2_msg_ctx_get_property(in_msg_ctx, env, AXIS2_REQUEST_RECEIVED_TIME);
             if(property)
             {
                 received_time = axutil_property_get_value(property, env);
             }
             current_time = service_admin_util_get_current_time_in_millis(env);
-            response_time = current_time - *received_time;
+            if(received_time)
+            {
+                response_time = current_time - *received_time;
+            }
             svc = axis2_msg_ctx_get_svc(msg_ctx, env);
             if(svc)
             {
@@ -151,7 +154,7 @@ axis2_statistics_admin_calculate_response_times(
                 service_admin_response_time_processor_t *res_time_processor = NULL;
                 service_admin_counter_t *counter = NULL;
                 int op_req_count = 0;
-                
+               
                 op_req_counter_param = axis2_op_get_param(op, env, AXIS2_IN_OPERATION_COUNTER);
                 if(op_req_counter_param)
                 {

@@ -523,16 +523,20 @@
                 op = axis2_svc_get_op_with_name(svc, env, op_name);
                 if(op)
                 {
+                    service_admin_response_time_processor_t *res_time_proc = NULL;
                     axutil_param_t *param = NULL;
                     param = axis2_op_get_param(op, env, AXIS2_OPERATION_RESPONSE_TIME_PROCESSOR);
                     if(param)
                     {
-                        service_admin_response_time_processor_t *res_time_proc = NULL;
                         res_time_proc = axutil_param_get_value(param, env);
                         if(res_time_proc)
                         {
                             max_op_res_time_res = adb_getMaxOperationResponseTimeResponse_create_with_values(env, res_time_proc->max_response_time);
                         }
+                    }
+                    if(!res_time_proc)
+                    {
+                        max_op_res_time_res = adb_getMaxOperationResponseTimeResponse_create_with_values(env, 0);
                     }
                 }
             }
