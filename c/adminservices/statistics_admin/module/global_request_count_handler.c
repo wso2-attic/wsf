@@ -67,7 +67,8 @@ axis2_statistics_admin_global_request_count_handler_invoke(struct axis2_handler 
     {
         long *time_now = NULL;
         axutil_property_t *property = NULL;
-        
+       
+        time_now = AXIS2_MALLOC(env->allocator, sizeof(long));
         *time_now = service_admin_util_get_current_time_in_millis(env);
         property = axutil_property_create_with_args(env, 0, 0, 0, time_now);
         axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_REQUEST_RECEIVED_TIME, property);

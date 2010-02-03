@@ -106,7 +106,7 @@ axis2_statistics_admin_calculate_response_times(
             {
                 received_time = axutil_property_get_value(property, env);
             }
-            current_time = sandesha2_utils_get_current_time_in_millis(env);
+            current_time = service_admin_util_get_current_time_in_millis(env);
             response_time = current_time - *received_time;
             svc = axis2_msg_ctx_get_svc(msg_ctx, env);
             if(svc)
@@ -127,7 +127,7 @@ axis2_statistics_admin_calculate_response_times(
                 if(param)
                 {
                     res_time_processor = axutil_param_get_value(param, env);
-                    axis2_response_time_processor_add_response_time(res_time_processor, env, 
+                    service_admin_response_time_processor_add_response_time(res_time_processor, env, 
                             response_time, src_count);
                 }
                 else
@@ -135,7 +135,7 @@ axis2_statistics_admin_calculate_response_times(
                     res_time_processor = service_admin_response_time_processor_create(env);
                     if(res_time_processor)
                     {
-                        axis2_response_time_processor_add_response_time(res_time_processor, env, 
+                        service_admin_response_time_processor_add_response_time(res_time_processor, env, 
                             response_time, src_count);
                         param = axutil_param_create(env, AXIS2_SERVICE_RESPONSE_TIME_PROCESSOR, 
                                 res_time_processor);
@@ -162,15 +162,15 @@ axis2_statistics_admin_calculate_response_times(
                 if(param)
                 {
                     res_time_processor = axutil_param_get_value(param, env);
-                    axis2_response_time_processor_add_response_time(res_time_processor, env, 
+                    service_admin_response_time_processor_add_response_time(res_time_processor, env, 
                             response_time, op_req_count);
                 }
                 else
                 {
-                    res_time_processor = axis2_response_time_processor_create(env);
+                    res_time_processor = service_admin_response_time_processor_create(env);
                     if(res_time_processor)
                     {
-                        axis2_response_time_processor_add_response_time(res_time_processor, env, 
+                        service_admin_response_time_processor_add_response_time(res_time_processor, env, 
                             response_time, op_req_count);
                         param = axutil_param_create(env, AXIS2_OPERATION_RESPONSE_TIME_PROCESSOR, 
                                 res_time_processor);
