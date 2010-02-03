@@ -87,7 +87,7 @@ axis2_statistics_admin_in_op_count_handler_invoke(struct axis2_handler *handler,
             axis2_char_t *op_name = NULL;
 
             op_name = axutil_qname_get_localpart(axis2_op_get_qname(op, env), env);
-            service_admin_counter_create(env, svc_name, op_name);
+            counter = service_admin_counter_create(env, svc_name, op_name);
             if(counter)
             {
                 service_admin_counter_increment(counter, env, msg_ctx);
