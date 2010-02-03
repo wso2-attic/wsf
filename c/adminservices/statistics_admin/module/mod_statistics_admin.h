@@ -37,6 +37,11 @@ extern "C"
 #define AXIS2_MOD_STATISTICS_RESPONSE_TIME_HANDLER "ResponseTimeHandler"
 
 AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
+axis2_statistics_admin_global_request_count_handler_create(
+        const axutil_env_t *env, 
+        axutil_qname_t *qname);
+
+AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
 axis2_statistics_admin_svc_request_count_handler_create(
         const axutil_env_t *env, 
         axutil_qname_t *qname);

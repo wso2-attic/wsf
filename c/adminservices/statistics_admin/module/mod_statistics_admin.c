@@ -108,8 +108,8 @@ mod_statistics_admin_fill_handler_create_func_map(axis2_module_t *module,
            "[adminservices] Memory allocation failed for Statistics Admin Module");
         return AXIS2_FAILURE;
     }
-    /*axutil_hash_set(module->handler_create_func_map, AXIS2_MOD_STATISTICS_GLOBAL_REQUEST_COUNT_HANDLER, 
-        AXIS2_HASH_KEY_STRING, axis2_statistics_admin_global_request_count_handler_create);*/
+    axutil_hash_set(module->handler_create_func_map, AXIS2_MOD_STATISTICS_GLOBAL_REQUEST_COUNT_HANDLER, 
+        AXIS2_HASH_KEY_STRING, axis2_statistics_admin_global_request_count_handler_create);
     axutil_hash_set(module->handler_create_func_map, AXIS2_MOD_STATISTICS_SERVICE_REQUEST_COUNT_HANDLER, 
         AXIS2_HASH_KEY_STRING, axis2_statistics_admin_svc_request_count_handler_create);
     axutil_hash_set(module->handler_create_func_map, AXIS2_MOD_STATISTICS_IN_OP_COUNT_HANDLER, 

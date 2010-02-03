@@ -3,6 +3,9 @@
         This module handles server statistics
     </Description>
     <inflow>
+        <handler name="GlobalRequestCounter" class="statistics">
+            <order phase="Transport"/>
+        </handler>
         <handler name="ServiceRequestCounter" class="statistics">
             <order phase="Dispatch"/>
         </handler>

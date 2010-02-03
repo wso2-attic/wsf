@@ -102,7 +102,10 @@ axis2_statistics_admin_calculate_response_times(
             axis2_op_t *op = NULL;
 
             property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_REQUEST_RECEIVED_TIME);
-            received_time = axutil_property_get_value(property, env);
+            if(property)
+            {
+                received_time = axutil_property_get_value(property, env);
+            }
             current_time = sandesha2_utils_get_current_time_in_millis(env);
             response_time = current_time - *received_time;
             svc = axis2_msg_ctx_get_svc(msg_ctx, env);
