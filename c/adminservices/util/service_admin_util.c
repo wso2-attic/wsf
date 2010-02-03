@@ -12,6 +12,7 @@
 #include "service_admin_constants.h"
 #include "axutil_dll_desc.h"
 #include "axiom.h"
+#include <sys/timeb.h>
 
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL 
