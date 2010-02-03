@@ -8,7 +8,8 @@
     <operation name="getScenarios" mep="http://www.w3.org/ns/wsdl/in-out">
         <parameter name="wsamapping">urn:getScenarios</parameter>
     </operation>
-    <operation name="applySecurity" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+    <!--operation name="applySecurity" mep="http://www.w3.org/ns/wsdl/robust-in-only"-->
+    <operation name="applySecurity" mep="http://www.w3.org/2004/08/wsdl/robust-in-only">
         <parameter name="wsamapping">urn:applySecurity</parameter>
     </operation>
     <operation name="activateUsernameTokenAuthentication" mep="http://www.w3.org/ns/wsdl/robust-in-only">
@@ -23,5 +24,4 @@
     <operation name="getSecurityScenario" mep="http://www.w3.org/ns/wsdl/in-out">
         <parameter name="wsamapping">urn:getSecurityScenario</parameter>
     </operation>
-<parameter name="adminService" locked="true">true</parameter>
 </service>
