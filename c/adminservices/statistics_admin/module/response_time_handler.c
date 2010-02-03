@@ -121,7 +121,7 @@ axis2_statistics_admin_calculate_response_times(
                 if(src_param)
                 {
                     counter = axutil_param_get_value(src_param, env);
-                    src_count = axis2_counter_get_count(counter, env, msg_ctx);
+                    src_count = service_admin_counter_get_count(counter, env, msg_ctx);
                 }
                 param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_RESPONSE_TIME_PROCESSOR);
                 if(param)
@@ -156,7 +156,7 @@ axis2_statistics_admin_calculate_response_times(
                 if(op_req_counter_param)
                 {
                     counter = axutil_param_get_value(op_req_counter_param, env);
-                    op_req_count = axis2_counter_get_count(counter, env, msg_ctx);
+                    op_req_count = service_admin_counter_get_count(counter, env, msg_ctx);
                 }
                 param = axis2_op_get_param(op, env, AXIS2_OPERATION_RESPONSE_TIME_PROCESSOR);
                 if(param)

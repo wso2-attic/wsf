@@ -63,7 +63,6 @@ axis2_statistics_admin_svc_request_count_handler_invoke(struct axis2_handler *ha
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[adminservices] Start:axis2_statistics_admin_svc_request_count_handler_invoke");
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
 
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[adminservices] came1");
     svc = axis2_msg_ctx_get_svc(msg_ctx, env);
     if(svc)
     {
@@ -81,9 +80,11 @@ axis2_statistics_admin_svc_request_count_handler_invoke(struct axis2_handler *ha
             const axis2_char_t *svc_name = NULL;
 
             svc_name = axis2_svc_get_name(svc, env);
-            service_admin_counter_create(env, svc_name, NULL);
+            counter = service_admin_counter_create(env, svc_name, NULL);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[adminservices] came2");
             if(counter)
             {
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[adminservices] came3");
                 service_admin_counter_increment(counter, env, msg_ctx);
                 param = axutil_param_create(env, AXIS2_SERVICE_REQUEST_COUNTER, counter);
                 if(param)
