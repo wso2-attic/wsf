@@ -123,7 +123,6 @@ service_admin_util_serialize_param(axutil_env_t *env,
 	axiom_node_t *param_node = NULL;
 	axiom_element_t *param_ele = NULL;
 	axiom_attribute_t *attri = NULL;
-	axutil_dll_desc_t *dll_des = NULL;
 
 	name = axutil_param_get_name(param, env);
 	param_value = axutil_param_get_value(param, env);
@@ -208,7 +207,7 @@ service_admin_util_is_filtered_out_service(
 		if(value && axutil_strcmp(value, "true") == 0)
 			return AXIS2_TRUE;
 	}
-	return FALSE;
+	return AXIS2_FALSE;
 
 }
 
@@ -238,7 +237,7 @@ service_admin_util_is_filtered_out_service_group(
 		if(value && axutil_strcmp(value, "true") == 0)
 			return AXIS2_TRUE;
 	}
-	return FALSE;
+	return AXIS2_FALSE;
 
 }
 
