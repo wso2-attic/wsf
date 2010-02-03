@@ -21,6 +21,7 @@
 #include <axis2_op.h>
 #include <service_admin_counter.h>
 #include <service_admin_constants.h>
+#include <service_admin_util.h>
 
 axis2_status_t AXIS2_CALL
 axis2_statistics_admin_global_request_count_handler_invoke(
@@ -67,7 +68,7 @@ axis2_statistics_admin_global_request_count_handler_invoke(struct axis2_handler 
         long *time_now = NULL;
         axutil_property_t *property = NULL;
         
-        *time_now = sandesha2_utils_get_current_time_in_millis(env);
+        *time_now = service_admin_util_get_current_time_in_millis(env);
         property = axutil_property_create_with_args(env, 0, 0, 0, time_now);
         axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_REQUEST_RECEIVED_TIME, property);
     }

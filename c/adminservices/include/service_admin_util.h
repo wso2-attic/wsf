@@ -54,6 +54,10 @@ service_admin_util_get_service_group(
 	axis2_msg_ctx_t *msg_ctx,
 	axis2_char_t *svc_grp_name);
 
+AXIS2_EXTERN long AXIS2_CALL
+service_admin_util_get_current_time_in_millis(
+    const axutil_env_t *env);
+
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 service_admin_util_is_filtered_out_service(
 	axutil_env_t *env,

@@ -166,6 +166,22 @@ service_admin_util_get_service_group(
 
 }
 
+AXIS2_EXTERN long AXIS2_CALL
+service_admin_util_get_current_time_in_millis(
+    const axutil_env_t *env)
+{
+    long seconds = -1;
+    struct timeb *tp = AXIS2_MALLOC(env->allocator, sizeof(struct timeb));
+    ftime(tp);
+    /* To prevent an overflow we substract a contstant from seconds value
+     * This value is taken as 18.23.xx seconds on 26 Jul 2006
+     */
+    seconds = tp->time;
+    if(tp)
+        AXIS2_FREE(env->allocator, tp);
+    return seconds;
+}
+
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 service_admin_util_is_filtered_out_service(
 	axutil_env_t *env,

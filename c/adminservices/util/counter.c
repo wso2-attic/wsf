@@ -127,6 +127,7 @@ service_admin_counter_increment (
 {
     axutil_thread_mutex_lock(counter->mutex);
     counter->count++;
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[adminservices] damcount:%d", counter->count);
     axutil_thread_mutex_unlock(counter->mutex);
 }
  
