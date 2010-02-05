@@ -55,6 +55,10 @@
                     }
                 }
             }
+            if(!max_svc_res_time_res)
+            {
+                max_svc_res_time_res = adb_getMaxServiceResponseTimeResponse_create_with_values(env, 0);
+            }
  
             return (adb_getMaxServiceResponseTimeResponse_t*) max_svc_res_time_res;
         }
@@ -99,6 +103,10 @@
                         get_svc_req_count_res = adb_getServiceRequestCountResponse_create_with_values(env, service_admin_counter_get_count(counter, env, msg_ctx));
                     }
                 }
+            }
+            if(!get_svc_req_count_res)
+            {
+                get_svc_req_count_res = adb_getServiceRequestCountResponse_create_with_values(env, 0);
             }
 
             return (adb_getServiceRequestCountResponse_t*) get_svc_req_count_res;
@@ -169,6 +177,10 @@
                     }
                 }
             }
+            if(!get_op_res_count_res)
+            {
+                get_op_res_count_res = adb_getOperationResponseCountResponse_create_with_values(env, 0);
+            }
 
             return (adb_getOperationResponseCountResponse_t*) get_op_res_count_res;
         }
@@ -221,6 +233,10 @@
                         }
                     }
                 }
+            }
+            if(!avg_op_res_time_res)
+            {
+                avg_op_res_time_res = adb_getAvgOperationResponseTimeResponse_create_with_values(env, 0.0);
             }
 
             return (adb_getAvgOperationResponseTimeResponse_t*) avg_op_res_time_res;
@@ -416,9 +432,7 @@
             axis2_conf_t *conf = NULL;
             axis2_svc_t *svc = NULL;
             axis2_char_t *svc_name = NULL;
-            axutil_param_t *param = NULL;
             adb_getServiceFaultCountResponse_t* svc_fault_count_res = NULL;
-            service_admin_counter_t *counter = NULL;
 
             if(!_getServiceFaultCount)
             {
@@ -428,15 +442,23 @@
             conf = axis2_conf_ctx_get_conf(conf_ctx, env);
             svc_name = adb_getServiceFaultCount_get_serviceName(_getServiceFaultCount, env);
             svc = axis2_conf_get_svc(conf, env, svc_name);
-            if(!svc)
+            if(svc)
             {
-                return NULL;
+                axutil_param_t *param = NULL;
+                param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_FAULT_COUNTER);
+                if(param)
+                {
+                    service_admin_counter_t *counter = NULL;
+                    counter = axutil_param_get_value(param, env);
+                    if(counter)
+                    {
+                        svc_fault_count_res = adb_getServiceFaultCountResponse_create_with_values(env, service_admin_counter_get_count(counter, env, msg_ctx));
+                    }
+                }
             }
-            param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_FAULT_COUNTER);
-            if(param)
+            if(!svc_fault_count_res)
             {
-                counter = axutil_param_get_value(param, env);
-                svc_fault_count_res = adb_getServiceFaultCountResponse_create_with_values(env, service_admin_counter_get_count(counter, env, msg_ctx));
+                svc_fault_count_res = adb_getServiceFaultCountResponse_create_with_values(env, 0);
             }
 
             return (adb_getServiceFaultCountResponse_t*) svc_fault_count_res;
@@ -482,6 +504,10 @@
                         min_svc_res_time_res = adb_getMinServiceResponseTimeResponse_create_with_values(env, res_time_proc->min_response_time);
                     }
                 }
+            }
+            if(!min_svc_res_time_res)
+            {
+                min_svc_res_time_res = adb_getMinServiceResponseTimeResponse_create_with_values(env, 0);
             }
  
             return (adb_getMinServiceResponseTimeResponse_t*) min_svc_res_time_res;
@@ -534,11 +560,11 @@
                             max_op_res_time_res = adb_getMaxOperationResponseTimeResponse_create_with_values(env, res_time_proc->max_response_time);
                         }
                     }
-                    if(!res_time_proc)
-                    {
-                        max_op_res_time_res = adb_getMaxOperationResponseTimeResponse_create_with_values(env, 0);
-                    }
                 }
+            }
+            if(!max_op_res_time_res)
+            {
+                max_op_res_time_res = adb_getMaxOperationResponseTimeResponse_create_with_values(env, 0);
             }
             return (adb_getMaxOperationResponseTimeResponse_t*) max_op_res_time_res;
         }
@@ -719,9 +745,12 @@
                     }
                 }
             }
+            if(!get_op_fault_count_res)
+            {
+                get_op_fault_count_res = adb_getOperationFaultCountResponse_create_with_values(env, 0);
+            }
 
-
-          return (adb_getOperationFaultCountResponse_t*) get_op_fault_count_res;
+            return (adb_getOperationFaultCountResponse_t*) get_op_fault_count_res;
         }
      
 
@@ -764,6 +793,10 @@
                         avg_svc_res_time_res = adb_getAvgServiceResponseTimeResponse_create_with_values(env, res_time_proc->avg_response_time);
                     }
                 }
+            }
+            if(!avg_svc_res_time_res)
+            {
+                avg_svc_res_time_res = adb_getAvgServiceResponseTimeResponse_create_with_values(env, 0.0);
             }
             return (adb_getAvgServiceResponseTimeResponse_t*) avg_svc_res_time_res;
         }
@@ -818,7 +851,10 @@
                     {
                         service_admin_counter_t *counter = NULL;
                         counter = axutil_param_get_value(param, env);
-                        count += service_admin_counter_get_count(counter, env, msg_ctx);
+                        if(counter)
+                        {
+                            count += service_admin_counter_get_count(counter, env, msg_ctx);
+                        }
                     }
                 }
             }
@@ -889,6 +925,10 @@
                     }
                 }
             }
+            if(!min_op_res_time_res)
+            {
+                min_op_res_time_res = adb_getMinOperationResponseTimeResponse_create_with_values(env, 0);
+            }
             return (adb_getMinOperationResponseTimeResponse_t*) min_op_res_time_res;
         }
      
@@ -939,6 +979,7 @@
             axis2_conf_t *conf = NULL;
             axis2_svc_t *svc = NULL;
             axis2_char_t *svc_name = NULL;
+            int count = 0;
             adb_getOperationRequestCountResponse_t* get_op_req_count_res = NULL;
 
             if(!_getOperationRequestCount)
@@ -966,12 +1007,12 @@
                         counter = axutil_param_get_value(param, env);
                         if(counter)
                         {
-                            get_op_req_count_res = adb_getOperationRequestCountResponse_create_with_values(env, 
-                                    service_admin_counter_get_count(counter, env, msg_ctx));
+                            count = service_admin_counter_get_count(counter, env, msg_ctx);
                         }
                     }
                 }
             }
+            get_op_req_count_res = adb_getOperationRequestCountResponse_create_with_values(env, count);
 
             return (adb_getOperationRequestCountResponse_t*) get_op_req_count_res;
         }
