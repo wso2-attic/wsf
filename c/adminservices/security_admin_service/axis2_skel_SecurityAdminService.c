@@ -8,8 +8,11 @@
      * axis2_skel_SecurityAdminService Axis2/C skeleton for the axisService
      */
 
-     #include "codegen/axis2_skel_SecurityAdminService.h"   
-
+     #include "codegen/axis2_skel_SecurityAdminService.h"
+	 #include <neethi_engine.h>
+	 #include <axis2_policy_include.h>
+     #include <rampart_context.h>
+	 #include <neethi_util.h> 
 		 
         /**
          * auto generated function definition signature
@@ -179,10 +182,64 @@
                                               adb_applySecurity_t* _applySecurity,
                                           axis2_skel_SecurityAdminService_applySecurity_fault *fault )
         {
-          /* TODO fill this with the necessary business logic */
-          return AXIS2_SUCCESS;
+			axis2_char_t* service_name = NULL;
+			axis2_char_t* scenario_id = NULL;
+			axis2_conf_ctx_t* conf_ctx = NULL;
+			axis2_conf_t* conf = NULL;
+			axis2_svc_t* svc = NULL;
+			axis2_char_t* repo_path = NULL;
+			axis2_char_t* policy_file_name = NULL;
+			neethi_policy_t* neethi_policy = NULL;
+			axis2_desc_t* desc = NULL;
+			axis2_policy_include_t* policy_include = NULL;
+			axutil_qname_t* module_qname = NULL;
+			axis2_module_desc_t* module_desc = NULL;
+
+			conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+
+			// Get parameters
+			service_name = adb_applySecurity_get_serviceName(_applySecurity, env);
+			scenario_id = adb_applySecurity_get_policyId(_applySecurity, env);
+
+			// Load neethi policy
+			repo_path = axis2_conf_ctx_get_root_dir(conf_ctx, env);
+			policy_file_name = axutil_strcat(env, repo_path, AXIS2_PATH_SEP_STR, "services",
+				AXIS2_PATH_SEP_STR, "SecurityAdminService", AXIS2_PATH_SEP_STR, "policies",
+				AXIS2_PATH_SEP_STR, scenario_id, "-policy.xml", NULL);
+
+			neethi_policy = neethi_util_create_policy_from_file(env, policy_file_name);
+			AXIS2_FREE(env->allocator, policy_file_name);
+			if (!neethi_policy)
+				return AXIS2_FAILURE;
+			
+			// Get service instance
+			conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+			svc = axis2_conf_get_svc(conf, env, service_name);
+			if (!svc)
+				return AXIS2_FAILURE;
+
+			desc = axis2_svc_get_base(svc, env);
+			if (!desc)
+				return AXIS2_FAILURE;
+
+			policy_include = axis2_desc_get_policy_include(desc, env);
+			if (!policy_include)
+				return AXIS2_FAILURE;
+
+			// Attach policy
+			axis2_policy_include_add_policy_element(policy_include, env, 
+				AXIS2_SERVICE_POLICY, neethi_policy);
+
+			// Enagage modules
+			module_qname = axutil_qname_create(env, "rampart", NULL, NULL);
+			module_desc = axis2_conf_get_module(conf, env, module_qname);
+			axutil_qname_free(module_qname, env);
+
+			axis2_svc_disengage_module(svc, env, module_desc, conf);
+			axis2_svc_engage_module(svc, env, module_desc, conf);
+
+			return AXIS2_SUCCESS;
         }
-     
 
 		 
         /**

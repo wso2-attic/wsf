@@ -216,13 +216,15 @@ $(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\$(SERVICE_GRP_ADMIN_SERVICE).d
 service_grp_admin_service: $(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\$(SERVICE_GRP_ADMIN_SERVICE).dll
 #=====================================================================================================
 $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)\$(SECURITY_ADMIN_SERVICE).dll: $(SECURITY_ADMIN_SVC_SRC)\codegen\*.c $(SECURITY_ADMIN_SVC_SRC)\*.c
-	$(CC) $(CFLAGS) $(SECURITY_ADMIN_SVC_SRC)\codegen\*.c $(SECURITY_ADMIN_SVC_SRC)\*.c \
+	$(CC) $(CFLAGS) /I C:\OpenSSL\include $(SECURITY_ADMIN_SVC_SRC)\codegen\*.c $(SECURITY_ADMIN_SVC_SRC)\*.c \
 		/Fo$(ADMIN_SVC_INTDIR)\$(SECURITY_ADMIN_SERVICE)\ /c
 	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(SECURITY_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
 		/OUT:$(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)\$(SECURITY_ADMIN_SERVICE).dll
 	-@$(_VC_MANIFEST_EMBED_DLL)
+	if not exist $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)\policies mkdir $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)\policies
 	copy $(SECURITY_ADMIN_SVC_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)
 	copy $(SECURITY_ADMIN_SVC_SRC)\resources\scenario-config.xml $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)
+	copy $(SECURITY_ADMIN_SVC_SRC)\resources\scenario*-policy.xml $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)\policies\
 
 security_admin_service: $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)\$(SECURITY_ADMIN_SERVICE).dll
 #=====================================================================================================
@@ -253,8 +255,8 @@ registry_client: $(REGISTRY_CLIENT_SRC)
 	
 #==============================================================================================
 
-#admin_svc_all: security_admin_service user_manager_service 
-admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service 
+admin_svc_all: security_admin_service 
+#admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service 
 
 install: distdir intdirs admin_svc_all
 
