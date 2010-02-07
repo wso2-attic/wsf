@@ -92,6 +92,8 @@
     <!-- ================================================= -->
     <!-- Comment this to disable Addressing -->
     <module ref="addressing"/>
+    <!--module ref="statistics"/-->
+    <!--module ref="bam_publisher"/-->
 
 
     <!--Configuring module , providing paramters for modules whether they refer or not-->
