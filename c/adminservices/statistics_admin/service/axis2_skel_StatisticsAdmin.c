@@ -123,8 +123,7 @@
          */
         adb_getSystemResponseCountResponse_t* axis2_skel_StatisticsAdmin_getSystemResponseCount(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx )
         {
-          /* TODO fill this with the necessary business logic */
-          return (adb_getSystemResponseCountResponse_t*)NULL;
+            return adb_getSystemResponseCountResponse_create_with_values(env, 0);
         }
      
 
@@ -381,8 +380,7 @@
          */
         adb_getMinSystemResponseTimeResponse_t* axis2_skel_StatisticsAdmin_getMinSystemResponseTime(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx )
         {
-          /* TODO fill this with the necessary business logic */
-          return (adb_getMinSystemResponseTimeResponse_t*)NULL;
+            return adb_getMinSystemResponseTimeResponse_create_with_values(env, 0);;
         }
      
 
@@ -396,8 +394,7 @@
          */
         adb_getSystemFaultCountResponse_t* axis2_skel_StatisticsAdmin_getSystemFaultCount(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx )
         {
-          /* TODO fill this with the necessary business logic */
-          return (adb_getSystemFaultCountResponse_t*)NULL;
+            return adb_getSystemFaultCountResponse_create_with_values(env, 0);
         }
      
 
@@ -411,8 +408,7 @@
          */
         adb_getMaxSystemResponseTimeResponse_t* axis2_skel_StatisticsAdmin_getMaxSystemResponseTime(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx )
         {
-          /* TODO fill this with the necessary business logic */
-          return (adb_getMaxSystemResponseTimeResponse_t*)NULL;
+            return adb_getMaxSystemResponseTimeResponse_create_with_values(env, 0);
         }
      
 
@@ -873,7 +869,7 @@
          */
         adb_getSystemRequestCountResponse_t* axis2_skel_StatisticsAdmin_getSystemRequestCount(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx )
         {
-          return (adb_getSystemRequestCountResponse_t*) NULL;
+            return adb_getSystemRequestCountResponse_create_with_values(env, 0);
         }
      
 
@@ -943,8 +939,7 @@
          */
         adb_getAvgSystemResponseTimeResponse_t* axis2_skel_StatisticsAdmin_getAvgSystemResponseTime(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx )
         {
-          /* TODO fill this with the necessary business logic */
-          return (adb_getAvgSystemResponseTimeResponse_t*)NULL;
+            return adb_getAvgSystemResponseTimeResponse_create_with_values(env, 0.0);
         }
      
 
@@ -958,8 +953,7 @@
          */
         adb_getSystemStatisticsResponse_t* axis2_skel_StatisticsAdmin_getSystemStatistics(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx )
         {
-          /* TODO fill this with the necessary business logic */
-          return (adb_getSystemStatisticsResponse_t*)NULL;
+            return adb_getSystemStatisticsResponse_create(env);;
         }
      
 
