@@ -33,8 +33,8 @@ service_admin_response_time_processor_create(
 	}
     res_time_proc->max_response_time = 0;
     res_time_proc->min_response_time = -1;
-    res_time_proc->avg_response_time = 0;
-    res_time_proc->total_response_time = 0;
+    res_time_proc->avg_response_time = 0.0;
+    res_time_proc->total_response_time = 0.0;
 
 	return res_time_proc;
 }
