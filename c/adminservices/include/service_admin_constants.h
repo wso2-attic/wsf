@@ -42,5 +42,6 @@
 #define AXIS2_REQUEST_RECEIVED_TIME "wso2statistics.request.received.time"
 #define AXIS2_RESPONSE_SENT_TIME "wso2statistics.response.sent.time"
 #define AXIS2_STATISTISTICS_MODULE_NAME "wso2statistics"
+#define ADMIN_SERVICE_STATISTICS_SVC_NAME "StatisticsAdmin"
 
 #endif /* SERVICE_ADMIN_CONSTANTS_H_ */

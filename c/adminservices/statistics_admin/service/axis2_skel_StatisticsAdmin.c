@@ -605,12 +605,11 @@
                 return NULL;
             }
             svc_stat = adb_ServiceStatistics_create(env);
-            if(svc_stat)
+            if(!svc_stat)
             {
                 return NULL;
             }
             svc_name = adb_getServiceStatistics_get_serviceName(_getServiceStatistics, env);
-
             get_avg_svc_res_time = adb_getAvgServiceResponseTime_create_with_values(env, svc_name);
             if(get_avg_svc_res_time)
             {
@@ -681,7 +680,7 @@
                 if(get_svc_fault_count_res)
                 {
                     fault_count = adb_getServiceFaultCountResponse_get_return(get_svc_fault_count_res, env);
-                    adb_ServiceStatistics_set_FaultCount (svc_stat, env, fault_count);
+                    adb_ServiceStatistics_set_faultCount (svc_stat, env, fault_count);
                     adb_getServiceFaultCountResponse_free(get_svc_fault_count_res, env);
                 }
                 adb_getServiceFaultCount_free(get_svc_fault_count, env);

@@ -4,7 +4,7 @@
     </Description>
     <inflow>
         <handler name="ServiceStatHandler" class="bam_publisher">
-            <order phase="Dispatch"/>
+            <order phase="PostDispatch"/>
         </handler>
         <handler name="OperationStatHandler" class="bam_publisher">
             <order phase="OpPhase"/>
