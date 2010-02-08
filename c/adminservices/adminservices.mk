@@ -245,6 +245,7 @@ service_grp_admin_service: $(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\$(S
 #=====================================================================================================
 $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)\$(SECURITY_ADMIN_SERVICE).dll: $(SECURITY_ADMIN_SVC_SRC)\codegen\*.c $(SECURITY_ADMIN_SVC_SRC)\*.c
 	$(CC) $(CFLAGS) $(SECURITY_ADMIN_SVC_SRC)\codegen\*.c $(SECURITY_ADMIN_SVC_SRC)\*.c \
+		$(SERVICE_ADMIN_UTIL_SRC)\security_admin_util.c \
 		/Fo$(ADMIN_SVC_INTDIR)\$(SECURITY_ADMIN_SERVICE)\ /c
 	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(SECURITY_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
 		/OUT:$(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)\$(SECURITY_ADMIN_SERVICE).dll
