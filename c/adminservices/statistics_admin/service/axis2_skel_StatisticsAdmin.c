@@ -12,6 +12,7 @@
      #include <service_admin_response_time_processor.h>
      #include <service_admin_counter.h>
      #include <service_admin_constants.h>
+#include "adb_OperationStatistics.h"
 
      
 
@@ -359,7 +360,7 @@
                 if(get_op_fault_count_res)
                 {
                     fault_count = adb_getOperationFaultCountResponse_get_return(get_op_fault_count_res, env);
-                    adb_OperationStatistics_set_FaultCount (op_stat, env, fault_count);
+                    adb_OperationStatistics_set_faultCount (op_stat, env, fault_count);
                     adb_getOperationFaultCountResponse_free(get_op_fault_count_res, env);
                 }
                 adb_getOperationFaultCount_free(get_op_fault_count, env);

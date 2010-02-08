@@ -316,15 +316,43 @@
 				>
 			</File>
 			<File
+				RelativePath=".\adb_Metric.c"
+				>
+			</File>
+			<File
+				RelativePath=".\adb_OperationStatistics.c"
+				>
+			</File>
+			<File
+				RelativePath=".\adb_ServiceStatistics.c"
+				>
+			</File>
+			<File
+				RelativePath=".\adb_SystemStatistics.c"
+				>
+			</File>
+			<File
 				RelativePath=".\axis2_extension_mapper.c"
 				>
 			</File>
 			<File
-				RelativePath=".\axis2_skel_StatisticsAdmin.c"
+				RelativePath="..\axis2_skel_StatisticsAdmin.c"
 				>
 			</File>
 			<File
 				RelativePath=".\axis2_svc_skel_StatisticsAdmin.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\util\counter.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\util\response_time_processor.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\util\service_admin_util.c"
 				>
 			</File>
 		</Filter>
@@ -473,11 +501,31 @@
 				>
 			</File>
 			<File
+				RelativePath=".\adb_Metric.h"
+				>
+			</File>
+			<File
+				RelativePath=".\adb_OperationStatistics.h"
+				>
+			</File>
+			<File
+				RelativePath=".\adb_ServiceStatistics.h"
+				>
+			</File>
+			<File
+				RelativePath=".\adb_SystemStatistics.h"
+				>
+			</File>
+			<File
 				RelativePath=".\axis2_extension_mapper.h"
 				>
 			</File>
 			<File
 				RelativePath=".\axis2_skel_StatisticsAdmin.h"
+				>
+			</File>
+			<File
+				RelativePath="..\axis2_statistics_admin_constants.h"
 				>
 			</File>
 		</Filter>
