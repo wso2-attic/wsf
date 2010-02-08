@@ -965,7 +965,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\service_admin_constants.h"
+				RelativePath="..\..\include\service_admin_constants.h"
 				>
 			</File>
 			<File

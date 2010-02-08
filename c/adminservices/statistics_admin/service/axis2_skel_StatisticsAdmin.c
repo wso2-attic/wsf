@@ -251,123 +251,125 @@
          *
          * @return adb_getOperationStatisticsResponse_t*
          */
-        adb_getOperationStatisticsResponse_t* axis2_skel_StatisticsAdmin_getOperationStatistics(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_getOperationStatistics_t* _getOperationStatistics )
-        {
-            adb_getOperationStatisticsResponse_t *get_op_stat_res = NULL;
-            adb_OperationStatistics_t *op_stat = NULL;
-            axis2_char_t *op_name = NULL;
-            axis2_char_t *svc_name = NULL;
-            double avg_res_time = 0;
-            long max_res_time = 0;
-            long min_res_time = 0;
-            int res_count = 0;
-            int req_count = 0;
-            int fault_count = 0;
-            adb_getAvgOperationResponseTime_t *get_avg_op_res_time = NULL;
-            adb_getAvgOperationResponseTimeResponse_t *get_avg_op_res_time_res = NULL;
-            adb_getMaxOperationResponseTime_t *get_max_op_res_time = NULL;
-            adb_getMaxOperationResponseTimeResponse_t *get_max_op_res_time_res = NULL;
-            adb_getMinOperationResponseTime_t *get_min_op_res_time = NULL;
-            adb_getMinOperationResponseTimeResponse_t *get_min_op_res_time_res = NULL;
-            adb_getOperationResponseCount_t *get_op_res_count = NULL;
-            adb_getOperationResponseCountResponse_t *get_op_res_count_res = NULL;
-            adb_getOperationRequestCount_t *get_op_req_count = NULL;
-            adb_getOperationRequestCountResponse_t *get_op_req_count_res = NULL;
-            adb_getOperationFaultCount_t *get_op_fault_count = NULL;
-            adb_getOperationFaultCountResponse_t *get_op_fault_count_res = NULL;
+adb_getOperationStatisticsResponse_t* axis2_skel_StatisticsAdmin_getOperationStatistics(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+	adb_getOperationStatistics_t* _getOperationStatistics )
+{
+	adb_getOperationStatisticsResponse_t *get_op_stat_res = NULL;
+	adb_OperationStatistics_t *op_stat = NULL;
+	axis2_char_t *op_name = NULL;
+	axis2_char_t *svc_name = NULL;
+	double avg_res_time = 0;
+	long max_res_time = 0;
+	long min_res_time = 0;
+	int res_count = 0;
+	int req_count = 0;
+	int fault_count = 0;
+	adb_getAvgOperationResponseTime_t *get_avg_op_res_time = NULL;
+	adb_getAvgOperationResponseTimeResponse_t *get_avg_op_res_time_res = NULL;
+	adb_getMaxOperationResponseTime_t *get_max_op_res_time = NULL;
+	adb_getMaxOperationResponseTimeResponse_t *get_max_op_res_time_res = NULL;
+	adb_getMinOperationResponseTime_t *get_min_op_res_time = NULL;
+	adb_getMinOperationResponseTimeResponse_t *get_min_op_res_time_res = NULL;
+	adb_getOperationResponseCount_t *get_op_res_count = NULL;
+	adb_getOperationResponseCountResponse_t *get_op_res_count_res = NULL;
+	adb_getOperationRequestCount_t *get_op_req_count = NULL;
+	adb_getOperationRequestCountResponse_t *get_op_req_count_res = NULL;
+	adb_getOperationFaultCount_t *get_op_fault_count = NULL;
+	adb_getOperationFaultCountResponse_t *get_op_fault_count_res = NULL;
 
-            if(!_getOperationStatistics)
-            {
-                return NULL;
-            }
-            op_stat = adb_OperationStatistics_create(env);
-            if(op_stat)
-            {
-                return NULL;
-            }
-            svc_name = adb_getOperationStatistics_get_serviceName(_getOperationStatistics, env);
-            op_name = adb_getOperationStatistics_get_operationName(_getOperationStatistics, env);
+	if(!_getOperationStatistics)
+	{
+		return NULL;
+	}
+	op_stat = adb_OperationStatistics_create(env);
+	if(!op_stat)
+	{
+		return NULL;
+	}
+	svc_name = adb_getOperationStatistics_get_serviceName(_getOperationStatistics, env);
+	op_name = adb_getOperationStatistics_get_operationName(_getOperationStatistics, env);
 
-            get_avg_op_res_time = adb_getAvgOperationResponseTime_create_with_values(env, svc_name, op_name);
-            if(get_avg_op_res_time)
-            {
-                get_avg_op_res_time_res = axis2_skel_StatisticsAdmin_getAvgOperationResponseTime(env, msg_ctx, get_avg_op_res_time);
-                if(get_avg_op_res_time_res)
-                {
-                    avg_res_time = adb_getAvgOperationResponseTimeResponse_get_return(get_avg_op_res_time_res, env);
-                    adb_OperationStatistics_set_avgResponseTime(op_stat, env, avg_res_time);
-                    adb_getAvgOperationResponseTimeResponse_free(get_avg_op_res_time_res, env);
-                }
-                adb_getAvgOperationResponseTime_free(get_avg_op_res_time, env);
-            }
-            
-            if(get_max_op_res_time)
-            {
-                get_max_op_res_time_res = axis2_skel_StatisticsAdmin_getMaxOperationResponseTime(env, msg_ctx, get_max_op_res_time);
-                if(get_max_op_res_time_res)
-                {
-                    max_res_time = adb_getMaxOperationResponseTimeResponse_get_return(get_max_op_res_time_res, env);
-                    adb_OperationStatistics_set_maxResponseTime(op_stat, env, max_res_time);
-                    adb_getMaxOperationResponseTimeResponse_free(get_max_op_res_time_res, env);
-                }
-                adb_getMaxOperationResponseTime_free(get_max_op_res_time, env);
-            }
-            
-            if(get_min_op_res_time)
-            {
-                get_min_op_res_time_res = axis2_skel_StatisticsAdmin_getMinOperationResponseTime(env, msg_ctx, get_min_op_res_time);
-                if(get_min_op_res_time_res)
-                {
-                    min_res_time = adb_getMinOperationResponseTimeResponse_get_return(get_min_op_res_time_res, env);
-                    adb_OperationStatistics_set_minResponseTime(op_stat, env, min_res_time);
-                    adb_getMinOperationResponseTimeResponse_free(get_min_op_res_time_res, env);
-                }
-                adb_getMinOperationResponseTime_free(get_min_op_res_time, env);
-            }
+	get_avg_op_res_time = adb_getAvgOperationResponseTime_create_with_values(env, svc_name, op_name);
+	if(get_avg_op_res_time)
+	{
+		get_avg_op_res_time_res = axis2_skel_StatisticsAdmin_getAvgOperationResponseTime(env, msg_ctx, get_avg_op_res_time);
+		if(get_avg_op_res_time_res)
+		{
+			avg_res_time = adb_getAvgOperationResponseTimeResponse_get_return(get_avg_op_res_time_res, env);
+			adb_OperationStatistics_set_avgResponseTime(op_stat, env, avg_res_time);
+			adb_getAvgOperationResponseTimeResponse_free(get_avg_op_res_time_res, env);
+		}
+		adb_getAvgOperationResponseTime_free(get_avg_op_res_time, env);
+	}
 
-            get_op_res_count = adb_getOperationResponseCount_create_with_values(env, svc_name, op_name);
-            if(get_op_res_count)
-            {
-                get_op_res_count_res = axis2_skel_StatisticsAdmin_getOperationResponseCount(env, msg_ctx, get_op_res_count);
-                if(get_op_res_count_res)
-                {
-                    res_count = adb_getOperationResponseCountResponse_get_return(get_op_res_count_res, env);
-                    adb_OperationStatistics_set_responseCount (op_stat, env, res_count);
-                    adb_getOperationResponseCountResponse_free(get_op_res_count_res, env);
-                }
-                adb_getOperationResponseCount_free(get_op_res_count, env);
-            }
-            
-            get_op_req_count = adb_getOperationRequestCount_create_with_values(env, svc_name, op_name);
-            if(get_op_req_count)
-            {
-                get_op_req_count_res = axis2_skel_StatisticsAdmin_getOperationRequestCount(env, msg_ctx, get_op_req_count);
-                if(get_op_req_count_res)
-                {
-                    req_count = adb_getOperationRequestCountResponse_get_return(get_op_req_count_res, env);
-                    adb_OperationStatistics_set_requestCount (op_stat, env, req_count);
-                    adb_getOperationRequestCountResponse_free(get_op_req_count_res, env);
-                }
-                adb_getOperationRequestCount_free(get_op_req_count, env);
-            }
-            
-            get_op_fault_count = adb_getOperationFaultCount_create_with_values(env, svc_name, op_name);
-            if(get_op_fault_count)
-            {
-                get_op_fault_count_res = axis2_skel_StatisticsAdmin_getOperationFaultCount(env, msg_ctx, get_op_fault_count);
-                if(get_op_fault_count_res)
-                {
-                    fault_count = adb_getOperationFaultCountResponse_get_return(get_op_fault_count_res, env);
-                    adb_OperationStatistics_set_faultCount (op_stat, env, fault_count);
-                    adb_getOperationFaultCountResponse_free(get_op_fault_count_res, env);
-                }
-                adb_getOperationFaultCount_free(get_op_fault_count, env);
-            }
+	if(get_max_op_res_time)
+	{
+		get_max_op_res_time_res = axis2_skel_StatisticsAdmin_getMaxOperationResponseTime(env, msg_ctx, get_max_op_res_time);
+		if(get_max_op_res_time_res)
+		{
+			max_res_time = adb_getMaxOperationResponseTimeResponse_get_return(get_max_op_res_time_res, env);
+			adb_OperationStatistics_set_maxResponseTime(op_stat, env, max_res_time);
+			adb_getMaxOperationResponseTimeResponse_free(get_max_op_res_time_res, env);
+		}
+		adb_getMaxOperationResponseTime_free(get_max_op_res_time, env);
+	}
 
-            get_op_stat_res = adb_getOperationStatisticsResponse_create_with_values(env, op_stat);
-            return (adb_getOperationStatisticsResponse_t*) get_op_stat_res;
-        }
+	if(get_min_op_res_time)
+	{
+		get_min_op_res_time_res = axis2_skel_StatisticsAdmin_getMinOperationResponseTime(env, msg_ctx, get_min_op_res_time);
+		if(get_min_op_res_time_res)
+		{
+			min_res_time = adb_getMinOperationResponseTimeResponse_get_return(get_min_op_res_time_res, env);
+			adb_OperationStatistics_set_minResponseTime(op_stat, env, min_res_time);
+			adb_getMinOperationResponseTimeResponse_free(get_min_op_res_time_res, env);
+		}
+		adb_getMinOperationResponseTime_free(get_min_op_res_time, env);
+	}
+
+	get_op_res_count = adb_getOperationResponseCount_create_with_values(env, svc_name, op_name);
+	if(get_op_res_count)
+	{
+		get_op_res_count_res = axis2_skel_StatisticsAdmin_getOperationResponseCount(env, msg_ctx, get_op_res_count);
+		if(get_op_res_count_res)
+		{
+			res_count = adb_getOperationResponseCountResponse_get_return(get_op_res_count_res, env);
+			adb_OperationStatistics_set_responseCount (op_stat, env, res_count);
+			adb_getOperationResponseCountResponse_free(get_op_res_count_res, env);
+		}
+		adb_getOperationResponseCount_free(get_op_res_count, env);
+	}
+
+	get_op_req_count = adb_getOperationRequestCount_create_with_values(env, svc_name, op_name);
+	if(get_op_req_count)
+	{
+		get_op_req_count_res = axis2_skel_StatisticsAdmin_getOperationRequestCount(env, msg_ctx, get_op_req_count);
+		if(get_op_req_count_res)
+		{
+			req_count = adb_getOperationRequestCountResponse_get_return(get_op_req_count_res, env);
+			adb_OperationStatistics_set_requestCount (op_stat, env, req_count);
+			adb_getOperationRequestCountResponse_free(get_op_req_count_res, env);
+		}
+		adb_getOperationRequestCount_free(get_op_req_count, env);
+	}
+
+	get_op_fault_count = adb_getOperationFaultCount_create_with_values(env, svc_name, op_name);
+	if(get_op_fault_count)
+	{
+		get_op_fault_count_res = axis2_skel_StatisticsAdmin_getOperationFaultCount(env, msg_ctx, get_op_fault_count);
+		if(get_op_fault_count_res)
+		{
+			fault_count = adb_getOperationFaultCountResponse_get_return(get_op_fault_count_res, env);
+			adb_OperationStatistics_set_faultCount (op_stat, env, fault_count);
+			adb_getOperationFaultCountResponse_free(get_op_fault_count_res, env);
+		}
+		adb_getOperationFaultCount_free(get_op_fault_count, env);
+	}
+
+	get_op_stat_res = adb_getOperationStatisticsResponse_create_with_values(env, op_stat);
+	return (adb_getOperationStatisticsResponse_t*) get_op_stat_res;
+	}
      
 
 		 
