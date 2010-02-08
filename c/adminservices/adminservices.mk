@@ -21,6 +21,7 @@ SERVICE_ADMIN_SERVICE=ServiceAdmin
 SERVICE_GRP_ADMIN_SERVICE=ServiceGroupAdmin
 SECURITY_ADMIN_SERVICE=SecurityAdminService
 USER_MANAGER_SERVICE=UserManagementService
+KEYSTORE_ADMIN_SERVICE = KeyStoreAdminService
 
 ## Service Code SRC
 AUTH_SVC_SRC=$(ADMIN_SVC_SRCDIR)\authentication
@@ -29,6 +30,7 @@ SERVICE_ADMIN_SRC=$(ADMIN_SVC_SRCDIR)\service_admin
 SERVICE_ADMIN_UTIL_SRC=$(ADMIN_SVC_SRCDIR)\util
 SECURITY_ADMIN_SVC_SRC=$(ADMIN_SVC_SRCDIR)\security_admin_service
 USER_MANAGER_SVC_SRC=$(ADMIN_SVC_SRCDIR)\usermanager
+KEYSTORE_ADMIN_SVC_SRC=$(ADMIN_SVC_SRCDIR)\keystore_admin
 
 ##################### compiler options
 
@@ -92,6 +94,7 @@ distdir:
 	if not exist $(ADMIN_SVC_DISTDIR)\$(OP_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(OP_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_DISTDIR)\$(USER_MANAGER_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(USER_MANAGER_SERVICE)
+	if not exist $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)
 	
 
 clean: 
@@ -108,6 +111,7 @@ intdirs:
 	if not exist $(ADMIN_SVC_INTDIR)\$(OP_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(OP_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_INTDIR)\$(SECURITY_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(SECURITY_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_INTDIR)\$(USER_MANAGER_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(USER_MANAGER_SERVICE)
+	if not exist $(ADMIN_SVC_INTDIR)\$(KEYSTORE_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(KEYSTORE_ADMIN_SERVICE)
 
 
 $(ADMIN_SVC_DISTDIR)\$(AUTH_SERVICE)\$(AUTH_SERVICE).dll: $(AUTH_SVC_SRC)\codegen\*.c $(AUTH_SVC_SRC)\*.c
@@ -152,24 +156,6 @@ proxy_admin: $(PROXY_ADMIN_SRC)
 		/OUT:$(PROXY_ADMIN_DISTDIR)\$(PROXY_ADMIN_SERVICE).dll
 	-@$(_VC_MANIFEST_EMBED_DLL)
 	copy $(ADMIN_SVC_SRCDIR)\proxy_admin\resources\services.xml $(PROXY_ADMIN_DISTDIR)
-	
-#==================================================================================
-#Keystore Admin Service 
-#==================================================================================
-KEYSTORE_ADMIN_SERVICE = KeyStoreAdminService
-KEYSTORE_ADMIN_DISTDIR = $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)
-KEYSTORE_ADMIN_INTDIR = $(ADMIN_SVC_INTDIR)\$(KEYSTORE_ADMIN_SERVICE)
-KEYSTORE_ADMIN_SRC = 	$(ADMIN_SVC_SRCDIR)\keystore_admin\codegen\*.c \
-					$(ADMIN_SVC_SRCDIR)\keystore_admin\*.c
-
-keystore_admin: $(KEYSTORE_ADMIN_SRC)
-	if not exist $(KEYSTORE_ADMIN_DISTDIR) mkdir $(KEYSTORE_ADMIN_DISTDIR)
-	if not exist $(KEYSTORE_ADMIN_INTDIR) mkdir $(KEYSTORE_ADMIN_INTDIR)
-	$(CC) $(CFLAGS) $(KEYSTORE_ADMIN_SRC) /Fo$(KEYSTORE_ADMIN_INTDIR)\ /c
-	$(LD) $(LDFLAGS) $(KEYSTORE_ADMIN_INTDIR)\*.obj $(LIBS) esb.lib /DLL \
-		/OUT:$(KEYSTORE_ADMIN_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE).dll
-	-@$(_VC_MANIFEST_EMBED_DLL)
-	copy $(ADMIN_SVC_SRCDIR)\keystore_admin\resources\services.xml $(KEYSTORE_ADMIN_DISTDIR)
 	
 #==============================================================================================
 OP_ADMIN_SRC=$(ADMIN_SVC_SRCDIR)\operation_admin
@@ -266,6 +252,16 @@ $(ADMIN_SVC_DISTDIR)\$(USER_MANAGER_SERVICE)\$(USER_MANAGER_SERVICE).dll: $(USER
 	copy $(USER_MANAGER_SVC_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(USER_MANAGER_SERVICE)
 
 user_manager_service: $(ADMIN_SVC_DISTDIR)\$(USER_MANAGER_SERVICE)\$(USER_MANAGER_SERVICE).dll
+#=====================================================================================================
+$(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)\$(KEYSTORE_ADMIN_SERVICE).dll: $(KEYSTORE_ADMIN_SVC_SRC)\codegen\*.c $(KEYSTORE_ADMIN_SVC_SRC)\*.c
+	$(CC) $(CFLAGS) $(KEYSTORE_ADMIN_SVC_SRC)\codegen\*.c $(KEYSTORE_ADMIN_SVC_SRC)\*.c \
+		/Fo$(ADMIN_SVC_INTDIR)\$(KEYSTORE_ADMIN_SERVICE)\ /c
+	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(KEYSTORE_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
+		/OUT:$(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)\$(KEYSTORE_ADMIN_SERVICE).dll
+	-@$(_VC_MANIFEST_EMBED_DLL)
+	copy $(KEYSTORE_ADMIN_SVC_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)
+
+keystore_admin_service: $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)\$(KEYSTORE_ADMIN_SERVICE).dll
 #==================================================================================
 #Registry Client 
 #==================================================================================
@@ -284,7 +280,7 @@ registry_client: $(REGISTRY_CLIENT_SRC)
 	
 #=============================================================================================
 #admin_svc_all: stat_admin_module 
-admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service stat_admin_module stat_admin_service
+admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service stat_admin_module stat_admin_service keystore_admin_service
  
 install: distdir intdirs admin_svc_all
 

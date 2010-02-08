@@ -183,6 +183,9 @@ axis2_skel_KeyStoreAdminService_addKeyStore(const axutil_env_t *env ,
     }
 
     AXIS2_FREE(env->allocator, file_name);
+
+	printf("done\n");
+
     return AXIS2_SUCCESS;
 
 }
@@ -261,7 +264,19 @@ axis2_skel_KeyStoreAdminService_getKeyStores(const axutil_env_t *env ,
 											 axis2_msg_ctx_t *msg_ctx,
 											 axis2_skel_KeyStoreAdminService_getKeyStores_fault *fault )
 {
-	adb_getKeyStoresResponse_t *response = adb_getKeyStoresResponse_create(env);
+	adb_getKeyStoresResponse_t* response = NULL;
+	adb_KeyStoreData_t* data = NULL;
+	
+	// Create response
+	response = adb_getKeyStoresResponse_create(env);
+
+	// Fill data
+	data = adb_KeyStoreData_create(env);
+	adb_KeyStoreData_set_keyStoreName(data, env, "wso2wsfc.p12");
+	adb_KeyStoreData_set_keyStoreType(data, env, "PKCS12");
+
+	adb_getKeyStoresResponse_add_return(response, env, data);
+	
 	return response;
 }
 
