@@ -22,6 +22,7 @@
 #include <service_admin_counter.h>
 #include <service_admin_constants.h>
 #include <service_admin_response_time_processor.h>
+#include "service_admin_util.h"
 
 static axis2_status_t AXIS2_CALL
 axis2_statistics_admin_calculate_response_times( 
