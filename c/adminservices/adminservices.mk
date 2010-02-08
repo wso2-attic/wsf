@@ -1,13 +1,15 @@
 
 AUTOCONF = configure.in
-#!include $(AUTOCONF)
+!include $(AUTOCONF)
 
 ADMIN_SVC_SRCDIR = .\ 
 ADMIN_SVC_INTDIR = .\intmsvc
 ADMIN_SVC_DISTDIR = .\services
 
-INCLUDE_PATH = /I $(WSFC_HOME)\include /I $(WSFC_HOME)/../include /I$(ADMIN_SVC_SRCDIR)\include 
-LIBS_PATH = /LIBPATH:$(WSFC_HOME)\lib 
+INCLUDE_PATH = /I$(OPENSSL_BIN_DIR)\include /I$(WSFC_HOME_DIR)\include /I$(WSFC_HOME_DIR)/../include /I$(ADMIN_SVC_SRCDIR)\include
+
+LIBS_PATH = /LIBPATH:$(WSFC_HOME_DIR)\lib /LIBPATH:$(OPENSSL_BIN_DIR)\lib\VC
+
 
 ## Packaged Service Names
 
@@ -41,9 +43,9 @@ LDFLAGS = /nologo $(LIBS_PATH)
 LIBS = axutil.lib axiom.lib axis2_engine.lib axis2_parser.lib neethi.lib neethi_util.lib
 
 
-SSL_LIB_FLAG = "MD"
+SSL_LIB_FLAG = MD
 !if "$(CRUNTIME)" == "/MT"
-SSL_LIB_FLAG = "MT"
+SSL_LIB_FLAG = MT
 !endif
 
 ####################
@@ -67,6 +69,13 @@ LDFLAGS = $(LDFLAGS) /DEBUG
 !else
 CFLAGS = $(CFLAGS) /D "NDEBUG" /O2 $(CRUNTIME)
 LDFLAGS = $(LDFLAGS)
+!endif
+
+#debug symbols
+!if "$(DEBUG)" == "1"
+LIBS = $(LIBS) libeay32$(SSL_LIB_FLAG)d.lib ssleay32$(SSL_LIB_FLAG)d.lib
+!else
+LIBS = $(LIBS) libeay32$(SSL_LIB_FLAG).lib ssleay32$(SSL_LIB_FLAG).lib
 !endif
 
 #################### hack!
@@ -216,7 +225,7 @@ $(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\$(SERVICE_GRP_ADMIN_SERVICE).d
 service_grp_admin_service: $(ADMIN_SVC_DISTDIR)\$(SERVICE_GRP_ADMIN_SERVICE)\$(SERVICE_GRP_ADMIN_SERVICE).dll
 #=====================================================================================================
 $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)\$(SECURITY_ADMIN_SERVICE).dll: $(SECURITY_ADMIN_SVC_SRC)\codegen\*.c $(SECURITY_ADMIN_SVC_SRC)\*.c
-	$(CC) $(CFLAGS) /I C:\OpenSSL\include $(SECURITY_ADMIN_SVC_SRC)\codegen\*.c $(SECURITY_ADMIN_SVC_SRC)\*.c \
+	$(CC) $(CFLAGS) $(SECURITY_ADMIN_SVC_SRC)\codegen\*.c $(SECURITY_ADMIN_SVC_SRC)\*.c \
 		/Fo$(ADMIN_SVC_INTDIR)\$(SECURITY_ADMIN_SERVICE)\ /c
 	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(SECURITY_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
 		/OUT:$(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)\$(SECURITY_ADMIN_SERVICE).dll
@@ -253,10 +262,9 @@ registry_client: $(REGISTRY_CLIENT_SRC)
 		/OUT:$(REGISTRY_CLIENT_DISTDIR)\$(REGISTRY_CLIENT).dll
 	-@$(_VC_MANIFEST_EMBED_DLL)
 	
-#==============================================================================================
-
-admin_svc_all: security_admin_service 
-#admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service 
+#=============================================================================================
+#admin_svc_all: security_admin_service 
+admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service 
 
 install: distdir intdirs admin_svc_all
 

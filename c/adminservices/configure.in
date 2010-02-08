@@ -1,8 +1,17 @@
 # Set this to 1 if debug code should be generated, 0 otherwise.
+
+
+OPENSSL_BIN_DIR=F:\OpenSSL
+
 DEBUG = 1
+
 #CRUNTIME Libaray ( Use /MT or /MD)
+
 CRUNTIME=/MT
 
+
 EMBED_MANIFEST=0
-OPENSSL_BIN_DIR=F:\OpenSSL
-WSFC_HOME=..\wso2-wsf-c-bin-2.0.0-win32
+
+
+WSFC_HOME_DIR=..\wso2-wsf-c-bin-2.0.0-win32
+

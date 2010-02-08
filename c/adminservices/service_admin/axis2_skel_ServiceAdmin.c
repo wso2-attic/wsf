@@ -13,6 +13,8 @@
 #include "service_admin_util.h"
 #include "axis2_policy_include.h"
 #include "neethi_engine.h"
+#include "axis2_msg.h"
+#include "axis2_op.h"
 
 static axis2_char_t *axis2_skel_ServiceAdmin_get_service_type(
     const axutil_env_t *env,
@@ -721,12 +723,61 @@ axis2_skel_ServiceAdmin_setServiceParameters(
 * @return adb_getOperationMessagePolicyResponse_t*
 */
 adb_getOperationMessagePolicyResponse_t* 
-axis2_skel_ServiceAdmin_getOperationMessagePolicy(const axutil_env_t *env , 
-												  axis2_msg_ctx_t *msg_ctx,
-												  adb_getOperationMessagePolicy_t* _getOperationMessagePolicy )
+axis2_skel_ServiceAdmin_getOperationMessagePolicy(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+	adb_getOperationMessagePolicy_t* _getOperationMessagePolicy )
 {
-	/* TODO fill this with the necessary business logic */
-	return (adb_getOperationMessagePolicyResponse_t*)NULL;
+	axis2_char_t *svc_name = NULL, *op_name = NULL, *message_type = NULL;
+	axis2_svc_t *svc = NULL;
+	axis2_op_t *op = NULL;
+	adb_getOperationMessagePolicyResponse_t *response = NULL;
+	svc_name = adb_getOperationMessagePolicy_get_serviceName(_getOperationMessagePolicy, env);
+	op_name = adb_getOperationMessagePolicy_get_operationName(_getOperationMessagePolicy, env);
+	message_type = adb_getOperationMessagePolicy_get_messageType(_getOperationMessagePolicy, env);
+
+	svc = service_admin_util_get_service(env, msg_ctx, svc_name);
+	response  = adb_getOperationMessagePolicyResponse_create(env);
+	if(svc)
+	{
+		op = axis2_svc_get_op_with_name(svc, env, op_name);
+		if(op)
+		{
+			axis2_msg_t * msg = NULL;
+			msg = axis2_op_get_msg(op, env, message_type);
+			if(msg)
+			{
+				axis2_desc_t *desc = NULL;
+				axis2_policy_include_t *policy_include = NULL;
+				
+				desc = axis2_msg_get_base(msg, env);
+				policy_include = axis2_desc_get_policy_include(desc, env);
+				if(policy_include)
+				{
+					axiom_node_t *policy_node = NULL;
+					neethi_policy_t *effective_policy = NULL;
+					effective_policy = axis2_policy_include_get_effective_policy(policy_include, env);
+					if(effective_policy)
+					{
+						axis2_char_t *policy_str = NULL;
+						policy_node = neethi_policy_serialize(effective_policy, NULL, env);
+						if(policy_node)
+						{
+							policy_str = axiom_node_to_string(policy_node, env);
+							if(policy_str)
+							{
+								adb_getOperationMessagePolicyResponse_set_return(response, env, policy_str);
+								return response;
+							}
+						}
+					}
+				}
+
+			}
+		}
+	}
+
+	return response;
 }
 
 
@@ -805,7 +856,25 @@ axis2_skel_ServiceAdmin_getServiceData(const axutil_env_t *env ,
 
     adb_ServiceMetaData_set_mtomStatus(adb_svc, env, "optional");
     adb_ServiceMetaData_set_name(adb_svc, env, service_name);
-    adb_ServiceMetaData_add_operations(adb_svc, env, "test 0");
+	{
+		axutil_hash_t *op_map = NULL;
+		axutil_hash_index_t *index = NULL;
+		op_map = axis2_svc_get_all_ops(service, env);
+        for (index = axutil_hash_first(op_map, env); index; index = axutil_hash_next(env, index))
+        {
+            void *v = NULL;
+            axis2_op_t *op = NULL;
+            axis2_char_t *op_name = NULL;
+					
+            axutil_hash_this(index, NULL, NULL, &v);
+            op = (axis2_op_t *) v;
+            op_name = axutil_qname_get_localpart(axis2_op_get_qname(op, env), env);
+			if(op_name)
+				adb_ServiceMetaData_add_operations(adb_svc, env,op_name);
+		}
+	}
+
+
     adb_ServiceMetaData_set_scope(adb_svc, env, "application");
 	{
 		axis2_svc_grp_t *svc_grp = NULL;
@@ -1324,12 +1393,10 @@ axis2_skel_ServiceAdmin_getServiceBindings(
 		return NULL;
 	}
 	policy_include = axis2_desc_get_policy_include(desc, env);
-	
+	response = adb_getServiceBindingsResponse_create(env);
 	if(policy_include)
 	{
-
 		axiom_node_t *policy_node = NULL;
-		response = adb_getServiceBindingsResponse_create(env);
 		effective_policy = axis2_policy_include_get_effective_policy(policy_include, env);
 		if(effective_policy)
 		{
@@ -1344,14 +1411,11 @@ axis2_skel_ServiceAdmin_getServiceBindings(
 					return response;
 				}
 			}
-		}else
-		{
-			/** TODO return an exception */
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "effective polcy not available");
-			return NULL;
 		}
 	}
-	return NULL;
+	
+	adb_getServiceBindingsResponse_add_return(response, env, " ");
+	return response;
 }
 
 
