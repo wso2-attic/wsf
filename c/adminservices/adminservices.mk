@@ -285,7 +285,6 @@ registry_client: $(REGISTRY_CLIENT_SRC)
 #admin_svc_all: stat_admin_module 
 admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service stat_admin_module stat_admin_service
  
-
 install: distdir intdirs admin_svc_all
 
 dist: install 
