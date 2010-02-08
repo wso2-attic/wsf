@@ -3,6 +3,7 @@
 <!-- by the Apache Axis2 version: #axisVersion# #today# -->
 <service name="SecurityAdminService">
     <parameter name="ServiceClass">SecurityAdminService</parameter>
+    <parameter name="adminService" locked="true">true</parameter>
     <description>SecurityAdminService Service
             </description>
     <operation name="getScenarios" mep="http://www.w3.org/ns/wsdl/in-out">
