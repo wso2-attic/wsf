@@ -1,10 +1,11 @@
 
-AUTOCONF = configure.in
+AUTOCONF = configure.in_win32
 !include $(AUTOCONF)
 
 ADMIN_SVC_SRCDIR = .\ 
 ADMIN_SVC_INTDIR = .\intmsvc
 ADMIN_SVC_DISTDIR = .\services
+ADMIN_MOD_DISTDIR = .\modules
 
 INCLUDE_PATH = /I$(OPENSSL_BIN_DIR)\include /I$(WSFC_HOME_DIR)\include /I$(WSFC_HOME_DIR)/../include /I$(ADMIN_SVC_SRCDIR)\include
 
@@ -83,6 +84,7 @@ LIBS = $(LIBS) libeay32$(SSL_LIB_FLAG).lib ssleay32$(SSL_LIB_FLAG).lib
 
 distdir:
 	if not exist $(ADMIN_SVC_DISTDIR)	mkdir $(ADMIN_SVC_DISTDIR)
+	if not exist $(ADMIN_MOD_DISTDIR)   mkdir $(ADMIN_MOD_DISTDIR)
 	if not exist $(ADMIN_SVC_DISTDIR)\$(AUTH_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(AUTH_SERVICE)
 	if not exist $(ADMIN_SVC_DISTDIR)\$(SERVER_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(SERVER_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE)
@@ -90,12 +92,13 @@ distdir:
 	if not exist $(ADMIN_SVC_DISTDIR)\$(OP_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(OP_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_DISTDIR)\$(USER_MANAGER_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(USER_MANAGER_SERVICE)
-
+	
 
 clean: 
 	if exist $(ADMIN_SVC_DISTDIR) rmdir /S /Q $(ADMIN_SVC_DISTDIR)
 	if exist $(ADMIN_SVC_INTDIR)  rmdir /S /Q $(ADMIN_SVC_INTDIR)
-
+	if exist $(ADMIN_MOD_DISTDIR) rmdir /S /Q $(ADMIN_MOD_DISTDIR)
+	
 intdirs:
 	if not exist $(ADMIN_SVC_INTDIR) mkdir $(ADMIN_SVC_INTDIR)
 	if not exist $(ADMIN_SVC_INTDIR)\$(AUTH_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(AUTH_SERVICE)
@@ -184,21 +187,37 @@ op_admin_service: $(ADMIN_SVC_DISTDIR)\$(OP_ADMIN_SERVICE)\$(OP_ADMIN_SERVICE).d
 
 #=====================================================================================================
 STAT_ADMIN_SERVICE=StatisticsAdmin
-STAT_ADMIN_SRC=$(ADMIN_SVC_SRCDIR)\statistics_admin
+STAT_ADMIN_SRC=$(ADMIN_SVC_SRCDIR)\statistics_admin\service
 
 $(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE)\$(STAT_ADMIN_SERVICE).dll : 
     if not exist $(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_SERVICE)
     if not exist $(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE)
-	$(CC) $(CFLAGS) $(STAT_ADMIN_SRC) $(STAT_ADMIN_SRC)\codegen\*.c $(STAT_ADMIN_SRC)\*.c $(SERVICE_ADMIN_UTIL_SRC)\*.c /Fo$(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_SERVICE)\ /c
+	$(CC) $(CFLAGS) $(STAT_ADMIN_SRC)\codegen\*.c $(STAT_ADMIN_SRC)\*.c $(SERVICE_ADMIN_UTIL_SRC)\*.c /Fo$(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_SERVICE)\ /c
 	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
 		/OUT:$(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE)\$(STAT_ADMIN_SERVICE).dll
 	-@$(_VC_MANIFEST_EMBED_DLL)
-	copy $(OP_ADMIN_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE)\
+	copy $(STAT_ADMIN_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE)\
 
 	copy $(STAT_ADMIN_SRC)\resources\$(STAT_ADMIN_SERVICE).wsdl $(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE)\
 
 stat_admin_service: $(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE)\$(STAT_ADMIN_SERVICE).dll
 
+#=======================================================================================================
+#statistics module
+
+STAT_ADMIN_MODULE=statistics
+STAT_ADMIN_MODULE_SRC=$(ADMIN_SVC_SRCDIR)\statistics_admin\module
+
+$(ADMIN_MOD_DISTDIR)\$(STAT_ADMIN_MODULE)\$(STAT_ADMIN_MODULE).dll :
+	if not exist $(AXMIN_SVC_INTDIR)\$(STAT_ADMIN_MODULE) mkdir $(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_MODULE)
+	if not exist $(ADMIN_MOD_DISTDIR)\$(STAT_ADMIN_MODULE) mkdir $(ADMIN_MOD_DISTDIR)\$(STAT_ADMIN_MODULE)
+	$(CC) $(CFLAGS) $(STAT_ADMIN_MODULE_SRC)\*.c $(SERVICE_ADMIN_UTIL_SRC)\*.c /Fo$(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_MODULE)\ /c
+	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_MODULE)\*.obj $(LIBS) /DLL \
+		/OUT:$(ADMIN_MOD_DISTDIR)\$(STAT_ADMIN_MODULE)\$(STAT_ADMIN_MODULE).dll
+		-@$(_VC_MANIFEST_EMBED_DLL)
+		copy $(STAT_ADMIN_MODULE_SRC)\module.xml $(ADMIN_MOD_DISTDIR)\$(STAT_ADMIN_MODULE)\
+		
+stat_admin_module : $(ADMIN_MOD_DISTDIR)\$(STAT_ADMIN_MODULE)\$(STAT_ADMIN_MODULE).dll
 
 #=====================================================================================================
 $(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE)\$(SERVICE_ADMIN_SERVICE).dll: 	
@@ -263,8 +282,9 @@ registry_client: $(REGISTRY_CLIENT_SRC)
 	-@$(_VC_MANIFEST_EMBED_DLL)
 	
 #=============================================================================================
-#admin_svc_all: security_admin_service 
-admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service 
+#admin_svc_all: stat_admin_module 
+admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service stat_admin_module stat_admin_service
+ 
 
 install: distdir intdirs admin_svc_all
 
