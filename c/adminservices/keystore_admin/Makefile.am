@@ -22,6 +22,7 @@ INCLUDES = -I$(top_builddir)/include \
 			-I. \
 			@AXIS2INC@ \
 		   	@AXIOMINC@ \
+		   	@RAMPARTINC@ \
 		   	@NEETHIINC@ \
 		   	@UTILINC@
 

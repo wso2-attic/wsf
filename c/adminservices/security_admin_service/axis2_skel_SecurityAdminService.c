@@ -222,7 +222,7 @@
 			axutil_array_list_t* key_stores = NULL;
 			axutil_array_list_t* user_groups = NULL;
 	
-			// Create data
+			/* Create data */
 			key_stores = axutil_array_list_create(env, 1);
 			axutil_array_list_add(key_stores, env, axutil_string_get_buffer(
 				axutil_string_create(env, "test"), env));
@@ -238,7 +238,7 @@
 			adb_SecurityConfigData_set_trustedKeyStores(data, env, key_stores);
 			adb_SecurityConfigData_set_userGroups(data, env, user_groups);
 
-			// Create response
+			/* Create response */
 			response = adb_getSecurityConfigDataResponse_create(env);
 			adb_getSecurityConfigDataResponse_set_return(response, env, data);
 

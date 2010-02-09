@@ -148,8 +148,10 @@ AXIOMINC=$axis2inc/../axiom/include
 UTILINC=$axis2inc/../util/include
 NEETHIINC=$axis2inc/../neethi/include
 SAVANINC=$axis2inc/../../savanc/include
+RAMPARTINC=$axis2inc/../../rampartc/include
 
 AC_SUBST(SAVANINC)
+AC_SUBST(RAMPARTINC)
 AC_SUBST(AXIS2INC)
 AC_SUBST(AXIOMINC)
 AC_SUBST(UTILINC)

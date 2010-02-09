@@ -227,24 +227,24 @@ axis2_skel_KeyStoreAdminService_getKeystoreInfo(const axutil_env_t *env ,
 	adb_getKeystoreInfoResponse_t* response = NULL;
 	adb_KeyStoreData_t* data = NULL;
 
-	// Get required keystore name
+	/* Get required keystore name */
 	keystore_name = adb_getKeystoreInfo_get_keyStoreName(_getKeystoreInfo, env);
 	if (!keystore_name) return NULL;
 
-	// Load keystore file
-	//pkcs12_keystore = pkcs12_keystore_create(env, 
+	/* Load keystore file */
+	/*pkcs12_keystore = pkcs12_keystore_create(env, */
 
-	// Create data
+	/* Create data */
 	data = adb_KeyStoreData_create(env);
 
-	// Set keystore name
+	/* Set keystore name */
 	adb_KeyStoreData_set_keyStoreName(data, env, 
 		(axis2_char_t*)axutil_strdup(env, keystore_name));
 
-	// Set keystore type
+	/* Set keystore type */
 	adb_KeyStoreData_set_keyStoreType(data, env, "PKCS12");
 
-	// Create response
+	/* Create response */
 	response = adb_getKeystoreInfoResponse_create(env);
 	adb_getKeystoreInfoResponse_set_return(response, env, data);
 
