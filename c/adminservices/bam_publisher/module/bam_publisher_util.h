@@ -87,6 +87,11 @@ bam_publisher_util_publish(
         const axutil_env_t *env,
         struct axis2_msg_ctx *msg_ctx,
         axiom_node_t *node);
+    
+axis2_bool_t AXIS2_CALL
+bam_publisher_util_is_service_allowed_for_statistics_query(
+        const axutil_env_t *env, 
+        axis2_char_t *svc_name);
 
 /** @} */
 #ifdef __cplusplus

@@ -62,7 +62,6 @@ bam_publisher_svc_stat_handler_invoke(struct axis2_handler *handler,
     axis2_status_t status = AXIS2_SUCCESS;
     axis2_char_t *svc_name = NULL;
     axis2_svc_t *svc = NULL;
-    axis2_svc_t *stat_admin_svc = NULL;
     adb_getServiceStatistics_t *get_svc_stat = NULL;
     adb_getServiceStatisticsResponse_t * get_svc_stat_res = NULL;
     adb_ServiceStatistics_t *svc_stat = NULL;
@@ -80,6 +79,10 @@ bam_publisher_svc_stat_handler_invoke(struct axis2_handler *handler,
     if(svc)
     {
         svc_name = (axis2_char_t *) axis2_svc_get_name(svc, env);
+        if(!bam_publisher_util_is_service_allowed_for_statistics_query(env, svc_name))
+        {
+            return AXIS2_SUCCESS;
+        }
     }
     get_svc_stat = adb_getServiceStatistics_create_with_values(env, svc_name);
     get_svc_stat_res = bam_publisher_statistics_get_service_statistics(env, msg_ctx, get_svc_stat);

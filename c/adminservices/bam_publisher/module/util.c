@@ -22,6 +22,7 @@
 #include <axis2_svc_client.h>
 #include <axiom_soap.h>
 #include <service_admin_util.h>
+#include <service_admin_constants.h>
 #include <stdio.h>
 
 axiom_node_t *AXIS2_CALL
@@ -137,9 +138,6 @@ bam_publisher_util_publish(
     axis2_options_t *options = NULL;
     const axis2_char_t *client_home = NULL;
     axis2_svc_client_t* svc_client = NULL;
-    axis2_status_t status = AXIS2_FAILURE;
-    axis2_char_t *subs_status = NULL;
-    int action = 0;
     axis2_conf_ctx_t *conf_ctx = NULL;
 
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
@@ -172,5 +170,24 @@ bam_publisher_util_publish(
         axis2_svc_client_free(svc_client, env);
         svc_client = NULL;
     }
+}
+
+axis2_bool_t AXIS2_CALL
+bam_publisher_util_is_service_allowed_for_statistics_query(
+            const axutil_env_t *env, 
+            axis2_char_t *svc_name)
+{
+    axis2_bool_t ret = AXIS2_TRUE;
+    if(svc_name && !axutil_strcmp(svc_name, ADMIN_SERVICE_STATISTICS_SVC_NAME))
+    {
+        /* We don't request statistics for statistics admin service it self */
+        return AXIS2_FALSE;
+    }
+    if(!axutil_strcmp(svc_name, AXIS2_ANON_SERVICE))
+    {
+        return AXIS2_FALSE;
+    }
+
+    return ret;
 }
 
