@@ -81,7 +81,6 @@
         address = "http://127.0.0.1:9090/axis2/services/StatisticsAdmin";
         conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
         client_home = axis2_conf_ctx_get_root_dir(conf_ctx, env);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_address:%s", address);
         if(!client_home)
         {
             client_home = AXIS2_GETENV("AXIS2C_HOME");

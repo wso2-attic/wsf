@@ -119,7 +119,7 @@ axis2_statistics_admin_calculate_response_times(
                 axutil_param_t *src_param = NULL;
                 service_admin_response_time_processor_t *res_time_processor = NULL;
                 service_admin_counter_t *counter = NULL;
-                int src_count = 0;
+                long src_count = 0;
                 
                 src_param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_REQUEST_COUNTER);
                 if(src_param)

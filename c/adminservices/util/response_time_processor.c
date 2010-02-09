@@ -74,7 +74,7 @@ service_admin_response_time_processor_add_response_time (
 
     res_time_proc->total_response_time = res_time_proc->total_response_time + response_time;
     res_time_proc->avg_response_time = res_time_proc->total_response_time / request_count;
-    
+   
     return AXIS2_SUCCESS;
 }
  
