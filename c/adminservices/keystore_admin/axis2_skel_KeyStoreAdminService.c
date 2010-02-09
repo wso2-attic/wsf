@@ -20,12 +20,11 @@ axis2_keystore_admin_create_fault(
     const axis2_char_t *file_name,
     const int line_number);
 
-static axis2_status_t
-axis2_keystore_admin_store_to_registry(
-    const axutil_env_t *env,
-    axis2_msg_ctx_t *msg_ctx,
-    adb_addKeyStore_t* addKeyStore,
-    axis2_char_t *file_name);
+axis2_status_t
+axis2_keystore_admin_save_keystore_details(
+    const axutil_env_t* env,
+	axis2_msg_ctx_t* msg_ctx,
+    adb_addKeyStore_t* addKeyStore);
 
 /**
 * auto generated function definition signature
@@ -170,8 +169,8 @@ axis2_skel_KeyStoreAdminService_addKeyStore(const axutil_env_t *env ,
     fflush(file);
     fclose(file);
 
-    /* store the details to registry */
-    if(axis2_keystore_admin_store_to_registry(env, msg_ctx, _addKeyStore, file_name)
+    // Persist keystore details
+    if(axis2_keystore_admin_save_keystore_details(env, msg_ctx, _addKeyStore)
         != AXIS2_SUCCESS)
     {
         axis2_keystore_admin_create_fault(env,
@@ -224,6 +223,7 @@ axis2_skel_KeyStoreAdminService_getKeystoreInfo(const axutil_env_t *env ,
 												axis2_skel_KeyStoreAdminService_getKeystoreInfo_fault *fault )
 {
 	axis2_char_t* keystore_name = NULL;
+	pkcs12_keystore_t* pkcs12_keystore = NULL;
 	adb_getKeystoreInfoResponse_t* response = NULL;
 	adb_KeyStoreData_t* data = NULL;
 
@@ -232,7 +232,7 @@ axis2_skel_KeyStoreAdminService_getKeystoreInfo(const axutil_env_t *env ,
 	if (!keystore_name) return NULL;
 
 	// Load keystore file
-
+	//pkcs12_keystore = pkcs12_keystore_create(env, 
 
 	// Create data
 	data = adb_KeyStoreData_create(env);
@@ -272,10 +272,14 @@ axis2_skel_KeyStoreAdminService_deleteStore(const axutil_env_t *env ,
 	axis2_conf_t* conf = NULL;
 	axis2_char_t* repo_path = NULL;
 	axis2_char_t* keystore_file = NULL;
+	axis2_char_t* keystore_details_file = NULL;
+	int status = 0;
 
 	// Get required keystore name
-	keystore_name = adb_deleteStore_get_keyStoreName(_deleteStore, env);
+	keystore_name = axutil_strdup(
+		env, adb_deleteStore_get_keyStoreName(_deleteStore, env));
 	if (!keystore_name) return AXIS2_FAILURE;
+	keystore_name = strtok(keystore_name, ".");
 
 	// Primary keystore should not be deleted
 	if (0 == axutil_strcmp(keystore_name, "wso2wsfc.p12"))
@@ -287,10 +291,21 @@ axis2_skel_KeyStoreAdminService_deleteStore(const axutil_env_t *env ,
     repo_path = axis2_conf_get_repo(conf, env);
 	keystore_file = axutil_strcat(env, repo_path, AXIS2_PATH_SEP_STR, "services", 
 		AXIS2_PATH_SEP_STR, "KeyStoreAdminService", AXIS2_PATH_SEP_STR, "keystores", 
-		AXIS2_PATH_SEP_STR, keystore_name, NULL);
+		AXIS2_PATH_SEP_STR, keystore_name, ".p12", NULL);
+	keystore_details_file = axutil_strcat(env, repo_path, AXIS2_PATH_SEP_STR, "services", 
+		AXIS2_PATH_SEP_STR, "KeyStoreAdminService", AXIS2_PATH_SEP_STR, "keystores", 
+		AXIS2_PATH_SEP_STR, keystore_name, ".dat", NULL);
 
-	// Remove file
-	if (0 != remove(keystore_file)) return AXIS2_FAILURE;
+	// Remove keystore and detail files
+	status = remove(keystore_file);
+	if (0 == status)
+		status = remove(keystore_details_file);
+
+	AXIS2_FREE(env->allocator, keystore_name);
+	AXIS2_FREE(env->allocator, keystore_file);
+	AXIS2_FREE(env->allocator, keystore_details_file);
+	
+	if (0 != status) return AXIS2_FAILURE;
 
 	return AXIS2_SUCCESS;
 }
@@ -330,6 +345,8 @@ axis2_skel_KeyStoreAdminService_getKeyStores(const axutil_env_t *env ,
 
 	// Read file names in keystore directory	
 	file_handle = FindFirstFile(keystore_dir_path, &find_data);
+	AXIS2_FREE(env->allocator, keystore_dir_path);
+
 	if (INVALID_HANDLE_VALUE == file_handle) return NULL;
 	
 	// Create response
@@ -398,15 +415,57 @@ axis2_keystore_admin_create_fault(
     AXIS2_LOG_ERROR(env->log, file_name, line_number, "[KeyStoreAdmin]%s", reason);
 }
 
-static axis2_status_t
-axis2_keystore_admin_store_to_registry(
-    const axutil_env_t *env,
-    axis2_msg_ctx_t *msg_ctx,
-    adb_addKeyStore_t* addKeyStore,
-    axis2_char_t *file_name)
+axis2_status_t
+axis2_keystore_admin_save_keystore_details(
+    const axutil_env_t* env,
+	axis2_msg_ctx_t* msg_ctx,
+    adb_addKeyStore_t* addKeyStore)
 {
-    /* TODO Implement this method to store to registry */
-    return AXIS2_SUCCESS;
+	axis2_char_t* file_name = NULL;
+	axis2_char_t* password = NULL;
+	axis2_char_t* provider = NULL;
+	axis2_char_t* pvt_key_pass = NULL;
+	axis2_char_t* record = NULL;
+	axis2_conf_ctx_t* conf_ctx = NULL;
+	axis2_conf_t* axis2_conf = NULL;
+	axis2_char_t* repo_path = NULL;
+	axis2_char_t* data_file_name = NULL;
+	FILE* file = NULL;
+	axis2_char_t* encoded_record = NULL;
+	int encoded_length = 0;
+
+	// Get parameters
+	file_name = axutil_strdup(env, adb_addKeyStore_get_filename(addKeyStore, env));
+	file_name = strtok(file_name, ".");
+	password = adb_addKeyStore_get_password(addKeyStore, env);
+	provider = adb_addKeyStore_get_provider(addKeyStore, env);
+	pvt_key_pass = adb_addKeyStore_get_pvtkeyPass(addKeyStore, env);
+
+	// Persist keystore details
+	record = axutil_strcat(env, password, "|", provider, "|", pvt_key_pass, NULL);
+
+	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+    axis2_conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+    repo_path = axis2_conf_get_repo(axis2_conf, env);
+    data_file_name = axutil_strcat(env, repo_path, AXIS2_PATH_SEP_STR, "services", 
+		AXIS2_PATH_SEP_STR, "KeyStoreAdminService", AXIS2_PATH_SEP_STR, "keystores",
+        AXIS2_PATH_SEP_STR, file_name, ".dat", NULL);
+
+	file = fopen(data_file_name, "w");
+	/*encoded_record = (axis2_char_t*)
+		AXIS2_MALLOC(env->allocator, axutil_strlen(record));
+	encoded_length = axutil_base64_encode(encoded_record, record, 
+		axutil_strlen(record));*/
+
+	fwrite(record, sizeof(axis2_char_t), axutil_strlen(record), file);
+	fflush(file);
+	fclose(file);
+
+	AXIS2_FREE(env->allocator, file_name);
+	AXIS2_FREE(env->allocator, record);
+	AXIS2_FREE(env->allocator, data_file_name);
+
+	return AXIS2_SUCCESS;
 }
 
 
