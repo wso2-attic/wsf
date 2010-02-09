@@ -74,11 +74,11 @@ bam_publisher_util_get_payload (
     const axutil_env_t *env,
     const axis2_char_t* server_name,
     const double avg_res_time,
-    const int min_res_time,
-    const int max_res_time,
-    const int req_ount,
-    const int _res_count,
-    const int _fault_count,
+    const long min_res_time,
+    const long max_res_time,
+    const long req_ount,
+    const long res_count,
+    const long fault_count,
     const axis2_char_t *svc_name,
     const axis2_char_t *op_name);
 

@@ -108,12 +108,12 @@ bam_publisher_svc_stat_handler_invoke(struct axis2_handler *handler,
     {
         axis2_char_t *server_name = NULL;
         axiom_node_t *payload = NULL;
-        int avg_res_time = adb_ServiceStatistics_get_avgResponseTime(svc_stat, env);
-        int min_res_time = adb_ServiceStatistics_get_minResponseTime(svc_stat, env);
-        int max_res_time = adb_ServiceStatistics_get_maxResponseTime(svc_stat, env);
-        int request_count = current_count;
-        int response_count = adb_ServiceStatistics_get_responseCount(svc_stat, env);
-        int fault_count = adb_ServiceStatistics_get_faultCount(svc_stat, env);
+        double avg_res_time = adb_ServiceStatistics_get_avgResponseTime(svc_stat, env);
+        long min_res_time = adb_ServiceStatistics_get_minResponseTime(svc_stat, env);
+        long max_res_time = adb_ServiceStatistics_get_maxResponseTime(svc_stat, env);
+        long request_count = current_count;
+        long response_count = adb_ServiceStatistics_get_responseCount(svc_stat, env);
+        long fault_count = adb_ServiceStatistics_get_faultCount(svc_stat, env);
 
         /* Eventing threshold count reached. So let's fire the event */
         service_admin_counter_set_last_count(env, msg_ctx, svc_name, NULL, current_count);

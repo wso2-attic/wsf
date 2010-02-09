@@ -30,11 +30,11 @@ bam_publisher_util_get_payload (
     const axutil_env_t *env,
     const axis2_char_t* server_name,
     const double avg_res_time,
-    const int min_res_time,
-    const int max_res_time,
-    const int req_count,
-    const int res_count,
-    const int fault_count,
+    const long min_res_time,
+    const long max_res_time,
+    const long req_count,
+    const long res_count,
+    const long fault_count,
     const axis2_char_t *svc_name,
     const axis2_char_t *op_name)
 
@@ -62,19 +62,19 @@ bam_publisher_util_get_payload (
     axiom_element_t *svc_name_element = NULL;
     axiom_node_t *op_name_node = NULL;
     axiom_element_t *op_name_element = NULL;
-    axis2_char_t str_avg_res_time[8];
+    axis2_char_t str_avg_res_time[64];
     axis2_char_t str_min_res_time[8];
     axis2_char_t str_max_res_time[8];
     axis2_char_t str_req_count[8];
     axis2_char_t str_res_count[8];
     axis2_char_t str_fault_count[8];
-   
+  
     sprintf(str_avg_res_time, "%f", avg_res_time);
-    sprintf(str_min_res_time, "%d", min_res_time);
-    sprintf(str_max_res_time, "%d", max_res_time);
-    sprintf(str_req_count, "%d", req_count);
-    sprintf(str_res_count, "%d", res_count);
-    sprintf(str_fault_count, "%d", fault_count);
+    sprintf(str_min_res_time, "%ld", min_res_time);
+    sprintf(str_max_res_time, "%ld", max_res_time);
+    sprintf(str_req_count, "%ld", req_count);
+    sprintf(str_res_count, "%ld", res_count);
+    sprintf(str_fault_count, "%ld", fault_count);
     stat_ns = axiom_namespace_create(env, STATISTICS_DATA_NS_URI, STATISTICS_DATA_NS_PREFIX);
     event_element =
         axiom_element_create(env, NULL, STATISTICS_DATA_ELEMENT_NAME_EVENT, stat_ns, &event_node);
