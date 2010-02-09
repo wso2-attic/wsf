@@ -10,8 +10,6 @@
 
 #include "codegen/axis2_skel_KeyStoreAdminService.h"
 
-#define KEYSTORE_FILE_LOCATION "/keystore/"
-
 static void
 axis2_keystore_admin_create_fault(
     const axutil_env_t *env,
@@ -112,8 +110,9 @@ axis2_skel_KeyStoreAdminService_addKeyStore(const axutil_env_t *env ,
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     axis2_conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     repo_path = axis2_conf_get_repo(axis2_conf, env);
-    file_name = axutil_strcat(env, repo_path, KEYSTORE_FILE_LOCATION,
-        adb_addKeyStore_get_filename(_addKeyStore, env), NULL);
+    file_name = axutil_strcat(env, repo_path, AXIS2_PATH_SEP_STR, "services", 
+		AXIS2_PATH_SEP_STR, "KeyStoreAdminService", AXIS2_PATH_SEP_STR, "keystores",
+        AXIS2_PATH_SEP_STR, adb_addKeyStore_get_filename(_addKeyStore, env), NULL);
     if(!file_name)
     {
         axis2_keystore_admin_create_fault(env, "Internal Server Error; File path is invalid",
@@ -184,10 +183,7 @@ axis2_skel_KeyStoreAdminService_addKeyStore(const axutil_env_t *env ,
 
     AXIS2_FREE(env->allocator, file_name);
 
-	printf("done\n");
-
     return AXIS2_SUCCESS;
-
 }
 
 
@@ -246,7 +242,27 @@ axis2_skel_KeyStoreAdminService_deleteStore(const axutil_env_t *env ,
 											adb_deleteStore_t* _deleteStore,
 											axis2_skel_KeyStoreAdminService_deleteStore_fault *fault )
 {
-	/* TODO fill this with the necessary business logic */
+	axis2_char_t* keystore_name = NULL;
+	axis2_conf_ctx_t* conf_ctx = NULL;
+	axis2_conf_t* conf = NULL;
+	axis2_char_t* repo_path = NULL;
+	axis2_char_t* keystore_file = NULL;
+
+	// Get required keystore name
+	keystore_name = adb_deleteStore_get_keyStoreName(_deleteStore, env);
+	if (!keystore_name) return AXIS2_FAILURE;
+
+	// Form keystore directory name
+	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+    repo_path = axis2_conf_get_repo(conf, env);
+	keystore_file = axutil_strcat(env, repo_path, AXIS2_PATH_SEP_STR, "services", 
+		AXIS2_PATH_SEP_STR, "KeyStoreAdminService", AXIS2_PATH_SEP_STR, "keystores", 
+		AXIS2_PATH_SEP_STR, keystore_name, NULL);
+
+	// Remove file
+	if (0 != remove(keystore_file) return AXIS2_FAILURE;
+
 	return AXIS2_SUCCESS;
 }
 
@@ -264,18 +280,69 @@ axis2_skel_KeyStoreAdminService_getKeyStores(const axutil_env_t *env ,
 											 axis2_msg_ctx_t *msg_ctx,
 											 axis2_skel_KeyStoreAdminService_getKeyStores_fault *fault )
 {
+	axis2_conf_ctx_t* conf_ctx = NULL;
+	axis2_conf_t* conf = NULL;
+	axis2_char_t* repo_path = NULL;
+	axis2_char_t* keystore_dir_path = NULL;
+	WIN32_FIND_DATA find_data;
+	HANDLE file_handle = NULL;
 	adb_getKeyStoresResponse_t* response = NULL;
+	axis2_char_t* keystore_name = NULL;
+	axis2_char_t* keystore_type = NULL;
+	axis2_char_t* tok = NULL;
 	adb_KeyStoreData_t* data = NULL;
+
+	// Form keystore directory name
+	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+    repo_path = axis2_conf_get_repo(conf, env);
+	keystore_dir_path = axutil_strcat(env, repo_path, AXIS2_PATH_SEP_STR, "services", 
+		AXIS2_PATH_SEP_STR, "KeyStoreAdminService", AXIS2_PATH_SEP_STR, "keystores/*.*", NULL);
+
+	// Read file names in keystore directory	
+	file_handle = FindFirstFile(keystore_dir_path, &find_data);
+	if (INVALID_HANDLE_VALUE == file_handle) return NULL;
 	
 	// Create response
 	response = adb_getKeyStoresResponse_create(env);
 
 	// Fill data
-	data = adb_KeyStoreData_create(env);
-	adb_KeyStoreData_set_keyStoreName(data, env, "wso2wsfc.p12");
-	adb_KeyStoreData_set_keyStoreType(data, env, "PKCS12");
+	do
+	{
+		keystore_name = NULL;
+		keystore_type = NULL;
+		tok = NULL;
 
-	adb_getKeyStoresResponse_add_return(response, env, data);
+		// Get name
+		keystore_name = axutil_strdup(env, find_data.cFileName);
+
+		// Get type
+		tok = strtok(find_data.cFileName, ".");
+		if (tok) tok = strtok(NULL, " .");
+		if (NULL == tok) // No extension found
+		{
+			AXIS2_FREE(env->allocator, keystore_name);
+			keystore_name = NULL;
+			continue;
+		}
+
+		if (0 == axutil_strcmp(tok, "p12")) // PKCS12
+		{
+			keystore_type = "PKCS12";
+		}
+		else
+		{
+			AXIS2_FREE(env->allocator, keystore_name);
+			keystore_name = NULL;
+			continue;
+		}
+
+		data = adb_KeyStoreData_create(env);
+		adb_KeyStoreData_set_keyStoreName(data, env, keystore_name);
+		adb_KeyStoreData_set_keyStoreType(data, env, keystore_type);
+
+		adb_getKeyStoresResponse_add_return(response, env, data);
+	} while (FindNextFile(file_handle, &find_data));
 	
 	return response;
 }
