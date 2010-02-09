@@ -261,7 +261,7 @@ axis2_skel_KeyStoreAdminService_deleteStore(const axutil_env_t *env ,
 		AXIS2_PATH_SEP_STR, keystore_name, NULL);
 
 	// Remove file
-	if (0 != remove(keystore_file) return AXIS2_FAILURE;
+	if (0 != remove(keystore_file)) return AXIS2_FAILURE;
 
 	return AXIS2_SUCCESS;
 }
