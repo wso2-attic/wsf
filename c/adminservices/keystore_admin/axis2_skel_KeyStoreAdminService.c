@@ -9,6 +9,7 @@
 */
 
 #include "codegen/axis2_skel_KeyStoreAdminService.h"
+#include <openssl_pkcs12_keystore.h>
 
 static void
 axis2_keystore_admin_create_fault(
@@ -222,8 +223,32 @@ axis2_skel_KeyStoreAdminService_getKeystoreInfo(const axutil_env_t *env ,
 												adb_getKeystoreInfo_t* _getKeystoreInfo,
 												axis2_skel_KeyStoreAdminService_getKeystoreInfo_fault *fault )
 {
-	/* TODO fill this with the necessary business logic */
-	return (adb_getKeystoreInfoResponse_t*)NULL;
+	axis2_char_t* keystore_name = NULL;
+	adb_getKeystoreInfoResponse_t* response = NULL;
+	adb_KeyStoreData_t* data = NULL;
+
+	// Get required keystore name
+	keystore_name = adb_getKeystoreInfo_get_keyStoreName(_getKeystoreInfo, env);
+	if (!keystore_name) return NULL;
+
+	// Load keystore file
+
+
+	// Create data
+	data = adb_KeyStoreData_create(env);
+
+	// Set keystore name
+	adb_KeyStoreData_set_keyStoreName(data, env, 
+		(axis2_char_t*)axutil_strdup(env, keystore_name));
+
+	// Set keystore type
+	adb_KeyStoreData_set_keyStoreType(data, env, "PKCS12");
+
+	// Create response
+	response = adb_getKeystoreInfoResponse_create(env);
+	adb_getKeystoreInfoResponse_set_return(response, env, data);
+
+	return response;
 }
 
 
@@ -251,6 +276,10 @@ axis2_skel_KeyStoreAdminService_deleteStore(const axutil_env_t *env ,
 	// Get required keystore name
 	keystore_name = adb_deleteStore_get_keyStoreName(_deleteStore, env);
 	if (!keystore_name) return AXIS2_FAILURE;
+
+	// Primary keystore should not be deleted
+	if (0 == axutil_strcmp(keystore_name, "wso2wsfc.p12"))
+		return AXIS2_FAILURE;
 
 	// Form keystore directory name
 	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
