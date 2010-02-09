@@ -247,8 +247,47 @@ axis2_skel_ModuleAdminService_listModulesForOperation(
     adb_listModulesForOperation_t* _listModulesForOperation,
     axis2_skel_ModuleAdminService_listModulesForOperation_fault *fault )
 {
-    /** TODO fill this with the necessary business logic */
-	return (adb_listModulesForOperationResponse_t*)NULL;
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf  = NULL;
+	axutil_hash_t *all_modules = NULL;
+	axutil_hash_index_t *index = NULL;
+	
+
+	adb_listModulesForOperationResponse_t *response = NULL;
+	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+	response = adb_listModulesForOperationResponse_create(env);
+	all_modules = axis2_conf_get_all_modules(conf, env);
+	if(!all_modules)
+	{
+		/** Returning empty response */
+		return	response;
+	}
+	for(index = axutil_hash_first(all_modules, env); index; index = axutil_hash_next(env, index))
+	{
+		adb_ModuleMetaData_t *meta_data = NULL;
+		axis2_char_t *module_name = NULL, *mdescription = NULL;
+		axis2_module_t *module = NULL;
+		void *v = NULL;
+		axis2_module_desc_t *module_desc = NULL;
+		axutil_hash_this(index, &module_name, NULL, &v);
+		module_desc = (axis2_module_desc_t *)v;
+		
+		if(module_desc)
+		{
+			axutil_qname_t *mod_qname = axis2_module_desc_get_qname(module_desc, env);
+			meta_data = adb_ModuleMetaData_create(env);
+			adb_ModuleMetaData_set_modulename(meta_data, env, module_name);
+			adb_ModuleMetaData_set_description(meta_data, env, module_name);
+			//axis2_conf_get_default_module_version(conf, env, module_name)
+			adb_ModuleMetaData_set_moduleVersion(meta_data, env, ADMIN_DEFAULT_MODULE_VERSION);
+			adb_ModuleMetaData_set_moduleId(meta_data, env, module_name);
+			adb_ModuleMetaData_set_engagedGlobalLevel(meta_data, env, axis2_conf_is_engaged(conf, env, mod_qname));
+			
+			adb_listModulesForOperationResponse_add_return(response, env, meta_data);
+		}
+	}
+	return response;
 }
      
 
@@ -268,25 +307,48 @@ axis2_skel_ModuleAdminService_listModulesForService(
     adb_listModulesForService_t* _listModulesForService,
 	axis2_skel_ModuleAdminService_listModulesForService_fault *fault )
 {
-	axis2_char_t *service_name  = NULL;
-	axis2_svc_t *svc = NULL;
-	adb_listModulesForServiceResponse_t *response = NULL;
-	service_name = adb_listModulesForService_get_serviceName(_listModulesForService, env);
-	if(service_name)
-	{
-		svc = service_admin_util_get_service(env, msg_ctx, service_name);
-		if(svc)
-		{
-			axutil_array_list_t *engaged_modules = NULL;
-			engaged_modules = axis2_svc_get_engaged_module_list(svc, env);
-			response = adb_listModulesForServiceResponse_create(env);
 
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf  = NULL;
+	axutil_hash_t *all_modules = NULL;
+	axutil_hash_index_t *index = NULL;
+	
+
+	adb_listModulesForServiceResponse_t *response = NULL;
+	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+	response = adb_listModulesForServiceResponse_create(env);
+	all_modules = axis2_conf_get_all_modules(conf, env);
+	if(!all_modules)
+	{
+		/** Returning empty response */
+		return	response;
+	}
+	for(index = axutil_hash_first(all_modules, env); index; index = axutil_hash_next(env, index))
+	{
+		adb_ModuleMetaData_t *meta_data = NULL;
+		axis2_char_t *module_name = NULL, *mdescription = NULL;
+		axis2_module_t *module = NULL;
+		void *v = NULL;
+		axis2_module_desc_t *module_desc = NULL;
+		axutil_hash_this(index, &module_name, NULL, &v);
+		module_desc = (axis2_module_desc_t *)v;
 		
+		if(module_desc)
+		{
+			axutil_qname_t *mod_qname = axis2_module_desc_get_qname(module_desc, env);
+			meta_data = adb_ModuleMetaData_create(env);
+			adb_ModuleMetaData_set_modulename(meta_data, env, module_name);
+			adb_ModuleMetaData_set_description(meta_data, env, module_name);
+			//axis2_conf_get_default_module_version(conf, env, module_name)
+			adb_ModuleMetaData_set_moduleVersion(meta_data, env, ADMIN_DEFAULT_MODULE_VERSION);
+			adb_ModuleMetaData_set_moduleId(meta_data, env, module_name);
+			adb_ModuleMetaData_set_engagedGlobalLevel(meta_data, env, axis2_conf_is_engaged(conf, env, mod_qname));
+			
+			adb_listModulesForServiceResponse_add_return(response, env, meta_data);
 		}
 	}
-
-
-	return (adb_listModulesForServiceResponse_t*)NULL;
+	return response;
 }
      
 
@@ -376,8 +438,6 @@ axis2_skel_ModuleAdminService_listModules(
 			adb_ModuleMetaData_set_moduleId(meta_data, env, module_name);
 			adb_ModuleMetaData_set_engagedGlobalLevel(meta_data, env, axis2_conf_is_engaged(conf, env, mod_qname));
 			
-			
-			
 			adb_listModulesResponse_add_return(response, env, meta_data);
 		}
 	}
@@ -422,20 +482,55 @@ axis2_skel_ModuleAdminService_listModules(
      
 
 		 
-        /**
-         * auto generated function definition signature
-         * for "getModuleInfo|http://service.mgt.module.carbon.wso2.org" operation.
-         * @param env environment ( mandatory)* @param MessageContext the outmessage context
-         * @param _getModuleInfo of the adb_getModuleInfo_t*
-         *
-         * @return adb_getModuleInfoResponse_t*
-         */
-        adb_getModuleInfoResponse_t* axis2_skel_ModuleAdminService_getModuleInfo(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_getModuleInfo_t* _getModuleInfo,
-                                          axis2_skel_ModuleAdminService_getModuleInfo_fault *fault )
-        {
-          /* TODO fill this with the necessary business logic */
-          return (adb_getModuleInfoResponse_t*)NULL;
-        }
+/**
+ * auto generated function definition signature
+ * for "getModuleInfo|http://service.mgt.module.carbon.wso2.org" operation.
+ * @param env environment ( mandatory)* @param MessageContext the outmessage context
+ * @param _getModuleInfo of the adb_getModuleInfo_t*
+ *
+ * @return adb_getModuleInfoResponse_t*
+ */
+adb_getModuleInfoResponse_t* 
+axis2_skel_ModuleAdminService_getModuleInfo(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+    adb_getModuleInfo_t* _getModuleInfo,
+    axis2_skel_ModuleAdminService_getModuleInfo_fault *fault )
+{
+	axis2_char_t *module_name = NULL, *module_version = NULL;
+	adb_getModuleInfoResponse_t *response = NULL;
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf = NULL;
+	module_name = adb_getModuleInfo_get_moduleName(_getModuleInfo, env);
+	module_version = adb_getModuleInfo_get_moduleVersion(_getModuleInfo, env);
+	
+	if(module_name)
+	{
+		conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+		if(conf_ctx)
+		{
+			adb_ModuleMetaData_t *meta_data = NULL;
+			axutil_qname_t *mod_qname = NULL;
+			axis2_module_desc_t *mod_desc = NULL;
+			conf  = axis2_conf_ctx_get_conf(conf_ctx, env);
+			mod_qname = axutil_qname_create(env, module_name, NULL, NULL);
+			mod_desc = axis2_conf_get_module(conf, env, mod_qname);
+			if(mod_desc)
+			{
+				meta_data = adb_ModuleMetaData_create(env);
+				adb_ModuleMetaData_set_modulename(meta_data, env, module_name);
+				adb_ModuleMetaData_set_engagedGlobalLevel(meta_data, env, axis2_conf_is_engaged(conf, env, mod_qname));
+				adb_ModuleMetaData_set_description(meta_data, env, module_name);
+				adb_ModuleMetaData_set_moduleId(meta_data, env, module_name);
+				adb_ModuleMetaData_set_moduleVersion(meta_data,env, module_version);
+				response = adb_getModuleInfoResponse_create(env);
+				adb_getModuleInfoResponse_set_return(response, env, meta_data);
+				return response;
+			}
+		}
+	}
+	/** TODO return proper exception */
+	return NULL;
+}
      
 

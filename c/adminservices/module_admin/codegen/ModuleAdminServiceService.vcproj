@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="F:\wsfc\wso2-wsf-c-bin-2.0.0-win32\services\ModuleAdminService"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;$(AXIS2C_HOME)\include;$(AXIS2C_HOME)\include\platforms;"
+				AdditionalIncludeDirectories=".;&quot;$(AXIS2C_HOME)\include&quot;;&quot;$(AXIS2C_HOME)\include\platforms&quot;;F:\wsfc\adminservices\util\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;SERVICE_EXPORTS;AXIS2_DECLARE_EXPORT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -232,6 +232,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\adb_Exception.c"
+				>
+			</File>
+			<File
 				RelativePath=".\adb_getModuleInfo.c"
 				>
 			</File>
@@ -293,6 +297,14 @@
 			</File>
 			<File
 				RelativePath=".\adb_listModulesResponse.c"
+				>
+			</File>
+			<File
+				RelativePath=".\adb_ModuleMetaData.c"
+				>
+			</File>
+			<File
+				RelativePath=".\adb_ModuleMgtException.c"
 				>
 			</File>
 			<File
@@ -396,7 +408,23 @@
 				>
 			</File>
 			<File
+				RelativePath="..\axis2_skel_ModuleAdminService.c"
+				>
+			</File>
+			<File
 				RelativePath=".\axis2_svc_skel_ModuleAdminService.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\util\counter.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\util\response_time_processor.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\util\service_admin_util.c"
 				>
 			</File>
 		</Filter>
@@ -461,6 +489,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\adb_Exception.h"
+				>
+			</File>
+			<File
 				RelativePath=".\adb_getModuleInfo.h"
 				>
 			</File>
@@ -522,6 +554,14 @@
 			</File>
 			<File
 				RelativePath=".\adb_listModulesResponse.h"
+				>
+			</File>
+			<File
+				RelativePath=".\adb_ModuleMetaData.h"
+				>
+			</File>
+			<File
+				RelativePath=".\adb_ModuleMgtException.h"
 				>
 			</File>
 			<File
@@ -628,12 +668,20 @@
 				RelativePath=".\axis2_skel_ModuleAdminService.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\include\service_admin_constants.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			>
 		</Filter>
+		<File
+			RelativePath="..\..\adminservices.mk"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
