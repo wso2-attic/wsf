@@ -189,6 +189,24 @@ $(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE)\$(STAT_ADMIN_SERVICE).dll :
 stat_admin_service: $(ADMIN_SVC_DISTDIR)\$(STAT_ADMIN_SERVICE)\$(STAT_ADMIN_SERVICE).dll
 
 #=======================================================================================================
+#module admin service
+MODULE_ADMIN_SERVICE=ModuleAdminService
+MODULE_ADMIN_SRC=$(ADMIN_SVC_SRCDIR)\module_admin
+
+$(ADMIN_SVC_DISTDIR)\$(MODULE_ADMIN_SERVICE)\$(MODULE_ADMIN_SERVICE).dll : 
+    if not exist $(ADMIN_SVC_INTDIR)\$(MODULE_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(MODULE_ADMIN_SERVICE)
+    if not exist $(ADMIN_SVC_DISTDIR)\$(MODULE_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(MODULE_ADMIN_SERVICE)
+	$(CC) $(CFLAGS) $(MODULE_ADMIN_SRC)\codegen\*.c $(MODULE_ADMIN_SRC)\*.c $(SERVICE_ADMIN_UTIL_SRC)\*.c /Fo$(ADMIN_SVC_INTDIR)\$(MODULE_ADMIN_SERVICE)\ /c
+	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(MODULE_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
+		/OUT:$(ADMIN_SVC_DISTDIR)\$(MODULE_ADMIN_SERVICE)\$(MODULE_ADMIN_SERVICE).dll
+	-@$(_VC_MANIFEST_EMBED_DLL)
+	copy $(MODULE_ADMIN_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(MODULE_ADMIN_SERVICE)\
+
+	copy $(MODULE_ADMIN_SRC)\resources\$(MODULE_ADMIN_SERVICE).wsdl $(ADMIN_SVC_DISTDIR)\$(MODULE_ADMIN_SERVICE)\
+
+module_admin_service: $(ADMIN_SVC_DISTDIR)\$(MODULE_ADMIN_SERVICE)\$(MODULE_ADMIN_SERVICE).dll
+
+#=======================================================================================================
 #statistics module
 
 STAT_ADMIN_MODULE=statistics
@@ -281,8 +299,8 @@ registry_client: $(REGISTRY_CLIENT_SRC)
 	-@$(_VC_MANIFEST_EMBED_DLL)
 	
 #=============================================================================================
-admin_svc_all: keystore_admin_service 
-#admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service stat_admin_module stat_admin_service keystore_admin_service
+admin_svc_all: module_admin_service 
+#admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service stat_admin_module stat_admin_service module_admin_service keystore_admin_service
  
 install: distdir intdirs admin_svc_all
 
