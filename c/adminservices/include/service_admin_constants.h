@@ -47,4 +47,7 @@
 
 #define ADMIN_SERVICE_EMPTY_POLICY "<wsp:Policy xmlns:wsp=\"http://schemas.xmlsoap.org/ws/2004/09/policy\"/>"
 
+
+#define ADMIN_DEFAULT_MODULE_VERSION "2.0.0"
+
 #endif /* SERVICE_ADMIN_CONSTANTS_H_ */

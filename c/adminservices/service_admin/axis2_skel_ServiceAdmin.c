@@ -324,12 +324,12 @@ axis2_skel_ServiceAdmin_getPolicy(const axutil_env_t *env ,
 		return NULL;
 	}
 	policy_include = axis2_desc_get_policy_include(desc, env);
-	
+	response = adb_getPolicyResponse_create(env);
 	if(policy_include)
 	{
 
 		axiom_node_t *policy_node = NULL;
-		response = adb_getPolicyResponse_create(env);
+		
 		effective_policy = axis2_policy_include_get_effective_policy(policy_include, env);
 
 		if(effective_policy)
@@ -345,14 +345,10 @@ axis2_skel_ServiceAdmin_getPolicy(const axutil_env_t *env ,
 					return response;
 				}
 			}
-		}else
-		{
-			/** TODO return an exception */
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "effective polcy not available");
-			return NULL;
 		}
 	}
-	return NULL;
+	adb_getPolicyResponse_set_return(response, env, ADMIN_SERVICE_EMPTY_POLICY);
+	return response;
 }
 
 
