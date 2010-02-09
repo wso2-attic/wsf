@@ -36,9 +36,8 @@
         axis2_stub_t *stub = NULL;
         adb_getOperationStatisticsResponse_t *get_op_stat_res = NULL;
 
-        /*address = service_admin_util_get_epr_address(env, msg_ctx, 
-                ADMIN_SERVICE_STATISTICS_SVC_NAME); */
-        address = "http://127.0.0.1:9090/axis2/services/StatisticsAdmin";
+        address = service_admin_util_get_epr_address(env, msg_ctx, 
+                ADMIN_SERVICE_STATISTICS_SVC_NAME); 
         conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
         client_home = axis2_conf_ctx_get_root_dir(conf_ctx, env);
         if(!client_home)
@@ -76,9 +75,8 @@
         axis2_stub_t *stub = NULL;
         adb_getServiceStatisticsResponse_t *get_svc_stat_res = NULL;
 
-        /*address = service_admin_util_get_epr_address(env, msg_ctx, 
-                ADMIN_SERVICE_STATISTICS_SVC_NAME);*/
-        address = "http://127.0.0.1:9090/axis2/services/StatisticsAdmin";
+        address = service_admin_util_get_epr_address(env, msg_ctx, 
+                ADMIN_SERVICE_STATISTICS_SVC_NAME);
         conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
         client_home = axis2_conf_ctx_get_root_dir(conf_ctx, env);
         if(!client_home)
