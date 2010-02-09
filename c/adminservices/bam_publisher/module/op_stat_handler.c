@@ -124,7 +124,7 @@ bam_publisher_op_stat_handler_invoke(struct axis2_handler *handler,
         int fault_count = adb_OperationStatistics_get_faultCount(op_stat, env);
 
         /* Eventing threshold count reached. So let's fire the event */
-        axis2_counter_set_last_count(env, msg_ctx, svc_name, op_name, current_count);
+        service_admin_counter_set_last_count(env, msg_ctx, svc_name, op_name, current_count);
         server_name = service_admin_util_get_epr_address(env, msg_ctx, svc_name);
         payload = bam_publisher_util_get_payload(env, server_name, avg_res_time, 
                 min_res_time, max_res_time, request_count, response_count, fault_count, svc_name, 
