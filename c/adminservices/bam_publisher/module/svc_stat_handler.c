@@ -83,16 +83,7 @@ bam_publisher_svc_stat_handler_invoke(struct axis2_handler *handler,
         {
             return AXIS2_SUCCESS;
         }
-    }
-    get_svc_stat = adb_getServiceStatistics_create_with_values(env, svc_name);
-    get_svc_stat_res = bam_publisher_statistics_get_service_statistics(env, msg_ctx, get_svc_stat);
-    if(get_svc_stat_res)
-    {
-        svc_stat = adb_getServiceStatisticsResponse_get_return(get_svc_stat_res, env);
-        if(svc_stat)
-        {
-            current_count = adb_ServiceStatistics_get_requestCount(svc_stat, env);
-        }
+        current_count = bam_publisher_statistics_get_service_request_count(env, msg_ctx, svc);
     }
     param = axis2_conf_get_param(conf, env, BAM_PUBLISHER_SERVICE_REQUEST_THRESHOLD_COUNT_PARAM);
     if(param)
@@ -108,12 +99,12 @@ bam_publisher_svc_stat_handler_invoke(struct axis2_handler *handler,
     {
         axis2_char_t *server_name = NULL;
         axiom_node_t *payload = NULL;
-        double avg_res_time = adb_ServiceStatistics_get_avgResponseTime(svc_stat, env);
-        long min_res_time = adb_ServiceStatistics_get_minResponseTime(svc_stat, env);
-        long max_res_time = adb_ServiceStatistics_get_maxResponseTime(svc_stat, env);
+        double avg_res_time = bam_publisher_statistics_get_avg_service_response_time(env, msg_ctx, svc);
+        long min_res_time = bam_publisher_statistics_get_min_service_response_time(env, msg_ctx, svc);
+        long max_res_time = bam_publisher_statistics_get_max_service_response_time(env, msg_ctx, svc);
         long request_count = current_count;
-        long response_count = adb_ServiceStatistics_get_responseCount(svc_stat, env);
-        long fault_count = adb_ServiceStatistics_get_faultCount(svc_stat, env);
+        long response_count = bam_publisher_statistics_get_service_response_count(env, msg_ctx, svc);
+        long fault_count = bam_publisher_statistics_get_service_fault_count(env, msg_ctx, svc);
 
         /* Eventing threshold count reached. So let's fire the event */
         service_admin_counter_set_last_count(env, msg_ctx, svc_name, NULL, current_count);

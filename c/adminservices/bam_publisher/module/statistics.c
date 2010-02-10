@@ -5,92 +5,328 @@
     * by the Apache Axis2/Java version: 1.5.1  Built on : Oct 19, 2009 (10:59:00 EDT)
     */
 
-    #include "axis2_stub_StatisticsAdmin.h"
     #include "bam_publisher_statistics.h"
     #include <axis2_msg.h>
     #include <axis2_policy_include.h>
     #include <neethi_engine.h>
     #include <service_admin_util.h>
+    #include <service_admin_counter.h>
+    #include <service_admin_response_time_processor.h>
     #include <service_admin_constants.h>
 
 
-    /**
-    * auto generated method signature
-    * for "getOperationStatistics|http://services.statistics.carbon.wso2.org" operation.
-    * @param stub The stub (axis2_stub_t)
-    * @param env environment ( mandatory)
-    * @param _getOperationStatistics of the adb_getOperationStatistics_t*
-    *
-    * @return adb_getOperationStatisticsResponse_t*
-    */
-
-    adb_getOperationStatisticsResponse_t* AXIS2_CALL 
-    bam_publisher_statistics_get_operation_statistics(
+    int AXIS2_CALL 
+    bam_publisher_statistics_get_service_request_count(
             const axutil_env_t *env,
             axis2_msg_ctx_t *msg_ctx,
-            adb_getOperationStatistics_t *op_stat)
+            axis2_svc_t *svc)
     {
-        const axis2_char_t *client_home = NULL;
-        axis2_char_t *address = NULL;
-        axis2_conf_ctx_t *conf_ctx = NULL;
-        axis2_stub_t *stub = NULL;
-        adb_getOperationStatisticsResponse_t *get_op_stat_res = NULL;
-
-        address = service_admin_util_get_epr_address(env, msg_ctx, 
-                ADMIN_SERVICE_STATISTICS_SVC_NAME); 
-        conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
-        client_home = axis2_conf_ctx_get_root_dir(conf_ctx, env);
-        if(!client_home)
+        int ret = 0;
+        if(svc)
         {
-            client_home = AXIS2_GETENV("AXIS2C_HOME");
+            axutil_param_t *param = NULL;
+            
+            param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_REQUEST_COUNTER);
+            if(param)
+            {
+                service_admin_counter_t *counter = NULL;
+                counter = axutil_param_get_value(param, env);
+                if(counter)
+                {
+                    ret = service_admin_counter_get_count(counter, env, msg_ctx);
+                }
+            }
         }
-        stub = axis2_stub_create_StatisticsAdmin(env, client_home, address);
-        if(stub)
-        {
-            get_op_stat_res = axis2_stub_op_StatisticsAdmin_getOperationStatistics(stub, env, op_stat);
-        }
-
-        return get_op_stat_res;
+        return ret;
     }
 
-    /**
-    * auto generated method signature
-    * for "getServiceStatistics|http://services.statistics.carbon.wso2.org" operation.
-    * @param stub The stub (axis2_stub_t)
-    * @param env environment ( mandatory)
-    * @param _getServiceStatistics of the adb_getServiceStatistics_t*
-    *
-    * @return adb_getServiceStatisticsResponse_t*
-    */
-
-    adb_getServiceStatisticsResponse_t* AXIS2_CALL 
-    bam_publisher_statistics_get_service_statistics( 
-            const axutil_env_t *env, 
+    int AXIS2_CALL 
+    bam_publisher_statistics_get_service_response_count(
+            const axutil_env_t *env,
             axis2_msg_ctx_t *msg_ctx,
-            adb_getServiceStatistics_t *svc_stat)
+            axis2_svc_t *svc)
     {
-        const axis2_char_t *client_home = NULL;
-        axis2_char_t *address = NULL;
-        axis2_conf_ctx_t *conf_ctx = NULL;
-        axis2_stub_t *stub = NULL;
-        adb_getServiceStatisticsResponse_t *get_svc_stat_res = NULL;
-
-        address = service_admin_util_get_epr_address(env, msg_ctx, 
-                ADMIN_SERVICE_STATISTICS_SVC_NAME);
-        conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
-        client_home = axis2_conf_ctx_get_root_dir(conf_ctx, env);
-        if(!client_home)
+        int ret = 0;
+        if(svc)
         {
-            client_home = AXIS2_GETENV("AXIS2C_HOME");
-        }
-        stub = axis2_stub_create_StatisticsAdmin(env, client_home, address);
-        if(stub)
-        {
-            get_svc_stat_res = axis2_stub_op_StatisticsAdmin_getServiceStatistics(stub, env, svc_stat);
+            axutil_hash_t *op_map = NULL;
+            axutil_hash_index_t *index;
+
+            op_map = axis2_svc_get_all_ops(svc, env);
+            for (index = axutil_hash_first(op_map, env); index; index = axutil_hash_next(env, index))
+            {
+                axutil_param_t *param = NULL;
+                void *v = NULL;
+                axis2_op_t *op = NULL;
+
+                axutil_hash_this(index, NULL, NULL, &v);
+                op = (axis2_op_t *) v;
+                if(op)
+                {
+                    param = axis2_op_get_param(op, env, AXIS2_OUT_OPERATION_COUNTER);
+                    if(param)
+                    {
+                        service_admin_counter_t *counter = NULL;
+                        counter = axutil_param_get_value(param, env);
+                        if(counter)
+                        {
+                            ret += service_admin_counter_get_count(counter, env, msg_ctx);
+                        }
+                    }
+                }
+            }
         }
 
-        return get_svc_stat_res;
+        return ret;
     }
 
+    int AXIS2_CALL 
+    bam_publisher_statistics_get_service_fault_count(
+            const axutil_env_t *env,
+            axis2_msg_ctx_t *msg_ctx,
+            axis2_svc_t *svc)
+    {
+        int ret = 0;
+        if(svc)
+        {
+            axutil_param_t *param = NULL;
+            param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_FAULT_COUNTER);
+            if(param)
+            {
+                service_admin_counter_t *counter = NULL;
+                counter = axutil_param_get_value(param, env);
+                if(counter)
+                {
+                    ret = service_admin_counter_get_count(counter, env, msg_ctx);
+                }
+            }
+        }
+        return ret;
+    }
 
+    int AXIS2_CALL 
+    bam_publisher_statistics_get_max_service_response_time(
+            const axutil_env_t *env,
+            axis2_msg_ctx_t *msg_ctx,
+            axis2_svc_t *svc)
+    {
+        int ret = 0;
+        if(svc)
+        {
+            axutil_param_t *param = NULL;
+            param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_RESPONSE_TIME_PROCESSOR);
+            if(param)
+            {
+                service_admin_response_time_processor_t *res_time_proc = NULL;
+                res_time_proc = axutil_param_get_value(param, env);
+                if(res_time_proc)
+                {
+                    ret = res_time_proc->max_response_time;
+                }
+            }
+        }
+        return ret;
+    }
+ 
 
+		 
+    int AXIS2_CALL 
+    bam_publisher_statistics_get_operation_response_count(
+            const axutil_env_t *env,
+            axis2_msg_ctx_t *msg_ctx,
+            axis2_op_t *op)
+    {
+        int ret = 0;
+        if(op)
+        {
+            axutil_param_t *param = NULL;
+            param = axis2_op_get_param(op, env, AXIS2_OUT_OPERATION_COUNTER);
+            if(param)
+            {
+                service_admin_counter_t *counter = NULL;
+                counter = axutil_param_get_value(param, env);
+                if(counter)
+                {
+                    ret = service_admin_counter_get_count(counter, env, msg_ctx);
+                }
+            }
+        }
+        return ret;
+    }
+ 
+
+    double AXIS2_CALL 
+    bam_publisher_statistics_get_avg_operation_response_time(
+            const axutil_env_t *env,
+            axis2_msg_ctx_t *msg_ctx,
+            axis2_op_t *op)
+    {
+        double ret = 0.0;
+        if(op)
+        {
+            axutil_param_t *param = NULL;
+            param = axis2_op_get_param(op, env, AXIS2_OPERATION_RESPONSE_TIME_PROCESSOR);
+            if(param)
+            {
+                service_admin_response_time_processor_t *res_time_proc = NULL;
+                res_time_proc = axutil_param_get_value(param, env);
+                if(res_time_proc)
+                {
+                    ret = res_time_proc->avg_response_time;
+                }
+            }
+        }
+        return ret;
+    }
+ 
+
+    int AXIS2_CALL 
+    bam_publisher_statistics_get_min_service_response_time(
+            const axutil_env_t *env,
+            axis2_msg_ctx_t *msg_ctx,
+            axis2_svc_t *svc)
+    {
+        int ret = 0;
+
+        if(svc)
+        {
+            axutil_param_t *param = NULL;
+            param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_RESPONSE_TIME_PROCESSOR);
+            if(param)
+            {
+                service_admin_response_time_processor_t *res_time_proc = NULL;
+                res_time_proc = axutil_param_get_value(param, env);
+                if(res_time_proc)
+                {
+                    ret = res_time_proc->min_response_time;
+                }
+            }
+        }
+        return ret;
+    }
+ 
+    int AXIS2_CALL 
+    bam_publisher_statistics_get_max_operation_response_time(
+            const axutil_env_t *env,
+            axis2_msg_ctx_t *msg_ctx,
+            axis2_op_t *op)
+    {
+        int ret = 0;
+        if(op)
+        {
+            service_admin_response_time_processor_t *res_time_proc = NULL;
+            axutil_param_t *param = NULL;
+            param = axis2_op_get_param(op, env, AXIS2_OPERATION_RESPONSE_TIME_PROCESSOR);
+            if(param)
+            {
+                res_time_proc = axutil_param_get_value(param, env);
+                if(res_time_proc)
+                {
+                    ret = res_time_proc->max_response_time;
+                }
+            }
+        }
+        return ret;
+    }
+ 
+
+    int AXIS2_CALL 
+    bam_publisher_statistics_get_operation_fault_count(
+            const axutil_env_t *env,
+            axis2_msg_ctx_t *msg_ctx,
+            axis2_op_t *op)
+    {
+        int ret = 0;
+        if(op)
+        {
+            axutil_param_t *param = NULL;
+            param = axis2_op_get_param(op, env, AXIS2_OPERATION_FAULT_COUNTER);
+            if(param)
+            {
+                service_admin_counter_t *counter = NULL;
+                counter = axutil_param_get_value(param, env);
+                if(counter)
+                {
+                    ret = service_admin_counter_get_count(counter, env, msg_ctx);
+                }
+            }
+        }
+        return ret;
+    }
+ 
+    double AXIS2_CALL 
+    bam_publisher_statistics_get_avg_service_response_time(
+            const axutil_env_t *env,
+            axis2_msg_ctx_t *msg_ctx,
+            axis2_svc_t *svc)
+    {
+        double ret = 0.0;
+        if(svc)
+        {
+            axutil_param_t *param = NULL;
+            param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_RESPONSE_TIME_PROCESSOR);
+            if(param)
+            {
+                service_admin_response_time_processor_t *res_time_proc = NULL;
+                res_time_proc = axutil_param_get_value(param, env);
+                if(res_time_proc)
+                {
+                   ret = res_time_proc->avg_response_time;
+                }
+            }
+        }
+        return ret;
+    }
+ 
+
+    int AXIS2_CALL 
+    bam_publisher_statistics_get_min_operation_response_time(
+            const axutil_env_t *env,
+            axis2_msg_ctx_t *msg_ctx,
+            axis2_op_t *op)
+    {
+        int ret = 0;
+        if(op)
+        {
+            axutil_param_t *param = NULL;
+            param = axis2_op_get_param(op, env, AXIS2_OPERATION_RESPONSE_TIME_PROCESSOR);
+            if(param)
+            {
+                service_admin_response_time_processor_t *res_time_proc = NULL;
+                res_time_proc = axutil_param_get_value(param, env);
+                if(res_time_proc)
+                {
+                    ret = res_time_proc->min_response_time;
+                }
+            }
+        }
+        return ret;
+    }
+ 
+
+		 
+    		 
+    int AXIS2_CALL
+    bam_publisher_statistics_get_operation_request_count(
+            const axutil_env_t *env , 
+            axis2_msg_ctx_t *msg_ctx,
+            axis2_op_t* op)
+    {
+        int ret = 0;
+        if(op)
+        {
+            axutil_param_t *param = NULL;
+            param = axis2_op_get_param(op, env, AXIS2_IN_OPERATION_COUNTER);
+            if(param)
+            {
+                service_admin_counter_t *counter = NULL;
+                counter = axutil_param_get_value(param, env);
+                if(counter)
+                {
+                    ret = service_admin_counter_get_count(counter, env, msg_ctx);
+                }
+            }
+        }
+        return ret;
+    }
+     

@@ -64,9 +64,6 @@ bam_publisher_op_stat_handler_invoke(struct axis2_handler *handler,
     axis2_char_t *op_name = NULL;
     axis2_svc_t *svc = NULL;
     axis2_op_t *op = NULL;
-    adb_getOperationStatistics_t *get_op_stat = NULL;
-    adb_getOperationStatisticsResponse_t * get_op_stat_res = NULL;
-    adb_OperationStatistics_t *op_stat = NULL;
     int current_count = 0;
     int last_count = 0;
     axis2_char_t *str_threshold_count = NULL;
@@ -91,16 +88,7 @@ bam_publisher_op_stat_handler_invoke(struct axis2_handler *handler,
     if(op)
     {
         op_name = axutil_qname_get_localpart(axis2_op_get_qname(op, env), env);
-    }
-    get_op_stat = adb_getOperationStatistics_create_with_values(env, svc_name, op_name);
-    get_op_stat_res = bam_publisher_statistics_get_operation_statistics(env, msg_ctx, get_op_stat);
-    if(get_op_stat_res)
-    {
-        op_stat = adb_getOperationStatisticsResponse_get_return(get_op_stat_res, env);
-        if(op_stat)
-        {
-            current_count = adb_OperationStatistics_get_requestCount(op_stat, env);
-        }
+        current_count = bam_publisher_statistics_get_operation_request_count(env, msg_ctx, op);
     }
     param = axis2_conf_get_param(conf, env, BAM_PUBLISHER_OPERATION_REQUEST_THRESHOLD_COUNT_PARAM);
     if(param)
@@ -116,12 +104,12 @@ bam_publisher_op_stat_handler_invoke(struct axis2_handler *handler,
     {
         axis2_char_t *server_name = NULL;
         axiom_node_t *payload = NULL;
-        double avg_res_time = adb_OperationStatistics_get_avgResponseTime(op_stat, env);
-        long min_res_time = adb_OperationStatistics_get_minResponseTime(op_stat, env);
-        long max_res_time = adb_OperationStatistics_get_maxResponseTime(op_stat, env);
+        double avg_res_time = bam_publisher_statistics_get_avg_operation_response_time(env, msg_ctx, op);
+        long min_res_time = bam_publisher_statistics_get_min_operation_response_time(env, msg_ctx, op);
+        long max_res_time = bam_publisher_statistics_get_max_operation_response_time(env, msg_ctx, op);
         long request_count = current_count;
-        long response_count = adb_OperationStatistics_get_responseCount(op_stat, env);
-        long fault_count = adb_OperationStatistics_get_faultCount(op_stat, env);
+        long response_count = bam_publisher_statistics_get_operation_response_count(env, msg_ctx, op);
+        long fault_count = bam_publisher_statistics_get_operation_fault_count(env, msg_ctx, op);
 
         /* Eventing threshold count reached. So let's fire the event */
         service_admin_counter_set_last_count(env, msg_ctx, svc_name, op_name, current_count);
