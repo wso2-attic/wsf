@@ -68,8 +68,10 @@ function wsf_create_payload_for_class_map(DomDocument $payload_dom,
     // This is not expected in the class map mode to have params with no childs
     // So mark it as an unknown schema
 
-    // here we always expect structures with childs
-    if(!$sig_node->hasChildNodes()) {
+    // here we always expect structures with childs unless it is simple content model
+    if(!($sig_node->attributes->getNamedItem(WSF_CONTENT_MODEL) &&
+                $sig_node->attributes->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT) && 
+                !$sig_node->hasChildNodes()) {
         
         // Just take the first namespace in the map to create the xml elements in 
         // the unknown structure..
@@ -532,6 +534,7 @@ function wsf_serialize_simple_types(DomNode $sig_param_node, $user_val,
                     $ele = $payload_dom->createElement($node_name);
                     $parent_node->appendChild($ele);
                     if(is_object($user_val)) {
+                      //  echo wsf_test_serialize_node($sig_param_node) ."<val>".print_r($user_val, true)."</val>" ;
                         wsf_create_payload_for_class_map($payload_dom, $sig_param_node,
                          $ele, $root_node, $user_val, $classmap,
                          $prefix_i, $namespace_map, $mtom_on, $attachment_map);
@@ -901,7 +904,6 @@ function wsf_convert_classobj_to_array($sig_node, $user_obj) {
     /* for the simple content type we expect the "VALUE" attribute */
     if($sig_param_attrs->getNamedItem(WSF_CONTENT_MODEL) &&
             $sig_param_attrs->getNamedItem(WSF_CONTENT_MODEL)->value == WSF_SIMPLE_CONTENT) {
-
         $extension_type = "";
         if($sig_param_attrs->getNamedItem(WSF_EXTENSION)) {
             $extension_type = $sig_param_attrs->getNamedItem(WSF_EXTENSION)->value;
