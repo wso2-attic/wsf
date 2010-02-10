@@ -62,9 +62,6 @@ bam_publisher_svc_stat_handler_invoke(struct axis2_handler *handler,
     axis2_status_t status = AXIS2_SUCCESS;
     axis2_char_t *svc_name = NULL;
     axis2_svc_t *svc = NULL;
-    adb_getServiceStatistics_t *get_svc_stat = NULL;
-    adb_getServiceStatisticsResponse_t * get_svc_stat_res = NULL;
-    adb_ServiceStatistics_t *svc_stat = NULL;
     long current_count = 0;
     long last_count = 0;
     axis2_char_t *str_threshold_count = NULL;
