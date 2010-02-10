@@ -6,7 +6,7 @@
 * This file was auto-generated from WSDL for "KeyStoreAdminService|http://service.keystore.security.carbon.wso2.org" service
 * by the Apache Axis2/C version: #axisVersion# #today#
 * axis2_skel_KeyStoreAdminService Axis2/C skeleton for the axisService
-*/
+*/	
 
 #include "codegen/axis2_skel_KeyStoreAdminService.h"
 #include <openssl_pkcs12_keystore.h>
@@ -315,9 +315,9 @@ axis2_skel_KeyStoreAdminService_getKeystoreInfo(const axutil_env_t *env ,
 	adb_KeyStoreData_set_provider(data, env, provider);
 
 	// Add certs
-	cert_array = pkcs12_keystore_populate_cert_array(env,
+	/*cert_array = pkcs12_keystore_populate_cert_array(env,
 		pkcs12_keystore_get_other_certificate(pkcs12_keystore, env));
-	adb_KeyStoreData_set_certs(data, env, cert_array);
+	adb_KeyStoreData_set_certs(data, env, cert_array);*/
 
 	// Create response
 	response = adb_getKeystoreInfoResponse_create(env);
