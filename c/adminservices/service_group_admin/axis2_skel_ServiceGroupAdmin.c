@@ -414,16 +414,7 @@ axis2_skel_ServiceGroupAdmin_removeServiceGroupParameter(const axutil_env_t *env
 		return AXIS2_FAILURE;
 	}
 		
-	param = axis2_svc_grp_get_param(svc_grp, env, param_name);
-	if(!param)
-	{
-		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Param does not exist in this service group");	
-		return AXIS2_SUCCESS;
-	}else
-	{
-		/** TODO Implement Remove param method for service and service group */		
-	}
-	return AXIS2_SUCCESS;
+	return axis2_svc_grp_remove_param(svc_grp, env, param_name);
 }
 
 
