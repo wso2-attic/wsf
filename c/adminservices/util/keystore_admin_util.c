@@ -47,11 +47,14 @@ keystore_admin_util_format_date(const axutil_env_t* env,
 		{
 			day = tok;
 
-			tok = strtok(NULL, " "); /* Time */
 			tok = strtok(NULL, " ");
-			if (tok) /* Year */
+			if (tok) /* Time */
 			{
-				year = tok;
+				tok = strtok(NULL, " ");
+				if (tok) /* Year */
+				{
+					year = tok;
+				}
 			}
 		}
 	}
