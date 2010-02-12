@@ -948,12 +948,25 @@ axis2_skel_ServiceAdmin_getPolicies(const axutil_env_t *env ,
 * @return 
 */
 axis2_status_t  
-axis2_skel_ServiceAdmin_removeServiceParameter(const axutil_env_t *env , 
-											   axis2_msg_ctx_t *msg_ctx,
-												adb_removeServiceParameter_t* _removeServiceParameter )
+axis2_skel_ServiceAdmin_removeServiceParameter(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+	adb_removeServiceParameter_t* _removeServiceParameter )
 {
-	/* TODO fill this with the necessary business logic */
-	return AXIS2_SUCCESS;
+	axis2_svc_t *svc = NULL;
+	axis2_char_t *service_name = NULL;
+	axis2_char_t *param_name = NULL;
+	
+	service_name = adb_removeServiceParameter_get_serviceName(_removeServiceParameter, env);
+	param_name = adb_removeServiceParameter_get_parameterName(_removeServiceParameter, env);
+	if(!service_name)
+		return AXIS2_FAILURE;
+	svc = service_admin_util_get_service(env, msg_ctx, service_name);
+	if(svc)
+	{
+		return axis2_svc_remove_param(svc, env, param_name);
+	}
+	return AXIS2_FAILURE;
 }
 
 
