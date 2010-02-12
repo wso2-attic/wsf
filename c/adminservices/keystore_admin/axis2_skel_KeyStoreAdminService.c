@@ -9,6 +9,7 @@
 */	
 
 #include "codegen/axis2_skel_KeyStoreAdminService.h"
+#include "../include/keystore_admin_util.h"
 #include <openssl_pkcs12_keystore.h>
 
 static void
@@ -237,7 +238,12 @@ axis2_skel_KeyStoreAdminService_getKeystoreInfo(const axutil_env_t *env ,
 	FILE* file = NULL;
 	axis2_char_t* tok = NULL;
 	pkcs12_keystore_t* pkcs12_keystore = NULL;
+	axutil_array_list_t* cert_array_tmp = NULL;
 	axutil_array_list_t* cert_array = NULL;
+	int cert_count = 0;
+	int index = 0;
+	adb_CertData_t* cert_data = NULL;
+	oxs_x509_cert_t* oxs_cert = NULL;
 	adb_KeyStoreData_t* data = NULL;
 	adb_getKeystoreInfoResponse_t* response = NULL;
 
@@ -315,9 +321,51 @@ axis2_skel_KeyStoreAdminService_getKeystoreInfo(const axutil_env_t *env ,
 	adb_KeyStoreData_set_provider(data, env, provider);
 
 	// Add certs
-	/*cert_array = pkcs12_keystore_populate_cert_array(env,
-		pkcs12_keystore_get_other_certificate(pkcs12_keystore, env));
-	adb_KeyStoreData_set_certs(data, env, cert_array);*/
+	cert_array_tmp = pkcs12_keystore_populate_cert_array(env, 
+		pkcs12_keystore_get_other_certs(pkcs12_keystore));
+	cert_count = axutil_array_list_size(cert_array_tmp, env);
+	cert_array = axutil_array_list_create(env, cert_count);
+	for (index = 0; index < cert_count; ++index)
+	{
+		oxs_cert = (oxs_x509_cert_t*)
+			axutil_array_list_get(cert_array_tmp, env, index);
+		
+		// Create and store cert data
+		cert_data = adb_CertData_create(env);
+
+		axutil_array_list_add(cert_array, env, cert_data);
+
+		/*printf("%s\n", oxs_x509_cert_get_common_name(oxs_cert, env));
+		printf("%s\n", oxs_x509_cert_get_data(oxs_cert, env));
+		printf("%s\n", oxs_x509_cert_get_date(oxs_cert, env));
+		printf("%s\n", oxs_x509_cert_get_fingerprint(oxs_cert, env));
+		printf("%s\n", oxs_x509_cert_get_hash(oxs_cert, env));
+		printf("%s\n", oxs_x509_cert_get_issuer(oxs_cert, env));
+		printf("%s\n", oxs_x509_cert_get_key_identifier(oxs_cert, env));
+		printf("%d\n", oxs_x509_cert_get_serial_number(oxs_cert, env));
+		printf("%s\n", oxs_x509_cert_get_subject(oxs_cert, env));*/
+
+		oxs_x509_cert_free(oxs_cert, env);
+	}
+	axutil_array_list_free(cert_array_tmp, env);
+	//adb_KeyStoreData_set_certs(data, env, cert_array);
+
+	// Set private cert
+	oxs_cert = pkcs12_keystore_get_owner_certificate(pkcs12_keystore, env);
+	cert_data = adb_CertData_create(env);
+	adb_CertData_set_alias(cert_data, env, oxs_x509_cert_get_alias(oxs_cert, env));
+	adb_CertData_set_issuerDN(cert_data, env, oxs_x509_cert_get_issuer(oxs_cert, env));
+	adb_CertData_set_notAfter(cert_data, env, 
+		keystore_admin_util_format_date(env, oxs_x509_cert_get_date(oxs_cert, env)));
+	adb_CertData_set_notBefore(cert_data, env, 
+		keystore_admin_util_format_date(env, oxs_x509_cert_get_valid_from(oxs_cert, env)));
+	adb_CertData_set_serialNumber(cert_data, env, oxs_x509_cert_get_serial_number(oxs_cert, env));
+	adb_CertData_set_subjectDN(cert_data, env, oxs_x509_cert_get_subject(oxs_cert, env));
+	adb_CertData_set_version(cert_data, env, oxs_x509_cert_get_version(oxs_cert, env));
+
+	axutil_array_list_add(cert_array, env, cert_data);
+	
+	adb_KeyStoreData_set_certs(data, env, cert_array);
 
 	// Create response
 	response = adb_getKeystoreInfoResponse_create(env);

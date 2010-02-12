@@ -273,6 +273,7 @@ user_manager_service: $(ADMIN_SVC_DISTDIR)\$(USER_MANAGER_SERVICE)\$(USER_MANAGE
 #=====================================================================================================
 $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)\$(KEYSTORE_ADMIN_SERVICE).dll: $(KEYSTORE_ADMIN_SVC_SRC)\codegen\*.c $(KEYSTORE_ADMIN_SVC_SRC)\*.c
 	$(CC) $(CFLAGS) $(KEYSTORE_ADMIN_SVC_SRC)\codegen\*.c $(KEYSTORE_ADMIN_SVC_SRC)\*.c \
+		$(SERVICE_ADMIN_UTIL_SRC)\keystore_admin_util.c \
 		/Fo$(ADMIN_SVC_INTDIR)\$(KEYSTORE_ADMIN_SERVICE)\ /c
 	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(KEYSTORE_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
 		/OUT:$(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)\$(KEYSTORE_ADMIN_SERVICE).dll
