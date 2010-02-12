@@ -10,6 +10,7 @@
 
 #include "codegen/axis2_skel_OperationAdmin.h"
 #include "service_admin_util.h"
+#include "axis2_op.h"
 
      
 
@@ -42,8 +43,11 @@ axis2_skel_OperationAdmin_listOperationPhaseHandlers(
          *
          * @return 
          */
-        axis2_status_t  axis2_skel_OperationAdmin_setPolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_setPolicy_t* _setPolicy )
+        axis2_status_t  
+			axis2_skel_OperationAdmin_setPolicy(
+			const axutil_env_t *env , 
+			axis2_msg_ctx_t *msg_ctx,
+            adb_setPolicy_t* _setPolicy )
         {
           /* TODO fill this with the necessary business logic */
           return AXIS2_SUCCESS;
@@ -59,8 +63,11 @@ axis2_skel_OperationAdmin_listOperationPhaseHandlers(
          *
          * @return adb_listOperationPhasesResponse_t*
          */
-        adb_listOperationPhasesResponse_t* axis2_skel_OperationAdmin_listOperationPhases(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_listOperationPhases_t* _listOperationPhases )
+        adb_listOperationPhasesResponse_t* 
+			axis2_skel_OperationAdmin_listOperationPhases(
+			const axutil_env_t *env , 
+			axis2_msg_ctx_t *msg_ctx,
+            adb_listOperationPhases_t* _listOperationPhases )
         {
           /* TODO fill this with the necessary business logic */
           return (adb_listOperationPhasesResponse_t*)NULL;
@@ -76,8 +83,11 @@ axis2_skel_OperationAdmin_listOperationPhaseHandlers(
          *
          * @return adb_listControlOperationsResponse_t*
          */
-        adb_listControlOperationsResponse_t* axis2_skel_OperationAdmin_listControlOperations(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_listControlOperations_t* _listControlOperations )
+        adb_listControlOperationsResponse_t* 
+			axis2_skel_OperationAdmin_listControlOperations(
+			const axutil_env_t *env , 
+			axis2_msg_ctx_t *msg_ctx,
+			adb_listControlOperations_t* _listControlOperations )
         {
           /* TODO fill this with the necessary business logic */
           return (adb_listControlOperationsResponse_t*)NULL;
@@ -93,13 +103,56 @@ axis2_skel_OperationAdmin_listOperationPhaseHandlers(
          *
          * @return adb_getDeclaredOperationParametersResponse_t*
          */
-        adb_getDeclaredOperationParametersResponse_t* axis2_skel_OperationAdmin_getDeclaredOperationParameters(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_getDeclaredOperationParameters_t* _getDeclaredOperationParameters )
-        {
-          /* TODO fill this with the necessary business logic */
-          return (adb_getDeclaredOperationParametersResponse_t*)NULL;
-        }
-     
+adb_getDeclaredOperationParametersResponse_t* 
+	axis2_skel_OperationAdmin_getDeclaredOperationParameters(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+    adb_getDeclaredOperationParameters_t* _getDeclaredOperationParameters )
+{
+	axis2_char_t *operation_name = NULL;
+	axis2_char_t *service_name = NULL;
+	axis2_svc_t *svc = NULL;
+	axis2_op_t *op = NULL;
+	int i =0, size = 0;
+	axutil_array_list_t* params = NULL;
+	adb_getDeclaredOperationParametersResponse_t *response = NULL;
+	service_name = adb_getDeclaredOperationParameters_get_serviceName(_getDeclaredOperationParameters, env);
+	operation_name = adb_getDeclaredOperationParameters_get_operationName(_getDeclaredOperationParameters, env);
+	response = adb_getDeclaredOperationParametersResponse_create(env);
+	if(!service_name && !operation_name)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "service name or operation name null");
+		return response;
+	}
+		
+	svc = service_admin_util_get_service(env, msg_ctx, service_name);
+	op = axis2_svc_get_op_with_name(svc, env, operation_name);
+	
+	params = axis2_op_get_all_params(op, env);	
+	size = axutil_array_list_size(params, env);
+	for(i = 0; i<size; i++)
+	{
+		axiom_node_t *param_node = NULL;
+		axutil_param_t *param = NULL;
+		param = axutil_array_list_get(params, env, i );
+		if(param)
+		{
+			param_node = service_admin_util_serialize_param(env, param);
+
+			if(param_node)
+			{
+				axis2_char_t *param_str = NULL;
+				param_str = axiom_node_to_string(param_node, env);
+				if(param_str)
+				{
+					adb_getDeclaredOperationParametersResponse_add_return(response, env, param_str);
+				}			
+			}
+		}
+	}
+	return response;
+}
+
 
 		 
         /**
@@ -110,7 +163,8 @@ axis2_skel_OperationAdmin_listOperationPhaseHandlers(
          *
          * @return adb_listAllOperationsResponse_t*
          */
-        adb_listAllOperationsResponse_t* axis2_skel_OperationAdmin_listAllOperations(
+        adb_listAllOperationsResponse_t* 
+			axis2_skel_OperationAdmin_listAllOperations(
 			const axutil_env_t *env , 
 			axis2_msg_ctx_t *msg_ctx,
             adb_listAllOperations_t* _listAllOperations )
@@ -229,20 +283,46 @@ axis2_skel_OperationAdmin_listOperationPhaseHandlers(
      
 
 		 
-        /**
-         * auto generated function definition signature
-         * for "removeOperationParameter|http://mgt.operation.carbon.wso2.org" operation.
-         * @param env environment ( mandatory)* @param MessageContext the outmessage context
-         * @param _removeOperationParameter of the adb_removeOperationParameter_t*
-         *
-         * @return 
-         */
-        axis2_status_t  axis2_skel_OperationAdmin_removeOperationParameter(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_removeOperationParameter_t* _removeOperationParameter )
-        {
-          /* TODO fill this with the necessary business logic */
-          return AXIS2_SUCCESS;
-        }
+/**
+ * auto generated function definition signature
+ * for "removeOperationParameter|http://mgt.operation.carbon.wso2.org" operation.
+ * @param env environment ( mandatory)* @param MessageContext the outmessage context
+ * @param _removeOperationParameter of the adb_removeOperationParameter_t*
+ *
+ * @return 
+ */
+axis2_status_t  
+axis2_skel_OperationAdmin_removeOperationParameter(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+    adb_removeOperationParameter_t* _removeOperationParameter )
+{
+	axis2_char_t *service_name = NULL;
+	axis2_char_t *op_name = NULL;
+	axis2_char_t *param_name = NULL;
+	axis2_svc_t *svc = NULL;
+	axis2_op_t *op = NULL;
+
+	service_name = adb_removeOperationParameter_get_serviceName(_removeOperationParameter, env);
+	op_name = adb_removeOperationParameter_get_operationName(_removeOperationParameter, env);
+	param_name = adb_removeOperationParameter_get_parameterName(_removeOperationParameter, env);
+	
+	svc = service_admin_util_get_service(env, msg_ctx, service_name);
+
+	if(!svc)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "service not found");
+		return AXIS2_FAILURE;
+	}
+
+	op = axis2_svc_get_op_with_name(svc, env, op_name);
+	if(op)
+	{
+		return axis2_op_remove_param(op, env, param_name);
+	}
+
+	return AXIS2_FAILURE;
+}
      
 
 		 
@@ -370,19 +450,85 @@ axis2_skel_OperationAdmin_listOperationPhaseHandlers(
      
 
 		 
-        /**
-         * auto generated function definition signature
-         * for "setOperationParameters|http://mgt.operation.carbon.wso2.org" operation.
-         * @param env environment ( mandatory)* @param MessageContext the outmessage context
-         * @param _setOperationParameters of the adb_setOperationParameters_t*
-         *
-         * @return 
-         */
-        axis2_status_t  axis2_skel_OperationAdmin_setOperationParameters(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_setOperationParameters_t* _setOperationParameters )
-        {
-          /* TODO fill this with the necessary business logic */
-          return AXIS2_SUCCESS;
-        }
+/**
+ * auto generated function definition signature
+ * for "setOperationParameters|http://mgt.operation.carbon.wso2.org" operation.
+ * @param env environment ( mandatory)* @param MessageContext the outmessage context
+ * @param _setOperationParameters of the adb_setOperationParameters_t*
+ *
+ * @return 
+ */
+axis2_status_t  axis2_skel_OperationAdmin_setOperationParameters(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+    adb_setOperationParameters_t* _setOperationParameters )
+{
+	axis2_char_t *svc_name = NULL, *op_name = NULL;
+	axutil_array_list_t *parameters = NULL;
+	int i =0, size = 0;
+	axis2_svc_t *svc = NULL;
+	axis2_op_t *op = NULL;
+	svc_name = adb_setOperationParameters_get_serviceId(_setOperationParameters, env);
+	op_name = adb_setOperationParameters_get_operationId(_setOperationParameters, env);
+	parameters = adb_setOperationParameters_get_parameters(_setOperationParameters, env);
+	
+	svc = service_admin_util_get_service(env, msg_ctx, svc_name);
+	if(!svc)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Service not found");
+		return AXIS2_FAILURE;
+	}
+	op = axis2_svc_get_op_with_name(svc, env, op_name);
+	if(!op)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Operation not found");
+		return AXIS2_FAILURE;
+	}
+	
+
+	size = axutil_array_list_size(parameters, env);
+	for(i =0; i < size; i++)
+	{
+		axiom_node_t *node = NULL;
+		axutil_param_t *param = NULL;
+		axiom_element_t *element = NULL;
+		axis2_char_t *name_val = NULL, *locked_val = NULL, *param_str = NULL;
+		param_str = axutil_array_list_get(parameters, env, i);
+	
+		node = axiom_node_create_from_buffer(env, param_str);
+		if(axiom_node_get_node_type(node,env) == AXIOM_ELEMENT)
+		{
+			element = (axiom_element_t*)axiom_node_get_data_element(node, env);
+			if(!element)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "param axiom element null");
+			}
+			name_val = axiom_element_get_attribute_value_by_name(element, env, "name");
+			locked_val = axiom_element_get_attribute_value_by_name(element, env, "locked");
+			param_str = axiom_element_get_text(element, env, node);
+
+			if(name_val)
+			{
+				param = axis2_op_get_param(op, env, name_val);
+				/** Parameter exist */
+				if(param)
+				{
+					if((locked_val && strcmp(locked_val,"false") == 0) || !locked_val)
+					{
+						axutil_param_set_value(param, env, param_str);
+					}
+				}else
+				{
+					/** create and add param */
+					param = axutil_param_create(env, name_val, param_str);
+					axutil_param_set_locked(param, env, AXIS2_FALSE);
+					axis2_op_add_param(op, env, param);
+				}
+			}
+		}
+	
+	}
+	return AXIS2_SUCCESS;
+}
      
 
