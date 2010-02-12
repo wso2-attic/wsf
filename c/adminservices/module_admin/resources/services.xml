@@ -65,4 +65,5 @@
     <operation name="getModuleInfo" mep="http://www.w3.org/ns/wsdl/in-out">
         <parameter name="wsamapping">urn:getModuleInfo</parameter>
     </operation>
+    <parameter name="adminService" locked="true">true</parameter>
 </service>
