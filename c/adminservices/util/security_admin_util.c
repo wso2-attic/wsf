@@ -156,7 +156,7 @@ security_admin_load_scenarios(
 		const axutil_env_t* env, 
 		axis2_msg_ctx_t* msg_ctx)
 {
-	// Read senarios from config file
+	/* Read senarios from config file*/
 	axis2_conf_ctx_t* conf_ctx = NULL;
 	axis2_char_t* repo_path = NULL;
 	axis2_char_t* scenario_config_file_path = NULL;
@@ -168,7 +168,7 @@ security_admin_load_scenarios(
 	axiom_children_iterator_t* children_ite = NULL;
 	axutil_array_list_t* scenarios = NULL;
 			
-	// Form absolute path to config file
+	/* Form absolute path to config file*/
 	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
 	repo_path = axis2_conf_ctx_get_root_dir(conf_ctx, env);
 	scenario_config_file_path = axutil_strcat(env, repo_path, AXIS2_PATH_SEP_STR, "services", 
@@ -185,7 +185,7 @@ security_admin_load_scenarios(
 	document = axiom_stax_builder_get_document(stax_builder, env);
 	if (!document) return NULL;
 
-	// Build XML document
+	/* Build XML document*/
 	axiom_document_build_all(document, env);
 
 	scenario_config_root_node = axiom_document_get_root_element(document, env);
@@ -196,7 +196,7 @@ security_admin_load_scenarios(
 		scenario_config_root_node);
 	if (children_ite)
 	{
-		// Get Scenario nodes and build hash
+		/* Get Scenario nodes and build hash*/
 		while (axiom_children_iterator_has_next(children_ite, env))
 		{
 			axiom_node_t* node = NULL;
@@ -213,21 +213,21 @@ security_admin_load_scenarios(
 
 				localname = axiom_element_get_localname(scenario_ele, env);
 
-				if (0 == axutil_strcmp(localname, "Scenario")) // Scenario
+				if (0 == axutil_strcmp(localname, "Scenario")) /* Scenario */
 				{
 					axis2_char_t* id = NULL;
 					security_admin_scenario_data_t* data = NULL;
 
-					// Create scenarios hash
+					/* Create scenarios hash*/
 					if (!scenarios)
 						scenarios = axutil_array_list_create(env, SEC_ADMIN_SCENARIO_COUNT);
 
 					data = security_admin_scenario_data_create(env);
 
-					// Current scenario
+					/* Current scenario*/
 					security_admin_scenario_data_set_current_scenario(data, AXIS2_TRUE);
 
-					// id
+					/* id*/
 					id = axiom_element_get_attribute_value_by_name(scenario_ele, env, "id");
 					security_admin_scenario_data_set_id(data, axutil_strdup(env, id));
 
@@ -248,37 +248,37 @@ security_admin_load_scenarios(
 							localname = axiom_element_get_localname(node_ele, env);
 							text = axiom_element_get_text(node_ele, env, node);
 									
-							if (0 == axutil_strcmp(localname, "Summary")) // Summary
+							if (0 == axutil_strcmp(localname, "Summary")) /* Summary */
 							{
 								security_admin_scenario_data_set_summary(data, 
 									axutil_strdup(env, text));
 							}
-							else if (0 == axutil_strcmp(localname, "Description")) // Description
+							else if (0 == axutil_strcmp(localname, "Description")) /* Description */
 							{
 								security_admin_scenario_data_set_description(data, 
 									axutil_strdup(env, text));
 							}
-							else if (0 == axutil_strcmp(localname, "Category")) // Category
+							else if (0 == axutil_strcmp(localname, "Category")) /* Category */
 							{
 								security_admin_scenario_data_set_category(data, 
 									axutil_strdup(env, text));
 							}
-							/*else if (0 == axutil_strcmp(localname, "WsuId") // WsuId
-							{
+							/*else if (0 == axutil_strcmp(localname, "WsuId")*/ /* WsuId */
+							/*{
 							}*/
-							else if (0 == axutil_strcmp(localname, "Type")) // Type
+							else if (0 == axutil_strcmp(localname, "Type")) /* Type */
 							{
 								security_admin_scenario_data_set_type(data, 
 									axutil_strdup(env, text));
 							}
-							else if (0 == axutil_strcmp(localname, "Modules")) // Modules
+							else if (0 == axutil_strcmp(localname, "Modules")) /* Modules */
 							{
 										
 							}
 						}
 					}
 
-					// Add scenario data into the hash map
+					/* Add scenario data into the hash map*/
 					axutil_array_list_add(scenarios, env, data);
 				}
 			}

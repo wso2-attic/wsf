@@ -35,7 +35,7 @@
 			int scenario_count = 0;
 			int scenario_index = 0;
 
-			// Load scenarios if not loaded already
+			/* Load scenarios if not loaded already*/
 			if (!scenarios)
 			{
 				scenarios = security_admin_load_scenarios(env, msg_ctx);
@@ -44,44 +44,44 @@
 
 			security_scenario_data_wrapper = adb_SecurityScenarioDataWrapper_create(env);
 
-			// Iterate through the hash and add scenarios into the data wrapper
+			/* Iterate through the hash and add scenarios into the data wrapper*/
 			scenario_count = axutil_array_list_size(scenarios, env);
 			for (scenario_index = 0; scenario_index < scenario_count; ++scenario_index)
 			{
 				security_admin_scenario_data_t* array_data = NULL;
 				adb_SecurityScenarioData_t* data = NULL;
 
-				// Get current data element
+				/* Get current data element*/
 				array_data = (security_admin_scenario_data_t*)
 					axutil_array_list_get(scenarios, env, scenario_index);
 
-				// Create response data element
+				/* Create response data element*/
 				data = adb_SecurityScenarioData_create(env);
 
-				// Current scenario
+				/* Current scenario*/
 				adb_SecurityScenarioData_set_currentScenario(data, env, AXIS2_TRUE);
 				
-				// id
+				/* id*/
 				adb_SecurityScenarioData_set_scenarioId(data, env, 
 					(const axis2_char_t*)axutil_strdup(env, 
 					security_admin_scenario_data_get_id(array_data)));
 
-				// Summary
+				/* Summary*/
 				adb_SecurityScenarioData_set_summary(data, env,
 					(const axis2_char_t*)axutil_strdup(env,
 					security_admin_scenario_data_get_summary(array_data)));
 
-				// Description
+				/* Description*/
 				adb_SecurityScenarioData_set_description(data, env,
 					(const axis2_char_t*)axutil_strdup(env,
 					security_admin_scenario_data_get_description(array_data)));
 
-				// Category
+				/* Category*/
 				adb_SecurityScenarioData_set_category(data, env,
 					(const axis2_char_t*)axutil_strdup(env,
 					security_admin_scenario_data_get_category(array_data)));
 
-				// Type
+				/* Type*/
 				adb_SecurityScenarioData_set_type(data, env,
 					(const axis2_char_t*)axutil_strdup(env,
 					security_admin_scenario_data_get_type(array_data)));
@@ -90,7 +90,7 @@
 					security_scenario_data_wrapper, env, data);
 			}
 
-			// Build response and return
+			/* Build response and return*/
 			response = adb_getScenariosResponse_create(env);
 			adb_getScenariosResponse_set_return(response, env, security_scenario_data_wrapper);
 
@@ -124,11 +124,11 @@
 
 			conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
 
-			// Get parameters
+			/* Get parameters*/
 			service_name = adb_applySecurity_get_serviceName(_applySecurity, env);
 			scenario_id = adb_applySecurity_get_policyId(_applySecurity, env);
 
-			// Load neethi policy
+			/* Load neethi policy*/
 			repo_path = axis2_conf_ctx_get_root_dir(conf_ctx, env);
 			policy_file_name = axutil_strcat(env, repo_path, AXIS2_PATH_SEP_STR, "services",
 				AXIS2_PATH_SEP_STR, "SecurityAdminService", AXIS2_PATH_SEP_STR, "policies",
@@ -139,7 +139,7 @@
 			if (!neethi_policy)
 				return AXIS2_FAILURE;
 			
-			// Get service instance
+			/* Get service instance*/
 			conf = axis2_conf_ctx_get_conf(conf_ctx, env);
 			svc = axis2_conf_get_svc(conf, env, service_name);
 			if (!svc)
@@ -153,11 +153,11 @@
 			if (!policy_include)
 				return AXIS2_FAILURE;
 
-			// Attach policy
+			/* Attach policy*/
 			axis2_policy_include_add_policy_element(policy_include, env, 
 				AXIS2_SERVICE_POLICY, neethi_policy);
 
-			// Enagage modules
+			/* Enagage modules*/
 			module_qname = axutil_qname_create(env, "rampart", NULL, NULL);
 			module_desc = axis2_conf_get_module(conf, env, module_qname);
 			axutil_qname_free(module_qname, env);
@@ -262,64 +262,64 @@
 			int scenario_count = 0;
 			int scenario_index = 0;
 
-			// Load scenarios if not loaded already
+			/* Load scenarios if not loaded already*/
 			if (!scenarios)
 			{
 				scenarios = security_admin_load_scenarios(env, msg_ctx);
 				if (!scenarios) return NULL;
 			}
 
-			// Get required scenario id
+			/* Get required scenario id*/
 			scenario_id = adb_getSecurityScenario_get_sceneId(_getSecurityScenario, env);
 
-			// Iterate through the hash and add scenarios into the data wrapper
+			/* Iterate through the hash and add scenarios into the data wrapper*/
 			scenario_count = axutil_array_list_size(scenarios, env);
 			for (scenario_index = 0; scenario_index < scenario_count; ++scenario_index)
 			{
 				security_admin_scenario_data_t* array_data = NULL;
 
-				// Get current data element
+				/* Get current data element*/
 				array_data = (security_admin_scenario_data_t*)
 					axutil_array_list_get(scenarios, env, scenario_index);
 
 				if (0 == axutil_strcmp(security_admin_scenario_data_get_id(array_data), 
-					scenario_id)) // Required scenario found
+					scenario_id)) /* Required scenario found */
 				{
 					adb_SecurityScenarioData_t* data = NULL;
 					adb_getSecurityScenarioResponse_t* response = NULL;
 
-					// Create response data element
+					/* Create response data element*/
 					data = adb_SecurityScenarioData_create(env);
 
-					// Current scenario
-					//adb_SecurityScenarioData_set_currentScenario(data, env, AXIS2_TRUE);
+					/* Current scenario*/
+					/*adb_SecurityScenarioData_set_currentScenario(data, env, AXIS2_TRUE);*/
 					
-					// id
+					/* id*/
 					adb_SecurityScenarioData_set_scenarioId(data, env, 
 						(const axis2_char_t*)axutil_strdup(env, 
 						security_admin_scenario_data_get_id(array_data)));
 
-					// Summary
+					/* Summary*/
 					adb_SecurityScenarioData_set_summary(data, env,
 						(const axis2_char_t*)axutil_strdup(env,
 						security_admin_scenario_data_get_summary(array_data)));
 
-					// Description
+					/* Description*/
 					adb_SecurityScenarioData_set_description(data, env,
 						(const axis2_char_t*)axutil_strdup(env,
 						security_admin_scenario_data_get_description(array_data)));
 
-					// Category
+					/* Category*/
 					adb_SecurityScenarioData_set_category(data, env,
 						(const axis2_char_t*)axutil_strdup(env,
 						security_admin_scenario_data_get_category(array_data)));
 
-					// Type
+					/* Type*/
 					adb_SecurityScenarioData_set_type(data, env,
 						(const axis2_char_t*)axutil_strdup(env,
 						security_admin_scenario_data_get_type(array_data)));
 
-					// Create response
+					/* Create response*/
 					response = adb_getSecurityScenarioResponse_create(env);
 					adb_getSecurityScenarioResponse_set_return(response, env, data);
 
