@@ -3,6 +3,7 @@
 <!-- by the Apache Axis2 version: #axisVersion# #today# -->
 <service name="KeyStoreAdminService">
     <parameter name="ServiceClass">KeyStoreAdminService</parameter>
+    <parameter name="adminService" locked="true">true</parameter>
     <description>KeyStoreAdminService Service
             </description>
     <operation name="getStoreEntries" mep="http://www.w3.org/ns/wsdl/in-out">
