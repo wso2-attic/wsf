@@ -279,7 +279,7 @@ axis2_skel_ModuleAdminService_listModulesForOperation(
 			meta_data = adb_ModuleMetaData_create(env);
 			adb_ModuleMetaData_set_modulename(meta_data, env, module_name);
 			adb_ModuleMetaData_set_description(meta_data, env, module_name);
-			//axis2_conf_get_default_module_version(conf, env, module_name)
+			/* axis2_conf_get_default_module_version(conf, env, module_name) */
 			adb_ModuleMetaData_set_moduleVersion(meta_data, env, ADMIN_DEFAULT_MODULE_VERSION);
 			adb_ModuleMetaData_set_moduleId(meta_data, env, module_name);
 			adb_ModuleMetaData_set_engagedGlobalLevel(meta_data, env, axis2_conf_is_engaged(conf, env, mod_qname));
@@ -340,7 +340,7 @@ axis2_skel_ModuleAdminService_listModulesForService(
 			meta_data = adb_ModuleMetaData_create(env);
 			adb_ModuleMetaData_set_modulename(meta_data, env, module_name);
 			adb_ModuleMetaData_set_description(meta_data, env, module_name);
-			//axis2_conf_get_default_module_version(conf, env, module_name)
+			/*axis2_conf_get_default_module_version(conf, env, module_name) */
 			adb_ModuleMetaData_set_moduleVersion(meta_data, env, ADMIN_DEFAULT_MODULE_VERSION);
 			adb_ModuleMetaData_set_moduleId(meta_data, env, module_name);
 			adb_ModuleMetaData_set_engagedGlobalLevel(meta_data, env, axis2_conf_is_engaged(conf, env, mod_qname));
@@ -433,7 +433,7 @@ axis2_skel_ModuleAdminService_listModules(
 			meta_data = adb_ModuleMetaData_create(env);
 			adb_ModuleMetaData_set_modulename(meta_data, env, module_name);
 			adb_ModuleMetaData_set_description(meta_data, env, module_name);
-			//axis2_conf_get_default_module_version(conf, env, module_name)
+			/*axis2_conf_get_default_module_version(conf, env, module_name) */
 			adb_ModuleMetaData_set_moduleVersion(meta_data, env, ADMIN_DEFAULT_MODULE_VERSION);
 			adb_ModuleMetaData_set_moduleId(meta_data, env, module_name);
 			adb_ModuleMetaData_set_engagedGlobalLevel(meta_data, env, axis2_conf_is_engaged(conf, env, mod_qname));
