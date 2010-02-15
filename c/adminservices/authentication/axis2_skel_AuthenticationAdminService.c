@@ -20,8 +20,11 @@
          *
          * @return 
          */
-        axis2_status_t  axis2_skel_AuthenticationAdminService_logout(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                          axis2_skel_AuthenticationAdminService_logout_fault *fault )
+        axis2_status_t  
+			axis2_skel_AuthenticationAdminService_logout(
+			const axutil_env_t *env , 
+			axis2_msg_ctx_t *msg_ctx,
+            axis2_skel_AuthenticationAdminService_logout_fault *fault )
         {
           /* TODO fill this with the necessary business logic */
           return AXIS2_SUCCESS;
@@ -37,9 +40,12 @@
          *
          * @return adb_loginResponse_t*
          */
-        adb_loginResponse_t* axis2_skel_AuthenticationAdminService_login(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_login_t* _login,
-                                          axis2_skel_AuthenticationAdminService_login_fault *fault )
+        adb_loginResponse_t* 
+			axis2_skel_AuthenticationAdminService_login(
+			const axutil_env_t *env , 
+			axis2_msg_ctx_t *msg_ctx,
+            adb_login_t* _login,
+            axis2_skel_AuthenticationAdminService_login_fault *fault )
         {
           /* TODO fill this with the necessary business logic */
 			adb_loginResponse_t *loginResponse = adb_loginResponse_create(env);
@@ -57,9 +63,12 @@
          *
          * @return adb_getSystemPermissionOfUserResponse_t*
          */
-        adb_getSystemPermissionOfUserResponse_t* axis2_skel_AuthenticationAdminService_getSystemPermissionOfUser(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_getSystemPermissionOfUser_t* _getSystemPermissionOfUser,
-                                          axis2_skel_AuthenticationAdminService_getSystemPermissionOfUser_fault *fault )
+        adb_getSystemPermissionOfUserResponse_t* 
+			axis2_skel_AuthenticationAdminService_getSystemPermissionOfUser(
+			const axutil_env_t *env , 
+			axis2_msg_ctx_t *msg_ctx,
+            adb_getSystemPermissionOfUser_t* _getSystemPermissionOfUser,
+            axis2_skel_AuthenticationAdminService_getSystemPermissionOfUser_fault *fault )
         {
 			adb_getSystemPermissionOfUserResponse_t* response = NULL;
 			axutil_array_list_t *list = NULL;
@@ -90,9 +99,12 @@
          *
          * @return adb_loginWithDelegationResponse_t*
          */
-        adb_loginWithDelegationResponse_t* axis2_skel_AuthenticationAdminService_loginWithDelegation(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_loginWithDelegation_t* _loginWithDelegation,
-                                          axis2_skel_AuthenticationAdminService_loginWithDelegation_fault *fault )
+        adb_loginWithDelegationResponse_t* 
+			axis2_skel_AuthenticationAdminService_loginWithDelegation(
+			const axutil_env_t *env , 
+			axis2_msg_ctx_t *msg_ctx,
+			adb_loginWithDelegation_t* _loginWithDelegation,
+            axis2_skel_AuthenticationAdminService_loginWithDelegation_fault *fault )
         {
 			adb_loginWithDelegationResponse_t* loginWithDelegationRes = adb_loginWithDelegationResponse_create(env);
 			adb_loginWithDelegationResponse_set_return(loginWithDelegationRes, env, AXIS2_TRUE);
