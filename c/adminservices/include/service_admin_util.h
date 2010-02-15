@@ -25,6 +25,7 @@ extern "C"
 
 #include "axutil_string.h"
 #include "axis2_conf.h"
+#include "axutil_url.h"
 #include "axis2_transport_receiver.h"
 #include "axiom_element.h"
 
@@ -42,6 +43,11 @@ AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 service_admin_util_get_epr_address(const axutil_env_t *env,
 						   axis2_msg_ctx_t *msg_ctx,
 						   axis2_char_t *service_name);
+
+AXIS2_EXTERN axutil_url_t* AXIS2_CALL
+service_admin_util_get_server_url(
+	const axutil_env_t *env,
+	axis2_msg_ctx_t *msg_ctx);
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 service_admin_util_serialize_param(
@@ -67,6 +73,9 @@ AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 service_admin_util_is_filtered_out_service_group(
 	axutil_env_t *env,
 	axis2_svc_grp_t *svc);
+
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+service_admin_util_get_uname(axutil_env_t *env,char mode);
 
 
 

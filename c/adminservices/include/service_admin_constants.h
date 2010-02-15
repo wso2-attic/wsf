@@ -51,4 +51,13 @@
 
 #define ADMIN_DEFAULT_MODULE_VERSION "2.0.0"
 
+/** definitions */
+#ifdef WIN32
+#define USERHOME  "USERPROFILE"
+#define USERNAME  "USERNAME"
+#else
+#define USERHOME  "HOME"	
+#define USERNAME  "USER"
+#endif
+
 #endif /* SERVICE_ADMIN_CONSTANTS_H_ */
