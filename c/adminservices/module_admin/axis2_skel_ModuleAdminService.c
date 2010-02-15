@@ -31,9 +31,34 @@ axis2_skel_ModuleAdminService_engageModuleForService(
 	adb_engageModuleForService_t* _engageModuleForService,
     axis2_skel_ModuleAdminService_engageModuleForService_fault *fault )
 {
-	/** TODO fill this with the necessary business logic */
+	axis2_char_t *service_name = NULL;
+	axis2_svc_t *svc  = NULL;
+	axis2_char_t *module_name = NULL;
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf = NULL;
+	axis2_module_desc_t *module_desc = NULL;
+	axutil_qname_t *qname = NULL;
+	adb_engageModuleForServiceResponse_t *response = NULL;
 
-  return (adb_engageModuleForServiceResponse_t*)NULL;
+	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+	conf  = axis2_conf_ctx_get_conf(conf_ctx, env);
+
+	service_name = adb_engageModuleForService_get_serviceName(_engageModuleForService, env);
+	svc = service_admin_util_get_service(env, msg_ctx, service_name);
+	module_name = adb_engageModuleForService_get_moduleId(_engageModuleForService, env);
+	qname = axutil_qname_create(env, module_name, NULL, NULL);
+
+	module_desc = axis2_conf_get_module(conf, env, qname);
+	
+	axis2_svc_engage_module(svc, env, module_desc, conf);
+
+	axutil_qname_free(qname, env);
+	
+	response = adb_engageModuleForServiceResponse_create(env);
+	
+	adb_engageModuleForServiceResponse_set_return(response, env, AXIS2_TRUE);
+
+  return response;
 }
      
 
@@ -136,13 +161,60 @@ axis2_skel_ModuleAdminService_engageModuleForService(
          *
          * @return adb_getModuleParametersResponse_t*
          */
-        adb_getModuleParametersResponse_t* axis2_skel_ModuleAdminService_getModuleParameters(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_getModuleParameters_t* _getModuleParameters,
-                                          axis2_skel_ModuleAdminService_getModuleParameters_fault *fault )
-        {
-          /* TODO fill this with the necessary business logic */
-          return (adb_getModuleParametersResponse_t*)NULL;
-        }
+adb_getModuleParametersResponse_t* 
+axis2_skel_ModuleAdminService_getModuleParameters(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+    adb_getModuleParameters_t* _getModuleParameters,
+    axis2_skel_ModuleAdminService_getModuleParameters_fault *fault )
+{
+	axis2_char_t *module_name = NULL;
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf = NULL;
+	axis2_module_desc_t *module_desc = NULL;
+	axutil_qname_t *module_qname = NULL;
+	axutil_array_list_t *param_list = NULL;
+	int size = 0, i = 0;
+	adb_getModuleParametersResponse_t *response = NULL;
+
+	module_name = adb_getModuleParameters_get_moduleName(_getModuleParameters, env);
+	if(!module_name)
+	{
+		/** TODO Return fault */
+		return NULL;
+	}
+	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+	module_qname = axutil_qname_create(env, module_name, NULL, NULL);
+	
+	module_desc = axis2_conf_get_module(conf, env, module_qname);
+
+	param_list = axis2_module_desc_get_all_params(module_desc, env);
+	if(!param_list)
+	{
+		return NULL;
+	}
+	response  = adb_getModuleParametersResponse_create(env);
+	size = axutil_array_list_size(param_list, env);
+	for(i = 0; i < size; i++)
+	{
+		axis2_char_t *param_str = NULL;
+		axiom_node_t *param_node = NULL;
+		axutil_param_t *param = NULL;
+
+		param = axutil_array_list_get(param_list, env, i);
+		if(param)
+		{
+			param_node = service_admin_util_serialize_param(env, param);
+			if(param_node)
+			{
+				param_str = axiom_node_to_string(param_node, env);
+				adb_getModuleParametersResponse_add_return(response, env, param_str);
+			}
+		}
+	}
+	return response;
+}
      
 
 		 
