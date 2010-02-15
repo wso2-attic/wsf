@@ -35,7 +35,6 @@ extern "C"
  * @ingroup axis2_counter
  * @{
  */
-#define BAM_PUBLISHER_SERVICE_STATISTICS_SUBSCRIBER_SERVICE "BAMServiceStatisticsSubscriberService"
 #define BAM_PUBLISHER_SERVICE_ACTION "http://wso2.org/services/BAMServiceStatisticsSubscriberService/send"
 #define BAM_PUBLISHER_SERVICE_STAT_HANDLER "ServiceStatHandler"
 #define BAM_PUBLISHER_OPERATION_STAT_HANDLER "OperationStatHandler"

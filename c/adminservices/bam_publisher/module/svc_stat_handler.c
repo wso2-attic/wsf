@@ -122,7 +122,6 @@ bam_publisher_svc_stat_handler_invoke(struct axis2_handler *handler,
     }
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[adminservices] End:bam_publisher_svc_stat_handler_invoke");
-    
     return status;
 }
 
