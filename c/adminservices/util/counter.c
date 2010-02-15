@@ -151,6 +151,7 @@ service_admin_counter_get_last_count (
     axutil_property_t *property = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
 
+    axutil_allocator_switch_to_global_pool(env->allocator);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(svc_name && op_name)
     {
@@ -203,6 +204,7 @@ service_admin_counter_get_last_count (
                     AXIS2_HASH_KEY_STRING, count);
         }
     }
+    axutil_allocator_switch_to_local_pool(env->allocator);
     return *count;
 }
 

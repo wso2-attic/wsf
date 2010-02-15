@@ -88,6 +88,7 @@ axis2_statistics_admin_calculate_response_times(
     axis2_status_t status = AXIS2_SUCCESS;
     axis2_op_ctx_t *op_ctx = NULL;
 
+    axutil_allocator_switch_to_global_pool(env->allocator);
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
     if(op_ctx)
     {
@@ -185,6 +186,7 @@ axis2_statistics_admin_calculate_response_times(
 
         }
     }
+    axutil_allocator_switch_to_local_pool(env->allocator);
     return status;
 }
 
