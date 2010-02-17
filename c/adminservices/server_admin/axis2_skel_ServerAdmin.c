@@ -12,8 +12,9 @@
 #include "service_admin_util.h"
 #include "service_admin_constants.h"
 #include "axutil_version.h"
+#include "../include/server_admin_util.h"
 
-
+extern time_t start_time;
 
 /**
 * auto generated function definition signature
@@ -146,13 +147,21 @@ axis2_skel_ServerAdmin_getServerData(
 	adb_getServerDataResponse_t *server_data_res  = NULL;
 	axis2_char_t *repo_location = NULL;
 	axutil_url_t *url = NULL;
+	axis2_char_t start_time_buffer[80];
+	struct tm* start_time_info = NULL;
+	axis2_char_t up_time_buffer[100];
 	
+	/* Calculate server start time and up time */	
+	start_time_info = localtime(&start_time);
+	strftime(start_time_buffer, 80, "%a %d %b %Y %I:%M:%S %p (%Z)", start_time_info);
+
+	server_admin_util_get_up_time(start_time, &up_time_buffer);
+
 	server_data = adb_ServerData_create(env);
 	
 	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
 	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
 	repo_location = axis2_conf_get_repo(conf, env);
-	
 	
 	adb_ServerData_set_osName(server_data, env, service_admin_util_get_uname(env, 'a'));
 	adb_ServerData_set_osVersion(server_data, env, service_admin_util_get_uname(env,'r'));
@@ -181,14 +190,15 @@ axis2_skel_ServerAdmin_getServerData(
 	url = service_admin_util_get_server_url(env, msg_ctx);
 	adb_ServerData_set_serverIp(server_data, env,axutil_url_get_host(url, env));
 	adb_ServerData_set_serverName(server_data, env, "Server1");
-	adb_ServerData_set_systemUpTime(server_data, env, "10:10");
-	adb_ServerData_set_serverStartTime(server_data, env, "1");
+	adb_ServerData_set_systemUpTime(server_data, env, up_time_buffer);
+	adb_ServerData_set_serverStartTime(server_data, env, start_time_buffer);
 	adb_ServerData_set_registryType(server_data,env, "local");
 	adb_ServerData_set_remoteRegistryChroot_nil(server_data,env);
 	adb_ServerData_set_remoteRegistryURL_nil(server_data, env);
 
 	server_data_res = adb_getServerDataResponse_create(env);
 	adb_getServerDataResponse_set_return(server_data_res, env, server_data);
+
 	return server_data_res;
 }
 

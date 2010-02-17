@@ -13,6 +13,8 @@
         #include <stdio.h>
         #include <axis2_svc.h>
 
+		time_t start_time = NULL;		
+
         #ifdef __cplusplus
         extern "C" {
         #endif
@@ -125,7 +127,9 @@
 	axis2_svc_skel_ServerAdmin_init(axis2_svc_skeleton_t *svc_skeleton,
 	                        const axutil_env_t *env)
 	{
-	    /* Nothing special in initialization  axis2_skel_ServerAdmin */
+		/* Set server start time */
+		time(&start_time);
+
 	    return AXIS2_SUCCESS;
 	}
 
