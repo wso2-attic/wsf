@@ -150,6 +150,9 @@ axis2_skel_ServerAdmin_getServerData(
 	axis2_char_t start_time_buffer[80];
 	struct tm* start_time_info = NULL;
 	axis2_char_t up_time_buffer[100];
+	axis2_char_t* cwd = NULL;
+	int cwd_length = 0;
+	axis2_char_t timezone_buffer[50];
 	
 	/* Calculate server start time and up time */	
 	start_time_info = localtime(&start_time);
@@ -157,6 +160,13 @@ axis2_skel_ServerAdmin_getServerData(
 
 	server_admin_util_get_up_time(start_time, &up_time_buffer);
 
+	/* Get repo location */
+	cwd = getcwd(cwd, cwd_length); 
+
+	/* Get timezone */
+	server_admin_util_get_timezone(timezone_buffer);
+
+	/* Create data */
 	server_data = adb_ServerData_create(env);
 	
 	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
@@ -172,18 +182,18 @@ axis2_skel_ServerAdmin_getServerData(
 	adb_ServerData_set_dbName(server_data,env,"test");
 	adb_ServerData_set_dbVersion(server_data, env, "5.1");
 
-	adb_ServerData_set_javaHome(server_data, env,AXIS2_GETENV("JAVA_HOME"));
-	adb_ServerData_set_javaRuntimeName(server_data, env, "JRE");
-	adb_ServerData_set_javaVersion(server_data, env, "1.6.0");
-	adb_ServerData_set_javaVMVendor(server_data, env, "java.sun.com");
-	adb_ServerData_set_javaVMVersion(server_data, env, "1.6.0");
+	adb_ServerData_set_javaHome(server_data, env,"N/A");
+	adb_ServerData_set_javaRuntimeName(server_data, env, "N/A");
+	adb_ServerData_set_javaVersion(server_data, env, "N/A");
+	adb_ServerData_set_javaVMVendor(server_data, env, "N/A");
+	adb_ServerData_set_javaVMVersion(server_data, env, "N/A");
 
 	adb_ServerData_set_userHome(server_data, env, AXIS2_GETENV(USERHOME));
 	adb_ServerData_set_axis2Location(server_data, env, repo_location);
 	adb_ServerData_set_userCountry(server_data, env, "LK");
 	adb_ServerData_set_userName(server_data, env, AXIS2_GETENV(USERNAME));
 
-	adb_ServerData_set_userTimezone(server_data, env, "Test");
+	adb_ServerData_set_userTimezone(server_data, env, timezone_buffer);
 
 	adb_ServerData_set_wso2wsasVersion(server_data,env,"3.1");
 
@@ -196,6 +206,7 @@ axis2_skel_ServerAdmin_getServerData(
 	adb_ServerData_set_remoteRegistryChroot_nil(server_data,env);
 	adb_ServerData_set_remoteRegistryURL_nil(server_data, env);
 
+	/* Create response */
 	server_data_res = adb_getServerDataResponse_create(env);
 	adb_getServerDataResponse_set_return(server_data_res, env, server_data);
 

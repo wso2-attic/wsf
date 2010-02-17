@@ -256,6 +256,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\util\server_admin_util.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\util\service_admin_util.c"
 				>
 			</File>
@@ -338,6 +342,10 @@
 			</File>
 			<File
 				RelativePath=".\axis2_skel_ServerAdmin.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\server_admin_util.h"
 				>
 			</File>
 			<File

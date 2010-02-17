@@ -320,12 +320,12 @@ service_admin_util_get_uname(axutil_env_t *env,char mode)
 		/* Get build numbers for Windows NT or Win95 */
 		if (dwVersion < 0x80000000){
 			dwBuild = (DWORD)(HIWORD(dwVersion));
-			snprintf(tmp_uname, sizeof(tmp_uname), "%s %s %d.%d build %d",
-					 "Windows NT", ComputerName,
+			snprintf(tmp_uname, sizeof(tmp_uname), "%s %d.%d build %d",
+					 "Windows NT", 
 					 dwWindowsMajorVersion, dwWindowsMinorVersion, dwBuild);
 		} else {
 			snprintf(tmp_uname, sizeof(tmp_uname), "%s %s %d.%d",
-					 "Windows 9x", ComputerName,
+					 "Windows 9x",
 					 dwWindowsMajorVersion, dwWindowsMinorVersion);
 		}
 		unameval = tmp_uname;

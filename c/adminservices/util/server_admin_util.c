@@ -9,9 +9,12 @@
 */
 
 #include "server_admin_util.h"
+#ifdef WIN32
+#include <windows.h>
+#endif
 
 #if WIN32 
-#define snprintf sprintf_s 
+#define snprintf sprintf_s
 #endif
 
 AXIS2_EXTERN void AXIS2_CALL 
@@ -40,4 +43,20 @@ server_admin_util_get_up_time(time_t start_time,
 	hours = hours % 24;
 
 	sprintf(buffer, "%d day(s) %d hr(s) %d min(s) %d sec(s)", days, hours, mins, secs);
+}
+
+AXIS2_EXTERN void AXIS2_CALL 
+server_admin_util_get_timezone(axis2_char_t* buffer)
+{
+#ifdef WIN32
+	TIME_ZONE_INFORMATION tzi;
+	DWORD dwRet;
+	
+	dwRet = GetTimeZoneInformation(&tzi);
+
+	if (dwRet == TIME_ZONE_ID_STANDARD || dwRet == TIME_ZONE_ID_UNKNOWN)
+		wcstombs(buffer, tzi.StandardName, sizeof(tzi.StandardName));
+	else if(dwRet == TIME_ZONE_ID_DAYLIGHT)
+		wprintf(buffer, tzi.DaylightName, sizeof(tzi.DaylightName));
+#endif
 }
