@@ -345,15 +345,9 @@ axis2_skel_KeyStoreAdminService_getKeystoreInfo(const axutil_env_t *env ,
 	axis2_conf_t* axis2_conf = NULL;
 	axis2_char_t* repo_path = NULL;
 	axis2_char_t* keystore_file = NULL;
-	axis2_char_t* keystore_details_file = NULL;
-	axis2_char_t* password = NULL;
-	axis2_char_t* provider = NULL;
-	axis2_char_t* pvt_key_pass = NULL;
-	int file_size = 0;
-	axis2_char_t* data_buffer = NULL;
-	int data_buffer_size = 0;
-	FILE* file = NULL;
-	axis2_char_t* tok = NULL;
+	axis2_char_t password[10];
+	axis2_char_t provider[20];
+	axis2_char_t pvt_key_pass[10];
 	pkcs12_keystore_t* pkcs12_keystore = NULL;
 	axutil_array_list_t* cert_array_tmp = NULL;
 	int cert_count = 0;
@@ -372,45 +366,15 @@ axis2_skel_KeyStoreAdminService_getKeystoreInfo(const axutil_env_t *env ,
     axis2_conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     repo_path = axis2_conf_get_repo(axis2_conf, env);
 	
-	/* Load password, provider and pvt_key_pass from details file*/
-	keystore_details_file = axutil_strcat(env, repo_path, AXIS2_PATH_SEP_STR, "services", 
-		AXIS2_PATH_SEP_STR, "KeyStoreAdminService", AXIS2_PATH_SEP_STR, "keystores", 
-		AXIS2_PATH_SEP_STR, keystore_name, ".dat", NULL);
-
-	file = fopen(keystore_details_file, "r");
-	AXIS2_FREE(env->allocator, keystore_details_file);
-	if (!file)
+	/* Get password, provider and pvt_key_pass from details file */
+	if (!keystore_admin_util_get_keystore_details(env, repo_path, keystore_name, 
+		password, provider, pvt_key_pass))
 	{
 		AXIS2_FREE(env->allocator, keystore_name);
 		return NULL;
 	}
 
-	/* Get file size*/
-	fseek(file, 0, SEEK_END);
-	file_size = ftell(file);
-	rewind(file);
-
-	data_buffer_size = (file_size * sizeof(axis2_char_t)) + 1;
-	data_buffer = AXIS2_MALLOC(env->allocator, data_buffer_size);
-	memset(data_buffer, 0, data_buffer_size);
-	fread(data_buffer, sizeof(axis2_char_t), file_size, file);
-	fclose(file);
-	if (!data_buffer)
-	{
-		AXIS2_FREE(env->allocator, keystore_name);
-		AXIS2_FREE(env->allocator, data_buffer);
-
-		return NULL;
-	}
-
-	/* Read data - password|pvt_key_pass|provider*/
-	tok = strtok(data_buffer, "|");
-	if (tok) password = tok;
-	tok = strtok(NULL, "|");
-	if (tok) pvt_key_pass = tok;
-	tok = strtok(NULL, "|");
-	if (tok) provider = tok;
-
+	/* Load keystore file */
 	keystore_file = axutil_strcat(env, repo_path, AXIS2_PATH_SEP_STR, "services", 
 		AXIS2_PATH_SEP_STR, "KeyStoreAdminService", AXIS2_PATH_SEP_STR, "keystores", 
 		AXIS2_PATH_SEP_STR, keystore_name, ".p12", NULL);
@@ -454,15 +418,19 @@ axis2_skel_KeyStoreAdminService_getKeystoreInfo(const axutil_env_t *env ,
 			
 			if (oxs_x509_cert_get_alias(oxs_cert, env))
 			{
+				axis2_char_t not_after[20];
+				axis2_char_t not_before[20];
+
 				/* Create and store cert data*/
 				cert_data = adb_CertData_create(env);
 
+				keystore_admin_util_format_date(env, oxs_x509_cert_get_date(oxs_cert, env), not_after);
+				keystore_admin_util_format_date(env, oxs_x509_cert_get_valid_from(oxs_cert, env), not_before);
+
 				adb_CertData_set_alias(cert_data, env, oxs_x509_cert_get_alias(oxs_cert, env));
 				adb_CertData_set_issuerDN(cert_data, env, oxs_x509_cert_get_issuer(oxs_cert, env));
-				adb_CertData_set_notAfter(cert_data, env, 
-					keystore_admin_util_format_date(env, oxs_x509_cert_get_date(oxs_cert, env)));
-				adb_CertData_set_notBefore(cert_data, env, 
-					keystore_admin_util_format_date(env, oxs_x509_cert_get_valid_from(oxs_cert, env)));
+				adb_CertData_set_notAfter(cert_data, env, not_after);
+				adb_CertData_set_notBefore(cert_data, env, not_before);
 				adb_CertData_set_serialNumber(cert_data, env, oxs_x509_cert_get_serial_number(oxs_cert, env));
 				adb_CertData_set_subjectDN(cert_data, env, oxs_x509_cert_get_subject(oxs_cert, env));
 				adb_CertData_set_version(cert_data, env, oxs_x509_cert_get_version(oxs_cert, env));
@@ -486,14 +454,18 @@ axis2_skel_KeyStoreAdminService_getKeystoreInfo(const axutil_env_t *env ,
 	oxs_cert = pkcs12_keystore_get_owner_certificate(pkcs12_keystore, env);
 	if (oxs_cert)
 	{
+		axis2_char_t not_after[20];
+		axis2_char_t not_before[20];
+
 		cert_data = adb_CertData_create(env);
+
+		keystore_admin_util_format_date(env, oxs_x509_cert_get_date(oxs_cert, env), not_after);
+		keystore_admin_util_format_date(env, oxs_x509_cert_get_valid_from(oxs_cert, env), not_before);
 
 		adb_CertData_set_alias(cert_data, env, oxs_x509_cert_get_alias(oxs_cert, env));
 		adb_CertData_set_issuerDN(cert_data, env, oxs_x509_cert_get_issuer(oxs_cert, env));
-		adb_CertData_set_notAfter(cert_data, env, 
-			keystore_admin_util_format_date(env, oxs_x509_cert_get_date(oxs_cert, env)));
-		adb_CertData_set_notBefore(cert_data, env, 
-			keystore_admin_util_format_date(env, oxs_x509_cert_get_valid_from(oxs_cert, env)));
+		adb_CertData_set_notAfter(cert_data, env, not_after);
+		adb_CertData_set_notBefore(cert_data, env, not_before);
 		adb_CertData_set_serialNumber(cert_data, env, oxs_x509_cert_get_serial_number(oxs_cert, env));
 		adb_CertData_set_subjectDN(cert_data, env, oxs_x509_cert_get_subject(oxs_cert, env));
 		adb_CertData_set_version(cert_data, env, oxs_x509_cert_get_version(oxs_cert, env));
@@ -650,6 +622,8 @@ axis2_skel_KeyStoreAdminService_getKeyStores(const axutil_env_t *env ,
 		data = adb_KeyStoreData_create(env);
 		adb_KeyStoreData_set_keyStoreName(data, env, keystore_name);
 		adb_KeyStoreData_set_keyStoreType(data, env, keystore_type);
+		adb_KeyStoreData_set_provider(data, env, "");
+		adb_KeyStoreData_set_privateStore(data, env, AXIS2_TRUE);
 
 		adb_getKeyStoresResponse_add_return(response, env, data);
 	} while (FindNextFile(file_handle, &find_data));

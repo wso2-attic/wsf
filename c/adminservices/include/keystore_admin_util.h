@@ -24,10 +24,20 @@ extern "C"
 #endif
 
 #include "axutil_string.h"
+#include "axutil_utils_defines.h"
 
-AXIS2_EXTERN axis2_char_t* AXIS2_CALL 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 keystore_admin_util_format_date(const axutil_env_t* env,
-								axis2_char_t* str);
+								axis2_char_t* src,
+								axis2_char_t* result);
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+keystore_admin_util_get_keystore_details(const axutil_env_t* env,
+										 axis2_char_t* repo_path,
+										 axis2_char_t* keystore_name,
+										 axis2_char_t* password,
+										 axis2_char_t* provider,
+									     axis2_char_t* pvt_key_pass);
 
 #ifdef __cplusplus
 }
