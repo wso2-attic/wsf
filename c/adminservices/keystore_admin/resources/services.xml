@@ -4,6 +4,7 @@
 <service name="KeyStoreAdminService">
     <parameter name="ServiceClass">KeyStoreAdminService</parameter>
     <parameter name="adminService" locked="true">true</parameter>
+    <parameter name="PrimaryKeystore" locked="true">wso2wsfc.p12</parameter>
     <description>KeyStoreAdminService Service
             </description>
     <operation name="getStoreEntries" mep="http://www.w3.org/ns/wsdl/in-out">

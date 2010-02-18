@@ -560,6 +560,10 @@ axis2_skel_KeyStoreAdminService_getKeyStores(const axutil_env_t *env ,
 											 axis2_msg_ctx_t *msg_ctx,
 											 axis2_skel_KeyStoreAdminService_getKeyStores_fault *fault )
 {
+	axis2_svc_t* svc = NULL;
+	axutil_param_t* param = NULL;
+	axis2_char_t* primary_keystore = NULL;
+	axis2_bool_t is_primary_keystore = AXIS2_FALSE;
 	axis2_conf_ctx_t* conf_ctx = NULL;
 	axis2_conf_t* conf = NULL;
 	axis2_char_t* repo_path = NULL;
@@ -571,6 +575,15 @@ axis2_skel_KeyStoreAdminService_getKeyStores(const axutil_env_t *env ,
 	axis2_char_t* keystore_type = NULL;
 	axis2_char_t* tok = NULL;
 	adb_KeyStoreData_t* data = NULL;
+
+	/* Get primary keystore filename */
+	svc = axis2_msg_ctx_get_svc(msg_ctx, env);
+	param = axis2_svc_get_param(svc, env, "PrimaryKeystore");
+	if (param)
+	{
+		primary_keystore = (axis2_char_t*)
+			axutil_param_get_value(param, env);
+	}
 
 	/* Form keystore directory name*/
 	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
@@ -598,6 +611,9 @@ axis2_skel_KeyStoreAdminService_getKeyStores(const axutil_env_t *env ,
 		/* Get name*/
 		keystore_name = axutil_strdup(env, find_data.cFileName);
 
+		is_primary_keystore = 
+			(0 == axutil_strcmp(keystore_name, primary_keystore)) ? AXIS2_TRUE : AXIS2_FALSE;
+
 		/* Get type*/
 		tok = strtok(find_data.cFileName, ".");
 		if (tok) tok = strtok(NULL, " .");
@@ -620,11 +636,27 @@ axis2_skel_KeyStoreAdminService_getKeyStores(const axutil_env_t *env ,
 		}
 
 		data = adb_KeyStoreData_create(env);
+
 		adb_KeyStoreData_set_keyStoreName(data, env, keystore_name);
 		adb_KeyStoreData_set_keyStoreType(data, env, keystore_type);
-		adb_KeyStoreData_set_provider(data, env, "");
-		adb_KeyStoreData_set_privateStore(data, env, AXIS2_TRUE);
 
+		if (is_primary_keystore)
+		{
+			/* Primary keystore */
+			adb_KeyStoreData_set_provider(data, env, " ");
+			adb_KeyStoreData_set_privateStore(data, env, AXIS2_TRUE);
+		}
+		else
+		{
+			axis2_char_t* provider = NULL;
+			axis2_bool_t private_store = AXIS2_FALSE;
+
+			
+
+			adb_KeyStoreData_set_provider(data, env, provider);
+			adb_KeyStoreData_set_privateStore(data, env, private_store);
+		}
+		
 		adb_getKeyStoresResponse_add_return(response, env, data);
 	} while (FindNextFile(file_handle, &find_data));
 
