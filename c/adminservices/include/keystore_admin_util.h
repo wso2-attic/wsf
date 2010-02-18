@@ -39,6 +39,12 @@ keystore_admin_util_get_keystore_details(const axutil_env_t* env,
 										 axis2_char_t* provider,
 									     axis2_char_t* pvt_key_pass);
 
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+keystore_admin_util_get_private_store(const axutil_env_t* env, 
+									  axis2_char_t* repo_path,
+									  axis2_char_t* keystore_name,
+									  axis2_char_t* password);
+
 #ifdef __cplusplus
 }
 #endif

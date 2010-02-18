@@ -47,14 +47,9 @@ axis2_skel_KeyStoreAdminService_getStoreEntries(const axutil_env_t *env ,
 	axis2_char_t* repo_path = NULL;
 	axis2_char_t* keystore_file = NULL;
 	axis2_char_t* keystore_details_file = NULL;
-	axis2_char_t* password = NULL;
-	axis2_char_t* provider = NULL;
-	axis2_char_t* pvt_key_pass = NULL;
-	int file_size = 0;
-	axis2_char_t* data_buffer = NULL;
-	int data_buffer_size = 0;
-	FILE* file = NULL;
-	axis2_char_t* tok = NULL;
+	axis2_char_t password[10];
+	axis2_char_t provider[20];
+	axis2_char_t pvt_key_pass[10];
 	pkcs12_keystore_t* pkcs12_keystore = NULL;
 	axutil_array_list_t* cert_array_tmp = NULL;
 	int cert_count = 0;
@@ -71,45 +66,15 @@ axis2_skel_KeyStoreAdminService_getStoreEntries(const axutil_env_t *env ,
     axis2_conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     repo_path = axis2_conf_get_repo(axis2_conf, env);
 	
-	/* Load password, provider and pvt_key_pass from details file*/
-	keystore_details_file = axutil_strcat(env, repo_path, AXIS2_PATH_SEP_STR, "services", 
-		AXIS2_PATH_SEP_STR, "KeyStoreAdminService", AXIS2_PATH_SEP_STR, "keystores", 
-		AXIS2_PATH_SEP_STR, keystore_name, ".dat", NULL);
-
-	file = fopen(keystore_details_file, "r");
-	AXIS2_FREE(env->allocator, keystore_details_file);
-	if (!file)
+	/* Get password, provider and pvt_key_pass from details file */
+	if (!keystore_admin_util_get_keystore_details(env, repo_path, keystore_name, 
+		password, provider, pvt_key_pass))
 	{
 		AXIS2_FREE(env->allocator, keystore_name);
 		return NULL;
 	}
 
-	/* Get file size*/
-	fseek(file, 0, SEEK_END);
-	file_size = ftell(file);
-	rewind(file);
-
-	data_buffer_size = (file_size * sizeof(axis2_char_t)) + 1;
-	data_buffer = AXIS2_MALLOC(env->allocator, data_buffer_size);
-	memset(data_buffer, 0, data_buffer_size);
-	fread(data_buffer, sizeof(axis2_char_t), file_size, file);
-	fclose(file);
-	if (!data_buffer)
-	{
-		AXIS2_FREE(env->allocator, keystore_name);
-		AXIS2_FREE(env->allocator, data_buffer);
-
-		return NULL;
-	}
-
-	/* Read data - password|pvt_key_pass|provider*/
-	tok = strtok(data_buffer, "|");
-	if (tok) password = tok;
-	tok = strtok(NULL, "|");
-	if (tok) pvt_key_pass = tok;
-	tok = strtok(NULL, "|");
-	if (tok) provider = tok;
-
+	/* Load keystore file */
 	keystore_file = axutil_strcat(env, repo_path, AXIS2_PATH_SEP_STR, "services", 
 		AXIS2_PATH_SEP_STR, "KeyStoreAdminService", AXIS2_PATH_SEP_STR, "keystores", 
 		AXIS2_PATH_SEP_STR, keystore_name, ".p12", NULL);
@@ -502,6 +467,9 @@ axis2_skel_KeyStoreAdminService_deleteStore(const axutil_env_t *env ,
 											adb_deleteStore_t* _deleteStore,
 											axis2_skel_KeyStoreAdminService_deleteStore_fault *fault )
 {
+	axis2_svc_t* svc = NULL;
+	axutil_param_t* param = NULL;
+	axis2_char_t* primary_keystore = NULL;
 	axis2_char_t* keystore_name = NULL;
 	axis2_conf_ctx_t* conf_ctx = NULL;
 	axis2_conf_t* conf = NULL;
@@ -515,8 +483,17 @@ axis2_skel_KeyStoreAdminService_deleteStore(const axutil_env_t *env ,
 		env, adb_deleteStore_get_keyStoreName(_deleteStore, env));
 	if (!keystore_name) return AXIS2_FAILURE;
 
+	/* Get primary keystore filename */
+	svc = axis2_msg_ctx_get_svc(msg_ctx, env);
+	param = axis2_svc_get_param(svc, env, "PrimaryKeystore");
+	if (param)
+	{
+		primary_keystore = (axis2_char_t*)
+			axutil_param_get_value(param, env);
+	}
+
 	/* Primary keystore should not be deleted*/
-	if (0 == axutil_strcmp(keystore_name, "wso2wsfc.p12"))
+	if (0 == axutil_strcmp(keystore_name, primary_keystore))
 		return AXIS2_FAILURE;
 
 	keystore_name = strtok(keystore_name, ".");
@@ -573,6 +550,8 @@ axis2_skel_KeyStoreAdminService_getKeyStores(const axutil_env_t *env ,
 	adb_getKeyStoresResponse_t* response = NULL;
 	axis2_char_t* keystore_name = NULL;
 	axis2_char_t* keystore_type = NULL;
+	axis2_char_t* provider = NULL;
+	axis2_bool_t private_store = AXIS2_FALSE;
 	axis2_char_t* tok = NULL;
 	adb_KeyStoreData_t* data = NULL;
 
@@ -606,13 +585,12 @@ axis2_skel_KeyStoreAdminService_getKeyStores(const axutil_env_t *env ,
 	{
 		keystore_name = NULL;
 		keystore_type = NULL;
+		provider = NULL;
+		private_store = AXIS2_FALSE;
 		tok = NULL;
 
 		/* Get name*/
 		keystore_name = axutil_strdup(env, find_data.cFileName);
-
-		is_primary_keystore = 
-			(0 == axutil_strcmp(keystore_name, primary_keystore)) ? AXIS2_TRUE : AXIS2_FALSE;
 
 		/* Get type*/
 		tok = strtok(find_data.cFileName, ".");
@@ -635,28 +613,48 @@ axis2_skel_KeyStoreAdminService_getKeyStores(const axutil_env_t *env ,
 			continue;
 		}
 
-		data = adb_KeyStoreData_create(env);
-
-		adb_KeyStoreData_set_keyStoreName(data, env, keystore_name);
-		adb_KeyStoreData_set_keyStoreType(data, env, keystore_type);
+		is_primary_keystore = 
+			(0 == axutil_strcmp(keystore_name, primary_keystore)) ? AXIS2_TRUE : AXIS2_FALSE;
 
 		if (is_primary_keystore)
 		{
 			/* Primary keystore */
-			adb_KeyStoreData_set_provider(data, env, " ");
-			adb_KeyStoreData_set_privateStore(data, env, AXIS2_TRUE);
+			provider = axutil_strcat(env, " ", NULL);
+			private_store = AXIS2_TRUE;
 		}
 		else
 		{
-			axis2_char_t* provider = NULL;
-			axis2_bool_t private_store = AXIS2_FALSE;
+			axis2_char_t password_tmp[10];
+			axis2_char_t provider_tmp[20];
+			axis2_char_t pvt_key_pass_tmp[10];
+			axis2_char_t* keystore_name_tmp = NULL;
 
-			
+			keystore_name_tmp = axutil_strdup(env, keystore_name);
+			keystore_name_tmp = strtok(keystore_name_tmp, ".");
 
-			adb_KeyStoreData_set_provider(data, env, provider);
-			adb_KeyStoreData_set_privateStore(data, env, private_store);
+			/* Get password, provider and pvt_key_pass */
+			if (!keystore_admin_util_get_keystore_details(env, repo_path, keystore_name_tmp, 
+				password_tmp, provider_tmp, pvt_key_pass_tmp))
+			{
+				AXIS2_FREE(env->allocator, keystore_name);
+				AXIS2_FREE(env->allocator, keystore_name_tmp);
+				keystore_name = keystore_name_tmp = NULL;
+				continue;
+			}
+
+			provider = axutil_strdup(env, provider_tmp);
+
+			private_store = keystore_admin_util_get_private_store(env, repo_path,
+				keystore_name_tmp, password_tmp);
 		}
 		
+		data = adb_KeyStoreData_create(env);
+
+		adb_KeyStoreData_set_keyStoreName(data, env, keystore_name);
+		adb_KeyStoreData_set_keyStoreType(data, env, keystore_type);
+		adb_KeyStoreData_set_provider(data, env, provider);
+		adb_KeyStoreData_set_privateStore(data, env, private_store);
+
 		adb_getKeyStoresResponse_add_return(response, env, data);
 	} while (FindNextFile(file_handle, &find_data));
 

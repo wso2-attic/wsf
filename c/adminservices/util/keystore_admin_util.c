@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "axis2_util.h"
+#include <openssl_pkcs12_keystore.h>
 #include "keystore_admin_util.h"
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
@@ -119,4 +120,29 @@ keystore_admin_util_get_keystore_details(const axutil_env_t* env,
 	if (tok) sprintf(provider, "%s", tok);
 	
 	return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+keystore_admin_util_get_private_store(const axutil_env_t* env, 
+									  axis2_char_t* repo_path,
+									  axis2_char_t* keystore_name,
+									  axis2_char_t* password)
+{
+	axis2_char_t* keystore_file = NULL;
+	pkcs12_keystore_t* pkcs12_keystore = NULL;
+	oxs_x509_cert_t* oxs_cert = NULL;
+	
+	keystore_file = axutil_strcat(env, repo_path, AXIS2_PATH_SEP_STR, "services", 
+		AXIS2_PATH_SEP_STR, "KeyStoreAdminService", AXIS2_PATH_SEP_STR, "keystores", 
+		AXIS2_PATH_SEP_STR, keystore_name, ".p12", NULL);
+
+	pkcs12_keystore = pkcs12_keystore_create(env, keystore_file, password);
+	AXIS2_FREE(env->allocator, keystore_file);
+
+	if (!pkcs12_keystore) return AXIS2_FALSE;
+
+	oxs_cert = pkcs12_keystore_get_owner_certificate(pkcs12_keystore, env);
+	if (!oxs_cert) return AXIS2_FALSE;
+
+	return (oxs_x509_cert_get_alias(oxs_cert, env)) ? AXIS2_TRUE : AXIS2_FALSE;
 }
