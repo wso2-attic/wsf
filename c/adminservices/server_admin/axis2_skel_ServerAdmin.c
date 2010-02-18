@@ -176,11 +176,11 @@ axis2_skel_ServerAdmin_getServerData(
 	adb_ServerData_set_osName(server_data, env, service_admin_util_get_uname(env, 'a'));
 	adb_ServerData_set_osVersion(server_data, env, service_admin_util_get_uname(env,'r'));
 
-	adb_ServerData_set_dbDriverName(server_data, env, "testdriver");
-	adb_ServerData_set_dbDriverVersion(server_data, env, "1.0");
-	adb_ServerData_set_dbURL(server_data, env,"http://test");
-	adb_ServerData_set_dbName(server_data,env,"test");
-	adb_ServerData_set_dbVersion(server_data, env, "5.1");
+	adb_ServerData_set_dbDriverName(server_data, env, "N/A");
+	adb_ServerData_set_dbDriverVersion(server_data, env, "N/A");
+	adb_ServerData_set_dbURL(server_data, env,"N/A");
+	adb_ServerData_set_dbName(server_data,env,"N/A");
+	adb_ServerData_set_dbVersion(server_data, env, "N/A");
 
 	adb_ServerData_set_javaHome(server_data, env,"N/A");
 	adb_ServerData_set_javaRuntimeName(server_data, env, "N/A");
@@ -199,10 +199,10 @@ axis2_skel_ServerAdmin_getServerData(
 
 	url = service_admin_util_get_server_url(env, msg_ctx);
 	adb_ServerData_set_serverIp(server_data, env,axutil_url_get_host(url, env));
-	adb_ServerData_set_serverName(server_data, env, "Server1");
+	adb_ServerData_set_serverName(server_data, env, "N/A");
 	adb_ServerData_set_systemUpTime(server_data, env, up_time_buffer);
 	adb_ServerData_set_serverStartTime(server_data, env, start_time_buffer);
-	adb_ServerData_set_registryType(server_data,env, "local");
+	adb_ServerData_set_registryType(server_data,env, "N/A");
 	adb_ServerData_set_remoteRegistryChroot_nil(server_data,env);
 	adb_ServerData_set_remoteRegistryURL_nil(server_data, env);
 
