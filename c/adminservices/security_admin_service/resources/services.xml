@@ -16,7 +16,7 @@
     <operation name="activateUsernameTokenAuthentication" mep="http://www.w3.org/ns/wsdl/robust-in-only">
         <parameter name="wsamapping">urn:activateUsernameTokenAuthentication</parameter>
     </operation>
-    <operation name="disableSecurityOnService" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+    <operation name="disableSecurityOnService" mep="http://www.w3.org/2004/08/wsdl/robust-in-only">
         <parameter name="wsamapping">urn:disableSecurityOnService</parameter>
     </operation>
     <operation name="getSecurityConfigData" mep="http://www.w3.org/ns/wsdl/in-out">

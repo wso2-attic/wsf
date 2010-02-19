@@ -122,13 +122,12 @@
 			axutil_qname_t* module_qname = NULL;
 			axis2_module_desc_t* module_desc = NULL;
 
-			conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
-
-			/* Get parameters*/
+			/* Get parameters */
 			service_name = adb_applySecurity_get_serviceName(_applySecurity, env);
 			scenario_id = adb_applySecurity_get_policyId(_applySecurity, env);
 
-			/* Load neethi policy*/
+			/* Load neethi policy */
+			conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
 			repo_path = axis2_conf_ctx_get_root_dir(conf_ctx, env);
 			policy_file_name = axutil_strcat(env, repo_path, AXIS2_PATH_SEP_STR, "services",
 				AXIS2_PATH_SEP_STR, "SecurityAdminService", AXIS2_PATH_SEP_STR, "policies",
@@ -136,22 +135,18 @@
 
 			neethi_policy = neethi_util_create_policy_from_file(env, policy_file_name);
 			AXIS2_FREE(env->allocator, policy_file_name);
-			if (!neethi_policy)
-				return AXIS2_FAILURE;
+			if (!neethi_policy) return AXIS2_FAILURE;
 			
 			/* Get service instance*/
 			conf = axis2_conf_ctx_get_conf(conf_ctx, env);
 			svc = axis2_conf_get_svc(conf, env, service_name);
-			if (!svc)
-				return AXIS2_FAILURE;
+			if (!svc) return AXIS2_FAILURE;
 
 			desc = axis2_svc_get_base(svc, env);
-			if (!desc)
-				return AXIS2_FAILURE;
+			if (!desc) return AXIS2_FAILURE;
 
 			policy_include = axis2_desc_get_policy_include(desc, env);
-			if (!policy_include)
-				return AXIS2_FAILURE;
+			if (!policy_include) return AXIS2_FAILURE;
 
 			/* Attach policy*/
 			axis2_policy_include_add_policy_element(policy_include, env, 
@@ -199,8 +194,49 @@
                                               adb_disableSecurityOnService_t* _disableSecurityOnService,
                                           axis2_skel_SecurityAdminService_disableSecurityOnService_fault *fault )
         {
-          /* TODO fill this with the necessary business logic */
-          return AXIS2_SUCCESS;
+			axis2_char_t* service_name = NULL;
+			axis2_conf_ctx_t* conf_ctx = NULL;
+			axis2_conf_t* conf = NULL;
+			axis2_svc_t* svc = NULL;
+			neethi_policy_t* neethi_policy = NULL;
+			axis2_char_t* policy_name = NULL;
+			axis2_desc_t* desc = NULL;
+			axis2_policy_include_t* policy_include = NULL;
+			axutil_qname_t* module_qname = NULL;
+			axis2_module_desc_t* module_desc = NULL;
+
+			/* Get parameters*/
+			service_name = adb_disableSecurityOnService_get_serviceName(
+				_disableSecurityOnService, env);
+			
+			/* Get service instance*/
+			conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+			conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+			svc = axis2_conf_get_svc(conf, env, service_name);
+			if (!svc) return AXIS2_FAILURE;
+
+			desc = axis2_svc_get_base(svc, env);
+			if (!desc) return AXIS2_FAILURE;
+
+			policy_include = axis2_desc_get_policy_include(desc, env);
+			if (!policy_include) return AXIS2_FAILURE;
+
+			/* Detach policy*/
+			neethi_policy = axis2_policy_include_get_policy(policy_include, env);
+			policy_name = neethi_policy_get_name(neethi_policy, env);
+			if (!policy_name)
+				policy_name = neethi_policy_get_id(neethi_policy, env);
+			axis2_policy_include_remove_policy_element(policy_include, env,
+				policy_name);
+
+			/* Disenagage modules*/
+			module_qname = axutil_qname_create(env, "rampart", NULL, NULL);
+			module_desc = axis2_conf_get_module(conf, env, module_qname);
+			axutil_qname_free(module_qname, env);
+
+			axis2_svc_disengage_module(svc, env, module_desc, conf);
+
+			return AXIS2_SUCCESS;
         }
      
 
