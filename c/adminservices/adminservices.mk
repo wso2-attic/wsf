@@ -281,6 +281,7 @@ $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)\$(KEYSTORE_ADMIN_SERVICE).dll: $(
 	if not exist $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)\keystores mkdir $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)\keystores
 	copy $(KEYSTORE_ADMIN_SVC_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)
 	copy $(KEYSTORE_ADMIN_SVC_SRC)\resources\wso2wsfc.p12 $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)\keystores\
+	copy $(KEYSTORE_ADMIN_SVC_SRC)\resources\wso2wsfc.dat $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)\keystores\
 
 keystore_admin_service: $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)\$(KEYSTORE_ADMIN_SERVICE).dll
 #==================================================================================
