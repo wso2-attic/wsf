@@ -223,6 +223,8 @@
 
 			/* Detach policy*/
 			neethi_policy = axis2_policy_include_get_policy(policy_include, env);
+			if (!neethi_policy) return AXIS2_FAILURE;
+
 			policy_name = neethi_policy_get_name(neethi_policy, env);
 			if (!policy_name)
 				policy_name = neethi_policy_get_id(neethi_policy, env);
