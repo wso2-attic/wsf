@@ -397,10 +397,45 @@ adb_engageModuleForServiceGroupResponse_t*
     axis2_skel_ModuleAdminService_engageModuleForServiceGroup_fault *fault )
 {
 	adb_engageModuleForServiceGroupResponse_t *response = NULL;
+	axis2_char_t *svc_grp_name = NULL;
+	axis2_char_t *module_id = NULL;
+	axis2_svc_grp_t *svc_grp = NULL;
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf = NULL;
+	axutil_qname_t *qname = NULL;
+	axis2_status_t status = AXIS2_FAILURE;
+		
 
+	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+	module_id = adb_engageModuleForServiceGroup_get_moduleID(_engageModuleForServiceGroup, env);
+	svc_grp_name = adb_engageModuleForServiceGroup_get_serviceGroupName(_engageModuleForServiceGroup, env);
+	svc_grp = service_admin_util_get_service_group(env, msg_ctx, svc_grp_name);
+	if(!svc_grp)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Service group with name %s not available", svc_grp_name);
+		return NULL;
+	}
+	qname = axutil_qname_create(env, module_id, NULL, NULL);
 	response = adb_engageModuleForServiceGroupResponse_create(env);
-	adb_engageModuleForServiceGroupResponse_set_return(response, env, AXIS2_TRUE);
-
+	
+	status = axis2_svc_grp_engage_module(svc_grp, env, qname);
+	if(status == AXIS2_SUCCESS)
+	{
+		if(axutil_strcmp(module_id,"rahas") == 0)
+		{
+				axutil_qname_t *rampartqname = axutil_qname_create(env, "rampart", NULL, NULL);
+				if(axis2_svc_grp_engage_module(svc_grp, env, rampartqname) != AXIS2_SUCCESS);
+					axutil_qname_free(rampartqname, env);
+		}
+			adb_engageModuleForServiceGroupResponse_set_return(response, env, AXIS2_TRUE);
+	}else{
+		adb_engageModuleForServiceGroupResponse_set_return(response, env, AXIS2_FALSE);
+		axutil_qname_free(qname, env);
+	}
+		
+	
+	
     return response;
 }
      
@@ -601,12 +636,45 @@ adb_disengageModuleForServiceGroupResponse_t*
         adb_disengageModuleForServiceGroup_t* _disengageModuleForServiceGroup,
         axis2_skel_ModuleAdminService_disengageModuleForServiceGroup_fault *fault )
 {
-	axis2_char_t *svc_grp_name = NULL;
+	axis2_char_t *svc_grp_name = NULL, *module_id = NULL;
 	axis2_svc_grp_t *svc_grp = NULL;
+	axis2_conf_t *conf = NULL;
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_module_desc_t *module_desc = NULL;
+	axutil_qname_t *module_qname = NULL;
+	axis2_status_t status = AXIS2_FAILURE;
+	adb_disengageModuleForServiceGroupResponse_t* response  = NULL;
 
 	svc_grp_name = adb_disengageModuleForServiceGroup_get_serviceGroupName(_disengageModuleForServiceGroup, env);
+	module_id = adb_disengageModuleForServiceGroup_get_moduleId(_disengageModuleForServiceGroup, env);
+
 	svc_grp = service_admin_util_get_service_group(env, msg_ctx, svc_grp_name);
-	return (adb_disengageModuleForServiceGroupResponse_t*)NULL;
+	if(!svc_grp)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "%s service group not found");
+		return NULL;
+	}
+	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+	
+	module_qname = axutil_qname_create(env, module_id, NULL, NULL);
+
+	module_desc = axis2_conf_get_module(conf, env, module_qname);
+	if(!module_desc)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "%s module does not exist", module_id);
+		return NULL;
+	}
+	
+	status = axis2_svc_grp_disengage_module(svc_grp, env, module_desc, conf);
+	response = adb_disengageModuleForServiceGroupResponse_create(env);
+
+	if(status == AXIS2_SUCCESS)
+		adb_disengageModuleForServiceGroupResponse_set_return(response, env, AXIS2_TRUE);
+	else
+		adb_disengageModuleForServiceGroupResponse_set_return(response, env, AXIS2_FALSE);
+	
+	return response;
 }
      
 
@@ -619,13 +687,16 @@ adb_disengageModuleForServiceGroupResponse_t*
          *
          * @return adb_globallyDisengageModuleResponse_t*
          */
-        adb_globallyDisengageModuleResponse_t* axis2_skel_ModuleAdminService_globallyDisengageModule(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_globallyDisengageModule_t* _globallyDisengageModule,
-                                          axis2_skel_ModuleAdminService_globallyDisengageModule_fault *fault )
-        {
+adb_globallyDisengageModuleResponse_t* 
+axis2_skel_ModuleAdminService_globallyDisengageModule(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+	adb_globallyDisengageModule_t* _globallyDisengageModule,
+    axis2_skel_ModuleAdminService_globallyDisengageModule_fault *fault )
+{
           /* TODO fill this with the necessary business logic */
           return (adb_globallyDisengageModuleResponse_t*)NULL;
-        }
+}
      
 
 		 
@@ -716,10 +787,7 @@ adb_listModulesForServiceGroupResponse_t*
 
 	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
 	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-	//svc = axis2_conf_get_svc(conf, env, service_name);
-
-	//	if(svc)
-	//		svc_grp = axis2_svc_get_parent(svc, env);
+	
 	response = adb_listModulesForServiceGroupResponse_create(env);
 	all_modules = axis2_conf_get_all_modules(conf, env);
 	if(!all_modules)
@@ -781,14 +849,48 @@ axis2_skel_ModuleAdminService_disengageModuleForOperation(
 	axis2_op_t *op =NULL;
 	axis2_char_t *op_name = NULL, *svc_name = NULL, *module_id = NULL;
 	adb_disengageModuleForOperationResponse_t *response = NULL;
+	axis2_module_desc_t *module_desc = NULL;
+	axutil_qname_t *mod_qname = NULL;
+	axis2_conf_t *conf = NULL;
+	axis2_conf_ctx_t *conf_ctx =  NULL;
 
 	op_name = adb_disengageModuleForOperation_get_operationName(_disengageModuleForOperation, env);
 	svc_name = adb_disengageModuleForOperation_get_serviceName(_disengageModuleForOperation, env);
 	module_id = adb_disengageModuleForOperation_get_moduleId(_disengageModuleForOperation,env);
-
-
 	response = adb_disengageModuleForOperationResponse_create(env);
-	adb_disengageModuleForOperationResponse_set_return(response, env, AXIS2_TRUE);
+	svc = service_admin_util_get_service(env, msg_ctx, svc_name);
+	if(!svc)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Service with name %s not found", svc_name);
+		return NULL;
+	}
+
+	op = axis2_svc_get_op_with_name(svc, env, op_name);
+	if(!op)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Operation with name %s not found", op_name);
+		return NULL;
+	}
+	
+	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+
+	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+
+	mod_qname = axutil_qname_create(env, module_id, NULL, NULL);
+	
+	if(axis2_op_is_module_engaged(op, env, mod_qname))
+	{
+		module_desc = axis2_conf_get_module(conf, env, mod_qname);
+		if(!module_desc)
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "module description not found");
+			return NULL;
+		}
+		axis2_op_disengage_module(op, env, module_desc, conf);
+		adb_disengageModuleForOperationResponse_set_return(response, env, AXIS2_TRUE);
+	}
+	adb_disengageModuleForOperationResponse_set_return(response, env, AXIS2_FALSE);
+
 	return response;
 }
 
