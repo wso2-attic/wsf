@@ -174,12 +174,26 @@ adb_disengageModuleForServiceResponse_t*
          *
          * @return adb_removeModuleResponse_t*
          */
-        adb_removeModuleResponse_t* axis2_skel_ModuleAdminService_removeModule(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_removeModule_t* _removeModule,
-                                          axis2_skel_ModuleAdminService_removeModule_fault *fault )
+        adb_removeModuleResponse_t* 
+			axis2_skel_ModuleAdminService_removeModule(
+			const axutil_env_t *env , 
+			axis2_msg_ctx_t *msg_ctx,
+            adb_removeModule_t* _removeModule,
+            axis2_skel_ModuleAdminService_removeModule_fault *fault )
         {
-          /* TODO fill this with the necessary business logic */
-          return (adb_removeModuleResponse_t*)NULL;
+			adb_removeModuleResponse_t *response = NULL;
+			/*
+			axiom_node_t *node = NULL;
+			axiom_text_t *text  = NULL;
+			adb_ModuleMgtExceptionE0_t *exp =adb_ModuleMgtExceptionE0_create(env);
+			text = axiom_text_create(env, NULL, "Module Deletion is not supported", &node);
+			adb_ModuleMgtExceptionE0_set_ModuleMgtException(exp, env, node);
+			fault->ModuleMgtException = exp;
+			env->error->status_code = AXIS2_FAILURE;
+			*/
+			response = adb_removeModuleResponse_create(env);
+			adb_removeModuleResponse_set_return(response, env, "Module Deletion Not supported"); 
+			return response;
         }
      
 
@@ -355,11 +369,12 @@ axis2_skel_ModuleAdminService_engageModuleForOperation(
          *
          * @return adb_listGloballyEngagedModulesResponse_t*
          */
-        adb_listGloballyEngagedModulesResponse_t* axis2_skel_ModuleAdminService_listGloballyEngagedModules(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx )
-        {
-          /* TODO fill this with the necessary business logic */
-          return (adb_listGloballyEngagedModulesResponse_t*)NULL;
-        }
+adb_listGloballyEngagedModulesResponse_t* 
+	axis2_skel_ModuleAdminService_listGloballyEngagedModules(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx )
+{
+  /* TODO fill this with the necessary business logic */
+  return (adb_listGloballyEngagedModulesResponse_t*)NULL;
+}
      
 
 		 
@@ -371,13 +386,33 @@ axis2_skel_ModuleAdminService_engageModuleForOperation(
          *
          * @return adb_globallyEngageModuleResponse_t*
          */
-        adb_globallyEngageModuleResponse_t* axis2_skel_ModuleAdminService_globallyEngageModule(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_globallyEngageModule_t* _globallyEngageModule,
-                                          axis2_skel_ModuleAdminService_globallyEngageModule_fault *fault )
-        {
-          /* TODO fill this with the necessary business logic */
-          return (adb_globallyEngageModuleResponse_t*)NULL;
-        }
+adb_globallyEngageModuleResponse_t* 
+	axis2_skel_ModuleAdminService_globallyEngageModule(
+		const axutil_env_t *env , 
+		axis2_msg_ctx_t *msg_ctx,
+		adb_globallyEngageModule_t* _globallyEngageModule,
+        axis2_skel_ModuleAdminService_globallyEngageModule_fault *fault )
+{
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf = NULL;
+	adb_globallyEngageModuleResponse_t *response = NULL;
+	axis2_char_t *module_id = NULL;
+		
+	module_id = adb_globallyEngageModule_get_moduleId(_globallyEngageModule, env);
+	response = adb_globallyEngageModuleResponse_create(env);
+	if(module_id)
+	{
+		axis2_status_t status = AXIS2_FAILURE;
+		axutil_qname_t *module_qname = axutil_qname_create(env, module_id, NULL, NULL);
+		conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+		conf     = axis2_conf_ctx_get_conf(conf_ctx, env);
+		status = axis2_conf_engage_module(conf, env, module_qname);
+		adb_globallyEngageModuleResponse_set_return(response, env, (status == AXIS2_SUCCESS )? AXIS2_TRUE : AXIS2_FALSE);
+	}
+	adb_globallyEngageModuleResponse_set_return(response, env, AXIS2_FALSE);
+			
+	return response;
+}
      
 
 		 
@@ -694,8 +729,16 @@ axis2_skel_ModuleAdminService_globallyDisengageModule(
 	adb_globallyDisengageModule_t* _globallyDisengageModule,
     axis2_skel_ModuleAdminService_globallyDisengageModule_fault *fault )
 {
-          /* TODO fill this with the necessary business logic */
-          return (adb_globallyDisengageModuleResponse_t*)NULL;
+	axis2_char_t *module_id = NULL;
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf = NULL;
+	adb_globallyDisengageModuleResponse_t *response = NULL;
+	module_id = adb_globallyDisengageModule_get_moduleId(_globallyDisengageModule, env);
+	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+	response = adb_globallyDisengageModuleResponse_create(env);
+	adb_globallyDisengageModuleResponse_set_return(response, env, AXIS2_TRUE);
+	return response;
 }
      
 
