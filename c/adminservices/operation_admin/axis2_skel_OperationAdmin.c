@@ -43,15 +43,15 @@ axis2_skel_OperationAdmin_listOperationPhaseHandlers(
          *
          * @return 
          */
-        axis2_status_t  
-			axis2_skel_OperationAdmin_setPolicy(
-			const axutil_env_t *env , 
-			axis2_msg_ctx_t *msg_ctx,
-            adb_setPolicy_t* _setPolicy )
-        {
-          /* TODO fill this with the necessary business logic */
-          return AXIS2_SUCCESS;
-        }
+axis2_status_t  
+	axis2_skel_OperationAdmin_setPolicy(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+    adb_setPolicy_t* _setPolicy )
+{
+  /* TODO fill this with the necessary business logic */
+  return AXIS2_SUCCESS;
+}
      
 
 		 
@@ -63,16 +63,16 @@ axis2_skel_OperationAdmin_listOperationPhaseHandlers(
          *
          * @return adb_listOperationPhasesResponse_t*
          */
-        adb_listOperationPhasesResponse_t* 
-			axis2_skel_OperationAdmin_listOperationPhases(
-			const axutil_env_t *env , 
-			axis2_msg_ctx_t *msg_ctx,
-            adb_listOperationPhases_t* _listOperationPhases )
-        {
-          /* TODO fill this with the necessary business logic */
-          return (adb_listOperationPhasesResponse_t*)NULL;
-        }
-     
+adb_listOperationPhasesResponse_t* 
+	axis2_skel_OperationAdmin_listOperationPhases(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+    adb_listOperationPhases_t* _listOperationPhases )
+{
+  /* TODO fill this with the necessary business logic */
+  return (adb_listOperationPhasesResponse_t*)NULL;
+}
+
 
 		 
         /**
@@ -83,15 +83,15 @@ axis2_skel_OperationAdmin_listOperationPhaseHandlers(
          *
          * @return adb_listControlOperationsResponse_t*
          */
-        adb_listControlOperationsResponse_t* 
-			axis2_skel_OperationAdmin_listControlOperations(
-			const axutil_env_t *env , 
-			axis2_msg_ctx_t *msg_ctx,
-			adb_listControlOperations_t* _listControlOperations )
-        {
-          /* TODO fill this with the necessary business logic */
-          return (adb_listControlOperationsResponse_t*)NULL;
-        }
+adb_listControlOperationsResponse_t* 
+	axis2_skel_OperationAdmin_listControlOperations(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+	adb_listControlOperations_t* _listControlOperations )
+{
+  /* TODO fill this with the necessary business logic */
+  return (adb_listControlOperationsResponse_t*)NULL;
+}
      
 
 		 
@@ -223,12 +223,39 @@ adb_getDeclaredOperationParametersResponse_t*
          *
          * @return 
          */
-        axis2_status_t  axis2_skel_OperationAdmin_configureMTOM(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_configureMTOM_t* _configureMTOM )
-        {
-          /* TODO fill this with the necessary business logic */
-          return AXIS2_SUCCESS;
-        }
+axis2_status_t  
+axis2_skel_OperationAdmin_configureMTOM(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+	adb_configureMTOM_t* _configureMTOM )
+{
+	axis2_char_t *operation_name = NULL, *service_name = NULL, *flag = NULL;
+	axis2_svc_t *svc = NULL;
+	axis2_op_t *op = NULL;
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf = NULL;
+
+	operation_name = adb_configureMTOM_get_operationName(_configureMTOM, env);
+	service_name = adb_configureMTOM_get_serviceName(_configureMTOM, env);
+	flag = adb_configureMTOM_get_flag(_configureMTOM, env);
+	svc = service_admin_util_get_service(env, msg_ctx, service_name);
+	if(!svc)
+	{
+		return AXIS2_FAILURE;
+	}
+	op = axis2_svc_get_op_with_name(svc, env, operation_name);
+	if(!op)
+	{
+		return AXIS2_FAILURE;
+	}
+	if(flag)
+	{
+		axutil_param_t *param = axutil_param_create(env, AXIS2_ENABLE_MTOM, flag);
+		axis2_op_add_param(op, env, param);
+		return AXIS2_SUCCESS;
+	}
+	return AXIS2_FAILURE;
+}
      
 
 		 
