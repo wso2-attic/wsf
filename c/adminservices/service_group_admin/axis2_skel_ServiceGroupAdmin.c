@@ -85,12 +85,7 @@ axis2_skel_ServiceGroupAdmin_listServiceGroup(const axutil_env_t *env ,
 			}
 			if(svc && service_admin_util_is_filtered_out_service(env, svc) == AXIS2_TRUE)
 				continue;
-			/*
-            if(!axutil_hash_get(service_types, service_type, AXIS2_HASH_KEY_STRING))
-            {
-                axutil_hash_set(service_types, service_type, AXIS2_HASH_KEY_STRING, service_type);
-            }
-			*/
+			
             adb_svc = adb_ServiceMetaData_create(env);
             adb_ServiceMetaData_set_active(adb_svc, env, AXIS2_TRUE); /* TODO get this from somewhere */
             adb_ServiceMetaData_set_disableTryit(adb_svc, env, AXIS2_TRUE);
@@ -259,125 +254,110 @@ axis2_skel_ServiceGroupAdmin_configureServiceGroupMTOM(
 	axis2_skel_ServiceGroupAdmin_configureServiceGroupMTOM_fault *fault )
 {
 	axis2_char_t *svc_grp_name = NULL;
-	axis2_char_t *mtom_flag = NULL;
-	axis2_svc_grp_t *svc_grp = NULL;
-	axutil_param_t *mtom_param = NULL;
-	adb_configureServiceGroupMTOMResponse_t *mtom_response = NULL;
-	adb_ServiceGroupMetaData_t *mata_data = NULL;
-
+	adb_configureServiceGroupMTOMResponse_t *response = NULL;
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf = NULL;
+	axis2_svc_grp_t* svc_grp = NULL;
+	axutil_hash_t *svc_map = NULL;
+	axutil_array_list_t *adb_svc_list = NULL; /* contains a list of adb_ServiceMetaData_t */
+	adb_ServiceGroupMetaData_t *svc_grp_metadata = NULL;
+	axutil_hash_index_t *hi_svc = NULL;
+	axis2_char_t *flag = NULL;
+	
 	svc_grp_name = adb_configureServiceGroupMTOM_get_serviceGroupName(_configureServiceGroupMTOM, env);
- 	mtom_flag = adb_configureServiceGroupMTOM_get_flag(_configureServiceGroupMTOM, env);
 	if(!svc_grp_name)
 	{
-		/** TODO add exception */
-		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "service group null");
-		return NULL;
+		 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Service Group name not given.");
+        AXIS2_ERROR_SET(env->error,
+			AXIS2_ERROR_SVC_SKEL_INVALID_OPERATION_PARAMETERS_IN_SOAP_REQUEST, AXIS2_FAILURE);
+        return NULL;
 	}
-	svc_grp = service_admin_util_get_service_group(env, msg_ctx, svc_grp_name);
+	flag = adb_configureServiceGroupMTOM_get_flag(_configureServiceGroupMTOM, env);
+	
+	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+	svc_grp = axis2_conf_get_svc_grp(conf, env, svc_grp_name);
+	
 	if(!svc_grp)
 	{
-		/** TODO add exception */
-		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "service group null");
-		return NULL;
-	}
-	if(!mtom_flag)
-	{
-		/** TODO add exception */
-		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "service mtom flag null");
-		return NULL;
-	}	
-
-	mtom_param = axis2_svc_grp_get_param(svc_grp, env, AXIS2_ENABLE_MTOM);
-	if(!mtom_param)
-	{
-		mtom_param  = axutil_param_create(env, AXIS2_ENABLE_MTOM, mtom_flag);
-		axis2_svc_grp_add_param(svc_grp, env, mtom_param);
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Service Group not found for %s.", svc_grp_name);
+		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INVALID_OPERATION_PARAMETERS_IN_SOAP_REQUEST, AXIS2_FAILURE);
+        return NULL;
 	}
 
-	mtom_response = adb_configureServiceGroupMTOMResponse_create(env);
+	response = adb_configureServiceGroupMTOMResponse_create(env);
 
-	/** Congigure MTOM */
-	{
+	svc_map = axis2_svc_grp_get_all_svcs(svc_grp, env);
+	adb_svc_list = axutil_array_list_create(env, 0);
+    for(hi_svc = axutil_hash_first(svc_map, env); hi_svc; hi_svc = axutil_hash_next(env, hi_svc))
+    {
+            axis2_svc_t *svc = NULL;
+            axis2_char_t *svc_name = NULL;
+            adb_ServiceMetaData_t *adb_svc = NULL;
+            axis2_char_t *service_type = NULL;
+			axutil_param_t *param = NULL;	
 
-		axutil_hash_t *svc_map = NULL;
-		axutil_array_list_t *adb_svc_list = NULL; /* contains a list of adb_ServiceMetaData_t */
-		adb_ServiceGroupMetaData_t *svc_grp_metadata = NULL;
-		axutil_hash_index_t *hi_svc = NULL;
-		axis2_conf_ctx_t *conf_ctx = NULL;
-		axis2_conf_t *conf = NULL;
-		conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
-		conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-		svc_map = axis2_svc_grp_get_all_svcs(svc_grp, env);
-		adb_svc_list = axutil_array_list_create(env, 0);
-		for(hi_svc = axutil_hash_first(svc_map, env); hi_svc; hi_svc = axutil_hash_next(env, hi_svc))
-		{
-				axis2_svc_t *svc = NULL;
-				axis2_char_t *svc_name = NULL;
-				adb_ServiceMetaData_t *adb_svc = NULL;
-				axis2_char_t *service_type = NULL;
-
-				axutil_hash_this(hi_svc, &svc_name, NULL, &svc);
-				/* Get the service type and filter using the given service type */
-				{
-					axutil_param_t* param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_TYPE);
-					if(!param)
-					{
-						service_type = AXIS2_DEFAULT_SERVICE_TYPE;
-					}else{
-						service_type = (axis2_char_t*)axutil_param_get_value(param, env);
-					}
-					
-				}
-				/*
-				if(!axutil_hash_get(service_types, service_type, AXIS2_HASH_KEY_STRING))
-				{
-					axutil_hash_set(service_types, service_type, AXIS2_HASH_KEY_STRING, service_type);
-				}
-				*/
-				adb_svc = adb_ServiceMetaData_create(env);
-				adb_ServiceMetaData_set_active(adb_svc, env, AXIS2_TRUE); /* TODO get this from somewhere */
-				adb_ServiceMetaData_set_disableTryit(adb_svc, env, AXIS2_TRUE);
-				/*adb_ServiceMetaData_set_tryitURL(adb_svc, env, "http://localhost:9090/test/tryit");*/
-				adb_ServiceMetaData_set_name(adb_svc, env, svc_name);
-				adb_ServiceMetaData_set_serviceType(adb_svc, env, service_type);
-
-				/* TODO fix the wsdl endpoints */
-				
-				adb_ServiceMetaData_add_wsdlURLs(adb_svc, env,service_admin_util_get_wsdl_for_service(env, svc_name, conf));
-				adb_ServiceMetaData_add_wsdlURLs(adb_svc, env, " ");
-
-				axutil_array_list_add(adb_svc_list, env, adb_svc);
-		}
-
-		/* check whether there are atleast one service for this group. There might be empty groups
-		 * due to the filters
-		 */
-		if(axutil_array_list_size(adb_svc_list, env))
-		{
-			svc_grp_metadata = adb_ServiceGroupMetaData_create(env);
-			adb_ServiceGroupMetaData_set_serviceGroupName(svc_grp_metadata, env, svc_grp_name);
-			adb_ServiceGroupMetaData_set_services(svc_grp_metadata, env, adb_svc_list);
-			adb_ServiceGroupMetaData_set_engagedModules_nil(svc_grp_metadata, env);
-			adb_ServiceGroupMetaData_set_serviceContextPath(svc_grp_metadata, env ,"");
-			adb_ServiceGroupMetaData_set_mtomStatus(svc_grp_metadata, env, "optional");
-	        
-		}
-		else
-		{
-			axutil_array_list_free(adb_svc_list, env);
-		}
-		{	
-			axutil_param_t *param = axis2_svc_grp_get_param(svc_grp, env, AXIS2_ENABLE_MTOM);
-			if(param)
+            axutil_hash_this(hi_svc, &svc_name, NULL, &svc);
+            /* Get the service type and filter using the given service type */
 			{
-				adb_ServiceGroupMetaData_set_mtomStatus(svc_grp_metadata, env, axutil_param_get_value(param, env));
+				axutil_param_t* param = axis2_svc_get_param(svc, env, AXIS2_SERVICE_TYPE);
+				if(!param)
+				{
+					service_type = AXIS2_DEFAULT_SERVICE_TYPE;
+				}else{
+					service_type = (axis2_char_t*)axutil_param_get_value(param, env);
+				}
+				
 			}
+			if(flag)
+			{
+				param = axutil_param_create(env, AXIS2_ENABLE_MTOM, flag);
+				axis2_svc_add_param(svc, env, param);
+			}
+			
+			if(svc && service_admin_util_is_filtered_out_service(env, svc) == AXIS2_TRUE)
+				continue;
+			
+            adb_svc = adb_ServiceMetaData_create(env);
+            adb_ServiceMetaData_set_active(adb_svc, env, AXIS2_TRUE); /* TODO get this from somewhere */
+            adb_ServiceMetaData_set_disableTryit(adb_svc, env, AXIS2_TRUE);
+            /*adb_ServiceMetaData_set_tryitURL(adb_svc, env, "http://localhost:9090/test/tryit");*/
+            adb_ServiceMetaData_set_name(adb_svc, env, svc_name);
+            adb_ServiceMetaData_set_serviceType(adb_svc, env, service_type);
+
+			
+			adb_ServiceMetaData_add_wsdlURLs(adb_svc, env,service_admin_util_get_wsdl_for_service(env, svc_name, conf));
+            adb_ServiceMetaData_add_wsdlURLs(adb_svc, env, " ");
+
+            axutil_array_list_add(adb_svc_list, env, adb_svc);
+    }
+
+    /* check whether there are atleast one service for this group. There might be empty groups
+     * due to the filters
+     */
+    if(axutil_array_list_size(adb_svc_list, env))
+    {
+        svc_grp_metadata = adb_ServiceGroupMetaData_create(env);
+        adb_ServiceGroupMetaData_set_serviceGroupName(svc_grp_metadata, env, svc_grp_name);
+        adb_ServiceGroupMetaData_set_services(svc_grp_metadata, env, adb_svc_list);
+		adb_ServiceGroupMetaData_set_engagedModules_nil(svc_grp_metadata, env);
+		adb_ServiceGroupMetaData_set_serviceContextPath(svc_grp_metadata, env ,"");
+		adb_ServiceGroupMetaData_set_mtomStatus(svc_grp_metadata, env, (flag!= NULL) ? flag : "optional");
+        
+    }
+    else
+    {
+        axutil_array_list_free(adb_svc_list, env);
+    }
+	{	
+		axutil_param_t *param = axis2_svc_grp_get_param(svc_grp, env, AXIS2_ENABLE_MTOM);
+		if(param && svc_grp_metadata)
+		{
+			adb_ServiceGroupMetaData_set_mtomStatus(svc_grp_metadata, env, axutil_param_get_value(param, env));
 		}
-	
 	}
-	
-	adb_configureServiceGroupMTOMResponse_set_return(mtom_response, env, NULL);
-	return (adb_configureServiceGroupMTOMResponse_t*)NULL;
+	adb_configureServiceGroupMTOMResponse_set_return(response, env, svc_grp_metadata);
+	return response;
 }
 
 
