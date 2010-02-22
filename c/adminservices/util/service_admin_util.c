@@ -134,6 +134,7 @@ service_admin_util_serialize_param(axutil_env_t *env,
 	param_value = axutil_param_get_value(param, env);
 	if(name && axutil_strcmp(name, "ServiceClass") ==0)
 	{
+		return NULL;
 	}else
 	{
 		value = (axis2_char_t*)param_value;
