@@ -156,13 +156,95 @@ adb_disengageModuleForServiceResponse_t*
          *
          * @return 
          */
-        axis2_status_t  axis2_skel_ModuleAdminService_setModuleParameters(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_setModuleParameters_t* _setModuleParameters,
-                                          axis2_skel_ModuleAdminService_setModuleParameters_fault *fault )
-        {
-          /* TODO fill this with the necessary business logic */
-          return AXIS2_SUCCESS;
-        }
+axis2_status_t  
+axis2_skel_ModuleAdminService_setModuleParameters(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+    adb_setModuleParameters_t* _setModuleParameters,
+    axis2_skel_ModuleAdminService_setModuleParameters_fault *fault )
+{
+	axis2_char_t *module_name = NULL;
+	axutil_array_list_t *param_list = NULL;
+	axis2_char_t *param_str = NULL;
+	axis2_module_desc_t  *module_desc = NULL;
+	axutil_param_t *param = NULL;
+	int size = 0, i;
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf = NULL;
+	axutil_qname_t *mod_qname = NULL;
+	
+
+	module_name = adb_setModuleParameters_get_moduleName(_setModuleParameters, env);
+	param_list	 = adb_setModuleParameters_get_parameters(_setModuleParameters, env);
+	if(!module_name)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Module name not specified");
+		return AXIS2_FAILURE;
+	}
+
+	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+
+	mod_qname = axutil_qname_create(env, module_name, NULL, NULL);
+
+	module_desc = axis2_conf_get_module(conf, env, mod_qname);
+	axutil_qname_free(mod_qname, env);	 
+	if(!module_desc)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "module not found");
+		return AXIS2_FAILURE;
+	}
+	if(!param_list)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"Parameter list not found");
+		return AXIS2_FAILURE;
+	}
+	size = axutil_array_list_size(param_list, env);
+	for(i =0; i <size; i++)
+	{
+		axiom_node_t *node = NULL;
+		axiom_element_t *element = NULL;
+		axis2_char_t *name_val = NULL, *locked_val = NULL;
+		param_str = axutil_array_list_get(param_list, env, i);
+	
+		node = axiom_node_create_from_buffer(env, param_str);
+		if(axiom_node_get_node_type(node,env) == AXIOM_ELEMENT)
+		{
+			element = (axiom_element_t*)axiom_node_get_data_element(node, env);
+			if(!element)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Param axiom element null");
+			}
+			name_val = axiom_element_get_attribute_value_by_name(element, env, "name");
+			locked_val = axiom_element_get_attribute_value_by_name(element, env, "locked");
+			param_str = axiom_element_get_text(element, env, node);
+
+			if(name_val)
+			{
+				param = axis2_module_desc_get_param(module_desc, env, name_val);
+				/** Parameter exist */
+				if(param)
+				{
+					if(param_str)
+					{
+						if((locked_val && strcmp(locked_val,"false") == 0) || !locked_val)
+						{
+							axutil_param_set_value(param, env, param_str);
+						}
+					}
+				}else
+				{
+					/** create and add param */
+					param = axutil_param_create(env, name_val, param_str);
+					axutil_param_set_locked(param, env, AXIS2_FALSE);
+					axis2_module_desc_add_param(module_desc, env, param);
+				}
+				return AXIS2_SUCCESS;
+			}
+		}
+	}
+	return AXIS2_FAILURE;
+}
      
 
 		 
@@ -182,17 +264,8 @@ adb_disengageModuleForServiceResponse_t*
             axis2_skel_ModuleAdminService_removeModule_fault *fault )
         {
 			adb_removeModuleResponse_t *response = NULL;
-			/*
-			axiom_node_t *node = NULL;
-			axiom_text_t *text  = NULL;
-			adb_ModuleMgtExceptionE0_t *exp =adb_ModuleMgtExceptionE0_create(env);
-			text = axiom_text_create(env, NULL, "Module Deletion is not supported", &node);
-			adb_ModuleMgtExceptionE0_set_ModuleMgtException(exp, env, node);
-			fault->ModuleMgtException = exp;
-			env->error->status_code = AXIS2_FAILURE;
-			*/
 			response = adb_removeModuleResponse_create(env);
-			adb_removeModuleResponse_set_return(response, env, "Module Deletion Not supported"); 
+			adb_removeModuleResponse_set_return(response ,env,"Module Removal is not supported from management console. You would need to stop the server and delete the folder to remove the module");
 			return response;
         }
      
@@ -206,13 +279,67 @@ adb_disengageModuleForServiceResponse_t*
          *
          * @return adb_removeModuleParameterResponse_t*
          */
-        adb_removeModuleParameterResponse_t* axis2_skel_ModuleAdminService_removeModuleParameter(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_removeModuleParameter_t* _removeModuleParameter,
-                                          axis2_skel_ModuleAdminService_removeModuleParameter_fault *fault )
-        {
-          /* TODO fill this with the necessary business logic */
-          return (adb_removeModuleParameterResponse_t*)NULL;
-        }
+adb_removeModuleParameterResponse_t* 
+axis2_skel_ModuleAdminService_removeModuleParameter(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+    adb_removeModuleParameter_t* _removeModuleParameter,
+    axis2_skel_ModuleAdminService_removeModuleParameter_fault *fault )
+{
+	axis2_char_t *module_name = NULL;
+	axis2_char_t *param_name = NULL;
+	axis2_conf_ctx_t *conf_ctx = NULL;
+	axis2_conf_t *conf = NULL;
+	axis2_module_desc_t *module_desc = NULL;
+	axutil_qname_t *module_qname = NULL;
+	axutil_array_list_t *param_list = NULL;
+	int size = 0, i = 0;
+	axis2_bool_t removel_status  = AXIS2_FALSE;
+	adb_removeModuleParameterResponse_t *response = NULL;
+	param_name = adb_removeModuleParameter_get_parameterName(_removeModuleParameter, env);
+	module_name = adb_removeModuleParameter_get_moduleName(_removeModuleParameter, env);
+	if(!module_name)
+	{
+		/** TODO Return fault */
+		return NULL;
+	}
+	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+	module_qname = axutil_qname_create(env, module_name, NULL, NULL);
+	
+	module_desc = axis2_conf_get_module(conf, env, module_qname);
+	if(!module_desc)
+		return NULL;
+	
+	response = adb_removeModuleParameterResponse_create(env);
+
+	param_list = axis2_module_desc_get_all_params(module_desc, env);
+	if(param_list)
+	{
+		size = axutil_array_list_size(param_list, env);
+		for( i =0; i < size; i++)
+		{
+			axutil_param_t *param = NULL;
+			axis2_char_t *obtained_param_name = NULL;
+
+			param = axutil_array_list_get(param_list, env, i);
+			if(param)
+			{
+				obtained_param_name = axutil_param_get_name(param, env);
+				if(axutil_strcmp(param_name, obtained_param_name) == 0)
+				{
+					axutil_array_list_remove(param_list, env, i);
+					adb_removeModuleParameterResponse_set_return(response, env, "Parameter removed successfully");
+					removel_status = AXIS2_TRUE;
+					break;
+				}
+			}
+		}
+	}
+	if(!removel_status)
+		adb_removeModuleParameterResponse_set_return(response, env, "Parameter removeal failed");
+	return response;
+}
      
 
 		 
@@ -259,23 +386,30 @@ axis2_skel_ModuleAdminService_getModuleParameters(
 	}
 	response  = adb_getModuleParametersResponse_create(env);
 	size = axutil_array_list_size(param_list, env);
+	/** start from 1 as module name param cannot be processed */
 	for(i = 0; i < size; i++)
 	{
 		axis2_char_t *param_str = NULL;
 		axiom_node_t *param_node = NULL;
 		axutil_param_t *param = NULL;
+		axis2_char_t *param_name = NULL;
 
 		param = axutil_array_list_get(param_list, env, i);
+		
 		if(param)
 		{
+			if(axutil_param_get_param_type(param, env) == AXIS2_DLL_PARAM)
+				continue;
 			param_node = service_admin_util_serialize_param(env, param);
 			if(param_node)
 			{
 				param_str = axiom_node_to_string(param_node, env);
 				adb_getModuleParametersResponse_add_return(response, env, param_str);
+				axiom_node_free_tree(param_node, env);
 			}
 		}
 	}
+	
 	return response;
 }
      
@@ -400,7 +534,7 @@ adb_globallyEngageModuleResponse_t*
 		
 	module_id = adb_globallyEngageModule_get_moduleId(_globallyEngageModule, env);
 	response = adb_globallyEngageModuleResponse_create(env);
-	if(module_id)
+	if(module_id && (axutil_strcmp("rampart", module_id) !=0))  
 	{
 		axis2_status_t status = AXIS2_FAILURE;
 		axutil_qname_t *module_qname = axutil_qname_create(env, module_id, NULL, NULL);
@@ -409,8 +543,9 @@ adb_globallyEngageModuleResponse_t*
 		status = axis2_conf_engage_module(conf, env, module_qname);
 		adb_globallyEngageModuleResponse_set_return(response, env, (status == AXIS2_SUCCESS )? AXIS2_TRUE : AXIS2_FALSE);
 	}
-	adb_globallyEngageModuleResponse_set_return(response, env, AXIS2_FALSE);
-			
+	else{
+		adb_globallyEngageModuleResponse_set_return(response, env, AXIS2_FALSE);
+	}	
 	return response;
 }
      
@@ -732,12 +867,33 @@ axis2_skel_ModuleAdminService_globallyDisengageModule(
 	axis2_char_t *module_id = NULL;
 	axis2_conf_ctx_t *conf_ctx = NULL;
 	axis2_conf_t *conf = NULL;
+	axutil_qname_t *qname = NULL;
 	adb_globallyDisengageModuleResponse_t *response = NULL;
+	axis2_status_t status = AXIS2_FAILURE;
+
+	response = adb_globallyDisengageModuleResponse_create(env);
 	module_id = adb_globallyDisengageModule_get_moduleId(_globallyDisengageModule, env);
+	if(!module_id)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Module id is not provided");
+		adb_globallyDisengageModuleResponse_set_return(response, env, AXIS2_FALSE);
+		return response;
+	}
+	
+	qname = axutil_qname_create(env, module_id, NULL, NULL);
+
 	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
 	conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-	response = adb_globallyDisengageModuleResponse_create(env);
-	adb_globallyDisengageModuleResponse_set_return(response, env, AXIS2_TRUE);
+	
+	status = axis2_conf_disengage_module(conf, env, qname);
+	if(status == AXIS2_SUCCESS)
+	{
+		adb_globallyDisengageModuleResponse_set_return(response, env, AXIS2_TRUE);
+	}
+	else
+	{
+		adb_globallyDisengageModuleResponse_set_return(response, env, AXIS2_FALSE);
+	}
 	return response;
 }
      
