@@ -462,6 +462,8 @@ axis2_skel_ServiceAdmin_getServiceParameters(
 				param = axutil_array_list_get(param_list,env, i);
 				if(param)
 				{	
+					if(axutil_param_get_param_type(param, env) == AXIS2_DLL_PARAM)
+						continue;
 					param_node = service_admin_util_serialize_param(env, param);
 					if(param_node)
 					{
