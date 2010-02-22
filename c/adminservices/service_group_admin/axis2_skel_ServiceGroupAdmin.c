@@ -608,6 +608,8 @@ axis2_skel_ServiceGroupAdmin_getServiceGroupParameters(const axutil_env_t *env ,
 		axiom_node_t *param_node = NULL;
 		axutil_param_t *param = NULL;
 		param = axutil_array_list_get(param_list,env, i);
+		if(axutil_param_get_param_type(param, env) == AXIS2_DLL_PARAM)
+						continue;
 		if(param)
 		{	
 			param_node = service_admin_util_serialize_param(env, param);
