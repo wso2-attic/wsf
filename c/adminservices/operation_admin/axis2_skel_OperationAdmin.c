@@ -302,11 +302,14 @@ axis2_skel_OperationAdmin_configureMTOM(
          *
          * @return adb_getOperationParametersResponse_t*
          */
-        adb_getOperationParametersResponse_t* axis2_skel_OperationAdmin_getOperationParameters(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-                                              adb_getOperationParameters_t* _getOperationParameters )
-        {
+ adb_getOperationParametersResponse_t* 
+	 axis2_skel_OperationAdmin_getOperationParameters(
+	 const axutil_env_t *env , 
+	 axis2_msg_ctx_t *msg_ctx,
+     adb_getOperationParameters_t* _getOperationParameters )
+{
           return (adb_getOperationParametersResponse_t*) NULL;
-        }
+}
      
 
 		 
@@ -411,12 +414,13 @@ axis2_skel_OperationAdmin_removeOperationParameter(
          *
          * @return adb_getPolicyResponse_t*
          */
-        adb_getPolicyResponse_t* axis2_skel_OperationAdmin_getPolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
+adb_getPolicyResponse_t* 
+axis2_skel_OperationAdmin_getPolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
                                               adb_getPolicy_t* _getPolicy )
-        {
+{
           /* TODO fill this with the necessary business logic */
           return (adb_getPolicyResponse_t*)NULL;
-        }
+}
      
 
 		 
