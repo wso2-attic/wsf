@@ -20,11 +20,9 @@
 #include <axutil_property.h>
 #include <service_admin_counter.h>
 #include <service_admin_util.h>
-#include <codegen/adb_ServiceStatistics.h>
-#include <codegen/adb_getServiceStatistics.h>
-#include <codegen/adb_getServiceStatisticsResponse.h>
-#include <bam_publisher_statistics.h>
+#include "bam_publisher_statistics.h"
 #include "bam_publisher_util.h"
+#include "axutil_types.h"
 
 axis2_status_t AXIS2_CALL
 bam_publisher_svc_stat_handler_invoke(

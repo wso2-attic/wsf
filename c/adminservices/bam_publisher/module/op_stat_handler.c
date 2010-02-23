@@ -21,11 +21,10 @@
 #include <axutil_property.h>
 #include <service_admin_counter.h>
 #include <service_admin_util.h>
-#include <codegen/adb_OperationStatistics.h>
-#include <codegen/adb_getOperationStatistics.h>
-#include <codegen/adb_getOperationStatisticsResponse.h>
-#include <bam_publisher_statistics.h>
+#include "bam_publisher_statistics.h"
 #include "bam_publisher_util.h"
+#include "axutil_types.h"
+
 axis2_status_t AXIS2_CALL
 bam_publisher_op_stat_handler_invoke(
         struct axis2_handler *handler, 
