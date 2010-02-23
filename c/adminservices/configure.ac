@@ -118,23 +118,23 @@ AC_ARG_ENABLE(openssl, [  --enable-openssl  enable ssl. default=no],
   CFLAGS="$CFLAGS"
 )
 
-AC_MSG_CHECKING(path to use Axis2C . This is a compulsory to build Admin Services)
-AC_ARG_WITH(axis2,
-[  --with-axis2[=PATH]      use axis2c.],
+AC_MSG_CHECKING(path to use WSFC . This is a compulsory to build Admin Services)
+AC_ARG_WITH(wsfc,
+[  --with-wsfc[=PATH]      use wsfc.],
 [ case "$withval" in
   no)
     AC_MSG_RESULT(no)
     ;;
   *)
     AC_MSG_RESULT($withval)
-    dnl Find axis2 include dir in the path
+    dnl Find wsfc include dir in the path
     if test -d $withval; then
-        axis2inc="-I$withval"
-    dnl else find the axis2inc include dir in $(AXIS2C_HOME)/include
-    elif test -d '$(AXIS2C_HOME)/include'; then
-        axis2inc="-I$(AXIS2C_HOME)/include/axis2-1.6.0"
+        wsfcinc="-I$withval"
+    dnl else find the wsfcinc include dir in $(AXIS2C_HOME)/include
+    elif test -d '$(WSFC_HOME)/include'; then
+        wsfcinc="-I$(WSFC_HOME)/include/wsfc-2.0.0"
     else
-        AC_MSG_ERROR(could not find axis2inc. stop)
+        AC_MSG_ERROR(could not find wsfcinc. stop)
     fi
     ;;
   esac ],
@@ -143,12 +143,13 @@ AC_ARG_WITH(axis2,
 
 AC_DEFINE_UNQUOTED(WSFC_PREFIX, "$prefix",[WSF/C Install Path])
 
-AXIS2INC=$axis2inc
-AXIOMINC=$axis2inc/../axiom/include
-UTILINC=$axis2inc/../util/include
-NEETHIINC=$axis2inc/../neethi/include
-SAVANINC=$axis2inc/../../savanc/include
-RAMPARTINC=$axis2inc/../../rampartc/include
+WSFCINC=$wsfcinc
+AXIS2INC=$wsfcinc
+AXIOMINC=$wsfcinc
+UTILINC=$wsfcinc
+NEETHIINC=$wsfcinc
+SAVANINC=$wsfcinc
+RAMPARTINC=$wsfcinc
 
 AC_SUBST(SAVANINC)
 AC_SUBST(RAMPARTINC)
