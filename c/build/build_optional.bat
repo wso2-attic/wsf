@@ -58,6 +58,7 @@ xcopy /E /Q /I /Y savanc\modules\savan .\..\..\axis2c\build\axis2c-bin-%AXIS2C_V
 xcopy /E /Q /I /Y savanc\services .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\services
 xcopy /E /Q /I /Y savanc\samples .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\samples
 copy /Y savanc\lib\* .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\lib\
+copy /Y savanc\include\*.h .\..\..\axis2c\build\axis2c-bin-%AXIS2C_VERSION%-win32\include\ 
 cd ..\..\
 goto build_udp_transport
 
