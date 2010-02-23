@@ -1009,9 +1009,7 @@ axis2_skel_ServiceAdmin_deleteServiceGroups(const axutil_env_t *env ,
 											axis2_msg_ctx_t *msg_ctx,
 											adb_deleteServiceGroups_t* _deleteServiceGroups )
 {
-	
-
-	return AXIS2_SUCCESS;
+	return AXIS2_FAILURE;
 }
 
 
@@ -1023,8 +1021,11 @@ axis2_skel_ServiceAdmin_deleteServiceGroups(const axutil_env_t *env ,
 *
 * @return adb_getNumberOfInactiveServicesResponse_t*
 */
-adb_getNumberOfInactiveServicesResponse_t* axis2_skel_ServiceAdmin_getNumberOfInactiveServices(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-																							   axis2_skel_ServiceAdmin_getNumberOfInactiveServices_fault *fault )
+adb_getNumberOfInactiveServicesResponse_t* 
+axis2_skel_ServiceAdmin_getNumberOfInactiveServices(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+	axis2_skel_ServiceAdmin_getNumberOfInactiveServices_fault *fault )
 {
 	/* TODO fill this with the necessary business logic */
 	return (adb_getNumberOfInactiveServicesResponse_t*)NULL;
@@ -1040,20 +1041,72 @@ adb_getNumberOfInactiveServicesResponse_t* axis2_skel_ServiceAdmin_getNumberOfIn
 *
 * @return 
 */
-axis2_status_t  axis2_skel_ServiceAdmin_setServiceOperationPolicy(
+axis2_status_t  
+axis2_skel_ServiceAdmin_setServiceOperationPolicy(
 	const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
 	adb_setServiceOperationPolicy_t* _setServiceOperationPolicy,
 	axis2_skel_ServiceAdmin_setServiceOperationPolicy_fault *fault )
 {
-	axis2_char_t *service_name = NULL;
+	axis2_char_t *service_name = NULL,*operation_policy = NULL, *op_name = NULL;
+	axis2_op_t *op = NULL;
 	axis2_svc_t *svc = NULL;
+	axis2_char_t *policy_str = NULL;
+	axis2_policy_include_t *policy_include = NULL;
+	axiom_node_t *policy_node = NULL;
+	axis2_desc_t *desc = NULL;
 
-	
 	service_name = adb_setServiceOperationPolicy_get_serviceName(_setServiceOperationPolicy, env);
+	operation_policy = adb_setServiceOperationPolicy_get_operationName(_setServiceOperationPolicy, env);
+	policy_str = adb_setServiceOperationPolicy_get_policyString(_setServiceOperationPolicy, env);
+	op_name = adb_setServiceOperationPolicy_get_operationName(_setServiceOperationPolicy, env);
+	if(!service_name || !policy_str || !policy_str || !op_name)
+	{
+		AXIS2_LOG_ERROR(env->log, 
+			AXIS2_LOG_SI, "incomplete parameters provided for method setServiceOperationPolicy");
+		return	AXIS2_FAILURE;
+	}
+	
+	svc = service_admin_util_get_service(env, msg_ctx, service_name);
+	if(!svc)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Undefined Service requested as %s", service_name);
+		return AXIS2_FAILURE;
+	}
+	
+	op = axis2_svc_get_op_with_name(svc, env, op_name);
+	if(!op)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Undefined operation requested as %s", op_name);
+		return AXIS2_FAILURE;
+	}
+	desc = axis2_op_get_base(op, env);
+	policy_include = axis2_desc_get_policy_include(desc, env);
+	if(policy_include)
+	{
 
+		axiom_node_t *policy_node = NULL;
+		neethi_policy_t *policy = NULL;
+		axiom_element_t *ele = NULL;
+		neethi_policy_t *current_policy = NULL;
+		policy_node = axiom_node_create_from_buffer(env, policy_str);
+		if(!policy_node)
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Policy string serialization filed");
+			return AXIS2_FAILURE;
+		}		
+		ele = (axiom_element_t *)axiom_node_get_data_element(policy_node, env);
 
-
-	return AXIS2_SUCCESS;
+		policy = neethi_engine_get_policy(env, policy_node, ele);
+		if(!policy)
+		{
+			/** TODO return an exception */
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "policy deserialization filed");
+			return AXIS2_FAILURE;
+		}
+		axis2_policy_include_set_policy(policy_include, env, policy);
+		return AXIS2_SUCCESS;
+	}
+	return AXIS2_FAILURE;
 }
 
 
@@ -1166,11 +1219,21 @@ axis2_status_t  axis2_skel_ServiceAdmin_deleteAllNonAdminServiceGroups(const axu
 *
 * @return adb_getModulePolicyResponse_t*
 */
-adb_getModulePolicyResponse_t* axis2_skel_ServiceAdmin_getModulePolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-																	   adb_getModulePolicy_t* _getModulePolicy )
+adb_getModulePolicyResponse_t* 
+axis2_skel_ServiceAdmin_getModulePolicy(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+	adb_getModulePolicy_t* _getModulePolicy )
 {
-	/* TODO fill this with the necessary business logic */
-	return (adb_getModulePolicyResponse_t*)NULL;
+	axis2_char_t *module_name =  NULL;
+	axis2_char_t *module_version = NULL;
+	adb_getModulePolicyResponse_t *module_policy_response = NULL;
+	module_name = adb_getModulePolicy_get_moduleName(_getModulePolicy, env);
+	module_version = adb_getModulePolicy_get_moduleVersion(_getModulePolicy, env);
+
+	module_policy_response = adb_getModulePolicyResponse_create(env);
+	adb_getModulePolicyResponse_set_return(module_policy_response, env, ADMIN_SERVICE_EMPTY_POLICY);
+	return module_policy_response;
 }
 
 
@@ -1342,12 +1405,63 @@ adb_listServiceGroupsResponse_t *response = NULL;
 * @return 
 */
 axis2_status_t  
-axis2_skel_ServiceAdmin_setServiceOperationMessagePolicy(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
-																		 adb_setServiceOperationMessagePolicy_t* _setServiceOperationMessagePolicy,
-																		 axis2_skel_ServiceAdmin_setServiceOperationMessagePolicy_fault *fault )
+axis2_skel_ServiceAdmin_setServiceOperationMessagePolicy(
+	const axutil_env_t *env , 
+	axis2_msg_ctx_t *msg_ctx,
+	adb_setServiceOperationMessagePolicy_t* _setServiceOperationMessagePolicy,
+	axis2_skel_ServiceAdmin_setServiceOperationMessagePolicy_fault *fault )
 {
-	/* TODO fill this with the necessary business logic */
-	return AXIS2_SUCCESS;
+	axis2_char_t *svc_name = NULL, *op_name = NULL, *message_type = NULL;
+	axis2_svc_t *svc = NULL;
+	axis2_op_t *op = NULL;
+	axis2_char_t *policy_string = NULL;
+
+	svc_name = adb_setServiceOperationMessagePolicy_get_serviceName(_setServiceOperationMessagePolicy, env);
+	op_name = adb_setServiceOperationMessagePolicy_get_operationName(_setServiceOperationMessagePolicy, env);
+	message_type = adb_setServiceOperationMessagePolicy_get_messageType(_setServiceOperationMessagePolicy, env);
+	svc = service_admin_util_get_service(env, msg_ctx, svc_name);
+	policy_string = adb_setServiceOperationMessagePolicy_get_policyString(_setServiceOperationMessagePolicy, env);
+	if(!policy_string)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"Null policy string specified");
+		return AXIS2_FAILURE;
+	}
+	if(svc)
+	{
+		op = axis2_svc_get_op_with_name(svc, env, op_name);
+		if(op)
+		{
+			axis2_msg_t * msg = NULL;
+			msg = axis2_op_get_msg(op, env, message_type);
+			if(msg)
+			{
+				axis2_desc_t *desc = NULL;
+				axis2_policy_include_t *policy_include = NULL;
+				
+				desc = axis2_msg_get_base(msg, env);
+				policy_include = axis2_desc_get_policy_include(desc, env);
+				if(policy_include)
+				{
+					axiom_node_t *policy_node = NULL;
+					policy_node = axiom_node_create_from_buffer(env, policy_string);
+					if(policy_node)
+					{
+						axiom_element_t *ele = NULL;
+						neethi_policy_t *neethi_policy = NULL;
+						
+						ele = axiom_node_get_data_element(policy_node, env);
+						neethi_policy = neethi_engine_get_policy(env, policy_node, ele);
+						if(neethi_policy)
+						{
+							axis2_policy_include_set_policy(policy_include, env, neethi_policy);
+							return AXIS2_SUCCESS;
+						}
+					}
+				}
+			}
+		}
+	}
+	return AXIS2_FAILURE;
 }
 
 
@@ -1505,7 +1619,7 @@ axis2_skel_ServiceAdmin_getOperationPolicy(
 			axiom_node_t *policy_node = NULL;
 			axis2_char_t *policy_str = NULL;
 
-			desc = axis2_svc_get_base(svc, env);
+			desc = axis2_op_get_base(op, env);
 			if(desc)
 			{
 				policy_include = axis2_desc_get_policy_include(desc, env);
