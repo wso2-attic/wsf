@@ -3,9 +3,11 @@ AUTOCONF = configure.in_win32
 !include $(AUTOCONF)
 
 ADMIN_SVC_SRCDIR = .\ 
-ADMIN_SVC_INTDIR = .\intmsvc
-ADMIN_SVC_DISTDIR = .\services
-ADMIN_MOD_DISTDIR = .\modules
+ADMIN_SVC_BUILDDIR = .\build
+ADMIN_SVC_INTDIR = $(ADMIN_SVC_BUILDDIR)\intmsvc
+ADMIN_SVC_DISTDIR = $(ADMIN_SVC_BUILDDIR)\services
+ADMIN_MOD_DISTDIR = $(ADMIN_SVC_BUILDDIR)\modules
+ADMIN_DISTDIR = $(ADMIN_SVC_BUILDDIR)\wso2-wsfc-admin-m1-bin-win32
 
 INCLUDE_PATH = /I$(OPENSSL_BIN_DIR)\include /I$(WSFC_HOME_DIR)\include /I$(WSFC_HOME_DIR)/../include /I$(ADMIN_SVC_SRCDIR)\include \
 	       /I$(BAM_PUBLISHER_SRC)\module\codegen /I$(BAM_PUBLISHER_SRC)\module 
@@ -88,8 +90,9 @@ LIBS = $(LIBS) libeay32$(SSL_LIB_FLAG).lib ssleay32$(SSL_LIB_FLAG).lib
 #CFLAGS = $(CFLAGS) /D "_WINSOCKAPI_"
 
 distdir:
-	if not exist $(ADMIN_SVC_DISTDIR)	mkdir $(ADMIN_SVC_DISTDIR)
-	if not exist $(ADMIN_MOD_DISTDIR)   mkdir $(ADMIN_MOD_DISTDIR)
+	if not exist $(ADMIN_SVC_BUILDDIR) mkdir $(ADMIN_SVC_BUILDDIR)
+	if not exist $(ADMIN_SVC_DISTDIR) mkdir $(ADMIN_SVC_DISTDIR)
+	if not exist $(ADMIN_MOD_DISTDIR) mkdir $(ADMIN_MOD_DISTDIR)
 	if not exist $(ADMIN_SVC_DISTDIR)\$(AUTH_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(AUTH_SERVICE)
 	if not exist $(ADMIN_SVC_DISTDIR)\$(SERVER_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(SERVER_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(SERVICE_ADMIN_SERVICE)
@@ -102,11 +105,10 @@ distdir:
 	
 
 clean: 
-	if exist $(ADMIN_SVC_DISTDIR) rmdir /S /Q $(ADMIN_SVC_DISTDIR)
-	if exist $(ADMIN_SVC_INTDIR)  rmdir /S /Q $(ADMIN_SVC_INTDIR)
-	if exist $(ADMIN_MOD_DISTDIR) rmdir /S /Q $(ADMIN_MOD_DISTDIR)
+	if exist $(ADMIN_SVC_BUILDDIR) rmdir /S /Q $(ADMIN_SVC_BUILDDIR)
 	
 intdirs:
+	if not exist $(ADMIN_SVC_BUILDDIR) mkdir $(ADMIN_SVC_BUILDDIR) 
 	if not exist $(ADMIN_SVC_INTDIR) mkdir $(ADMIN_SVC_INTDIR)
 	if not exist $(ADMIN_SVC_INTDIR)\$(AUTH_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(AUTH_SERVICE)
 	if not exist $(ADMIN_SVC_INTDIR)\$(SERVER_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(SERVER_ADMIN_SERVICE)
@@ -341,7 +343,14 @@ bam_publisher_module : $(ADMIN_MOD_DISTDIR)\$(BAM_PUBLISHER_MODULE)\$(BAM_PUBLIS
 #admin_svc_all: bam_publisher_module bam_publisher_service 
 admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service stat_admin_module stat_admin_service module_admin_service keystore_admin_service transport_admin_service bam_publisher_module bam_publisher_service
  
-install: distdir intdirs admin_svc_all
+all: distdir intdirs admin_svc_all
 
-dist: install 
+dist: $(ADMIN_SVC_BUILDDIR)
+	if exist $(ADMIN_DISTDIR) rmdir /S /Q $(ADMIN_DISTDIR)
+	mkdir $(ADMIN_DISTDIR)
+	xcopy /E /Q /I /Y $(ADMIN_SVC_DISTDIR) $(ADMIN_DISTDIR)\services
+	xcopy /E /Q /I /Y $(ADMIN_MOD_DISTDIR) $(ADMIN_DISTDIR)\modules
+	xcopy /E /Q /I /Y $(ADMIN_SVC_SRCDIR)\..\carbon $(ADMIN_DISTDIR)\carbon
+	copy setup.bat $(ADMIN_DISTDIR)
 
+mkdist: all dist
