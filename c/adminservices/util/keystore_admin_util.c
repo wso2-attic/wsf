@@ -2,6 +2,10 @@
 #include "axis2_util.h"
 #include <openssl_pkcs12_keystore.h>
 #include "keystore_admin_util.h"
+#ifndef WIN32
+	#include <sys/types.h>
+	#include <dirent.h>
+#endif
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 keystore_admin_util_format_date(const axutil_env_t* env,
@@ -145,4 +149,60 @@ keystore_admin_util_get_private_store(const axutil_env_t* env,
 	if (!oxs_cert) return AXIS2_FALSE;
 
 	return (oxs_x509_cert_get_alias(oxs_cert, env)) ? AXIS2_TRUE : AXIS2_FALSE;
+}
+
+AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL
+keystore_admin_util_get_keystore_filenames(const axutil_env_t* env,
+										   axis2_char_t* repo_path)
+{
+	axutil_array_list_t* filenames = NULL;
+	axis2_char_t* filename = NULL;
+	axis2_char_t* keystore_dir_path = NULL;
+
+#ifdef WIN32
+	WIN32_FIND_DATA find_data;
+	HANDLE file_handle = NULL;
+
+	keystore_dir_path = axutil_strcat(env, repo_path, AXIS2_PATH_SEP_STR, "services", 
+		AXIS2_PATH_SEP_STR, "KeyStoreAdminService", AXIS2_PATH_SEP_STR, "keystores/*.*", NULL);
+
+	file_handle = FindFirstFile(keystore_dir_path, &find_data);
+	AXIS2_FREE(env->allocator, keystore_dir_path);
+
+	if (INVALID_HANDLE_VALUE == file_handle) return NULL;
+
+	filenames = axutil_array_list_create(env, 5);
+
+	do
+	{
+		filename = axutil_strdup(env, find_data.cFileName);
+		axutil_array_list_add(filenames, env, (void*)filename);
+		
+	}while (FindNextFile(file_handle, &find_data));
+
+	FindClose(file_handle);
+#else
+	DIR* dir = NULL;
+	struct dirent* dit = NULL;
+
+	keystore_dir_path = axutil_strcat(env, repo_path, AXIS2_PATH_SEP_STR, "services", 
+		AXIS2_PATH_SEP_STR, "KeyStoreAdminService", AXIS2_PATH_SEP_STR, "keystores", NULL);
+
+	dir = opendir(keystore_dir_path);
+	AXIS2_FREE(env->allocator, keystore_dir_path);
+
+	if (!dir) return NULL;
+
+	filenames = axutil_array_list_create(env, 5);
+
+	while ((dit = readdir(dir)) != NULL)
+    {
+		filename = axutil_strdup(env, dit->d_name);
+		axutil_array_list_add(filenames, env, (void*)filename);
+    }
+
+	closedir(dir);
+#endif
+
+	return filenames;
 }

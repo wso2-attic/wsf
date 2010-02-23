@@ -352,7 +352,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\axis2_skel_TransportAdmin.c"
+				RelativePath="..\axis2_skel_TransportAdmin.c"
 				>
 			</File>
 			<File

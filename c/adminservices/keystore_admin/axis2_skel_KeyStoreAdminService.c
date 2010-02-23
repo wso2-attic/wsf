@@ -544,11 +544,13 @@ axis2_skel_KeyStoreAdminService_getKeyStores(const axutil_env_t *env ,
 	axis2_conf_ctx_t* conf_ctx = NULL;
 	axis2_conf_t* conf = NULL;
 	axis2_char_t* repo_path = NULL;
-	axis2_char_t* keystore_dir_path = NULL;
-	WIN32_FIND_DATA find_data;
-	HANDLE file_handle = NULL;
+	axutil_array_list_t* keystore_filenames = NULL;
+	int keystore_file_count = 0;
+	int index = 0;
 	adb_getKeyStoresResponse_t* response = NULL;
+	axis2_char_t* keystore_filename = NULL;
 	axis2_char_t* keystore_name = NULL;
+	axis2_char_t* extension = NULL;
 	axis2_char_t* keystore_type = NULL;
 	axis2_char_t* provider = NULL;
 	axis2_bool_t private_store = AXIS2_FALSE;
@@ -568,53 +570,68 @@ axis2_skel_KeyStoreAdminService_getKeyStores(const axutil_env_t *env ,
 	conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     repo_path = axis2_conf_get_repo(conf, env);
-	keystore_dir_path = axutil_strcat(env, repo_path, AXIS2_PATH_SEP_STR, "services", 
-		AXIS2_PATH_SEP_STR, "KeyStoreAdminService", AXIS2_PATH_SEP_STR, "keystores/*.*", NULL);
 
-	/* Read file names in keystore directory*/	
-	file_handle = FindFirstFile(keystore_dir_path, &find_data);
-	AXIS2_FREE(env->allocator, keystore_dir_path);
+	/* Read file names in keystore directory */	
+	keystore_filenames = keystore_admin_util_get_keystore_filenames(
+		env, repo_path);
 
-	if (INVALID_HANDLE_VALUE == file_handle) return NULL;
+	if (!keystore_filenames) return NULL;
 	
-	/* Create response*/
+	/* Create response */
 	response = adb_getKeyStoresResponse_create(env);
 
-	/* Fill data*/
-	do
+	/* Fill data */
+	keystore_file_count = axutil_array_list_size(keystore_filenames, env);
+	for (index = 0; index < keystore_file_count; ++index)
 	{
+		axis2_char_t* filename = NULL;
+
+		keystore_filename = NULL;
 		keystore_name = NULL;
+		extension = NULL;
 		keystore_type = NULL;
 		provider = NULL;
 		private_store = AXIS2_FALSE;
 		tok = NULL;
 
-		/* Get name*/
-		keystore_name = axutil_strdup(env, find_data.cFileName);
+		/* Get name */
+		filename = (axis2_char_t*)axutil_array_list_get(keystore_filenames, env, index);
+		keystore_filename = axutil_strdup(env, filename);
 
-		/* Get type*/
-		tok = strtok(find_data.cFileName, ".");
-		if (tok) tok = strtok(NULL, " .");
-		if (NULL == tok) /* No extension found */
+		tok = strtok(filename, ".");
+		if (tok) /* Keystore name */
 		{
-			AXIS2_FREE(env->allocator, keystore_name);
-			keystore_name = NULL;
+			keystore_name = tok;
+			
+			tok = strtok(NULL, " .");
+			if (tok) /* Extension */
+			{
+				extension = tok;
+			}
+		}
+
+		if (NULL == extension) /* No extension found */
+		{
+			AXIS2_FREE(env->allocator, filename);
+			AXIS2_FREE(env->allocator, keystore_filename);
+			keystore_filename = filename = NULL;
 			continue;
 		}
 
-		if (0 == axutil_strcmp(tok, "p12")) /* PKCS12 */
+		if (0 == axutil_strcmp(extension, "p12")) /* PKCS12 */
 		{
 			keystore_type = "PKCS12";
 		}
 		else
 		{
-			AXIS2_FREE(env->allocator, keystore_name);
-			keystore_name = NULL;
+			AXIS2_FREE(env->allocator, filename);
+			AXIS2_FREE(env->allocator, keystore_filename);
+			keystore_filename = filename = NULL;
 			continue;
 		}
 
 		is_primary_keystore = 
-			(0 == axutil_strcmp(keystore_name, primary_keystore)) ? AXIS2_TRUE : AXIS2_FALSE;
+			(0 == axutil_strcmp(keystore_filename, primary_keystore)) ? AXIS2_TRUE : AXIS2_FALSE;
 
 		if (is_primary_keystore)
 		{
@@ -627,38 +644,34 @@ axis2_skel_KeyStoreAdminService_getKeyStores(const axutil_env_t *env ,
 			axis2_char_t password_tmp[10];
 			axis2_char_t provider_tmp[20];
 			axis2_char_t pvt_key_pass_tmp[10];
-			axis2_char_t* keystore_name_tmp = NULL;
-
-			keystore_name_tmp = axutil_strdup(env, keystore_name);
-			keystore_name_tmp = strtok(keystore_name_tmp, ".");
 
 			/* Get password, provider and pvt_key_pass */
-			if (!keystore_admin_util_get_keystore_details(env, repo_path, keystore_name_tmp, 
+			if (!keystore_admin_util_get_keystore_details(env, repo_path, keystore_name, 
 				password_tmp, provider_tmp, pvt_key_pass_tmp))
 			{
-				AXIS2_FREE(env->allocator, keystore_name);
-				AXIS2_FREE(env->allocator, keystore_name_tmp);
-				keystore_name = keystore_name_tmp = NULL;
+				AXIS2_FREE(env->allocator, filename);
+				AXIS2_FREE(env->allocator, keystore_filename);
+				keystore_filename = filename = NULL;
 				continue;
 			}
 
 			provider = axutil_strdup(env, provider_tmp);
 
 			private_store = keystore_admin_util_get_private_store(env, repo_path,
-				keystore_name_tmp, password_tmp);
+				keystore_name, password_tmp);
 		}
 		
 		data = adb_KeyStoreData_create(env);
 
-		adb_KeyStoreData_set_keyStoreName(data, env, keystore_name);
+		adb_KeyStoreData_set_keyStoreName(data, env, keystore_filename);
 		adb_KeyStoreData_set_keyStoreType(data, env, keystore_type);
 		adb_KeyStoreData_set_provider(data, env, provider);
 		adb_KeyStoreData_set_privateStore(data, env, private_store);
 
 		adb_getKeyStoresResponse_add_return(response, env, data);
-	} while (FindNextFile(file_handle, &find_data));
+	}
 
-	FindClose(file_handle);
+	axutil_array_list_free(keystore_filenames, env);
 	
 	return response;
 }
