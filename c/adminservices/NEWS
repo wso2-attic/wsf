@@ -1,0 +1,50 @@
+WSO2 WSF Admin Console for WSF/C, WSF/C++ version 2.0.0-m1 released
+===================================================================
+
+WSO2 WSF/C team is pleased to announce the release of WSO2 WSF Admin Console
+for WSF/C and WSF/C++ m1 release.
+
+You can download this release from http://wso2.org/downloads/wsf/c
+
+WSO2 WSF Admin Console is a runtime management console for WSO2 Web Service Framework for C and C++ based on the WSO2 Carbon Platfrom Frontend which is a java based web UI. The management console backend is implemented as both services and modules which are deployed within the framework. The communication between the frontend and backend is based on SOAP and REST.
+
+This provides management capabilities for WSO2 WSF/C and C++ deployed services through a comprehensive UI.
+
+------------
+Key Features
+============
+ 1. Configure WSF/C, WSF/C++ though a Web UI
+ 2. Ability to view service group, service, operation and module meta data.
+ 3. Dynamically configure security
+ 4. Policy Editor
+ 5. Monitor service usage statistics
+
+------------------
+Reporting Problems
+==================
+
+Please report the issues using the public JIRA available at:
+ https://wso2.org/jira/browse/WSFC
+
+------------------
+Contact Us
+==================
+
+Please subscribe to our user or developer mailing lists. For details on how to subscribe visit http://wso2.org/mail
+
+We welcome your feedback on this implementation.
+
+Thank you for your interest in WSO2 WSF Admin Console
+
+------------------
+Discussion Forums
+==================
+
+You can use following public forums to find answers to any of the issues you might come accross.
+
+1. http://wso2.org/forum/185
+2. http://wso2.org/forum/352.
+
+-- WSO2 WSF/C Team --
+
+
