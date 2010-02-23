@@ -218,7 +218,7 @@ STAT_ADMIN_MODULE=statistics
 STAT_ADMIN_MODULE_SRC=$(ADMIN_SVC_SRCDIR)\statistics_admin\module
 
 $(ADMIN_MOD_DISTDIR)\$(STAT_ADMIN_MODULE)\$(STAT_ADMIN_MODULE).dll :
-	if not exist $(AXMIN_SVC_INTDIR)\$(STAT_ADMIN_MODULE) mkdir $(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_MODULE)
+	if not exist $(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_MODULE) mkdir $(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_MODULE)
 	if not exist $(ADMIN_MOD_DISTDIR)\$(STAT_ADMIN_MODULE) mkdir $(ADMIN_MOD_DISTDIR)\$(STAT_ADMIN_MODULE)
 	$(CC) $(CFLAGS) $(STAT_ADMIN_MODULE_SRC)\*.c $(SERVICE_ADMIN_UTIL_SRC)\*.c /Fo$(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_MODULE)\ /c
 	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(STAT_ADMIN_MODULE)\*.obj $(LIBS) /DLL \
@@ -306,7 +306,7 @@ BAM_PUBLISHER_SRC=$(ADMIN_SVC_SRCDIR)\bam_publisher
 $(ADMIN_SVC_DISTDIR)\$(BAM_PUBLISHER_SERVICE)\$(BAM_PUBLISHER_SERVICE).dll : 
     if not exist $(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_SERVICE)
     if not exist $(ADMIN_SVC_DISTDIR)\$(BAM_PUBLISHER_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(BAM_PUBLISHER_SERVICE)
-	$(CC) $(CFLAGS) /I$(BAM_PUBLISHER_SRC)\module\codegen\ $(BAM_PUBLISHER_SRC)\services\*.c $(BAM_PUBLISHER_SRC)\services\*.c/Fo$(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_SERVICE)\ /c
+	$(CC) $(CFLAGS) $(BAM_PUBLISHER_SRC)\services\*.c /Fo$(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_SERVICE)\ /c
 	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_SERVICE)\*.obj $(LIBS) /DLL \
 		/OUT:$(ADMIN_SVC_DISTDIR)\$(BAM_PUBLISHER_SERVICE)\$(BAM_PUBLISHER_SERVICE).dll
 	-@$(_VC_MANIFEST_EMBED_DLL)
@@ -318,12 +318,19 @@ bam_publisher_service: $(ADMIN_SVC_DISTDIR)\$(BAM_PUBLISHER_SERVICE)\$(BAM_PUBLI
 # bam publisher module
 
 BAM_PUBLISHER_MODULE=bam_publisher
+BAM_PUBLISHER_MODULE_SRC=$(BAM_PUBLISHER_SRC)\module\op_stat_handler.c \
+			 $(BAM_PUBLISHER_SRC)\module\mod_bam_publisher.c \
+			 $(BAM_PUBLISHER_SRC)\module\statistics.c \
+			 $(BAM_PUBLISHER_SRC)\module\util.c \
+			 $(BAM_PUBLISHER_SRC)\module\svc_stat_handler.c
 
 $(ADMIN_MOD_DISTDIR)\$(BAM_PUBLISHER_MODULE)\$(BAM_PUBLISHER_MODULE).dll :
 	if not exist $(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_MODULE) mkdir $(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_MODULE)
 	if not exist $(ADMIN_MOD_DISTDIR)\$(BAM_PUBLISHER_MODULE) mkdir $(ADMIN_MOD_DISTDIR)\$(BAM_PUBLISHER_MODULE)
-	$(CC) $(CFLAGS)  $(BAM_PUBLISHER_SRC)\module\*.c $(SERVICE_ADMIN_UTIL_SRC)\*.c $(BAM_PUBLISHER_SRC)\module\codegen\*.c /Fo$(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_MODULE)\ /c
-	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_MODULE)\*.obj $(LIBS) savan.lib savan_client.lib /DLL \
+	$(CC) $(CFLAGS)  $(BAM_PUBLISHER_MODULE_SRC) $(SERVICE_ADMIN_UTIL_SRC)\*.c \
+		/Fo$(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_MODULE)\ /c
+	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_MODULE)\*.obj \
+		$(LIBS) savan_msgreceivers.lib savan.lib savan_client.lib /DLL \
 		/OUT:$(ADMIN_MOD_DISTDIR)\$(BAM_PUBLISHER_MODULE)\$(BAM_PUBLISHER_MODULE).dll
 		-@$(_VC_MANIFEST_EMBED_DLL)
 		copy $(BAM_PUBLISHER_SRC)\module\module.xml $(ADMIN_MOD_DISTDIR)\$(BAM_PUBLISHER_MODULE)\
@@ -331,8 +338,8 @@ $(ADMIN_MOD_DISTDIR)\$(BAM_PUBLISHER_MODULE)\$(BAM_PUBLISHER_MODULE).dll :
 bam_publisher_module : $(ADMIN_MOD_DISTDIR)\$(BAM_PUBLISHER_MODULE)\$(BAM_PUBLISHER_MODULE).dll	
 #=============================================================================================
 
-admin_svc_all: bam_publisher_module bam_publisher_service 
-#admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service stat_admin_module stat_admin_service module_admin_service keystore_admin_service transport_admin_service bam_publisher_module bam_publisher_service
+#admin_svc_all: bam_publisher_module bam_publisher_service 
+admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service stat_admin_module stat_admin_service module_admin_service keystore_admin_service transport_admin_service bam_publisher_module bam_publisher_service
  
 install: distdir intdirs admin_svc_all
 
