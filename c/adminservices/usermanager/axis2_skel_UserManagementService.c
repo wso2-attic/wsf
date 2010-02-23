@@ -145,8 +145,12 @@
         adb_getInternalRolesResponse_t* axis2_skel_UserManagementService_getInternalRoles(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
                                           axis2_skel_UserManagementService_getInternalRoles_fault *fault )
         {
-          /* TODO fill this with the necessary business logic */
-          return (adb_getInternalRolesResponse_t*)NULL;
+			adb_getInternalRolesResponse_t* response = NULL;
+
+			response = adb_getInternalRolesResponse_create(env);
+			adb_getInternalRolesResponse_add_return(response, env, "");
+
+			return response;
         }
      
 
@@ -222,8 +226,12 @@
                                               adb_listInternalUsers_t* _listInternalUsers,
                                           axis2_skel_UserManagementService_listInternalUsers_fault *fault )
         {
-          /* TODO fill this with the necessary business logic */
-          return (adb_listInternalUsersResponse_t*)NULL;
+			adb_listInternalUsersResponse_t* response = NULL;
+
+			response = adb_listInternalUsersResponse_create(env);
+			adb_listInternalUsersResponse_set_return(response, env, NULL);
+
+			return response;
         }
      
 
@@ -364,8 +372,12 @@
                                               adb_getSystemPermissionsOfRole_t* _getSystemPermissionsOfRole,
                                           axis2_skel_UserManagementService_getSystemPermissionsOfRole_fault *fault )
         {
-          /* TODO fill this with the necessary business logic */
-          return (adb_getSystemPermissionsOfRoleResponse_t*)NULL;
+			adb_getSystemPermissionsOfRoleResponse_t* response = NULL;
+
+			response = adb_getSystemPermissionsOfExternalRoleResponse_create(env);
+			adb_getSystemPermissionsOfExternalRoleResponse_set_return(response, env, NULL);
+
+			return response;
         }
      
 
@@ -448,8 +460,13 @@
         adb_hasExternalUserStoreResponse_t* axis2_skel_UserManagementService_hasExternalUserStore(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
                                           axis2_skel_UserManagementService_hasExternalUserStore_fault *fault )
         {
-          /* TODO fill this with the necessary business logic */
-          return (adb_hasExternalUserStoreResponse_t*)NULL;
+			adb_hasExternalUserStoreResponse_t* response = NULL;
+
+			/* Create response */
+			response = adb_hasExternalUserStoreResponse_create(env);
+			adb_hasExternalUserStoreResponse_set_return(response, env, AXIS2_FALSE);
+
+			return response;
         }
      
 
@@ -464,8 +481,12 @@
         adb_getSystemPermissionsResponse_t* axis2_skel_UserManagementService_getSystemPermissions(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
                                           axis2_skel_UserManagementService_getSystemPermissions_fault *fault )
         {
-          /* TODO fill this with the necessary business logic */
-          return (adb_getSystemPermissionsResponse_t*)NULL;
+			adb_getSystemPermissionsResponse_t* response = NULL;
+
+			response = adb_getSystemPermissionsResponse_create(env);
+			adb_getSystemPermissionsResponse_add_return(response, env, "");
+
+			return response;
         }
      
 
@@ -678,8 +699,12 @@
                                               adb_getUsersInRole_t* _getUsersInRole,
                                           axis2_skel_UserManagementService_getUsersInRole_fault *fault )
         {
-          /* TODO fill this with the necessary business logic */
-          return (adb_getUsersInRoleResponse_t*)NULL;
+			adb_getUsersInRoleResponse_t* response = NULL;
+
+			response = adb_getUsersInRoleResponse_create(env);
+			adb_getUsersInRoleResponse_add_return(response, env, "");
+
+			return response;
         }
      
 

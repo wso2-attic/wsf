@@ -12,15 +12,15 @@ EMBED_MANIFEST = 1
 ### Apache Axis2/C Build Configuration Parameters
 
 # Path to libxml2 installation
-LIBXML2_BIN_DIR = C:\libxml2-2.7.6.win32
+LIBXML2_BIN_DIR = "C:\Program Files (x86)\libxml2-2.7.6.win32"
 #path to libxslt installation
-LIBXSLT_BIN_DIR=C:\libxslt-1.1.26.win32
+LIBXSLT_BIN_DIR="C:\Program Files (x86)\libxslt-1.1.26.win32"
 
 # Path to iconv installation
-ICONV_BIN_DIR = C:\iconv-1.9.2.win32
+ICONV_BIN_DIR = "C:\Program Files (x86)\iconv-1.9.2.win32"
 
 # Path to zlib installation
-ZLIB_BIN_DIR = C:\zlib-1.2.3.win32
+ZLIB_BIN_DIR = "C:\Program Files (x86)\zlib-1.2.3.win32"
 
 # Path to OpenSSL installation
 OPENSSL_BIN_DIR = C:\OpenSSL 

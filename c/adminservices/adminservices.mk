@@ -7,7 +7,8 @@ ADMIN_SVC_INTDIR = .\intmsvc
 ADMIN_SVC_DISTDIR = .\services
 ADMIN_MOD_DISTDIR = .\modules
 
-INCLUDE_PATH = /I$(OPENSSL_BIN_DIR)\include /I$(WSFC_HOME_DIR)\include /I$(WSFC_HOME_DIR)/../include /I$(ADMIN_SVC_SRCDIR)\include
+INCLUDE_PATH = /I$(OPENSSL_BIN_DIR)\include /I$(WSFC_HOME_DIR)\include /I$(WSFC_HOME_DIR)/../include /I$(ADMIN_SVC_SRCDIR)\include \
+	       /I$(BAM_PUBLISHER_SRC)\module\codegen /I$(BAM_PUBLISHER_SRC)\module 
 
 LIBS_PATH = /LIBPATH:$(WSFC_HOME_DIR)\lib /LIBPATH:$(OPENSSL_BIN_DIR)\lib\VC
 
@@ -22,6 +23,7 @@ SERVICE_GRP_ADMIN_SERVICE=ServiceGroupAdmin
 SECURITY_ADMIN_SERVICE=SecurityAdminService
 USER_MANAGER_SERVICE=UserManagementService
 KEYSTORE_ADMIN_SERVICE = KeyStoreAdminService
+TRANSPORT_ADMIN_SERVICE=TransportAdmin
 
 ## Service Code SRC
 AUTH_SVC_SRC=$(ADMIN_SVC_SRCDIR)\authentication
@@ -31,6 +33,7 @@ SERVICE_ADMIN_UTIL_SRC=$(ADMIN_SVC_SRCDIR)\util
 SECURITY_ADMIN_SVC_SRC=$(ADMIN_SVC_SRCDIR)\security_admin_service
 USER_MANAGER_SVC_SRC=$(ADMIN_SVC_SRCDIR)\usermanager
 KEYSTORE_ADMIN_SVC_SRC=$(ADMIN_SVC_SRCDIR)\keystore_admin
+TRANSPORT_ADMIN_SVC_SRC=$(ADMIN_SVC_SRCDIR)\transport_admin
 
 ##################### compiler options
 
@@ -95,6 +98,7 @@ distdir:
 	if not exist $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(SECURITY_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_DISTDIR)\$(USER_MANAGER_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(USER_MANAGER_SERVICE)
 	if not exist $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)
+	if not exist $(ADMIN_SVC_DISTDIR)\$(TRANSPORT_ADMIN_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(TRANSPORT_ADMIN_SERVICE)
 	
 
 clean: 
@@ -112,6 +116,7 @@ intdirs:
 	if not exist $(ADMIN_SVC_INTDIR)\$(SECURITY_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(SECURITY_ADMIN_SERVICE)
 	if not exist $(ADMIN_SVC_INTDIR)\$(USER_MANAGER_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(USER_MANAGER_SERVICE)
 	if not exist $(ADMIN_SVC_INTDIR)\$(KEYSTORE_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(KEYSTORE_ADMIN_SERVICE)
+	if not exist $(ADMIN_SVC_INTDIR)\$(TRANSPORT_ADMIN_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(TRANSPORT_ADMIN_SERVICE)
 
 
 $(ADMIN_SVC_DISTDIR)\$(AUTH_SERVICE)\$(AUTH_SERVICE).dll: $(AUTH_SVC_SRC)\codegen\*.c $(AUTH_SVC_SRC)\*.c
@@ -280,29 +285,54 @@ $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)\$(KEYSTORE_ADMIN_SERVICE).dll: $(
 	-@$(_VC_MANIFEST_EMBED_DLL)
 	if not exist $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)\keystores mkdir $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)\keystores
 	copy $(KEYSTORE_ADMIN_SVC_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)
-	copy $(KEYSTORE_ADMIN_SVC_SRC)\resources\wso2wsfc.p12 $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)\keystores\
-	copy $(KEYSTORE_ADMIN_SVC_SRC)\resources\wso2wsfc.dat $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)\keystores\
+	copy $(KEYSTORE_ADMIN_SVC_SRC)\resources\wso2wsfc.* $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)\keystores
 
 keystore_admin_service: $(ADMIN_SVC_DISTDIR)\$(KEYSTORE_ADMIN_SERVICE)\$(KEYSTORE_ADMIN_SERVICE).dll
-#==================================================================================
-#Registry Client 
-#==================================================================================
-REGISTRY_CLIENT = registry_client
-REGISTRY_CLIENT_DISTDIR = $(ADMIN_SVC_DISTDIR)\$(REGISTRY_CLIENT)
-REGISTRY_CLIENT_INTDIR = $(ADMIN_SVC_INTDIR)\$(REGISTRY_CLIENT)
-REGISTRY_CLIENT_SRC = 	$(ADMIN_SVC_SRCDIR)\registry_client\*.c 
-
-registry_client: $(REGISTRY_CLIENT_SRC)
-	if not exist $(REGISTRY_CLIENT_DISTDIR) mkdir $(REGISTRY_CLIENT_DISTDIR)
-	if not exist $(REGISTRY_CLIENT_INTDIR) mkdir $(REGISTRY_CLIENT_INTDIR)
-	$(CC) $(CFLAGS) $(REGISTRY_CLIENT_SRC) /Fo$(REGISTRY_CLIENT_INTDIR)\ /c
-	$(LD) $(LDFLAGS) $(REGISTRY_CLIENT_INTDIR)\*.obj $(LIBS) esb.lib /DLL \
-		/OUT:$(REGISTRY_CLIENT_DISTDIR)\$(REGISTRY_CLIENT).dll
+#=====================================================================================================
+$(ADMIN_SVC_DISTDIR)\$(TRANSPORT_ADMIN_SERVICE)\$(TRANSPORT_ADMIN_SERVICE).dll: $(TRANSPORT_ADMIN_SVC_SRC)\codegen\*.c $(TRANSPORT_ADMIN_SVC_SRC)\*.c
+	$(CC) $(CFLAGS) $(TRANSPORT_ADMIN_SVC_SRC)\codegen\*.c $(TRANSPORT_ADMIN_SVC_SRC)\*.c \
+		/Fo$(ADMIN_SVC_INTDIR)\$(TRANSPORT_ADMIN_SERVICE)\ /c
+	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(TRANSPORT_ADMIN_SERVICE)\*.obj $(LIBS) /DLL \
+		/OUT:$(ADMIN_SVC_DISTDIR)\$(TRANSPORT_ADMIN_SERVICE)\$(TRANSPORT_ADMIN_SERVICE).dll
 	-@$(_VC_MANIFEST_EMBED_DLL)
-	
+	copy $(TRANSPORT_ADMIN_SVC_SRC)\resources\services.xml $(ADMIN_SVC_DISTDIR)\$(TRANSPORT_ADMIN_SERVICE)
+
+transport_admin_service: $(ADMIN_SVC_DISTDIR)\$(TRANSPORT_ADMIN_SERVICE)\$(TRANSPORT_ADMIN_SERVICE).dll
+#==================================================================================
+# bam publisher service
+BAM_PUBLISHER_SERVICE=ServiceStatPublisherAdmin
+BAM_PUBLISHER_SRC=$(ADMIN_SVC_SRCDIR)\bam_publisher
+
+$(ADMIN_SVC_DISTDIR)\$(BAM_PUBLISHER_SERVICE)\$(BAM_PUBLISHER_SERVICE).dll : 
+    if not exist $(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_SERVICE) mkdir $(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_SERVICE)
+    if not exist $(ADMIN_SVC_DISTDIR)\$(BAM_PUBLISHER_SERVICE) mkdir $(ADMIN_SVC_DISTDIR)\$(BAM_PUBLISHER_SERVICE)
+	$(CC) $(CFLAGS) /I$(BAM_PUBLISHER_SRC)\module\codegen\ $(BAM_PUBLISHER_SRC)\services\*.c $(BAM_PUBLISHER_SRC)\services\*.c/Fo$(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_SERVICE)\ /c
+	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_SERVICE)\*.obj $(LIBS) /DLL \
+		/OUT:$(ADMIN_SVC_DISTDIR)\$(BAM_PUBLISHER_SERVICE)\$(BAM_PUBLISHER_SERVICE).dll
+	-@$(_VC_MANIFEST_EMBED_DLL)
+	copy $(BAM_PUBLISHER_SRC)\services\services.xml $(ADMIN_SVC_DISTDIR)\$(BAM_PUBLISHER_SERVICE)\
+
+bam_publisher_service: $(ADMIN_SVC_DISTDIR)\$(BAM_PUBLISHER_SERVICE)\$(BAM_PUBLISHER_SERVICE).dll
+
+#=======================================================================================================
+# bam publisher module
+
+BAM_PUBLISHER_MODULE=bam_publisher
+
+$(ADMIN_MOD_DISTDIR)\$(BAM_PUBLISHER_MODULE)\$(BAM_PUBLISHER_MODULE).dll :
+	if not exist $(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_MODULE) mkdir $(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_MODULE)
+	if not exist $(ADMIN_MOD_DISTDIR)\$(BAM_PUBLISHER_MODULE) mkdir $(ADMIN_MOD_DISTDIR)\$(BAM_PUBLISHER_MODULE)
+	$(CC) $(CFLAGS)  $(BAM_PUBLISHER_SRC)\module\*.c $(SERVICE_ADMIN_UTIL_SRC)\*.c $(BAM_PUBLISHER_SRC)\module\codegen\*.c /Fo$(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_MODULE)\ /c
+	$(LD) $(LDFLAGS) $(ADMIN_SVC_INTDIR)\$(BAM_PUBLISHER_MODULE)\*.obj $(LIBS) savan.lib savan_client.lib /DLL \
+		/OUT:$(ADMIN_MOD_DISTDIR)\$(BAM_PUBLISHER_MODULE)\$(BAM_PUBLISHER_MODULE).dll
+		-@$(_VC_MANIFEST_EMBED_DLL)
+		copy $(BAM_PUBLISHER_SRC)\module\module.xml $(ADMIN_MOD_DISTDIR)\$(BAM_PUBLISHER_MODULE)\
+		
+bam_publisher_module : $(ADMIN_MOD_DISTDIR)\$(BAM_PUBLISHER_MODULE)\$(BAM_PUBLISHER_MODULE).dll	
 #=============================================================================================
-admin_svc_all: security_admin_service 
-#admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service stat_admin_module stat_admin_service module_admin_service keystore_admin_service
+
+admin_svc_all: bam_publisher_module bam_publisher_service 
+#admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service stat_admin_module stat_admin_service module_admin_service keystore_admin_service transport_admin_service bam_publisher_module bam_publisher_service
  
 install: distdir intdirs admin_svc_all
 

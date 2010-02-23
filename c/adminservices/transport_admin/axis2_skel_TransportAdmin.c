@@ -41,8 +41,12 @@
         adb_getAllTransportDataResponse_t* axis2_skel_TransportAdmin_getAllTransportData(const axutil_env_t *env , axis2_msg_ctx_t *msg_ctx,
                                           axis2_skel_TransportAdmin_getAllTransportData_fault *fault )
         {
-          /* TODO fill this with the necessary business logic */
-          return (adb_getAllTransportDataResponse_t*)NULL;
+			adb_getAllTransportDataResponse_t* response = NULL;
+
+			response = adb_getAllTransportDataResponse_create(env);
+			adb_getAllTransportDataResponse_add_return(response, env, NULL);
+
+			return response;
         }
      
 
