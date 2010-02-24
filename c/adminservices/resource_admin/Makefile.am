@@ -1,6 +1,9 @@
-noinst_LTLIBRARIES = libresource_admin.la
+prglibdir=$(prefix)/services/ResourceAdminService
+prglib_LTLIBRARIES = libResourceAdminService.la
+prglib_DATA= resources/services.xml
+noinst_HEADERS = 
 
-libresource_admin_la_SOURCES = axis2_skel_ResourceAdminService.c \
+libResourceAdminService_la_SOURCES = axis2_skel_ResourceAdminService.c \
 							   codegen/adb_addCollection.c \
 							   codegen/adb_getVersionsBeanResponse.c \
 							   codegen/adb_getCollectionContentResponse.c \
@@ -67,7 +70,7 @@ libresource_admin_la_SOURCES = axis2_skel_ResourceAdminService.c \
 							   codegen/axis2_svc_skel_ResourceAdminService.c \
 							   codegen/adb_getVersionsBean.c \
 							   codegen/adb_getCollectionContent.c 
-libresource_admin_la_LIBADD = 
+libResourceAdminService_la_LIBADD = 
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
