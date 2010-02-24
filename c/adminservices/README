@@ -1,11 +1,16 @@
-WSO2 WSF Admin Console
+WSO2 WSF Admin Console for WSF/C and WSF/C++
+============================================
 
-WSO2 WSF Admin Console provides the runtime management capability for both
-WSO2 Web Services Framework for C and WSO2 Web Service Framework for C++. 
-WSO2 WSF Admin Console consists of two components. The Admin Console Frontend 
-is a WSO2 Carbon Frontend customised for the features exposed by WSO2 Web Service Framework for C. 
-The Admin Console backend consist of a set of services and modules implemented using the 
-C APIs provided by the WSO2 Web Services Framework for C.
+- WSO2 WSF Admin Console provides the runtime management capability for both
+  WSO2 Web Services Framework for C and WSO2 Web Service Framework for C++. 
+
+- WSO2 WSF Admin Console consists of two components.
+1. The Admin Console Frontend  is a WSO2 Carbon Frontend customised for the 
+features exposed by WSO2 Web Service Framework for C and 
+WSO2 Web Services Framework for C++.
+ 
+2. The Admin Console backend consist of a set of services and modules 
+implemented using the C APIs provided by the WSO2 Web Services Framework for C.
 
  
 
