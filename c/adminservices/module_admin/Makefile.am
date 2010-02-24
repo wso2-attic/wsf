@@ -1,6 +1,9 @@
-noinst_LTLIBRARIES = libmodule_admin.la
+prglibdir=$(prefix)/services/ModuleAdminService
+prglib_LTLIBRARIES = libModuleAdminService.la
+prglib_DATA= resources/services.xml
+noinst_HEADERS = 
 
-libmodule_admin_la_SOURCES = axis2_skel_ModuleAdminService.c \
+libModuleAdminService_la_SOURCES = axis2_skel_ModuleAdminService.c \
 							 codegen/adb_disengageModuleForOperation.c \
 							 codegen/adb_getModuleInfo.c \
 							 codegen/adb_listModulesResponse.c \
@@ -44,7 +47,7 @@ libmodule_admin_la_SOURCES = axis2_skel_ModuleAdminService.c \
 							 codegen/adb_engageModuleForServiceResponse.c \
 							 codegen/adb_Exception.c \
 							 codegen/adb_listModulesForServiceResponse.c 
-libmodule_admin_la_LIBADD = 
+libModuleAdminService_la_LIBADD = 
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
