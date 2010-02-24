@@ -27,4 +27,4 @@ INCLUDES = -I$(top_builddir)/include \
 		   	@NEETHIINC@ \
 		   	@UTILINC@
 
-EXTRA_DIST=
+EXTRA_DIST= logging_admin/codegen/adb_AppenderData.h logging_admin/codegen/adb_getAppenderData.h logging_admin/codegen/adb_LogData.h logging_admin/codegen/axis2_extension_mapper.h logging_admin/codegen/adb_ExceptionE0.h logging_admin/codegen/adb_getAppenderDataResponse.h logging_admin/codegen/adb_LoggerData.h logging_admin/codegen/axis2_skel_LoggingAdmin.h logging_admin/codegen/adb_Exception.h logging_admin/codegen/adb_getLoggerData.h logging_admin/codegen/adb_updateAllAppenderData.h logging_admin/codegen/adb_getAllLoggerData.h logging_admin/codegen/adb_getLoggerDataResponse.h logging_admin/codegen/adb_updateLoggerData.h logging_admin/codegen/adb_getAllLoggerDataResponse.h logging_admin/codegen/adb_getSystemLogResponse.h logging_admin/codegen/adb_updateSystemLog.h
