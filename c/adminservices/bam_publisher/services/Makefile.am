@@ -1,12 +1,12 @@
-prglibdir=$(prefix)/services/BAMServiceStatisticsSubscriberService
-prglib_LTLIBRARIES = libBAMServiceStatisticsSubscriberService.la
+prglibdir=$(prefix)/services/BAMServiceStatisticsPublisherService
+prglib_LTLIBRARIES = libBAMServiceStatisticsPublisherService.la
 prglib_DATA= services.xml
 noinst_HEADERS = statistics_svc.h
 SUBDIRS =
 
-libBAMServiceStatisticsSubscriberService_la_SOURCES = statistics_svc.c statistics_svc_skeleton.c
+libBAMServiceStatisticsPublisherService_la_SOURCES = statistics_svc.c statistics_svc_skeleton.c
 
-libBAMServiceStatisticsSubscriberService_la_LIBADD  = ../../util/libservice_admin_util.la
+libBAMServiceStatisticsPublisherService_la_LIBADD  = ../../util/libservice_admin_util.la
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
