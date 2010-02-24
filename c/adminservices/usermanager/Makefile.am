@@ -1,6 +1,9 @@
-noinst_LTLIBRARIES = libusermanager.la
+prglibdir=$(prefix)/services/UserManagementService
+prglib_LTLIBRARIES = libUserManagementService.la
+prglib_DATA= resources/services.xml
+noinst_HEADERS = 
 
-libusermanager_la_SOURCES = axis2_skel_UserManagementService.c \
+libUserManagementService_la_SOURCES = axis2_skel_UserManagementService.c \
 							codegen/adb_addExternalUserStoreConfig.c \
 							codegen/adb_getSystemPermissionsOfExternalRole.c \
 							codegen/adb_listInternalUsers.c \
@@ -105,7 +108,7 @@ libusermanager_la_SOURCES = axis2_skel_UserManagementService.c \
 							codegen/axis2_svc_skel_UserManagementService.c \
 							codegen/adb_getSpecialInternalRolesResponse.c \
 							codegen/adb_listExternalUsersResponse.c 
-libusermanager_la_LIBADD = 
+libUserManagementService_la_LIBADD = 
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
