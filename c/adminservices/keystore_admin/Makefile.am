@@ -26,4 +26,4 @@ INCLUDES = -I$(top_builddir)/include \
 		   	@NEETHIINC@ \
 		   	@UTILINC@
 
-EXTRA_DIST=
+EXTRA_DIST= codegen/adb_addKeyStore.h codegen/adb_Exception.h codegen/adb_getKeyStoresResponse.h codegen/adb_importCertToStore.h codegen/adb_SecurityConfigException.h codegen/adb_CertData.h codegen/adb_getKeystoreInfo.h codegen/adb_getStoreEntries.h codegen/adb_KeyStoreData.h codegen/axis2_extension_mapper.h codegen/adb_deleteStore.h codegen/adb_getKeystoreInfoResponse.h codegen/adb_getStoreEntriesResponse.h codegen/adb_SecurityConfigExceptionE0.h codegen/axis2_skel_KeyStoreAdminService.h
