@@ -341,7 +341,7 @@ bam_publisher_module : $(ADMIN_MOD_DISTDIR)\$(BAM_PUBLISHER_MODULE)\$(BAM_PUBLIS
 #=============================================================================================
 
 #admin_svc_all: bam_publisher_module bam_publisher_service 
-admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service stat_admin_module stat_admin_service module_admin_service keystore_admin_service transport_admin_service bam_publisher_module bam_publisher_service
+admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service stat_admin_module stat_admin_service module_admin_service keystore_admin_service transport_admin_service
  
 all: distdir intdirs admin_svc_all
 
@@ -350,7 +350,7 @@ dist: $(ADMIN_SVC_BUILDDIR)
 	mkdir $(ADMIN_DISTDIR)
 	xcopy /E /Q /I /Y $(ADMIN_SVC_DISTDIR) $(ADMIN_DISTDIR)\services
 	xcopy /E /Q /I /Y $(ADMIN_MOD_DISTDIR) $(ADMIN_DISTDIR)\modules
-	xcopy /E /Q /I /Y $(ADMIN_SVC_SRCDIR)\..\carbon $(ADMIN_DISTDIR)\carbon
+	xcopy /E /Q /I /Y $(ADMIN_SVC_SRCDIR)\carbon $(ADMIN_DISTDIR)\carbon
 	copy setup.bat $(ADMIN_DISTDIR)
 
 mkdist: all dist
