@@ -1,6 +1,9 @@
-noinst_LTLIBRARIES = libsecurity_admin_service.la
+prglibdir=$(prefix)/services/SecurityAdminService
+prglib_LTLIBRARIES = libSecurityAdminService.la
+prglib_DATA= resources/services.xml
+noinst_HEADERS = 
 
-libsecurity_admin_service_la_SOURCES = axis2_skel_SecurityAdminService.c \
+libSecurityAdminService_la_SOURCES = axis2_skel_SecurityAdminService.c \
 									   codegen/adb_activateUsernameTokenAuthentication.c \
 									   codegen/adb_getSecurityScenarioResponse.c \
 									   codegen/adb_getScenariosResponse.c \
@@ -18,7 +21,7 @@ libsecurity_admin_service_la_SOURCES = axis2_skel_SecurityAdminService.c \
 									   codegen/adb_getSecurityScenario.c \
 									   codegen/adb_getScenarios.c \
 									   codegen/adb_SecurityScenarioData.c
-libsecurity_admin_service_la_LIBADD = 
+libSecurityAdminService_la_LIBADD = 
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
