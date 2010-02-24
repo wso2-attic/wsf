@@ -7,7 +7,7 @@ ADMIN_SVC_BUILDDIR = .\build
 ADMIN_SVC_INTDIR = $(ADMIN_SVC_BUILDDIR)\intmsvc
 ADMIN_SVC_DISTDIR = $(ADMIN_SVC_BUILDDIR)\services
 ADMIN_MOD_DISTDIR = $(ADMIN_SVC_BUILDDIR)\modules
-ADMIN_DISTDIR = $(ADMIN_SVC_BUILDDIR)\wso2-wsfc-admin-m1-bin-win32
+ADMIN_DISTDIR = $(ADMIN_SVC_BUILDDIR)\wso2-wsf-admin-m1-bin-win32
 
 INCLUDE_PATH = /I$(OPENSSL_BIN_DIR)\include /I$(WSFC_HOME_DIR)\include /I$(WSFC_HOME_DIR)/../include /I$(ADMIN_SVC_SRCDIR)\include \
 	       /I$(BAM_PUBLISHER_SRC)\module\codegen /I$(BAM_PUBLISHER_SRC)\module 
