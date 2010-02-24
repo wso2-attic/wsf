@@ -178,9 +178,6 @@ AC_CONFIG_FILES([Makefile \
     statistics_admin/Makefile \
     statistics_admin/module/Makefile \
     statistics_admin/service/Makefile \
-    bam_publisher/Makefile \
-    bam_publisher/module/Makefile \
-    bam_publisher/services/Makefile \
     transport_admin/Makefile \
     usermanager/Makefile \
     operation_admin/Makefile
