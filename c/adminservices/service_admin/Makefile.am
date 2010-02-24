@@ -1,6 +1,9 @@
-noinst_LTLIBRARIES = libservice_admin.la
+prglibdir=$(prefix)/services/ServiceAdmin
+prglib_LTLIBRARIES = libServiceAdmin.la
+prglib_DATA= resources/services.xml
+noinst_HEADERS = 
 
-libservice_admin_la_SOURCES =   adb_Policy.c \
+libServiceAdmin_la_SOURCES =   adb_Policy.c \
                                 axis2_skel_ServiceAdmin.c \
 								codegen/adb_AbstractPolicyOperator.c \
 								codegen/adb_PolicyComponent.c \
@@ -80,7 +83,7 @@ libservice_admin_la_SOURCES =   adb_Policy.c \
 								codegen/axis2_svc_skel_ServiceAdmin.c \
 								codegen/adb_Map.c \
 								codegen/adb_getModulePolicy.c
-libservice_admin_la_LIBADD = 
+libServiceAdmin_la_LIBADD = 
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
