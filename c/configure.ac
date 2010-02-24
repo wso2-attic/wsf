@@ -333,28 +333,6 @@ AC_ARG_WITH(openssl,
   AC_MSG_RESULT(no)
 )
 
-AC_MSG_CHECKING(whether to build admin services)
-AC_ARG_ENABLE(adminservices, [  --enable-adminservices	build admin services. default=yes],
-[ case "${enableval}" in
-  no)
-    AC_MSG_RESULT(no)
-    ADMIN_SERVICES_DIR=""
-    ;;
-  *)
-    AC_MSG_RESULT(yes)
-    ADMIN_SERVICES_DIR="adminservices"
-
-    ;;
-  esac ],
-  AC_MSG_RESULT(yes)
-  ADMIN_SERVICES_DIR="adminservices"
-)
-
-AC_SUBST(ADMIN_SERVICES_DIR)
-if test "adminservices" = ${ADMIN_SERVICES_DIR}; then
-    AC_CONFIG_SUBDIRS(adminservices)
-fi
-
 IKSEMELINC=$iksemelinc
 IKSEMELLIB=$iksemellib
 
