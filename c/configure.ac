@@ -320,11 +320,15 @@ AC_ARG_WITH(openssl,
     AC_MSG_RESULT($withval)
     dnl Find oprnssl dir in the path
     if test -d $withval; then
-        opensslinc="-I$withval/include"
+        opensslinc="-I$withval/include/openssl"
         openssllib="-L$withval/lib"
+	CFLAGS="$CFLAGS -DAXIS2_SSL_ENABLED"
+	ssl_enabled=true
     elif test -d '/usr/include/openssl'; then
         opensslinc="-I/usr/include/openssl"
         openssllib=""
+	CFLAGS="$CFLAGS -DAXIS2_SSL_ENABLED"
+	ssl_enabled=true
     else
         AC_MSG_ERROR(could not find openssl. stop)
     fi
