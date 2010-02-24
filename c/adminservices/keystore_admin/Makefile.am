@@ -1,6 +1,9 @@
-noinst_LTLIBRARIES = libkeystore_admin.la
+prglibdir=$(prefix)/services/KeyStoreAdminService
+prglib_LTLIBRARIES = libKeyStoreAdminService.la
+prglib_DATA= resources/services.xml
+noinst_HEADERS = 
 
-libkeystore_admin_la_SOURCES = axis2_skel_KeyStoreAdminService.c \
+libKeyStoreAdminService_la_SOURCES = axis2_skel_KeyStoreAdminService.c \
 							   codegen/adb_addKeyStore.c \
 							   codegen/adb_getStoreEntries.c \
 							   codegen/adb_getKeystoreInfo.c \
@@ -16,7 +19,7 @@ libkeystore_admin_la_SOURCES = axis2_skel_KeyStoreAdminService.c \
 							   codegen/axis2_extension_mapper.c \
 							   codegen/adb_Exception.c \
 							   codegen/adb_KeyStoreData.c
-libkeystore_admin_la_LIBADD = 
+libKeyStoreAdminService_la_LIBADD = 
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
