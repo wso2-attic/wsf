@@ -59,17 +59,20 @@
 @echo.
 @echo Step 4
 @echo ------ 
-@echo Installing services ... [OK]
 @xcopy /E /Q /I /Y .\services %home%\services 
-@echo Installing modules ... [OK]
+@echo Installing services ... [OK]
+@echo.
 @xcopy /E /Q /I /Y .\modules %home%\modules 
+@echo Installing modules ... [OK]
+@echo.
+@xcopy /E /Q /I /Y .\carbon\wso2carbon-2.0.2 %carbon_home%\wso2carbon-2.0.2 
 @echo Installing Carbon console ... [OK]
-@xcopy /E /Q /I /Y .\carbon\wso2carbon-2.0.2 %carbon_home% 
+@echo.
+@if "%product%"=="1" copy .\carbon\conf\carbon.c.xml %carbon_home%\wso2carbon-2.0.2\conf\carbon.xml
+@if "%product%"=="2" copy .\carbon\conf\carbon.cpp.xml %carbon_home%\wso2carbon-2.0.2\conf\carbon.xml
+@if "%product%"=="1" copy .\carbon\styles\org.wso2.wsas.styles-3.1.2.c.jar %carbon_home%\wso2carbon-2.0.2\repository\components\plugins\org.wso2.wsas.styles-3.1.2.jar
+@if "%product%"=="2" copy .\carbon\styles\org.wso2.wsas.styles-3.1.2.cpp.jar %carbon_home%\wso2carbon-2.0.2\repository\components\plugins\org.wso2.wsas.styles-3.1.2.jar
 @echo Customizing ... [OK]
-@if "%product%"=="1" copy .\carbon\conf\carbon.c.xml %carbon_home%\conf\carbon.xml
-@if "%product%"=="2" copy .\carbon\conf\carbon.cpp.xml %carbon_home%\conf\carbon.xml
-@if "%product%"=="1" copy .\carbon\styles\org.wso2.wsas.styles-3.1.2.c.jar %carbon_home%\repository\components\plugins\org.wso2.wsas.styles-3.1.2.jar
-@if "%product%"=="2" copy .\carbon\styles\org.wso2.wsas.styles-3.1.2.cpp.jar %carbon_home%\repository\components\plugins\org.wso2.wsas.styles-3.1.2.jar
 @echo.
 @echo Admin installed successfully ...
 @goto end 
