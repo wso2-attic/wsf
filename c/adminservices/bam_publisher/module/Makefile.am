@@ -20,4 +20,4 @@ INCLUDES = -I$(top_builddir)/include \
 		   	@NEETHIINC@ \
 		   	@UTILINC@
 
-EXTRA_DIST=module.xml
+EXTRA_DIST=module.xml bam_publisher_util.h bam_publisher_statistics.h
