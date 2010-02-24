@@ -1,6 +1,9 @@
-noinst_LTLIBRARIES = libservice_group_admin.la
+prglibdir=$(prefix)/services/ServiceGroupAdmin
+prglib_LTLIBRARIES = libServiceGroupAdmin.la
+prglib_DATA= resources/services.xml
+noinst_HEADERS = 
 
-libservice_group_admin_la_SOURCES = axis2_skel_ServiceGroupAdmin.c \
+libServiceGroupAdmin_la_SOURCES = axis2_skel_ServiceGroupAdmin.c \
 									codegen/adb_configureServiceGroupMTOM.c \
 									codegen/adb_removeServiceGroupParameter.c \
 									codegen/adb_getServiceGroupParameterResponse.c \
@@ -25,7 +28,7 @@ libservice_group_admin_la_SOURCES = axis2_skel_ServiceGroupAdmin.c \
 									codegen/adb_ParameterMetaData.c \
 									codegen/adb_getServiceGroupParameter.c \
 									codegen/adb_setServiceGroupParameters.c 
-libservice_group_admin_la_LIBADD = 
+libServiceGroupAdmin_la_LIBADD = 
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
