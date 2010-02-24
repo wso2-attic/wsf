@@ -24,4 +24,4 @@ INCLUDES = -I$(top_builddir)/include \
 		   	@NEETHIINC@ \
 		   	@UTILINC@
 
-EXTRA_DIST=
+EXTRA_DIST= codegen/adb_ExceptionE0.h codegen/adb_getServerVersionResponse.h codegen/adb_shutdownGracefullyResponse.h codegen/adb_Exception.h codegen/adb_isAliveResponse.h codegen/adb_shutdownResponse.h codegen/adb_getServerDataAsStringResponse.h codegen/adb_restartGracefullyResponse.h codegen/axis2_extension_mapper.h codegen/adb_getServerDataResponse.h codegen/adb_restartResponse.h codegen/axis2_skel_ServerAdmin.h codegen/adb_getServerStatusResponse.h codegen/adb_ServerData.h
