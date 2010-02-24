@@ -34,4 +34,4 @@ INCLUDES = -I$(top_builddir)/include \
 		   	@NEETHIINC@ \
 		   	@UTILINC@
 
-EXTRA_DIST=
+EXTRA_DIST= codegen/adb_AccessControlAdmin.h codegen/adb_Claim.h codegen/adb_getUserPermissions.h codegen/adb_loginWithDelegationResponse.h codegen/adb_UserStoreAdmin.h codegen/adb_AuthenticationExceptionE1.h codegen/adb_ExceptionE0.h codegen/adb_getUserPermissionsResponse.h codegen/adb_ProfileConfiguration.h codegen/adb_UserStoreReader.h codegen/adb_AuthenticationException.h codegen/adb_Exception.h codegen/adb_login.h codegen/adb_UserClaimsAdmin.h codegen/axis2_extension_mapper.h codegen/adb_Authenticator.h codegen/adb_getSystemPermissionOfUser.h codegen/adb_loginResponse.h codegen/adb_UserProfileAdmin.h codegen/axis2_skel_AuthenticationAdminService.h codegen/adb_Authorizer.h codegen/adb_getSystemPermissionOfUserResponse.h codegen/adb_loginWithDelegation.h codegen/adb_UserRealm.h
