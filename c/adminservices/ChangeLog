@@ -1,0 +1,14 @@
+WSO2 WSF Admin Console for WSF/C and WSF C++ M1
+===============================================
+
+1. Ability to configure WSF/C and WSF/C++ through a WEB UI
+
+2. Ability to view Service group, service, operation and module meta data.
+
+3. Dynamically configure security
+
+4. Policy Editor
+
+5. Monitor service usage statistics
+
+-- WSO2 WSF/C team <wsf-dev@wso2.org> Wed 24 Jan 2010 --
