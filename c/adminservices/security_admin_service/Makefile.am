@@ -27,4 +27,4 @@ INCLUDES = -I$(top_builddir)/include \
 		   	@NEETHIINC@ \
 		   	@UTILINC@
 
-EXTRA_DIST=
+EXTRA_DIST= codegen/adb_activateUsernameTokenAuthentication.h codegen/adb_getScenarios.h codegen/adb_getSecurityScenario.h codegen/adb_SecurityConfigException.h codegen/axis2_skel_SecurityAdminService.h codegen/adb_applySecurity.h codegen/adb_getScenariosResponse.h codegen/adb_getSecurityScenarioResponse.h codegen/adb_SecurityScenarioData.h codegen/adb_disableSecurityOnService.h codegen/adb_getSecurityConfigData.h codegen/adb_SecurityConfigData.h codegen/adb_SecurityScenarioDataWrapper.h codegen/adb_Exception.h codegen/adb_getSecurityConfigDataResponse.h codegen/adb_SecurityConfigExceptionE0.h codegen/axis2_extension_mapper.h
