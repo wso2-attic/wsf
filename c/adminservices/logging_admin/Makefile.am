@@ -1,6 +1,9 @@
-noinst_LTLIBRARIES = liblogging_admin.la
+prglibdir=$(prefix)/services/LoggingAdmin
+prglib_LTLIBRARIES = libLoggingAdmin.la
+prglib_DATA= resources/services.xml
+noinst_HEADERS = 
 
-liblogging_admin_la_SOURCES = axis2_skel_LoggingAdmin.c \
+libLoggingAdmin_la_SOURCES = axis2_skel_LoggingAdmin.c \
 							  codegen/adb_AppenderData.c \
 							  codegen/adb_getAllLoggerDataResponse.c \
 							  codegen/adb_getLoggerDataResponse.c \
@@ -18,7 +21,7 @@ liblogging_admin_la_SOURCES = axis2_skel_LoggingAdmin.c \
 							  codegen/adb_getLoggerData.c \
 							  codegen/adb_LoggerData.c \
 							  codegen/axis2_extension_mapper.c 
-liblogging_admin_la_LIBADD = 
+libLoggingAdmin_la_LIBADD = 
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
