@@ -1,6 +1,9 @@
-noinst_LTLIBRARIES = libauthentication.la
+prglibdir=$(prefix)/services/AuthenticationAdminService
+prglib_LTLIBRARIES = libAuthenticationAdminService.la
+prglib_DATA= resources/services.xml
+noinst_HEADERS = 
 
-libauthentication_la_SOURCES =  axis2_skel_AuthenticationAdminService.c \
+libAuthenticationAdminService_la_SOURCES =  axis2_skel_AuthenticationAdminService.c \
 								codegen/adb_AccessControlAdmin.c \
 								codegen/adb_ExceptionE0.c \
 								codegen/adb_loginResponse.c \
@@ -25,7 +28,7 @@ libauthentication_la_SOURCES =  axis2_skel_AuthenticationAdminService.c \
 								codegen/adb_login.c \
 								codegen/adb_Exception.c \
 								codegen/adb_UserRealm.c
-libauthentication_la_LIBADD = 
+libAuthenticationAdminService_la_LIBADD = 
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
