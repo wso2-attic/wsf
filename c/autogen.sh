@@ -23,10 +23,6 @@ cd ../wsclient
 echo "Running autogen.sh in wsclient"
 ./autogen.sh
 
-cd ../adminservices
-echo "Running autogen.sh in adminservices"
-./autogen.sh
-
 cd ../rampartc
 echo "Running autogen.sh in Rampart/C"
 ./autogen.sh
