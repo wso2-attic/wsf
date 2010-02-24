@@ -1,6 +1,9 @@
-noinst_LTLIBRARIES = libserver_admin.la
+prglibdir=$(prefix)/services/ServerAdmin
+prglib_LTLIBRARIES = libServerAdmin.la
+prglib_DATA= resources/services.xml
+noinst_HEADERS = 
 
-libserver_admin_la_SOURCES =    axis2_skel_ServerAdmin.c \
+libServerAdmin_la_SOURCES =    axis2_skel_ServerAdmin.c \
 								codegen/adb_Exception.c \
 								codegen/adb_getServerStatusResponse.c \
 								codegen/adb_restartResponse.c \
@@ -15,7 +18,7 @@ libserver_admin_la_SOURCES =    axis2_skel_ServerAdmin.c \
 								codegen/adb_getServerDataResponse.c \
 								codegen/adb_restartGracefullyResponse.c \
 								codegen/adb_shutdownResponse.c
-libserver_admin_la_LIBADD = 
+libServerAdmin_la_LIBADD = 
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
