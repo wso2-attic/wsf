@@ -1,6 +1,9 @@
-noinst_LTLIBRARIES = libtransport_admin.la
+prglibdir=$(prefix)/services/TransportAdmin
+prglib_LTLIBRARIES = libTransportAdmin.la
+prglib_DATA= resources/services.xml
+noinst_HEADERS = 
 
-libtransport_admin_la_SOURCES = axis2_skel_TransportAdmin.c \
+libTransportAdmin_la_SOURCES = axis2_skel_TransportAdmin.c \
 								codegen/adb_addExposedTransports.c \
 								codegen/adb_getServiceSpecificInParameters.c \
 								codegen/adb_TransportData.c \
@@ -35,7 +38,7 @@ libtransport_admin_la_SOURCES = axis2_skel_TransportAdmin.c \
 								codegen/adb_listTransportsResponse.c \
 								codegen/adb_getGloballyDefinedOutParametersResponse.c \  
                                 codegen/adb_removeExposedTransports.c
-libtransport_admin_la_LIBADD = 
+libTransportAdmin_la_LIBADD = 
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
