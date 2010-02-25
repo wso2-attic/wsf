@@ -15,7 +15,7 @@ WSFC_HOME_DIR=..\wso2-wsf-c-bin-2.0.0-win32
 OPENSSL_BIN_DIR=F:\OpenSSL
 
 # CRUNTIME Libaray Setting { Options  /MT or /MD}
-CRUNTIME=/MT
+CRUNTIME=/MD
 
 # Wheather to embed the manifest files or not.
 
