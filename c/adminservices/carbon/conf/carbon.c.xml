@@ -51,7 +51,7 @@
      will be used by the clients in the front end server.
      This is required only for the Front-end server. This is used when seperating BE server from FE server
     -->
-    <ServerURL>http://localhost:9091/axis2/services/</ServerURL>
+    <ServerURL>http://localhost:9090/axis2/services/</ServerURL>
     
     <!--
     Number of items to be displayed on a management console page. This is used at the
