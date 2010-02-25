@@ -60,17 +60,14 @@ Table of Contents
 	
 3.2 Using Source Release
 ------------------------
-  This set of installtion instructions assumes that you have already successfully installed WSF/C or WSF/C++ from source.
+ This set of installation instructions assumes that you have already successfully installed WSF/C or WSF/C++ from source.
 
  1. unzip the source distribution. 
  2. open the file configure.in_win32 file using a text editor and set your configuaration setting on it.
- 3. Now run the build.bat file from the same directory as
-    build.bat mkdist.
- 4. This would built WSO2 WSF Admin and copy the binary files to build directory.
- 5. This would also copy the setup.bat file to same directory. 
- 6. Run the setup.bat file and specify your configation setting. 
- 7. Go to WSO2 Webservices framework installation directory and move to bin directory. Start axis2_http_server.exe
- 8. Move to your <WSF Admin Console installation>/bin directory and run wso2server.bat file. This would start the admin console
-   frontend. 
- 9. Now you have installed all components. Open your browser and type the url http://localhost:9763/
+ 3. Now run the build.bat file from the same directory as :\> build.bat mkdist.
+ 4. This would built WSO2 WSF Admin and copy the binary files to dist directory named wso2-wsf-admin-bin-m1-win32 under the build directory.
+ 5. Run the setup.bat file located in the bin  directory and specify your configuration settings. 
+ 6. Go to WSO2 Web Services framework installation directory and move to bin directory. Start axis2_http_server.exe
+ 7. Move to your <WSF Admin Console installation>/bin directory and run wso2server.bat file. This would start the admin console frontend. 
+ 8. Now you have installed all components. Open your browser and type the url http://localhost:9763/
  
