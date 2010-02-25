@@ -7,7 +7,7 @@ ADMIN_SVC_BUILDDIR = .\build
 ADMIN_SVC_INTDIR = $(ADMIN_SVC_BUILDDIR)\intmsvc
 ADMIN_SVC_DISTDIR = $(ADMIN_SVC_BUILDDIR)\services
 ADMIN_MOD_DISTDIR = $(ADMIN_SVC_BUILDDIR)\modules
-ADMIN_DISTDIR = $(ADMIN_SVC_BUILDDIR)\wso2-wsf-admin-m1-bin-win32
+ADMIN_DISTDIR = $(ADMIN_SVC_BUILDDIR)\wso2-wsf-admin-bin-m1-win32
 
 INCLUDE_PATH = /I$(OPENSSL_BIN_DIR)\include /I$(WSFC_HOME_DIR)\include /I$(WSFC_HOME_DIR)/../include /I$(ADMIN_SVC_SRCDIR)\include \
 	       /I$(BAM_PUBLISHER_SRC)\module\codegen /I$(BAM_PUBLISHER_SRC)\module 
@@ -340,6 +340,8 @@ $(ADMIN_MOD_DISTDIR)\$(BAM_PUBLISHER_MODULE)\$(BAM_PUBLISHER_MODULE).dll :
 bam_publisher_module : $(ADMIN_MOD_DISTDIR)\$(BAM_PUBLISHER_MODULE)\$(BAM_PUBLISHER_MODULE).dll	
 #=============================================================================================
 
+
+#=============================================================================================
 #admin_svc_all: bam_publisher_module bam_publisher_service 
 admin_svc_all: authentication_service server_admin_service service_admin_service service_grp_admin_service op_admin_service security_admin_service user_manager_service stat_admin_module stat_admin_service module_admin_service keystore_admin_service transport_admin_service
  
@@ -352,5 +354,10 @@ dist: $(ADMIN_SVC_BUILDDIR)
 	xcopy /E /Q /I /Y $(ADMIN_MOD_DISTDIR) $(ADMIN_DISTDIR)\modules
 	xcopy /E /Q /I /Y $(ADMIN_SVC_SRCDIR)\carbon $(ADMIN_DISTDIR)\carbon
 	copy setup.bat $(ADMIN_DISTDIR)
+	copy LICENSE $(ADMIN_DISTDIR)
+	copy INSTALL $(ADMIN_DISTDIR)
+	copy NEWS    $(ADMIN_DISTDIR)
+	copy CREDITS $(ADMIN_DISTDIR)
+	copy README  $(ADMIN_DISTDIR)
 
 mkdist: all dist
