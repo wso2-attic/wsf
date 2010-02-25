@@ -175,12 +175,14 @@ AC_CONFIG_FILES([Makefile \
     resource_admin/Makefile \
     server_admin/Makefile \
     service_admin/Makefile \
+    service_group_admin/Makefile \
     statistics_admin/Makefile \
     statistics_admin/module/Makefile \
     statistics_admin/service/Makefile \
     transport_admin/Makefile \
     usermanager/Makefile \
-    operation_admin/Makefile
+    operation_admin/Makefile \
+    security_admin_service/Makefile
     ])
     
 AC_OUTPUT
