@@ -30,4 +30,4 @@ INCLUDES = -I$(top_builddir)/include \
 		   	@NEETHIINC@ \
 		   	@UTILINC@
 
-EXTRA_DIST= codegen/adb_AppenderData.h codegen/adb_getAppenderData.h codegen/adb_LogData.h codegen/axis2_extension_mapper.h codegen/adb_ExceptionE0.h codegen/adb_getAppenderDataResponse.h codegen/adb_LoggerData.h codegen/axis2_skel_LoggingAdmin.h codegen/adb_Exception.h codegen/adb_getLoggerData.h codegen/adb_updateAllAppenderData.h codegen/adb_getAllLoggerData.h codegen/adb_getLoggerDataResponse.h codegen/adb_updateLoggerData.h codegen/adb_getAllLoggerDataResponse.h codegen/adb_getSystemLogResponse.h codegen/adb_updateSystemLog.h
+EXTRA_DIST= resources/services.xml codegen/adb_AppenderData.h codegen/adb_getAppenderData.h codegen/adb_LogData.h codegen/axis2_extension_mapper.h codegen/adb_ExceptionE0.h codegen/adb_getAppenderDataResponse.h codegen/adb_LoggerData.h codegen/axis2_skel_LoggingAdmin.h codegen/adb_Exception.h codegen/adb_getLoggerData.h codegen/adb_updateAllAppenderData.h codegen/adb_getAllLoggerData.h codegen/adb_getLoggerDataResponse.h codegen/adb_updateLoggerData.h codegen/adb_getAllLoggerDataResponse.h codegen/adb_getSystemLogResponse.h codegen/adb_updateSystemLog.h

@@ -37,4 +37,4 @@ INCLUDES = -I$(top_builddir)/include \
 		   	@NEETHIINC@ \
 		   	@UTILINC@
 
-EXTRA_DIST=
+EXTRA_DIST= resources/services.xml codegen/adb_configureServiceGroupMTOM.h codegen/adb_getServiceGroupParameters.h codegen/adb_ServiceGroupMetaData.h codegen/adb_configureServiceGroupMTOMResponse.h codegen/adb_getServiceGroupParametersResponse.h codegen/adb_ServiceMetaData.h codegen/adb_dumpAAR.h codegen/adb_listServiceGroup.h codegen/adb_setServiceGroupParameter.h codegen/adb_dumpAARResponse.h codegen/adb_listServiceGroupResponse.h codegen/adb_setServiceGroupParameters.h codegen/adb_ExceptionE0.h codegen/adb_ParameterMetaData.h codegen/adb_updateServiceGroupParameter.h codegen/adb_Exception.h codegen/adb_removeServiceGroupParameter.h codegen/adb_updateServiceGroupParamters.h codegen/adb_getServiceGroupParameter.h codegen/adb_ServerExceptionE1.h codegen/axis2_extension_mapper.h codegen/adb_getServiceGroupParameterResponse.h codegen/adb_ServerException.h codegen/axis2_skel_ServiceGroupAdmin.h
