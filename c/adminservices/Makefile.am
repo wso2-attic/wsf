@@ -1,7 +1,7 @@
 logsdir=$(prefix)/logs
 confdir=$(prefix)
 includedir=$(prefix)/include
-SUBDIRS = util authentication keystore_admin logging_admin module_admin resource_admin server_admin service_admin statistics_admin transport_admin usermanager operation_admin 
+SUBDIRS = util authentication keystore_admin logging_admin module_admin resource_admin server_admin service_admin statistics_admin transport_admin usermanager operation_admin security_admin_service service_group_admin
 noinst_HEADERS=$(top_builddir)/include/*.h
 data_DATA= README INSTALL CREDITS COPYING NEWS
 logs_DATA=
