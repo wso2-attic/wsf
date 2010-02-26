@@ -36,7 +36,7 @@ libTransportAdmin_la_SOURCES = axis2_skel_TransportAdmin.c \
 								codegen/axis2_svc_skel_TransportAdmin.c \
 								codegen/adb_getGloballyDefinedOutParameters.c \
 								codegen/adb_listTransportsResponse.c \
-								codegen/adb_getGloballyDefinedOutParametersResponse.c \  
+								codegen/adb_getGloballyDefinedOutParametersResponse.c \
                                 codegen/adb_removeExposedTransports.c
 libTransportAdmin_la_LIBADD = 
 
