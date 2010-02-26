@@ -129,7 +129,7 @@ AC_ARG_WITH(wsfc,
     AC_MSG_RESULT($withval)
     dnl Find wsfc include dir in the path
     if test -d $withval; then
-        wsfcinc="-I$withval/include/wsfc-2.0.0"
+        wsfcinc="-I$withval"
     dnl else find the wsfcinc include dir in $(AXIS2C_HOME)/include
     elif test -d '$(WSFC_HOME)/include'; then
         wsfcinc="-I$(WSFC_HOME)/include/wsfc-2.0.0"
