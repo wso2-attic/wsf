@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 echo -n 'Running libtoolize...'
 if [ `uname -s` = Darwin ]
 then

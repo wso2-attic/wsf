@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 echo -n 'Running libtoolize...'
 if libtoolize --force > /dev/null 2>&1; then
 	echo 'done.'

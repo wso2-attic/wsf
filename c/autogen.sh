@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 cd axis2c
 echo "Running autogen.sh in Axis2/C"
 ./autogen.sh
