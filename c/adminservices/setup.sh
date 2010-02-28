@@ -45,11 +45,11 @@ exit
 function install_prod {
 cp -rf ./carbon/wso2carbon-2.0.2 $carbon_home/wso2carbon-2.0.2
 echo "Installing Carbon Console .... [OK]"
-if "$product"=="1"; then
+if [ "$product"=="1" ]; then
 cp ./carbon/conf/carbon.c.xml $carbon_home/wso2carbon-2.0.2/conf/carbon.xml
 cp ./carbon/styles/org.wso2.wsas.styles-3.1.2.c.jar $carbon_home/wso2carbon-2.0.2/repository/components/plugins/org.wso2.wsas.styles-3.1.2.jar
 fi
-if "$product"=="2"; then
+if [ "$product"=="2" ]; then
 cp ./carbon/conf/carbon.cpp.xml $carbon_home/wso2carbon-2.0.2/conf/carbon.xml
 cp ./carbon/styles/org.wso2.wsas.styles-3.1.2.cpp.jar $carbon_home/wso2carbon-2.0.2/repository/components/plugins/org.wso2.wsas.styles-3.1.2.jar
 fi
