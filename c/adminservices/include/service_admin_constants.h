@@ -42,7 +42,7 @@
 #define AXIS2_RESPONSE_SENT_TIME "wso2statistics.response.sent.time"
 #define AXIS2_STATISTISTICS_MODULE_NAME "wso2statistics"
 #define ADMIN_SERVICE_STATISTICS_SVC_NAME "StatisticsAdmin"
-#define ADMIN_SERVICE_STATISTICS_SAVAN_SERVICE "BAMServiceStatisticsSubscriberService"
+#define ADMIN_SERVICE_STATISTICS_SAVAN_SERVICE "BAMServiceStatisticsPublisherService"
 
 
 #define ADMIN_SERVICE_EMPTY_POLICY "<wsp:Policy xmlns:wsp=\"http://schemas.xmlsoap.org/ws/2004/09/policy\"/>"
