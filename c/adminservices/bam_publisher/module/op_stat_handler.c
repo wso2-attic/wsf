@@ -66,10 +66,12 @@ bam_publisher_op_stat_handler_invoke(struct axis2_handler *handler,
     int current_count = 0;
     int last_count = 0;
     axis2_char_t *str_threshold_count = NULL;
-    int threshold_count = 0;
+    long threshold_count = BAM_PUBLISHER_DEFAULT_THRESHOLD_COUNT;
     axutil_param_t *param = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_conf_t *conf = NULL;
+    axis2_module_desc_t *module_desc = NULL;
+    axutil_qname_t *mod_qname = NULL;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[adminservices] Entry:bam_publisher_op_stat_handler_invoke");
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
@@ -89,7 +91,11 @@ bam_publisher_op_stat_handler_invoke(struct axis2_handler *handler,
         op_name = axutil_qname_get_localpart(axis2_op_get_qname(op, env), env);
         current_count = bam_publisher_statistics_get_operation_request_count(env, msg_ctx, op);
     }
-    param = axis2_conf_get_param(conf, env, BAM_PUBLISHER_OPERATION_REQUEST_THRESHOLD_COUNT_PARAM);
+    mod_qname = axutil_qname_create(env, BAM_PUBLISHER_MODULE, NULL, NULL);
+    module_desc = axis2_conf_get_module(conf, env, mod_qname);
+    axutil_qname_free(mod_qname, env);
+    param = axis2_module_desc_get_param(module_desc, env, 
+            BAM_PUBLISHER_OPERATION_REQUEST_THRESHOLD_COUNT_PARAM);
     if(param)
     {
         str_threshold_count = axutil_param_get_value(param, env);
@@ -112,7 +118,7 @@ bam_publisher_op_stat_handler_invoke(struct axis2_handler *handler,
 
         /* Eventing threshold count reached. So let's fire the event */
         service_admin_counter_set_last_count(env, msg_ctx, svc_name, op_name, current_count);
-        server_name = service_admin_util_get_epr_address(env, msg_ctx, svc_name);
+        server_name = service_admin_util_get_epr_address(env, msg_ctx, NULL);
         payload = bam_publisher_util_get_payload(env, server_name, avg_res_time, 
                 min_res_time, max_res_time, request_count, response_count, fault_count, svc_name, 
                 op_name);
