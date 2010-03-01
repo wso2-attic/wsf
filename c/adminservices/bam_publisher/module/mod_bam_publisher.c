@@ -66,47 +66,8 @@ bam_publisher_init(
         axis2_module_desc_t *module_desc)
 {
     axis2_status_t status = AXIS2_SUCCESS;
-    axutil_param_t *param = NULL;
-    axis2_conf_t *conf = NULL;
     
-    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[adminservices] Entry:bam_publisher_init");
-        
-    param = axis2_module_desc_get_param(module_desc, env, BAM_PUBLISHER_SERVICE_REQUEST_THRESHOLD_COUNT_PARAM);
-    if(param)
-    {
-        axis2_char_t *str_svc_threshold_count = NULL;
-
-        str_svc_threshold_count = axutil_param_get_value(param, env);
-        if(str_svc_threshold_count)
-        {
-            axutil_param_t *threshold_count_param = NULL;
-            threshold_count_param = axutil_param_create(env, BAM_PUBLISHER_SERVICE_REQUEST_THRESHOLD_COUNT_PARAM, 
-                    str_svc_threshold_count);
-            if(threshold_count_param)
-            {
-                axis2_conf_add_param(conf, env, threshold_count_param);
-            }
-        }
-    }
-    param = axis2_module_desc_get_param(module_desc, env, BAM_PUBLISHER_OPERATION_REQUEST_THRESHOLD_COUNT_PARAM);
-    if(param)
-    {
-        axis2_char_t *str_op_threshold_count = NULL;
-
-        str_op_threshold_count = axutil_param_get_value(param, env);
-        if(str_op_threshold_count)
-        {
-            axutil_param_t *threshold_count_param = NULL;
-            threshold_count_param = axutil_param_create(env, BAM_PUBLISHER_OPERATION_REQUEST_THRESHOLD_COUNT_PARAM, 
-                    str_op_threshold_count);
-            if(threshold_count_param)
-            {
-                axis2_conf_add_param(conf, env, threshold_count_param);
-            }
-        }
-    }
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[adminservices] Exit:bam_publisher_init");
 

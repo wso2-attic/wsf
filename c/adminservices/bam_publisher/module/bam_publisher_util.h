@@ -35,7 +35,6 @@ extern "C"
  * @ingroup axis2_counter
  * @{
  */
-#define BAM_PUBLISHER_SERVICE_ACTION "http://wso2.org/services/BAMServiceStatisticsSubscriberService/send"
 #define BAM_PUBLISHER_SERVICE_STAT_HANDLER "ServiceStatHandler"
 #define BAM_PUBLISHER_OPERATION_STAT_HANDLER "OperationStatHandler"
 
@@ -59,8 +58,10 @@ extern "C"
 
 #define STATISTICS_DATA_ELEMENT_NAME_OPERATION_NAME "OperationName"
 
+#define BAM_PUBLISHER_MODULE "bam_publisher"
 #define BAM_PUBLISHER_SERVICE_REQUEST_THRESHOLD_COUNT_PARAM "service_request_count_threshold"
 #define BAM_PUBLISHER_OPERATION_REQUEST_THRESHOLD_COUNT_PARAM "operation_request_count_threshold"
+#define BAM_PUBLISHER_DEFAULT_THRESHOLD_COUNT 5
 /** 
  * @brief counter struct impl
  *	Counter Struct
