@@ -193,7 +193,7 @@ bam_publisher_util_publish(
                 axis2_msg_ctx_set_svc(new_msg_ctx, env, svc);
                 property = axutil_property_create_with_args(env, 0, 0, 0, 
                         "/carbon/bam/data/publishers/service_stats");
-                axis2_msg_ctx_set_property(msg_ctx, env, "topic", property);
+                axis2_msg_ctx_set_property(msg_ctx, env, "Topic", property);
                 pub_mod = savan_publisher_create_with_conf(env, conf);
                 if(pub_mod)
                 {
