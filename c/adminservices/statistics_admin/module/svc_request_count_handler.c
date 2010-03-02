@@ -80,6 +80,7 @@ axis2_statistics_admin_svc_request_count_handler_invoke(struct axis2_handler *ha
             const axis2_char_t *svc_name = NULL;
 
             svc_name = axis2_svc_get_name(svc, env);
+            axutil_allocator_switch_to_global_pool(env->allocator);
             counter = service_admin_counter_create(env, svc_name, NULL);
             if(counter)
             {
@@ -90,6 +91,7 @@ axis2_statistics_admin_svc_request_count_handler_invoke(struct axis2_handler *ha
                     axis2_svc_add_param(svc, env, param);
                 }
             }
+            axutil_allocator_switch_to_local_pool(env->allocator);
         }
     }
     

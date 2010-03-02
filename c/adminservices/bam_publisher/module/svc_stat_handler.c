@@ -95,7 +95,9 @@ bam_publisher_svc_stat_handler_invoke(struct axis2_handler *handler,
             threshold_count = axutil_atoi(str_threshold_count);
         }
     }
+    axutil_allocator_switch_to_global_pool(env->allocator);
     last_count = service_admin_counter_get_last_count(env, msg_ctx, svc_name, NULL);
+    axutil_allocator_switch_to_local_pool(env->allocator);
     if((current_count - last_count) > threshold_count)
     {
         axis2_char_t *server_name = NULL;
@@ -108,7 +110,9 @@ bam_publisher_svc_stat_handler_invoke(struct axis2_handler *handler,
         long fault_count = bam_publisher_statistics_get_service_fault_count(env, msg_ctx, svc);
 
         /* Eventing threshold count reached. So let's fire the event */
+        axutil_allocator_switch_to_global_pool(env->allocator);
         service_admin_counter_set_last_count(env, msg_ctx, svc_name, NULL, current_count);
+        axutil_allocator_switch_to_local_pool(env->allocator);
         server_name = service_admin_util_get_epr_address(env, msg_ctx, NULL);
         payload = bam_publisher_util_get_payload(env, server_name, avg_res_time, 
                 min_res_time, max_res_time, request_count, response_count, fault_count, svc_name, 

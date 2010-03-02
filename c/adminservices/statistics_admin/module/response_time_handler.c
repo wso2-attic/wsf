@@ -88,7 +88,6 @@ axis2_statistics_admin_calculate_response_times(
     axis2_status_t status = AXIS2_SUCCESS;
     axis2_op_ctx_t *op_ctx = NULL;
 
-    axutil_allocator_switch_to_global_pool(env->allocator);
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
     if(op_ctx)
     {
@@ -137,6 +136,7 @@ axis2_statistics_admin_calculate_response_times(
                 }
                 else
                 {
+                    axutil_allocator_switch_to_global_pool(env->allocator);
                     res_time_processor = service_admin_response_time_processor_create(env);
                     if(res_time_processor)
                     {
@@ -146,6 +146,7 @@ axis2_statistics_admin_calculate_response_times(
                                 res_time_processor);
                         axis2_svc_add_param(svc, env, param);
                     }
+                    axutil_allocator_switch_to_local_pool(env->allocator);
                 }
             }
             op = axis2_msg_ctx_get_op(msg_ctx, env);
@@ -172,6 +173,7 @@ axis2_statistics_admin_calculate_response_times(
                 }
                 else
                 {
+                    axutil_allocator_switch_to_global_pool(env->allocator);
                     res_time_processor = service_admin_response_time_processor_create(env);
                     if(res_time_processor)
                     {
@@ -181,12 +183,12 @@ axis2_statistics_admin_calculate_response_times(
                                 res_time_processor);
                         axis2_op_add_param(op, env, param);
                     }
+                    axutil_allocator_switch_to_local_pool(env->allocator);
                 }
             }
 
         }
     }
-    axutil_allocator_switch_to_local_pool(env->allocator);
     return status;
 }
 

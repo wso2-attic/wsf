@@ -87,6 +87,7 @@ axis2_statistics_admin_out_op_count_handler_invoke(struct axis2_handler *handler
             axis2_char_t *op_name = NULL;
 
             op_name = axutil_qname_get_localpart(axis2_op_get_qname(op, env), env);
+            axutil_allocator_switch_to_global_pool(env->allocator);
             counter = service_admin_counter_create(env, svc_name, op_name);
             if(counter)
             {
@@ -97,6 +98,7 @@ axis2_statistics_admin_out_op_count_handler_invoke(struct axis2_handler *handler
                     axis2_op_add_param(op, env, param);
                 }
             }
+            axutil_allocator_switch_to_local_pool(env->allocator);
         }
     }
     
