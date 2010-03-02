@@ -138,12 +138,9 @@ AC_ARG_WITH(registry,
 )
 
 AC_MSG_CHECKING(To Use XPath based filter . This is an optional module to build Savan C)
-AC_ARG_WITH(xpath,
-[  --with-xpath[=PATH]     Find the libxml2 header files in 'PATH'.
-    'PATH' should point to libxml2 include files location.
-    If you omit the '=PATH' part completely, the configure script will assume
-    libxml2 is installed in default paths.],
-[ case "$withval" in
+AC_ARG_ENABLE(xpath, [  --enable-xpath
+                      Enable XPath filtering support (default=yes)],
+[ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
     SAVAN_FILTER=""
@@ -154,18 +151,16 @@ AC_ARG_WITH(xpath,
     SAVAN_FILTER="xpath"
     SAVAN_FILTER_LIB=xpath/libsavan_filter_mod.la
     dnl Find libxml2 include dir in the path
-    if test -d $withval; then
-        xpathinc="-I$withval"
-    dnl else find the libxml2 include dir in /usr/local/include
-    elif test -d '/usr/include/libxml2'; then
-        xpathinc="-I/usr/include/libxml2"
+    dnl Find the libxml2/libxslt include dir in /usr/include
+    if test -d '/usr/include'; then
+        xpathinc="-I/usr/include"
     else
-        AC_MSG_ERROR(could not find libxml2. stop)
+        AC_MSG_ERROR(could not find libxml2/libxslt. Assume set in CFLAGS)
     fi
     PKG_CHECK_MODULES(XSLT, libxslt)
     CFLAGS="$CFLAGS -DSAVAN_FILTERING $XSLT_CFLAGS"
     LDFLAGS="$LDFLAGS -lxslt"
-    ;;
+    ;; 
   esac ],
   AC_MSG_RESULT(no)
 )
