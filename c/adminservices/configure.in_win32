@@ -12,10 +12,10 @@ WSFC_HOME_DIR=..\wso2-wsf-c-bin-2.0.0-win32
 
 # OpenSLL Binary Location
 
-OPENSSL_BIN_DIR=F:\OpenSSL
+OPENSSL_BIN_DIR=C:\OpenSSL
 
 # CRUNTIME Libaray Setting { Options  /MT or /MD}
-CRUNTIME=/MD
+CRUNTIME=/MT
 
 # Wheather to embed the manifest files or not.
 
