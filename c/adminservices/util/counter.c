@@ -96,8 +96,10 @@ service_admin_counter_last_counts_free_void_arg(
     void *lcounts,
     const axutil_env_t *env)
 {
+    axutil_hash_t *last_counts = NULL;
+    
     axutil_allocator_switch_to_global_pool(env->allocator);
-    axutil_hash_t *last_counts = (axutil_hash_t *) lcounts;
+    last_counts = (axutil_hash_t *) lcounts;
     if(last_counts)
     {
         axutil_hash_index_t *hi;
