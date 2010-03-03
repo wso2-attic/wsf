@@ -18,7 +18,7 @@ libServerAdmin_la_SOURCES =    axis2_skel_ServerAdmin.c \
 								codegen/adb_getServerDataResponse.c \
 								codegen/adb_restartGracefullyResponse.c \
 								codegen/adb_shutdownResponse.c
-libServerAdmin_la_LIBADD = 
+libServerAdmin_la_LIBADD = ../util/libservice_admin_util.la 
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \

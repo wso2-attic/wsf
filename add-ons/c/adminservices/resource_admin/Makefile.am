@@ -70,7 +70,7 @@ libResourceAdminService_la_SOURCES = axis2_skel_ResourceAdminService.c \
 							   codegen/axis2_svc_skel_ResourceAdminService.c \
 							   codegen/adb_getVersionsBean.c \
 							   codegen/adb_getCollectionContent.c 
-libResourceAdminService_la_LIBADD = 
+libResourceAdminService_la_LIBADD =../util/libservice_admin_util.la
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \

@@ -83,7 +83,7 @@ libServiceAdmin_la_SOURCES =   adb_Policy.c \
 								codegen/axis2_svc_skel_ServiceAdmin.c \
 								codegen/adb_Map.c \
 								codegen/adb_getModulePolicy.c
-libServiceAdmin_la_LIBADD = 
+libServiceAdmin_la_LIBADD = ../util/libservice_admin_util.la
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
