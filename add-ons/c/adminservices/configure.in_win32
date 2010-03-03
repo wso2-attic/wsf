@@ -8,7 +8,7 @@
 
 # Add your WSF/C or WSF/CPP binary location
 
-WSFC_HOME_DIR=..\wso2-wsf-c-bin-2.0.0-win32
+WSFC_HOME_DIR=E:\wsf\c\trunk\wso2-wsf-c-bin-2.0.0-win32
 
 # OpenSLL Binary Location
 
