@@ -1,3 +1,4 @@
+-------------------------------------------------------
 WSO2 Web Services Framework (WSF) Admin Console for 
 Apache Axis2/C, WSO2 WSF/C and WSO2 WSF/C++ M1 Released
 =======================================================
@@ -7,52 +8,66 @@ for Apache Axis2/C, WSO2 WSF/C and WSO2 WSF/C++.
 
 You can download this release from http://wso2.org/downloads/wsf/c
 
-WSO2 WSF Admin Console is a runtime management console for Apache Axis2/C, WSO2 Web Service Framework for C and C++ powered by the WSO2 Carbon Frontend which is a java based web UI. The management console backend is implemented as both services and modules that are deployed within the framework itself. The communication between the frontend and backend is based on SOAP and REST.
+WSO2 WSF Admin Console is a runtime management GUI for Apache Axis2/C,
+WSO2 Web Service Framework for C and WSO2 Web Services Framework for C++ 
+that is powered by the WSO2 Carbon Frontend, a Java based web UI. 
+The management console backend is a collection of Axis2/C services and modules 
+that are deployed within the framework itself. The communication between 
+the frontend and backend is based on SOAP and REST.
 
 ------------
 Key Features
 ============
- 1. Configure Apache Axis2/C, WSO2 WSF/C and WSO2 WSF/C++ though a Web UI
- 2. Ability to view service group, service, operation and module meta data.
- 3. Dynamically configure security
- 4. Policy Editor
- 5. Monitor service usage statistics
+
+1. Configure Apache Axis2/C, WSO2 WSF/C and WSO2 WSF/C++ through a Web UI
+2. Ability to view service group, service, operation and module meta data
+3. Configure and apply/remove security on a service dynamically
+4. Policy Editor
+5. Monitor service usage statistics
 
 ------------------
 Reporting Problems
 ==================
 
-Please report the issues using the public JIRA available at:
- https://wso2.org/jira/browse/WSFC
+Please report issues on the public JIRA available at: 
+https://wso2.org/jira/browse/WSFC
 
 ------------------
 Contact Us
 ==================
 
-Please subscribe to our user or developer mailing lists. For details on how to subscribe visit http://wso2.org/mail
+Please subscribe to our user or developer mailing lists. For details on how to 
+subscribe please visit http://wso2.org/mail.
 
 We welcome your feedback on this implementation.
 
-Thank you for your interest in WSO2 WSF Admin Console
+Thank you for your interest in WSO2 WSF Admin Console.
 
 ------------------
 Discussion Forums
 ==================
 
-You can use following public forums to find answers to any of the issues you might come accross.
+Please feel free to use the following public forums to find out answers to 
+issues you may come across.
 
 1. http://wso2.org/forum/185
 2. http://wso2.org/forum/352.
 
+--------
 Training
 ========
-WSO2 Inc. offers a variety of professional Training Programs which includes training on WSF/C. 
+WSO2 Inc. offers a variety of professional Training Programs which includes 
+training on WSF/C. 
 For additional information please refer to http://wso2.com/training/
 
+-------
 Support
-========
-WSO2 Inc. offers a variety of development and production support programs, ranging from Web-based 
-support up through normal business hours, to premium 24x7 phone support.
-For additional support information please refer to http://wso2.com/services/support/
+=======
+WSO2 Inc. offers a variety of development and production support programs, 
+ranging from Web-based support which is up through normal business hours, to 
+premium 24x7 phone support.
+
+For additional support information please refer to 
+http://wso2.com/services/support/
 
 -- WSO2 WSF/C Team --
