@@ -32,7 +32,7 @@ libOperationAdmin_la_SOURCES = axis2_skel_OperationAdmin.c \
 								codegen/adb_listOperationPhasesResponse.c \
 								codegen/adb_getPolicy.c \
 								codegen/adb_listPublishedOperations.c 
-libOperationAdmin_la_LIBADD = 
+libOperationAdmin_la_LIBADD = ../util/libservice_admin_util.la
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
