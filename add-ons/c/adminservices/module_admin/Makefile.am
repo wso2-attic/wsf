@@ -46,8 +46,10 @@ libModuleAdminService_la_SOURCES = axis2_skel_ModuleAdminService.c \
 							 codegen/axis2_svc_skel_ModuleAdminService.c \
 							 codegen/adb_engageModuleForServiceResponse.c \
 							 codegen/adb_Exception.c \
-							 codegen/adb_listModulesForServiceResponse.c 
-libModuleAdminService_la_LIBADD = 
+							 codegen/adb_listModulesForServiceResponse.c
+
+libModuleAdminService_la_LIBADD = ../util/libservice_admin_util.la
+
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
