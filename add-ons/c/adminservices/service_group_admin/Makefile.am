@@ -28,7 +28,7 @@ libServiceGroupAdmin_la_SOURCES = axis2_skel_ServiceGroupAdmin.c \
 									codegen/adb_ParameterMetaData.c \
 									codegen/adb_getServiceGroupParameter.c \
 									codegen/adb_setServiceGroupParameters.c 
-libServiceGroupAdmin_la_LIBADD = 
+libServiceGroupAdmin_la_LIBADD = ../util/libservice_admin_util.la
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
