@@ -1,0 +1,15 @@
+<module name="bam_publisher" class="bam_publisher">
+    <Description>
+        This module responsible for firing bam_publisher events
+    </Description>
+    <inflow>
+        <handler name="ServiceStatHandler" class="bam_publisher">
+            <order phase="PostDispatch"/>
+        </handler>
+        <handler name="OperationStatHandler" class="bam_publisher">
+            <order phase="OpPhase"/>
+        </handler>
+    </inflow>
+   <parameter name="service_request_count_threshold" locked="false">2</parameter>
+   <parameter name="operation_request_count_threshold" locked="false">2</parameter>
+</module>

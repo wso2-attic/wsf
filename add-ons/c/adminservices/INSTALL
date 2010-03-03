@@ -1,0 +1,73 @@
+WSO2 WSF Admin Console for WSF/C and WSF/C++
+============================================
+
+Table of Contents
+=================
+1. Prerequisites
+2. Getting the Admin Console Working on Linux
+2.1 Using Source Release
+3. Getting the Admin Console Working on Windows (Win32)
+3.1 Using Binary Release
+3.2 Using Source Release
+
+1. Prerequisites
+================
+  1. Download and install WSO2 Web Services Framework for C { WSF/C } or WSO2 Web Services Framework for C++
+     depending on your requirements. 
+  1.1.Download WSF/C from http://wso2.org/downloads/wsf/cpp
+  1.2 Download WSF/C++ from http://wso2.org/downloads/wsf/c
+
+2. Getting the Admin Console Working on Linux
+=============================================
+
+2.1 Using Source Release
+-------------------------
+  1. Linux source distribution come as a .zip file named as wso2-wsf-admin-x.y.z.zip
+     Before installing WSF Admin you will need to have installed either WSO2 WSF/C or WSF/C++.
+  2. unzip the source dist using unzip wso2-wsf-admin-x.y.z.zip
+  3. Execute the following commands.
+     $./configure --with-wsfc=/home/<User>/wsfc/deploy/include
+     $./make
+     $./make install
+
+  4. Inorder to install the Admin Console UI run the shell script named setup.sh which will promt you to select
+     the installation type, WSO2 Web Service Framework installation directory and the prefered installation directory
+     for WSO2 Carbon based Admin Console.
+  5. Now you have successfully installed the Admin Console and WSO2 WSF Admin Services and Modules. 
+  6. Now move to the Admin Console installation directory.
+	cd <Admin Console installation directory>/bin
+	sh wso2server.sh 
+  7. Open a web browser and type the url http://localhost:9763/
+  8. You would get the carbon console UI with Server URL set to your axis2_http_server running port.
+  9. Move to WSO2 Web Services Framework installation directory and start axis2_http_server. 
+  10. Now you are ready to try out the Admin Console. Use username "admin" and password "admin" to log into the admin console.
+  11. Enjoy the power of the admin console in managing WSO2 Web Services Framework. 
+	
+   	
+3. Getting the Admin Console Working on Windows (Win32)
+=======================================================
+	
+3.1 Using Binary Release
+------------------------
+  1. You would need to have installed WSO2 Web Services Framework for C or C++.
+  2. Unzip the binary distribution to your prefered location which we will refer to as WSF Admin Home
+  3. Run the setup.bat file located in the root directory of WSF Admin and provide your configuration selection 
+     setting when prompted.
+  4. The setup.bat file would install and configure the admin console for you.
+  5. Now move to WSo2 WSF directory and start axis2_http_server.
+  6. Move to Admin console installation direcotry and move to bin directory under it and run wso2server.bat file. 
+  7. Open your browser and type the url http://localhost:9763/
+	
+3.2 Using Source Release
+------------------------
+ This set of installation instructions assumes that you have already successfully installed WSF/C or WSF/C++ from source.
+
+ 1. unzip the source distribution. 
+ 2. open the file configure.in_win32 file using a text editor and set your configuaration setting on it.
+ 3. Now run the build.bat file from the same directory as :\> build.bat mkdist.
+ 4. This would built WSO2 WSF Admin and copy the binary files to dist directory named wso2-wsf-admin-bin-m1-win32 under the build directory.
+ 5. Run the setup.bat file located in the bin  directory and specify your configuration settings. 
+ 6. Go to WSO2 Web Services framework installation directory and move to bin directory. Start axis2_http_server.exe
+ 7. Move to your <WSF Admin Console installation>/bin directory and run wso2server.bat file. This would start the admin console frontend. 
+ 8. Now you have installed all components. Open your browser and type the url http://localhost:9763/
+ 

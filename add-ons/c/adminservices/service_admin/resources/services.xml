@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: #axisVersion# #today# -->
+<service name="ServiceAdmin">
+    <parameter name="ServiceClass">ServiceAdmin</parameter>
+    <description>ServiceAdmin Service
+            </description>
+    <operation name="startService" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:startService</parameter>
+    </operation>
+    <operation name="getExposedTransports" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getExposedTransports</parameter>
+    </operation>
+    <operation name="listServiceGroup" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listServiceGroup</parameter>
+    </operation>
+    <operation name="addTransportBinding" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:addTransportBinding</parameter>
+    </operation>
+    <operation name="getWSDL" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getWSDL</parameter>
+    </operation>
+    <operation name="getNumberOfFaultyServices" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getNumberOfFaultyServices</parameter>
+    </operation>
+    <operation name="configureMTOM" mep="http://www.w3.org/ns/wsdl/in-only">
+        <parameter name="wsamapping">urn:configureMTOM</parameter>
+    </operation>
+    <operation name="setServicePolicy" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:setServicePolicy</parameter>
+    </operation>
+    <operation name="getPolicy" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getPolicy</parameter>
+    </operation>
+    <operation name="getFaultyServiceArchives" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getFaultyServiceArchives</parameter>
+    </operation>
+    <operation name="addPoliciesToService" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:addPoliciesToService</parameter>
+    </operation>
+    <operation name="getServiceParameters" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getServiceParameters</parameter>
+    </operation>
+    <operation name="setBindingOperationMessagePolicy" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:setBindingOperationMessagePolicy</parameter>
+    </operation>
+    <operation name="setBindingPolicy" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:setBindingPolicy</parameter>
+    </operation>
+    <operation name="removeServicePoliciesByNamespace" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:removeServicePoliciesByNamespace</parameter>
+    </operation>
+    <operation name="setBindingOperationPolicy" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:setBindingOperationPolicy</parameter>
+    </operation>
+    <operation name="setModulePolicy" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:setModulePolicy</parameter>
+    </operation>
+    <operation name="getBindingOperationMessagePolicy" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getBindingOperationMessagePolicy</parameter>
+    </operation>
+    <operation name="changeServiceState" mep="http://www.w3.org/ns/wsdl/in-only">
+        <parameter name="wsamapping">urn:changeServiceState</parameter>
+    </operation>
+    <operation name="setServiceParameters" mep="http://www.w3.org/ns/wsdl/in-only">
+        <parameter name="wsamapping">urn:setServiceParameters</parameter>
+    </operation>
+    <operation name="getOperationMessagePolicy" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getOperationMessagePolicy</parameter>
+    </operation>
+    <operation name="getNumberOfActiveServices" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getNumberOfActiveServices</parameter>
+    </operation>
+    <operation name="getServiceData" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getServiceData</parameter>
+    </operation>
+    <operation name="removeTransportBinding" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:removeTransportBinding</parameter>
+    </operation>
+    <operation name="getPolicies" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getPolicies</parameter>
+    </operation>
+    <operation name="removeServiceParameter" mep="http://www.w3.org/ns/wsdl/in-only">
+        <parameter name="wsamapping">urn:removeServiceParameter</parameter>
+    </operation>
+    <operation name="getBindingOperationPolicy" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getBindingOperationPolicy</parameter>
+    </operation>
+    <operation name="deleteServiceGroups" mep="http://www.w3.org/ns/wsdl/in-only">
+        <parameter name="wsamapping">urn:deleteServiceGroups</parameter>
+    </operation>
+    <operation name="getNumberOfInactiveServices" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getNumberOfInactiveServices</parameter>
+    </operation>
+    <operation name="setServiceOperationPolicy" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:setServiceOperationPolicy</parameter>
+    </operation>
+    <operation name="deleteFaultyServiceGroup" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:deleteFaultyServiceGroup</parameter>
+    </operation>
+    <operation name="engageModuleToService" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:engageModuleToService</parameter>
+    </operation>
+    <operation name="deleteFaultyServiceGroups" mep="http://www.w3.org/ns/wsdl/in-only">
+        <parameter name="wsamapping">urn:deleteFaultyServiceGroups</parameter>
+    </operation>
+    <operation name="removeBindingPolicy" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:removeBindingPolicy</parameter>
+    </operation>
+    <operation name="deleteAllFaultyServiceGroups" mep="http://www.w3.org/ns/wsdl/in-only">
+        <parameter name="wsamapping">urn:deleteAllFaultyServiceGroups</parameter>
+    </operation>
+    <operation name="deleteAllNonAdminServiceGroups" mep="http://www.w3.org/ns/wsdl/in-only">
+        <parameter name="wsamapping">urn:deleteAllNonAdminServiceGroups</parameter>
+    </operation>
+    <operation name="getModulePolicy" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getModulePolicy</parameter>
+    </operation>
+    <operation name="setPolicy" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:setPolicy</parameter>
+    </operation>
+    <operation name="listServiceGroups" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listServiceGroups</parameter>
+    </operation>
+    <operation name="setServiceOperationMessagePolicy" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:setServiceOperationMessagePolicy</parameter>
+    </operation>
+    <operation name="getBindingPolicy" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getBindingPolicy</parameter>
+    </operation>
+    <operation name="getServiceBindings" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getServiceBindings</parameter>
+    </operation>
+    <operation name="stopService" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:stopService</parameter>
+    </operation>
+    <operation name="getOperationPolicy" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getOperationPolicy</parameter>
+    </operation>
+<parameter name="adminService" locked="true">true</parameter>
+</service>

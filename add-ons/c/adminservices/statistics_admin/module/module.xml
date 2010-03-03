@@ -1,0 +1,32 @@
+<module name="statistics" class="statistics">
+    <Description>
+        This module handles server statistics
+    </Description>
+    <inflow>
+        <handler name="GlobalRequestCounter" class="statistics">
+            <order phase="Transport"/>
+        </handler>
+        <handler name="ServiceRequestCounter" class="statistics">
+            <order phase="Dispatch"/>
+        </handler>
+        <handler name="OperationInCounter" class="statistics">
+            <order phase="OpPhase"/>
+        </handler>
+        <handler name="ResponseTimeHandler" class="statistics">
+            <order phase="Transport"/>
+        </handler>
+    </inflow>
+    <outflow>        
+        <handler name="OperationOutCounter" class="statistics">
+            <order phase="OpPhase"/>
+        </handler>   
+        <handler name="ResponseTimeHandler" class="statistics">
+            <order phase="MessageOut"/>
+        </handler>   
+    </outflow>
+    <OUTfaultflow>        
+        <handler name="FaultCounter" class="statistics">
+            <order phase="MessageOut"/>
+        </handler>   
+    </OUTfaultflow>
+</module>

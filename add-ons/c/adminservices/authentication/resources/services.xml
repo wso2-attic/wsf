@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: #axisVersion# #today# -->
+<service name="AuthenticationAdminService">
+    <parameter name="ServiceClass">AuthenticationAdminService</parameter>
+    <description>AuthenticationAdminService Service
+            </description>
+    <operation name="logout" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:logout</parameter>
+    </operation>
+    <operation name="login" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:login</parameter>
+    </operation>
+    <operation name="getSystemPermissionOfUser" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getSystemPermissionOfUser</parameter>
+    </operation>
+    <operation name="loginWithDelegation" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:loginWithDelegation</parameter>
+    </operation>
+    <operation name="getUserPermissions" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getUserPermissions</parameter>
+    </operation>
+ <parameter name="adminService" locked="true">true</parameter>
+</service>

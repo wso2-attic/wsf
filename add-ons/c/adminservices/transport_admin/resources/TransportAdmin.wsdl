@@ -1,0 +1,950 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:axis2="http://mgt.transport.carbon.wso2.org" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ax240="http://mgt.transport.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ax238="http://util.transports.core.carbon.wso2.org/xsd" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mgt.transport.carbon.wso2.org">
+    <wsdl:documentation>TransportAdmin</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax242="http://mgt.transport.carbon.wso2.org/xsd" xmlns:ax239="http://util.transports.core.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:import namespace="http://util.transports.core.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://mgt.transport.carbon.wso2.org/xsd" />
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Exception" nillable="true" type="xs:anyType" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="Exception">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="Exception" nillable="true" type="ns:Exception" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateServiceSpecificOutParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="transport" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="service" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="params" nillable="true" type="ax239:TransportParameter" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateServiceSpecificInParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="transport" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="service" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="params" nillable="true" type="ax239:TransportParameter" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateGloballyDefinedOutParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="transport" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="params" nillable="true" type="ax239:TransportParameter" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateGloballyDefinedInParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="transport" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="params" nillable="true" type="ax239:TransportParameter" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeExposedTransports">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="transportProtocol" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listTransportsForService">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listTransportsForServiceResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax239:TransportSummary" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listTransportsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax239:TransportSummary" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listExposedTransports">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listExposedTransportsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax239:TransportSummary" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getTransportDetails">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="transportProtocol" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getTransportDetailsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax239:TransportDetails" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceSpecificOutParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="transport" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="service" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceSpecificOutParametersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax239:TransportParameter" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceSpecificInParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="transport" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="service" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceSpecificInParametersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax239:TransportParameter" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getGloballyDefinedOutParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="transport" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getGloballyDefinedOutParametersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax239:TransportParameter" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getGloballyDefinedInParameters">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="transport" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getGloballyDefinedInParametersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax239:TransportParameter" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllTransportDataResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax242:TransportData" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="disableSender">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="transport" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="disableListener">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="transport" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="dependenciesAvailable">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="transport" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="params" nillable="true" type="ax239:TransportParameter" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="dependenciesAvailableResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addExposedTransports">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="transport" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://util.transports.core.carbon.wso2.org/xsd">
+            <xs:complexType name="TransportParameter">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="paramElement" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="value" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="TransportSummary">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="listenerActive" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="nonRemovable" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="protocol" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="senderActive" type="xs:boolean" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="TransportDetails">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="inParameters" nillable="true" type="ax238:TransportParameter" />
+                    <xs:element minOccurs="0" name="listenerActive" type="xs:boolean" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="outParameters" nillable="true" type="ax238:TransportParameter" />
+                    <xs:element minOccurs="0" name="senderActive" type="xs:boolean" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax241="http://util.transports.core.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mgt.transport.carbon.wso2.org/xsd">
+            <xs:import namespace="http://util.transports.core.carbon.wso2.org/xsd" />
+            <xs:complexType name="TransportData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="details" nillable="true" type="ax241:TransportDetails" />
+                    <xs:element minOccurs="0" name="summary" nillable="true" type="ax241:TransportSummary" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="disableListenerRequest">
+        <wsdl:part name="parameters" element="ns1:disableListener" />
+    </wsdl:message>
+    <wsdl:message name="Exception">
+        <wsdl:part name="parameters" element="ns1:Exception" />
+    </wsdl:message>
+    <wsdl:message name="getAllTransportDataRequest" />
+    <wsdl:message name="getAllTransportDataResponse">
+        <wsdl:part name="parameters" element="ns1:getAllTransportDataResponse" />
+    </wsdl:message>
+    <wsdl:message name="dependenciesAvailableRequest">
+        <wsdl:part name="parameters" element="ns1:dependenciesAvailable" />
+    </wsdl:message>
+    <wsdl:message name="dependenciesAvailableResponse">
+        <wsdl:part name="parameters" element="ns1:dependenciesAvailableResponse" />
+    </wsdl:message>
+    <wsdl:message name="updateGloballyDefinedInParametersRequest">
+        <wsdl:part name="parameters" element="ns1:updateGloballyDefinedInParameters" />
+    </wsdl:message>
+    <wsdl:message name="disableSenderRequest">
+        <wsdl:part name="parameters" element="ns1:disableSender" />
+    </wsdl:message>
+    <wsdl:message name="getGloballyDefinedOutParametersRequest">
+        <wsdl:part name="parameters" element="ns1:getGloballyDefinedOutParameters" />
+    </wsdl:message>
+    <wsdl:message name="getGloballyDefinedOutParametersResponse">
+        <wsdl:part name="parameters" element="ns1:getGloballyDefinedOutParametersResponse" />
+    </wsdl:message>
+    <wsdl:message name="getServiceSpecificOutParametersRequest">
+        <wsdl:part name="parameters" element="ns1:getServiceSpecificOutParameters" />
+    </wsdl:message>
+    <wsdl:message name="getServiceSpecificOutParametersResponse">
+        <wsdl:part name="parameters" element="ns1:getServiceSpecificOutParametersResponse" />
+    </wsdl:message>
+    <wsdl:message name="listTransportsForServiceRequest">
+        <wsdl:part name="parameters" element="ns1:listTransportsForService" />
+    </wsdl:message>
+    <wsdl:message name="listTransportsForServiceResponse">
+        <wsdl:part name="parameters" element="ns1:listTransportsForServiceResponse" />
+    </wsdl:message>
+    <wsdl:message name="getTransportDetailsRequest">
+        <wsdl:part name="parameters" element="ns1:getTransportDetails" />
+    </wsdl:message>
+    <wsdl:message name="getTransportDetailsResponse">
+        <wsdl:part name="parameters" element="ns1:getTransportDetailsResponse" />
+    </wsdl:message>
+    <wsdl:message name="updateServiceSpecificOutParametersRequest">
+        <wsdl:part name="parameters" element="ns1:updateServiceSpecificOutParameters" />
+    </wsdl:message>
+    <wsdl:message name="getServiceSpecificInParametersRequest">
+        <wsdl:part name="parameters" element="ns1:getServiceSpecificInParameters" />
+    </wsdl:message>
+    <wsdl:message name="getServiceSpecificInParametersResponse">
+        <wsdl:part name="parameters" element="ns1:getServiceSpecificInParametersResponse" />
+    </wsdl:message>
+    <wsdl:message name="listExposedTransportsRequest">
+        <wsdl:part name="parameters" element="ns1:listExposedTransports" />
+    </wsdl:message>
+    <wsdl:message name="listExposedTransportsResponse">
+        <wsdl:part name="parameters" element="ns1:listExposedTransportsResponse" />
+    </wsdl:message>
+    <wsdl:message name="updateServiceSpecificInParametersRequest">
+        <wsdl:part name="parameters" element="ns1:updateServiceSpecificInParameters" />
+    </wsdl:message>
+    <wsdl:message name="updateGloballyDefinedOutParametersRequest">
+        <wsdl:part name="parameters" element="ns1:updateGloballyDefinedOutParameters" />
+    </wsdl:message>
+    <wsdl:message name="addExposedTransportsRequest">
+        <wsdl:part name="parameters" element="ns1:addExposedTransports" />
+    </wsdl:message>
+    <wsdl:message name="removeExposedTransportsRequest">
+        <wsdl:part name="parameters" element="ns1:removeExposedTransports" />
+    </wsdl:message>
+    <wsdl:message name="getGloballyDefinedInParametersRequest">
+        <wsdl:part name="parameters" element="ns1:getGloballyDefinedInParameters" />
+    </wsdl:message>
+    <wsdl:message name="getGloballyDefinedInParametersResponse">
+        <wsdl:part name="parameters" element="ns1:getGloballyDefinedInParametersResponse" />
+    </wsdl:message>
+    <wsdl:message name="listTransportsRequest" />
+    <wsdl:message name="listTransportsResponse">
+        <wsdl:part name="parameters" element="ns1:listTransportsResponse" />
+    </wsdl:message>
+    <wsdl:portType name="TransportAdminPortType">
+        <wsdl:operation name="disableListener">
+            <wsdl:input message="axis2:disableListenerRequest" wsaw:Action="urn:disableListener" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:disableListenerException" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllTransportData">
+            <wsdl:input message="axis2:getAllTransportDataRequest" wsaw:Action="urn:getAllTransportData" />
+            <wsdl:output message="axis2:getAllTransportDataResponse" wsaw:Action="urn:getAllTransportDataResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:getAllTransportDataException" />
+        </wsdl:operation>
+        <wsdl:operation name="dependenciesAvailable">
+            <wsdl:input message="axis2:dependenciesAvailableRequest" wsaw:Action="urn:dependenciesAvailable" />
+            <wsdl:output message="axis2:dependenciesAvailableResponse" wsaw:Action="urn:dependenciesAvailableResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:dependenciesAvailableException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateGloballyDefinedInParameters">
+            <wsdl:input message="axis2:updateGloballyDefinedInParametersRequest" wsaw:Action="urn:updateGloballyDefinedInParameters" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:updateGloballyDefinedInParametersException" />
+        </wsdl:operation>
+        <wsdl:operation name="disableSender">
+            <wsdl:input message="axis2:disableSenderRequest" wsaw:Action="urn:disableSender" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:disableSenderException" />
+        </wsdl:operation>
+        <wsdl:operation name="getGloballyDefinedOutParameters">
+            <wsdl:input message="axis2:getGloballyDefinedOutParametersRequest" wsaw:Action="urn:getGloballyDefinedOutParameters" />
+            <wsdl:output message="axis2:getGloballyDefinedOutParametersResponse" wsaw:Action="urn:getGloballyDefinedOutParametersResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:getGloballyDefinedOutParametersException" />
+        </wsdl:operation>
+        <wsdl:operation name="getServiceSpecificOutParameters">
+            <wsdl:input message="axis2:getServiceSpecificOutParametersRequest" wsaw:Action="urn:getServiceSpecificOutParameters" />
+            <wsdl:output message="axis2:getServiceSpecificOutParametersResponse" wsaw:Action="urn:getServiceSpecificOutParametersResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:getServiceSpecificOutParametersException" />
+        </wsdl:operation>
+        <wsdl:operation name="listTransportsForService">
+            <wsdl:input message="axis2:listTransportsForServiceRequest" wsaw:Action="urn:listTransportsForService" />
+            <wsdl:output message="axis2:listTransportsForServiceResponse" wsaw:Action="urn:listTransportsForServiceResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:listTransportsForServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="getTransportDetails">
+            <wsdl:input message="axis2:getTransportDetailsRequest" wsaw:Action="urn:getTransportDetails" />
+            <wsdl:output message="axis2:getTransportDetailsResponse" wsaw:Action="urn:getTransportDetailsResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:getTransportDetailsException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateServiceSpecificOutParameters">
+            <wsdl:input message="axis2:updateServiceSpecificOutParametersRequest" wsaw:Action="urn:updateServiceSpecificOutParameters" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:updateServiceSpecificOutParametersException" />
+        </wsdl:operation>
+        <wsdl:operation name="getServiceSpecificInParameters">
+            <wsdl:input message="axis2:getServiceSpecificInParametersRequest" wsaw:Action="urn:getServiceSpecificInParameters" />
+            <wsdl:output message="axis2:getServiceSpecificInParametersResponse" wsaw:Action="urn:getServiceSpecificInParametersResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:getServiceSpecificInParametersException" />
+        </wsdl:operation>
+        <wsdl:operation name="listExposedTransports">
+            <wsdl:input message="axis2:listExposedTransportsRequest" wsaw:Action="urn:listExposedTransports" />
+            <wsdl:output message="axis2:listExposedTransportsResponse" wsaw:Action="urn:listExposedTransportsResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:listExposedTransportsException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateServiceSpecificInParameters">
+            <wsdl:input message="axis2:updateServiceSpecificInParametersRequest" wsaw:Action="urn:updateServiceSpecificInParameters" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:updateServiceSpecificInParametersException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateGloballyDefinedOutParameters">
+            <wsdl:input message="axis2:updateGloballyDefinedOutParametersRequest" wsaw:Action="urn:updateGloballyDefinedOutParameters" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:updateGloballyDefinedOutParametersException" />
+        </wsdl:operation>
+        <wsdl:operation name="addExposedTransports">
+            <wsdl:input message="axis2:addExposedTransportsRequest" wsaw:Action="urn:addExposedTransports" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:addExposedTransportsException" />
+        </wsdl:operation>
+        <wsdl:operation name="removeExposedTransports">
+            <wsdl:input message="axis2:removeExposedTransportsRequest" wsaw:Action="urn:removeExposedTransports" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:removeExposedTransportsException" />
+        </wsdl:operation>
+        <wsdl:operation name="getGloballyDefinedInParameters">
+            <wsdl:input message="axis2:getGloballyDefinedInParametersRequest" wsaw:Action="urn:getGloballyDefinedInParameters" />
+            <wsdl:output message="axis2:getGloballyDefinedInParametersResponse" wsaw:Action="urn:getGloballyDefinedInParametersResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:getGloballyDefinedInParametersException" />
+        </wsdl:operation>
+        <wsdl:operation name="listTransports">
+            <wsdl:input message="axis2:listTransportsRequest" wsaw:Action="urn:listTransports" />
+            <wsdl:output message="axis2:listTransportsResponse" wsaw:Action="urn:listTransportsResponse" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="TransportAdminSoap11Binding" type="axis2:TransportAdminPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="disableListener">
+            <soap:operation soapAction="urn:disableListener" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllTransportData">
+            <soap:operation soapAction="urn:getAllTransportData" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateGloballyDefinedInParameters">
+            <soap:operation soapAction="urn:updateGloballyDefinedInParameters" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="dependenciesAvailable">
+            <soap:operation soapAction="urn:dependenciesAvailable" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getGloballyDefinedOutParameters">
+            <soap:operation soapAction="urn:getGloballyDefinedOutParameters" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="disableSender">
+            <soap:operation soapAction="urn:disableSender" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listTransportsForService">
+            <soap:operation soapAction="urn:listTransportsForService" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceSpecificOutParameters">
+            <soap:operation soapAction="urn:getServiceSpecificOutParameters" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getTransportDetails">
+            <soap:operation soapAction="urn:getTransportDetails" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceSpecificInParameters">
+            <soap:operation soapAction="urn:getServiceSpecificInParameters" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateServiceSpecificOutParameters">
+            <soap:operation soapAction="urn:updateServiceSpecificOutParameters" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listExposedTransports">
+            <soap:operation soapAction="urn:listExposedTransports" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateServiceSpecificInParameters">
+            <soap:operation soapAction="urn:updateServiceSpecificInParameters" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateGloballyDefinedOutParameters">
+            <soap:operation soapAction="urn:updateGloballyDefinedOutParameters" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addExposedTransports">
+            <soap:operation soapAction="urn:addExposedTransports" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeExposedTransports">
+            <soap:operation soapAction="urn:removeExposedTransports" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listTransports">
+            <soap:operation soapAction="urn:listTransports" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getGloballyDefinedInParameters">
+            <soap:operation soapAction="urn:getGloballyDefinedInParameters" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="TransportAdminSoap12Binding" type="axis2:TransportAdminPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="disableListener">
+            <soap12:operation soapAction="urn:disableListener" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllTransportData">
+            <soap12:operation soapAction="urn:getAllTransportData" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateGloballyDefinedInParameters">
+            <soap12:operation soapAction="urn:updateGloballyDefinedInParameters" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="dependenciesAvailable">
+            <soap12:operation soapAction="urn:dependenciesAvailable" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getGloballyDefinedOutParameters">
+            <soap12:operation soapAction="urn:getGloballyDefinedOutParameters" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="disableSender">
+            <soap12:operation soapAction="urn:disableSender" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listTransportsForService">
+            <soap12:operation soapAction="urn:listTransportsForService" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceSpecificOutParameters">
+            <soap12:operation soapAction="urn:getServiceSpecificOutParameters" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getTransportDetails">
+            <soap12:operation soapAction="urn:getTransportDetails" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceSpecificInParameters">
+            <soap12:operation soapAction="urn:getServiceSpecificInParameters" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateServiceSpecificOutParameters">
+            <soap12:operation soapAction="urn:updateServiceSpecificOutParameters" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listExposedTransports">
+            <soap12:operation soapAction="urn:listExposedTransports" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateServiceSpecificInParameters">
+            <soap12:operation soapAction="urn:updateServiceSpecificInParameters" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateGloballyDefinedOutParameters">
+            <soap12:operation soapAction="urn:updateGloballyDefinedOutParameters" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addExposedTransports">
+            <soap12:operation soapAction="urn:addExposedTransports" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeExposedTransports">
+            <soap12:operation soapAction="urn:removeExposedTransports" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listTransports">
+            <soap12:operation soapAction="urn:listTransports" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getGloballyDefinedInParameters">
+            <soap12:operation soapAction="urn:getGloballyDefinedInParameters" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="TransportAdminHttpBinding" type="axis2:TransportAdminPortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="disableListener">
+            <http:operation location="disableListener" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="disableListener" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getAllTransportData">
+            <http:operation location="getAllTransportData" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getAllTransportData" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getAllTransportData" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateGloballyDefinedInParameters">
+            <http:operation location="updateGloballyDefinedInParameters" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="updateGloballyDefinedInParameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="dependenciesAvailable">
+            <http:operation location="dependenciesAvailable" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="dependenciesAvailable" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="dependenciesAvailable" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getGloballyDefinedOutParameters">
+            <http:operation location="getGloballyDefinedOutParameters" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getGloballyDefinedOutParameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getGloballyDefinedOutParameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="disableSender">
+            <http:operation location="disableSender" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="disableSender" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="listTransportsForService">
+            <http:operation location="listTransportsForService" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="listTransportsForService" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="listTransportsForService" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceSpecificOutParameters">
+            <http:operation location="getServiceSpecificOutParameters" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getServiceSpecificOutParameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getServiceSpecificOutParameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getTransportDetails">
+            <http:operation location="getTransportDetails" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getTransportDetails" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getTransportDetails" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceSpecificInParameters">
+            <http:operation location="getServiceSpecificInParameters" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getServiceSpecificInParameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getServiceSpecificInParameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateServiceSpecificOutParameters">
+            <http:operation location="updateServiceSpecificOutParameters" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="updateServiceSpecificOutParameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="listExposedTransports">
+            <http:operation location="listExposedTransports" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="listExposedTransports" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="listExposedTransports" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateServiceSpecificInParameters">
+            <http:operation location="updateServiceSpecificInParameters" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="updateServiceSpecificInParameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="updateGloballyDefinedOutParameters">
+            <http:operation location="updateGloballyDefinedOutParameters" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="updateGloballyDefinedOutParameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addExposedTransports">
+            <http:operation location="addExposedTransports" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="addExposedTransports" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="removeExposedTransports">
+            <http:operation location="removeExposedTransports" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="removeExposedTransports" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="listTransports">
+            <http:operation location="listTransports" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="listTransports" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="listTransports" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getGloballyDefinedInParameters">
+            <http:operation location="getGloballyDefinedInParameters" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getGloballyDefinedInParameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getGloballyDefinedInParameters" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="TransportAdmin">
+        <wsdl:port name="TransportAdminHttpsSoap11Endpoint" binding="axis2:TransportAdminSoap11Binding">
+            <soap:address location="https://192.168.175.1:9443/services/TransportAdmin.TransportAdminHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="TransportAdminHttpsSoap12Endpoint" binding="axis2:TransportAdminSoap12Binding">
+            <soap12:address location="https://192.168.175.1:9443/services/TransportAdmin.TransportAdminHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="TransportAdminHttpsEndpoint" binding="axis2:TransportAdminHttpBinding">
+            <http:address location="https://192.168.175.1:9443/services/TransportAdmin.TransportAdminHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

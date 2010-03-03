@@ -1,0 +1,86 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AuthenticationAdminService", "authentication\codegen\AuthenticationAdminServiceService.vcproj", "{F9353372-DCAF-4C66-BAEC-DFECB9121C2B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KeyStoreAdminService", "keystore_admin\codegen\KeyStoreAdminServiceService.vcproj", "{37AC7CFA-7BFD-421B-BF78-8D9BF916804E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoggingAdmin", "logging_admin\codegen\LoggingAdminService.vcproj", "{265D2A76-C396-4920-B2C4-420A7DC9AF00}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModuleAdminService", "module_admin\codegen\ModuleAdminServiceService.vcproj", "{B5A8798B-3C9B-4023-BCEA-9E652007F466}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OperationAdmin", "operation_admin\codegen\OperationAdminService.vcproj", "{CCFB706B-962C-4911-8926-C1B1848BF4F8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ResourceAdminService", "resource_admin\codegen\ResourceAdminServiceService.vcproj", "{293B0292-A239-4DBD-BBC2-BB97871DE3FE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SecurityAdminService", "security_admin_service\codegen\SecurityAdminServiceService.vcproj", "{CF69B1AA-71A6-49FA-B3E2-CE53C0C86C20}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServerAdmin", "server_admin\codegen\ServerAdminService.vcproj", "{76B49BDA-5CC8-4E78-99BE-A7011CE6DF9D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServiceAdmin", "service_admin\codegen\ServiceAdminService.vcproj", "{1BE531FA-0222-42AB-8003-70AF6A9E0D0B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServiceGroupAdmin", "service_group_admin\codegen\ServiceGroupAdminService.vcproj", "{C54E2E3D-ACEE-4AC0-85B4-986EBA649BB7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TransportAdmin", "transport_admin\codegen\TransportAdminService.vcproj", "{7CDE1022-D9E5-49F2-B2D5-3E7CEC0A4E50}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UserManagementService", "usermanager\codegen\UserManagementServiceService.vcproj", "{F16E3A55-8545-4B8C-8DFD-71B9A75631BF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F9353372-DCAF-4C66-BAEC-DFECB9121C2B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F9353372-DCAF-4C66-BAEC-DFECB9121C2B}.Debug|Win32.Build.0 = Debug|Win32
+		{F9353372-DCAF-4C66-BAEC-DFECB9121C2B}.Release|Win32.ActiveCfg = Release|Win32
+		{F9353372-DCAF-4C66-BAEC-DFECB9121C2B}.Release|Win32.Build.0 = Release|Win32
+		{37AC7CFA-7BFD-421B-BF78-8D9BF916804E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{37AC7CFA-7BFD-421B-BF78-8D9BF916804E}.Debug|Win32.Build.0 = Debug|Win32
+		{37AC7CFA-7BFD-421B-BF78-8D9BF916804E}.Release|Win32.ActiveCfg = Release|Win32
+		{37AC7CFA-7BFD-421B-BF78-8D9BF916804E}.Release|Win32.Build.0 = Release|Win32
+		{265D2A76-C396-4920-B2C4-420A7DC9AF00}.Debug|Win32.ActiveCfg = Debug|Win32
+		{265D2A76-C396-4920-B2C4-420A7DC9AF00}.Debug|Win32.Build.0 = Debug|Win32
+		{265D2A76-C396-4920-B2C4-420A7DC9AF00}.Release|Win32.ActiveCfg = Release|Win32
+		{265D2A76-C396-4920-B2C4-420A7DC9AF00}.Release|Win32.Build.0 = Release|Win32
+		{B5A8798B-3C9B-4023-BCEA-9E652007F466}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B5A8798B-3C9B-4023-BCEA-9E652007F466}.Debug|Win32.Build.0 = Debug|Win32
+		{B5A8798B-3C9B-4023-BCEA-9E652007F466}.Release|Win32.ActiveCfg = Release|Win32
+		{B5A8798B-3C9B-4023-BCEA-9E652007F466}.Release|Win32.Build.0 = Release|Win32
+		{CCFB706B-962C-4911-8926-C1B1848BF4F8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CCFB706B-962C-4911-8926-C1B1848BF4F8}.Debug|Win32.Build.0 = Debug|Win32
+		{CCFB706B-962C-4911-8926-C1B1848BF4F8}.Release|Win32.ActiveCfg = Release|Win32
+		{CCFB706B-962C-4911-8926-C1B1848BF4F8}.Release|Win32.Build.0 = Release|Win32
+		{293B0292-A239-4DBD-BBC2-BB97871DE3FE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{293B0292-A239-4DBD-BBC2-BB97871DE3FE}.Debug|Win32.Build.0 = Debug|Win32
+		{293B0292-A239-4DBD-BBC2-BB97871DE3FE}.Release|Win32.ActiveCfg = Release|Win32
+		{293B0292-A239-4DBD-BBC2-BB97871DE3FE}.Release|Win32.Build.0 = Release|Win32
+		{CF69B1AA-71A6-49FA-B3E2-CE53C0C86C20}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CF69B1AA-71A6-49FA-B3E2-CE53C0C86C20}.Debug|Win32.Build.0 = Debug|Win32
+		{CF69B1AA-71A6-49FA-B3E2-CE53C0C86C20}.Release|Win32.ActiveCfg = Release|Win32
+		{CF69B1AA-71A6-49FA-B3E2-CE53C0C86C20}.Release|Win32.Build.0 = Release|Win32
+		{76B49BDA-5CC8-4E78-99BE-A7011CE6DF9D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{76B49BDA-5CC8-4E78-99BE-A7011CE6DF9D}.Debug|Win32.Build.0 = Debug|Win32
+		{76B49BDA-5CC8-4E78-99BE-A7011CE6DF9D}.Release|Win32.ActiveCfg = Release|Win32
+		{76B49BDA-5CC8-4E78-99BE-A7011CE6DF9D}.Release|Win32.Build.0 = Release|Win32
+		{1BE531FA-0222-42AB-8003-70AF6A9E0D0B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1BE531FA-0222-42AB-8003-70AF6A9E0D0B}.Debug|Win32.Build.0 = Debug|Win32
+		{1BE531FA-0222-42AB-8003-70AF6A9E0D0B}.Release|Win32.ActiveCfg = Release|Win32
+		{1BE531FA-0222-42AB-8003-70AF6A9E0D0B}.Release|Win32.Build.0 = Release|Win32
+		{C54E2E3D-ACEE-4AC0-85B4-986EBA649BB7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C54E2E3D-ACEE-4AC0-85B4-986EBA649BB7}.Debug|Win32.Build.0 = Debug|Win32
+		{C54E2E3D-ACEE-4AC0-85B4-986EBA649BB7}.Release|Win32.ActiveCfg = Release|Win32
+		{C54E2E3D-ACEE-4AC0-85B4-986EBA649BB7}.Release|Win32.Build.0 = Release|Win32
+		{7CDE1022-D9E5-49F2-B2D5-3E7CEC0A4E50}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7CDE1022-D9E5-49F2-B2D5-3E7CEC0A4E50}.Debug|Win32.Build.0 = Debug|Win32
+		{7CDE1022-D9E5-49F2-B2D5-3E7CEC0A4E50}.Release|Win32.ActiveCfg = Release|Win32
+		{7CDE1022-D9E5-49F2-B2D5-3E7CEC0A4E50}.Release|Win32.Build.0 = Release|Win32
+		{F16E3A55-8545-4B8C-8DFD-71B9A75631BF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F16E3A55-8545-4B8C-8DFD-71B9A75631BF}.Debug|Win32.Build.0 = Debug|Win32
+		{F16E3A55-8545-4B8C-8DFD-71B9A75631BF}.Release|Win32.ActiveCfg = Release|Win32
+		{F16E3A55-8545-4B8C-8DFD-71B9A75631BF}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

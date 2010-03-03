@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: #axisVersion# #today# -->
+<service name="UserManagementService">
+    <parameter name="ServiceClass">UserManagementService</parameter>
+    <description>UserManagementService Service
+            </description>
+    <operation name="deleteUserFromInternalStore" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:deleteUserFromInternalStore</parameter>
+    </operation>
+    <operation name="addRoleToInternalStore" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:addRoleToInternalStore</parameter>
+    </operation>
+    <operation name="deleteSpecialInternalRole" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:deleteSpecialInternalRole</parameter>
+    </operation>
+    <operation name="getExternalUsers" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getExternalUsers</parameter>
+    </operation>
+    <operation name="deleteExternalUserStore" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:deleteExternalUserStore</parameter>
+    </operation>
+    <operation name="updateExternalUserStoreConfig" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateExternalUserStoreConfig</parameter>
+    </operation>
+    <operation name="addSystemPermissionsToRole" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:addSystemPermissionsToRole</parameter>
+    </operation>
+    <operation name="getInternalRoles" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getInternalRoles</parameter>
+    </operation>
+    <operation name="getAllRolesNames" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getAllRolesNames</parameter>
+    </operation>
+    <operation name="getExternalGroups" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getExternalGroups</parameter>
+    </operation>
+    <operation name="updateRolesofResource" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateRolesofResource</parameter>
+    </operation>
+    <operation name="listInternalUsers" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listInternalUsers</parameter>
+    </operation>
+    <operation name="testConnection" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:testConnection</parameter>
+    </operation>
+    <operation name="updateUsersOfSpecialInternalRole" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateUsersOfSpecialInternalRole</parameter>
+    </operation>
+    <operation name="getSystemPermissionsOfSpecialInternalRole" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getSystemPermissionsOfSpecialInternalRole</parameter>
+    </operation>
+    <operation name="addRolesToResource" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:addRolesToResource</parameter>
+    </operation>
+    <operation name="deleteRoleFromInternalStore" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:deleteRoleFromInternalStore</parameter>
+    </operation>
+    <operation name="getUserRoles" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getUserRoles</parameter>
+    </operation>
+    <operation name="updateUsersOfRole" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateUsersOfRole</parameter>
+    </operation>
+    <operation name="getSystemPermissionsOfRole" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getSystemPermissionsOfRole</parameter>
+    </operation>
+    <operation name="updateSystemPermissionsOfSpecialInternalRole" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateSystemPermissionsOfSpecialInternalRole</parameter>
+    </operation>
+    <operation name="updateSystemPermissionsOfRole" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateSystemPermissionsOfRole</parameter>
+    </operation>
+    <operation name="getExternalUserStoreConfig" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getExternalUserStoreConfig</parameter>
+    </operation>
+    <operation name="getInternalUsers" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getInternalUsers</parameter>
+    </operation>
+    <operation name="hasExternalUserStore" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:hasExternalUserStore</parameter>
+    </operation>
+    <operation name="getSystemPermissions" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getSystemPermissions</parameter>
+    </operation>
+    <operation name="updateRoleName" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateRoleName</parameter>
+    </operation>
+    <operation name="updateSystemPermissionsOfExternalRole" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateSystemPermissionsOfExternalRole</parameter>
+    </operation>
+    <operation name="updateUserName" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateUserName</parameter>
+    </operation>
+    <operation name="addExternalUserStoreConfig" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:addExternalUserStoreConfig</parameter>
+    </operation>
+    <operation name="addUserToInternalStore" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:addUserToInternalStore</parameter>
+    </operation>
+    <operation name="listExternalUsers" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listExternalUsers</parameter>
+    </operation>
+    <operation name="getSpecialInternalRoles" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getSpecialInternalRoles</parameter>
+    </operation>
+    <operation name="getUsersInExternalRole" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getUsersInExternalRole</parameter>
+    </operation>
+    <operation name="changePassword" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:changePassword</parameter>
+    </operation>
+    <operation name="getSystemPermissionsOfExternalRole" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getSystemPermissionsOfExternalRole</parameter>
+    </operation>
+    <operation name="getUsersOfSpecialInternalRole" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getUsersOfSpecialInternalRole</parameter>
+    </operation>
+    <operation name="getUsersInRole" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getUsersInRole</parameter>
+    </operation>
+    <operation name="addSpecialInternalRole" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:addSpecialInternalRole</parameter>
+    </operation>
+<parameter name="adminService" locked="true">true</parameter>
+</service>

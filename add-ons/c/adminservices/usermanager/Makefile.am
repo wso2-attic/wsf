@@ -1,0 +1,120 @@
+prglibdir=$(prefix)/services/UserManagementService
+prglib_LTLIBRARIES = libUserManagementService.la
+prglib_DATA= resources/services.xml
+noinst_HEADERS = 
+
+libUserManagementService_la_SOURCES = axis2_skel_UserManagementService.c \
+							codegen/adb_addExternalUserStoreConfig.c \
+							codegen/adb_getSystemPermissionsOfExternalRole.c \
+							codegen/adb_listInternalUsers.c \
+							codegen/adb_addExternalUserStoreConfig.h \
+							codegen/adb_getSystemPermissionsOfExternalRole.h \
+							codegen/adb_listInternalUsers.h \
+							codegen/adb_addRolesToResource.c \
+							codegen/adb_getSystemPermissionsOfExternalRoleResponse.c \
+							codegen/adb_listInternalUsersResponse.c \
+							codegen/adb_addRolesToResource.h \
+							codegen/adb_getSystemPermissionsOfExternalRoleResponse.h \
+							codegen/adb_listInternalUsersResponse.h \
+							codegen/adb_addRoleToInternalStore.c \
+							codegen/adb_getSystemPermissionsOfRole.c \
+							codegen/adb_StoreProperty.c \
+							codegen/adb_addRoleToInternalStore.h \
+							codegen/adb_getSystemPermissionsOfRole.h \
+							codegen/adb_StoreProperty.h \
+							codegen/adb_addSpecialInternalRole.c \
+							codegen/adb_getSystemPermissionsOfRoleResponse.c \
+							codegen/adb_testConnectionResponse.c \
+							codegen/adb_addSpecialInternalRole.h \
+							codegen/adb_getSystemPermissionsOfRoleResponse.h \
+							codegen/adb_testConnectionResponse.h \
+							codegen/adb_addSystemPermissionsToRole.c \
+							codegen/adb_getSystemPermissionsOfSpecialInternalRole.c \
+							codegen/adb_updateExternalUserStoreConfig.c \
+							codegen/adb_addSystemPermissionsToRole.h \
+							codegen/adb_getSystemPermissionsOfSpecialInternalRole.h \
+							codegen/adb_updateExternalUserStoreConfig.h \
+							codegen/adb_addUserToInternalStore.c \
+							codegen/adb_getSystemPermissionsOfSpecialInternalRoleResponse.c \
+							codegen/adb_updateRoleName.c \
+							codegen/adb_addUserToInternalStore.h \
+							codegen/adb_getSystemPermissionsOfSpecialInternalRoleResponse.h \
+							codegen/adb_updateRoleName.h \
+							codegen/adb_changePassword.c \
+							codegen/adb_getSystemPermissionsResponse.c \
+							codegen/adb_updateRolesofResource.c \
+							codegen/adb_changePassword.h \
+							codegen/adb_getSystemPermissionsResponse.h \
+							codegen/adb_updateRolesofResource.h \
+							codegen/adb_deleteRoleFromInternalStore.c \
+							codegen/adb_getUserRoles.c \
+							codegen/adb_updateSystemPermissionsOfExternalRole.c \
+							codegen/adb_deleteRoleFromInternalStore.h \
+							codegen/adb_getUserRoles.h \
+							codegen/adb_updateSystemPermissionsOfExternalRole.h \
+							codegen/adb_deleteSpecialInternalRole.c \
+							codegen/adb_getUserRolesResponse.c \
+							codegen/adb_updateSystemPermissionsOfRole.c \
+							codegen/adb_deleteSpecialInternalRole.h \
+							codegen/adb_getUserRolesResponse.h \
+							codegen/adb_updateSystemPermissionsOfRole.h \
+							codegen/adb_deleteUserFromInternalStore.c \
+							codegen/adb_getUsersInExternalRole.c \
+							codegen/adb_updateSystemPermissionsOfSpecialInternalRole.c \
+							codegen/adb_deleteUserFromInternalStore.h \
+							codegen/adb_getUsersInExternalRole.h \
+							codegen/adb_updateSystemPermissionsOfSpecialInternalRole.h \
+							codegen/adb_Exception.c \
+							codegen/adb_getUsersInExternalRoleResponse.c \
+							codegen/adb_updateUserName.c \
+							codegen/adb_Exception.h \
+							codegen/adb_getUsersInExternalRoleResponse.h \
+							codegen/adb_updateUserName.h \
+							codegen/adb_getAllRolesNamesResponse.c \
+							codegen/adb_getUsersInRole.c \
+							codegen/adb_updateUsersOfRole.c \
+							codegen/adb_getAllRolesNamesResponse.h \
+							codegen/adb_getUsersInRole.h \
+							codegen/adb_updateUsersOfRole.h \
+							codegen/adb_getExternalGroupsResponse.c \
+							codegen/adb_getUsersInRoleResponse.c \
+							codegen/adb_updateUsersOfSpecialInternalRole.c \
+							codegen/adb_getExternalGroupsResponse.h \
+							codegen/adb_getUsersInRoleResponse.h \
+							codegen/adb_updateUsersOfSpecialInternalRole.h \
+							codegen/adb_getExternalUsersResponse.c \
+							codegen/adb_getUsersOfSpecialInternalRole.c \
+							codegen/adb_UserMgtException.c \
+							codegen/adb_getExternalUsersResponse.h \
+							codegen/adb_getUsersOfSpecialInternalRole.h \
+							codegen/adb_UserMgtExceptionE0.c \
+							codegen/adb_getExternalUserStoreConfigResponse.c \
+							codegen/adb_getUsersOfSpecialInternalRoleResponse.c \
+							codegen/adb_UserMgtExceptionE0.h \
+							codegen/adb_getExternalUserStoreConfigResponse.h \
+							codegen/adb_getUsersOfSpecialInternalRoleResponse.h \
+							codegen/adb_UserMgtException.h \
+							codegen/adb_getInternalRolesResponse.c \
+							codegen/adb_hasExternalUserStoreResponse.c \
+							codegen/axis2_extension_mapper.c \
+							codegen/adb_getInternalRolesResponse.h \
+							codegen/adb_hasExternalUserStoreResponse.h \
+							codegen/axis2_extension_mapper.h \
+							codegen/adb_getInternalUsersResponse.c \
+							codegen/adb_listExternalUsers.c \
+							codegen/axis2_skel_UserManagementService.h \
+							codegen/adb_getInternalUsersResponse.h \
+							codegen/adb_listExternalUsers.h \
+							codegen/axis2_svc_skel_UserManagementService.c \
+							codegen/adb_getSpecialInternalRolesResponse.c \
+							codegen/adb_listExternalUsersResponse.c 
+libUserManagementService_la_LIBADD = 
+
+INCLUDES = -I$(top_builddir)/include \
+			-I. \
+			@AXIS2INC@ \
+		   	@AXIOMINC@ \
+		   	@NEETHIINC@ \
+		   	@UTILINC@
+
+EXTRA_DIST= resources/services.xml codegen/adb_addExternalUserStoreConfig.h codegen/adb_getExternalUserStoreConfigResponse.h codegen/adb_getUsersInExternalRoleResponse.h codegen/adb_updateRolesofResource.h codegen/adb_addRolesToResource.h codegen/adb_getInternalRolesResponse.h codegen/adb_getUsersInRole.h codegen/adb_updateSystemPermissionsOfExternalRole.h codegen/adb_addRoleToInternalStore.h codegen/adb_getInternalUsersResponse.h codegen/adb_getUsersInRoleResponse.h codegen/adb_updateSystemPermissionsOfRole.h codegen/adb_addSpecialInternalRole.h codegen/adb_getSpecialInternalRolesResponse.h codegen/adb_getUsersOfSpecialInternalRole.h codegen/adb_updateSystemPermissionsOfSpecialInternalRole.h codegen/adb_addSystemPermissionsToRole.h codegen/adb_getSystemPermissionsOfExternalRole.h codegen/adb_getUsersOfSpecialInternalRoleResponse.h codegen/adb_updateUserName.h codegen/adb_addUserToInternalStore.h codegen/adb_getSystemPermissionsOfExternalRoleResponse.h codegen/adb_hasExternalUserStoreResponse.h codegen/adb_updateUsersOfRole.h codegen/adb_changePassword.h codegen/adb_getSystemPermissionsOfRole.h codegen/adb_listExternalUsers.h codegen/adb_updateUsersOfSpecialInternalRole.h codegen/adb_deleteRoleFromInternalStore.h codegen/adb_getSystemPermissionsOfRoleResponse.h codegen/adb_listExternalUsersResponse.h codegen/adb_UserMgtExceptionE0.h codegen/adb_deleteSpecialInternalRole.h codegen/adb_getSystemPermissionsOfSpecialInternalRole.h codegen/adb_listInternalUsers.h codegen/adb_UserMgtException.h codegen/adb_deleteUserFromInternalStore.h codegen/adb_getSystemPermissionsOfSpecialInternalRoleResponse.h codegen/adb_listInternalUsersResponse.h codegen/axis2_extension_mapper.h codegen/adb_Exception.h codegen/adb_getSystemPermissionsResponse.h codegen/adb_StoreProperty.h codegen/axis2_skel_UserManagementService.h codegen/adb_getAllRolesNamesResponse.h codegen/adb_getUserRoles.h codegen/adb_testConnectionResponse.h codegen/adb_getExternalGroupsResponse.h codegen/adb_getUserRolesResponse.h codegen/adb_updateExternalUserStoreConfig.h codegen/adb_getExternalUsersResponse.h codegen/adb_getUsersInExternalRole.h codegen/adb_updateRoleName.h

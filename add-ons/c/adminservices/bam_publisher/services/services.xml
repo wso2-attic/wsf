@@ -1,0 +1,11 @@
+<service name="BAMServiceStatisticsPublisherService">
+    <parameter name="ServiceClass" locked="xsd:false">BAMServiceStatisticsPublisherService</parameter>
+   <description>
+       BAM event source service
+   </description>
+   <module ref="savan"/>
+   <operation name="send">
+            <messageReceiver class="savan_msgreceivers" />
+           <parameter name="wsamapping" >http://wso2.org/services/BAMServiceStatisticsPublisherService/send</parameter>
+   </operation>
+</service>

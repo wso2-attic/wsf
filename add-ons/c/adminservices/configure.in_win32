@@ -1,0 +1,27 @@
+######################################################################
+#
+# Configurations settings for building the admin services, modules
+
+# Settings 
+# ################
+
+
+# Add your WSF/C or WSF/CPP binary location
+
+WSFC_HOME_DIR=..\wso2-wsf-c-bin-2.0.0-win32
+
+# OpenSLL Binary Location
+
+OPENSSL_BIN_DIR=C:\OpenSSL
+
+# CRUNTIME Libaray Setting { Options  /MT or /MD}
+CRUNTIME=/MT
+
+# Wheather to embed the manifest files or not.
+
+EMBED_MANIFEST=0
+
+# Enable debugging
+
+DEBUG = 0
+

@@ -1,0 +1,56 @@
+WSO2 WSF Admin Console for Axis2/C, WSF/C and WSF/C++ M1 released
+========================================================
+
+WSO2 WSF/C team is pleased to announce the release of WSO2 WSF Admin Console for Axis2/C, WSF/C and WSF/C++ M1 release.
+
+You can download this release from http://wso2.org/downloads/wsf/c
+
+WSO2 WSF Admin Console is a runtime management console for Apache Axis2/C, WSO2 Web Service Framework for C and C++ powered by the WSO2 Carbon Frontend which is a java based web UI. The management console backend is implemented as both services and modules that are deployed within the framework itself. The communication between the frontend and backend is based on SOAP and REST.
+
+------------
+Key Features
+============
+ 1. Configure Apache Axis2/C, WSO2 WSF/C and WSO2 WSF/C++ though a Web UI
+ 2. Ability to view service group, service, operation and module meta data.
+ 3. Dynamically configure security
+ 4. Policy Editor
+ 5. Monitor service usage statistics
+
+------------------
+Reporting Problems
+==================
+
+Please report the issues using the public JIRA available at:
+ https://wso2.org/jira/browse/WSFC
+
+------------------
+Contact Us
+==================
+
+Please subscribe to our user or developer mailing lists. For details on how to subscribe visit http://wso2.org/mail
+
+We welcome your feedback on this implementation.
+
+Thank you for your interest in WSO2 WSF Admin Console
+
+------------------
+Discussion Forums
+==================
+
+You can use following public forums to find answers to any of the issues you might come accross.
+
+1. http://wso2.org/forum/185
+2. http://wso2.org/forum/352.
+
+Training
+========
+WSO2 Inc. offers a variety of professional Training Programs which includes training on WSF/C. 
+For additional information please refer to http://wso2.com/training/
+
+Support
+========
+WSO2 Inc. offers a variety of development and production support programs, ranging from Web-based 
+support up through normal business hours, to premium 24x7 phone support.
+For additional support information please refer to http://wso2.com/services/support/
+
+-- WSO2 WSF/C Team --

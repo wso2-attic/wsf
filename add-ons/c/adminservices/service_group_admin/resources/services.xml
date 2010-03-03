@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: #axisVersion# #today# -->
+<service name="ServiceGroupAdmin">
+    <parameter name="ServiceClass">ServiceGroupAdmin</parameter>
+    <description>ServiceGroupAdmin Service
+            </description>
+    <operation name="listServiceGroup" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listServiceGroup</parameter>
+    </operation>
+    <operation name="setServiceGroupParameters" mep="http://www.w3.org/ns/wsdl/in-only">
+        <parameter name="wsamapping">urn:setServiceGroupParameters</parameter>
+    </operation>
+    <operation name="getServiceGroupParameter" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getServiceGroupParameter</parameter>
+    </operation>
+    <operation name="configureServiceGroupMTOM" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:configureServiceGroupMTOM</parameter>
+    </operation>
+    <operation name="removeServiceGroupParameter" mep="http://www.w3.org/ns/wsdl/in-only">
+        <parameter name="wsamapping">urn:removeServiceGroupParameter</parameter>
+    </operation>
+    <operation name="updateServiceGroupParamters" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateServiceGroupParamters</parameter>
+    </operation>
+    <operation name="dumpAAR" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:dumpAAR</parameter>
+    </operation>
+    <operation name="setServiceGroupParameter" mep="http://www.w3.org/ns/wsdl/in-only">
+        <parameter name="wsamapping">urn:setServiceGroupParameter</parameter>
+    </operation>
+    <operation name="updateServiceGroupParameter" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:updateServiceGroupParameter</parameter>
+    </operation>
+    <operation name="listServiceGroups" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listServiceGroups</parameter>
+    </operation>
+    <operation name="getServiceGroupParameters" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getServiceGroupParameters</parameter>
+    </operation>
+    <parameter name="adminService" locked="true">true</parameter>
+</service>

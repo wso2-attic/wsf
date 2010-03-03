@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: #axisVersion# #today# -->
+<service name="StatisticsAdmin">
+    <parameter name="ServiceClass">StatisticsAdmin</parameter>
+    <description>Statistics Admin Service</description>
+    <operation name="getMaxServiceResponseTime" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getMaxServiceResponseTime</parameter>
+    </operation>
+    <operation name="getServiceRequestCount" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getServiceRequestCount</parameter>
+    </operation>
+    <operation name="getSystemResponseCount" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getSystemResponseCount</parameter>
+    </operation>
+    <operation name="getOperationResponseCount" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getOperationResponseCount</parameter>
+    </operation>
+    <operation name="getAvgOperationResponseTime" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getAvgOperationResponseTime</parameter>
+    </operation>
+    <operation name="getOperationStatistics" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getOperationStatistics</parameter>
+    </operation>
+    <operation name="getMinSystemResponseTime" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getMinSystemResponseTime</parameter>
+    </operation>
+    <operation name="getSystemFaultCount" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getSystemFaultCount</parameter>
+    </operation>
+    <operation name="getMaxSystemResponseTime" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getMaxSystemResponseTime</parameter>
+    </operation>
+    <operation name="getServiceFaultCount" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getServiceFaultCount</parameter>
+    </operation>
+    <operation name="getMinServiceResponseTime" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getMinServiceResponseTime</parameter>
+    </operation>
+    <operation name="getMaxOperationResponseTime" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getMaxOperationResponseTime</parameter>
+    </operation>
+    <operation name="getServiceStatistics" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getServiceStatistics</parameter>
+    </operation>
+    <operation name="getOperationFaultCount" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getOperationFaultCount</parameter>
+    </operation>
+    <operation name="getAvgServiceResponseTime" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getAvgServiceResponseTime</parameter>
+    </operation>
+    <operation name="getServiceResponseCount" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getServiceResponseCount</parameter>
+    </operation>
+    <operation name="getSystemRequestCount" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getSystemRequestCount</parameter>
+    </operation>
+    <operation name="getMinOperationResponseTime" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getMinOperationResponseTime</parameter>
+    </operation>
+    <operation name="getAvgSystemResponseTime" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getAvgSystemResponseTime</parameter>
+    </operation>
+    <operation name="getSystemStatistics" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getSystemStatistics</parameter>
+    </operation>
+    <operation name="getOperationRequestCount" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getOperationRequestCount</parameter>
+    </operation>
+<parameter name="adminService" locked="true">true</parameter>
+</service>

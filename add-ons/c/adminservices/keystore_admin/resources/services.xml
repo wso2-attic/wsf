@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: #axisVersion# #today# -->
+<service name="KeyStoreAdminService">
+    <parameter name="ServiceClass">KeyStoreAdminService</parameter>
+    <parameter name="adminService" locked="true">true</parameter>
+    <parameter name="PrimaryKeystore" locked="true">wso2wsfc.p12</parameter>
+    <description>KeyStoreAdminService Service
+            </description>
+    <operation name="getStoreEntries" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getStoreEntries</parameter>
+    </operation>
+    <operation name="addKeyStore" mep="http://www.w3.org/2004/08/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:addKeyStore</parameter>
+    </operation>
+    <operation name="importCertToStore" mep="http://www.w3.org/2004/08/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:importCertToStore</parameter>
+    </operation>
+    <operation name="getKeystoreInfo" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getKeystoreInfo</parameter>
+    </operation>
+    <operation name="deleteStore" mep="http://www.w3.org/2004/08/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:deleteStore</parameter>
+    </operation>
+    <operation name="getKeyStores" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getKeyStores</parameter>
+    </operation>
+</service>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: #axisVersion# #today# -->
+<service name="SecurityAdminService">
+    <parameter name="ServiceClass">SecurityAdminService</parameter>
+    <parameter name="adminService" locked="true">true</parameter>
+    <description>SecurityAdminService Service
+            </description>
+    <operation name="getScenarios" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getScenarios</parameter>
+    </operation>
+    <!--operation name="applySecurity" mep="http://www.w3.org/ns/wsdl/robust-in-only"-->
+    <operation name="applySecurity" mep="http://www.w3.org/2004/08/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:applySecurity</parameter>
+    </operation>
+    <operation name="activateUsernameTokenAuthentication" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:activateUsernameTokenAuthentication</parameter>
+    </operation>
+    <operation name="disableSecurityOnService" mep="http://www.w3.org/2004/08/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:disableSecurityOnService</parameter>
+    </operation>
+    <operation name="getSecurityConfigData" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getSecurityConfigData</parameter>
+    </operation>
+    <operation name="getSecurityScenario" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getSecurityScenario</parameter>
+    </operation>
+</service>

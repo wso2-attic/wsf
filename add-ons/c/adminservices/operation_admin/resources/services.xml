@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: #axisVersion# #today# -->
+<service name="OperationAdmin">
+    <parameter name="ServiceClass">OperationAdmin</parameter>
+    <description>OperationAdmin Service
+            </description>
+    <operation name="listOperationPhaseHandlers" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listOperationPhaseHandlers</parameter>
+    </operation>
+    <operation name="setPolicy" mep="http://www.w3.org/ns/wsdl/in-only">
+        <parameter name="wsamapping">urn:setPolicy</parameter>
+    </operation>
+    <operation name="listOperationPhases" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listOperationPhases</parameter>
+    </operation>
+    <operation name="listControlOperations" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listControlOperations</parameter>
+    </operation>
+    <operation name="getDeclaredOperationParameters" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getDeclaredOperationParameters</parameter>
+    </operation>
+    <operation name="listAllOperations" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listAllOperations</parameter>
+    </operation>
+    <operation name="configureMTOM" mep="http://www.w3.org/ns/wsdl/in-only">
+        <parameter name="wsamapping">urn:configureMTOM</parameter>
+    </operation>
+    <operation name="getOperationMetaData" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getOperationMetaData</parameter>
+    </operation>
+    <operation name="getOperationParameters" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getOperationParameters</parameter>
+    </operation>
+    <operation name="removeOperationParameter" mep="http://www.w3.org/ns/wsdl/in-only">
+        <parameter name="wsamapping">urn:removeOperationParameter</parameter>
+    </operation>
+    <operation name="getOperationStatistics" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getOperationStatistics</parameter>
+    </operation>
+    <operation name="getPolicy" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getPolicy</parameter>
+    </operation>
+    <operation name="listPublishedOperations" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listPublishedOperations</parameter>
+    </operation>
+    <operation name="setOperationParameters" mep="http://www.w3.org/ns/wsdl/in-only">
+        <parameter name="wsamapping">urn:setOperationParameters</parameter>
+    </operation>
+<parameter name="adminService" locked="true">true</parameter>
+</service>

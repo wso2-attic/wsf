@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: #axisVersion# #today# -->
+<service name="ServerAdmin">
+    <parameter name="ServiceClass">ServerAdmin</parameter>
+    <description>ServerAdmin Service
+            </description>
+    <operation name="getServerStatus" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getServerStatus</parameter>
+    </operation>
+    <operation name="startMaintenance" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:startMaintenance</parameter>
+    </operation>
+    <operation name="shutdown" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:shutdown</parameter>
+    </operation>
+    <operation name="endMaintenance" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:endMaintenance</parameter>
+    </operation>
+    <operation name="getServerDataAsString" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getServerDataAsString</parameter>
+    </operation>
+    <operation name="isAlive" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:isAlive</parameter>
+    </operation>
+    <operation name="getServerData" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getServerData</parameter>
+    </operation>
+    <operation name="restartGracefully" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:restartGracefully</parameter>
+    </operation>
+    <operation name="getServerVersion" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getServerVersion</parameter>
+    </operation>
+    <operation name="restart" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:restart</parameter>
+    </operation>
+    <operation name="shutdownGracefully" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:shutdownGracefully</parameter>
+    </operation>
+<parameter name="adminService" locked="true">true</parameter>
+</service>

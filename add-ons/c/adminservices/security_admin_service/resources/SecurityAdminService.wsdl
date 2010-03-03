@@ -1,0 +1,375 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://service.config.security.carbon.wso2.org" xmlns:ax231="http://service.config.security.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ax228="http://security.carbon.wso2.org/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.config.security.carbon.wso2.org">
+    <wsdl:documentation>SecurityAdminService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax229="http://service.config.security.carbon.wso2.org" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://security.carbon.wso2.org/xsd">
+            <xs:import namespace="http://service.config.security.carbon.wso2.org"/>
+            <xs:complexType name="SecurityConfigException">
+                <xs:complexContent>
+                    <xs:extension base="ax229:Exception">
+                        <xs:sequence/>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.config.security.carbon.wso2.org/xsd">
+            <xs:complexType name="SecurityScenarioData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="category" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="currentScenario" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="description" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="scenarioId" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="summary" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="SecurityConfigData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="privateStore" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="trustedKeyStores" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="userGroups" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="SecurityScenarioDataWrapper">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="currentScenario" nillable="true" type="ax231:SecurityScenarioData"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="scenarios" nillable="true" type="ax231:SecurityScenarioData"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax232="http://service.config.security.carbon.wso2.org/xsd" xmlns:ax230="http://security.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.config.security.carbon.wso2.org">
+            <xs:import namespace="http://security.carbon.wso2.org/xsd"/>
+            <xs:import namespace="http://service.config.security.carbon.wso2.org/xsd"/>
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Exception" nillable="true" type="xs:anyType"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="SecurityConfigException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="SecurityConfigException" nillable="true" type="ax228:SecurityConfigException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSecurityScenario">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="sceneId" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSecurityScenarioResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax231:SecurityScenarioData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSecurityConfigData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="scenarioId" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSecurityConfigDataResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax231:SecurityConfigData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getScenarios">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getScenariosResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax231:SecurityScenarioDataWrapper"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="disableSecurityOnService">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="applySecurity">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="policyId" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="trustedStores" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="privateStore" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="userGroupNames" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="activateUsernameTokenAuthentication">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="userGroups" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getSecurityConfigDataRequest">
+        <wsdl:part name="parameters" element="ns:getSecurityConfigData"/>
+    </wsdl:message>
+    <wsdl:message name="getSecurityConfigDataResponse">
+        <wsdl:part name="parameters" element="ns:getSecurityConfigDataResponse"/>
+    </wsdl:message>
+    <wsdl:message name="SecurityConfigException">
+        <wsdl:part name="parameters" element="ns:SecurityConfigException"/>
+    </wsdl:message>
+    <wsdl:message name="getSecurityScenarioRequest">
+        <wsdl:part name="parameters" element="ns:getSecurityScenario"/>
+    </wsdl:message>
+    <wsdl:message name="getSecurityScenarioResponse">
+        <wsdl:part name="parameters" element="ns:getSecurityScenarioResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getScenariosRequest">
+        <wsdl:part name="parameters" element="ns:getScenarios"/>
+    </wsdl:message>
+    <wsdl:message name="getScenariosResponse">
+        <wsdl:part name="parameters" element="ns:getScenariosResponse"/>
+    </wsdl:message>
+    <wsdl:message name="activateUsernameTokenAuthenticationRequest">
+        <wsdl:part name="parameters" element="ns:activateUsernameTokenAuthentication"/>
+    </wsdl:message>
+    <wsdl:message name="disableSecurityOnServiceRequest">
+        <wsdl:part name="parameters" element="ns:disableSecurityOnService"/>
+    </wsdl:message>
+    <wsdl:message name="applySecurityRequest">
+        <wsdl:part name="parameters" element="ns:applySecurity"/>
+    </wsdl:message>
+    <wsdl:portType name="SecurityAdminServicePortType">
+        <wsdl:operation name="getSecurityConfigData">
+            <wsdl:input message="ns:getSecurityConfigDataRequest" wsaw:Action="urn:getSecurityConfigData"/>
+            <wsdl:output message="ns:getSecurityConfigDataResponse" wsaw:Action="urn:getSecurityConfigDataResponse"/>
+            <wsdl:fault message="ns:SecurityConfigException" name="SecurityConfigException" wsaw:Action="urn:getSecurityConfigDataSecurityConfigException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getSecurityScenario">
+            <wsdl:input message="ns:getSecurityScenarioRequest" wsaw:Action="urn:getSecurityScenario"/>
+            <wsdl:output message="ns:getSecurityScenarioResponse" wsaw:Action="urn:getSecurityScenarioResponse"/>
+            <wsdl:fault message="ns:SecurityConfigException" name="SecurityConfigException" wsaw:Action="urn:getSecurityScenarioSecurityConfigException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getScenarios">
+            <wsdl:input message="ns:getScenariosRequest" wsaw:Action="urn:getScenarios"/>
+            <wsdl:output message="ns:getScenariosResponse" wsaw:Action="urn:getScenariosResponse"/>
+            <wsdl:fault message="ns:SecurityConfigException" name="SecurityConfigException" wsaw:Action="urn:getScenariosSecurityConfigException"/>
+        </wsdl:operation>
+        <wsdl:operation name="activateUsernameTokenAuthentication">
+            <wsdl:input message="ns:activateUsernameTokenAuthenticationRequest" wsaw:Action="urn:activateUsernameTokenAuthentication"/>
+            <wsdl:fault message="ns:SecurityConfigException" name="SecurityConfigException" wsaw:Action="urn:activateUsernameTokenAuthenticationSecurityConfigException"/>
+        </wsdl:operation>
+        <wsdl:operation name="disableSecurityOnService">
+            <wsdl:input message="ns:disableSecurityOnServiceRequest" wsaw:Action="urn:disableSecurityOnService"/>
+            <wsdl:fault message="ns:SecurityConfigException" name="SecurityConfigException" wsaw:Action="urn:disableSecurityOnServiceSecurityConfigException"/>
+        </wsdl:operation>
+        <wsdl:operation name="applySecurity">
+            <wsdl:input message="ns:applySecurityRequest" wsaw:Action="urn:applySecurity"/>
+            <wsdl:fault message="ns:SecurityConfigException" name="SecurityConfigException" wsaw:Action="urn:applySecuritySecurityConfigException"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="SecurityAdminServiceSoap11Binding" type="ns:SecurityAdminServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getSecurityConfigData">
+            <soap:operation soapAction="urn:getSecurityConfigData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="SecurityConfigException">
+                <soap:fault use="literal" name="SecurityConfigException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSecurityScenario">
+            <soap:operation soapAction="urn:getSecurityScenario" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="SecurityConfigException">
+                <soap:fault use="literal" name="SecurityConfigException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getScenarios">
+            <soap:operation soapAction="urn:getScenarios" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="SecurityConfigException">
+                <soap:fault use="literal" name="SecurityConfigException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="activateUsernameTokenAuthentication">
+            <soap:operation soapAction="urn:activateUsernameTokenAuthentication" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="SecurityConfigException">
+                <soap:fault use="literal" name="SecurityConfigException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="disableSecurityOnService">
+            <soap:operation soapAction="urn:disableSecurityOnService" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="SecurityConfigException">
+                <soap:fault use="literal" name="SecurityConfigException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="applySecurity">
+            <soap:operation soapAction="urn:applySecurity" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="SecurityConfigException">
+                <soap:fault use="literal" name="SecurityConfigException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="SecurityAdminServiceSoap12Binding" type="ns:SecurityAdminServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getSecurityConfigData">
+            <soap12:operation soapAction="urn:getSecurityConfigData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="SecurityConfigException">
+                <soap12:fault use="literal" name="SecurityConfigException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSecurityScenario">
+            <soap12:operation soapAction="urn:getSecurityScenario" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="SecurityConfigException">
+                <soap12:fault use="literal" name="SecurityConfigException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getScenarios">
+            <soap12:operation soapAction="urn:getScenarios" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="SecurityConfigException">
+                <soap12:fault use="literal" name="SecurityConfigException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="activateUsernameTokenAuthentication">
+            <soap12:operation soapAction="urn:activateUsernameTokenAuthentication" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="SecurityConfigException">
+                <soap12:fault use="literal" name="SecurityConfigException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="disableSecurityOnService">
+            <soap12:operation soapAction="urn:disableSecurityOnService" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="SecurityConfigException">
+                <soap12:fault use="literal" name="SecurityConfigException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="applySecurity">
+            <soap12:operation soapAction="urn:applySecurity" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="SecurityConfigException">
+                <soap12:fault use="literal" name="SecurityConfigException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="SecurityAdminServiceHttpBinding" type="ns:SecurityAdminServicePortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="getSecurityConfigData">
+            <http:operation location="getSecurityConfigData"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getSecurityConfigData"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getSecurityConfigData"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSecurityScenario">
+            <http:operation location="getSecurityScenario"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getSecurityScenario"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getSecurityScenario"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getScenarios">
+            <http:operation location="getScenarios"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getScenarios"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getScenarios"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="activateUsernameTokenAuthentication">
+            <http:operation location="activateUsernameTokenAuthentication"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="activateUsernameTokenAuthentication"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="disableSecurityOnService">
+            <http:operation location="disableSecurityOnService"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="disableSecurityOnService"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="applySecurity">
+            <http:operation location="applySecurity"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="applySecurity"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="SecurityAdminService">
+        <wsdl:port name="SecurityAdminServiceHttpsSoap11Endpoint" binding="ns:SecurityAdminServiceSoap11Binding">
+            <soap:address location="https://10.100.1.101:9443/services/SecurityAdminService.SecurityAdminServiceHttpsSoap11Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="SecurityAdminServiceHttpsSoap12Endpoint" binding="ns:SecurityAdminServiceSoap12Binding">
+            <soap12:address location="https://10.100.1.101:9443/services/SecurityAdminService.SecurityAdminServiceHttpsSoap12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="SecurityAdminServiceHttpsEndpoint" binding="ns:SecurityAdminServiceHttpBinding">
+            <http:address location="https://10.100.1.101:9443/services/SecurityAdminService.SecurityAdminServiceHttpsEndpoint/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

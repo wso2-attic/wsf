@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: #axisVersion# #today# -->
+<service name="ModuleAdminService">
+    <parameter name="ServiceClass">ModuleAdminService</parameter>
+    <description>ModuleAdminService Service
+            </description>
+    <operation name="engageModuleForService" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:engageModuleForService</parameter>
+    </operation>
+    <operation name="disengageModuleFromSystem" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:disengageModuleFromSystem</parameter>
+    </operation>
+    <operation name="disengageModuleForService" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:disengageModuleForService</parameter>
+    </operation>
+    <operation name="setModuleParameters" mep="http://www.w3.org/ns/wsdl/robust-in-only">
+        <parameter name="wsamapping">urn:setModuleParameters</parameter>
+    </operation>
+    <operation name="removeModule" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:removeModule</parameter>
+    </operation>
+    <operation name="removeModuleParameter" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:removeModuleParameter</parameter>
+    </operation>
+    <operation name="getModuleParameters" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getModuleParameters</parameter>
+    </operation>
+    <operation name="engageModuleForOperation" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:engageModuleForOperation</parameter>
+    </operation>
+    <operation name="listGloballyEngagedModules" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listGloballyEngagedModules</parameter>
+    </operation>
+    <operation name="globallyEngageModule" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:globallyEngageModule</parameter>
+    </operation>
+    <operation name="engageModuleForServiceGroup" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:engageModuleForServiceGroup</parameter>
+    </operation>
+    <operation name="uploadModule" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:uploadModule</parameter>
+    </operation>
+    <operation name="listModulesForOperation" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listModulesForOperation</parameter>
+    </operation>
+    <operation name="listModulesForService" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listModulesForService</parameter>
+    </operation>
+    <operation name="disengageModuleForServiceGroup" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:disengageModuleForServiceGroup</parameter>
+    </operation>
+    <operation name="globallyDisengageModule" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:globallyDisengageModule</parameter>
+    </operation>
+    <operation name="listModules" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listModules</parameter>
+    </operation>
+    <operation name="listModulesForServiceGroup" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:listModulesForServiceGroup</parameter>
+    </operation>
+    <operation name="disengageModuleForOperation" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:disengageModuleForOperation</parameter>
+    </operation>
+    <operation name="getModuleInfo" mep="http://www.w3.org/ns/wsdl/in-out">
+        <parameter name="wsamapping">urn:getModuleInfo</parameter>
+    </operation>
+    <parameter name="adminService" locked="true">true</parameter>
+</service>
