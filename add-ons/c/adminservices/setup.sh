@@ -47,7 +47,7 @@ exit
 function install_prod {
 cp -rf ./carbon/wso2carbon-2.0.2 $carbon_home/wso2carbon-2.0.2
 echo "Installing Carbon Console .... [OK]"
-./deploy.js $home/services/SecurityAdminService/policies/scenario1-policy.xml $home
+./deploy.sh $home/services/SecurityAdminService/policies/scenario1-policy.xml $home
 echo "Customizing services ... [OK]"
 if [ "$product"=="1" ]; then
 cp ./carbon/conf/carbon.c.xml $carbon_home/wso2carbon-2.0.2/conf/carbon.xml

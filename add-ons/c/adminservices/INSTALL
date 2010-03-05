@@ -101,7 +101,7 @@ instance from the scratch as explained below.
   2. unzip the source dist using unzip wso2-wsf-admin-x.y.z.zip
   
   3. Execute the following commands.
-     $./configure --with-wsfc=/home/<User>/wsfc/deploy/include
+     $./configure --with-wsfc=<WSFC INSTALLATION DIR>/include/wsf-2.0.0
      $./make
      $./make install
 
