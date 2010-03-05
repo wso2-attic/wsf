@@ -354,6 +354,7 @@ dist: $(ADMIN_SVC_BUILDDIR)
 	xcopy /E /Q /I /Y $(ADMIN_MOD_DISTDIR) $(ADMIN_DISTDIR)\modules
 	xcopy /E /Q /I /Y $(ADMIN_SVC_SRCDIR)\carbon $(ADMIN_DISTDIR)\carbon
 	copy setup.bat $(ADMIN_DISTDIR)
+	copy deploy.js $(ADMIN_DISTDIR)
 	copy LICENSE $(ADMIN_DISTDIR)
 	copy INSTALL $(ADMIN_DISTDIR)
 	copy NEWS    $(ADMIN_DISTDIR)
