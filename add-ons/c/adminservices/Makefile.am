@@ -6,7 +6,7 @@ SUBDIRS = util authentication keystore_admin logging_admin module_admin resource
 noinst_HEADERS=$(top_builddir)/include/*.h
 data_DATA= README INSTALL CREDITS COPYING NEWS
 logs_DATA=
-EXTRA_DIST = build.sh autogen.sh CREDITS LICENSE README build.sh adminservices.mk docs carbon setup.sh setup.bat clean.bat build.bat configure.in_win32
+EXTRA_DIST = build.sh autogen.sh CREDITS LICENSE README build.sh adminservices.mk docs carbon setup.sh setup.bat deploy.js deploy.sh clean.bat build.bat configure.in_win32
 dist-hook:
 	rm -rf `find $(distdir)/ -type d -name .svn`
 	rm -rf `find $(distdir)/ -type d -name .deps`
