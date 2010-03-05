@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 function banner {
 echo "/***********************************************************/"
 echo "/* WSO2 WSF/{C,CPP} Admin Console Installer                */"
