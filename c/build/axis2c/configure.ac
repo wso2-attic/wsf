@@ -337,6 +337,9 @@ AC_ARG_ENABLE(openssl, [  --enable-openssl
     AC_MSG_RESULT(yes)
     CFLAGS="$CFLAGS -DAXIS2_SSL_ENABLED"
     ssl_enabled=true
+	opensslinc="-I/usr/include/openssl"
+	openssllib=""
+
 )
 
 AC_MSG_CHECKING(whether to use libcurl)
@@ -432,7 +435,11 @@ IKSEMELINC=$iksemelinc
 IKSEMELLIB=$iksemellib
 APRINC=$aprinc
 VERSION_NO="6:0:6"
+OPENSSLINC=$opensslinc
+OPENSSLLIB=$openssllib
 
+AC_SUBST(OPENSSLLIB)
+AC_SUBST(OPENSSLINC)
 AC_SUBST(VERSION_NO)
 AC_SUBST(PARSER_LIBS)
 AC_SUBST(APACHE2INC)
