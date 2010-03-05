@@ -7,8 +7,8 @@ var ForReading = 1, ForWriting = 2;
 var args = WScript.Arguments;
 
 var read_file = args.Item(0);
-var deploy_file = args.Item(1);
-var axis2c_home = args.Item(2);
+var deploy_file = args.Item(0);
+var axis2c_home = args.Item(1);
 
 // Deploy the client policy file
 f = fso.OpenTextFile(read_file, ForReading);

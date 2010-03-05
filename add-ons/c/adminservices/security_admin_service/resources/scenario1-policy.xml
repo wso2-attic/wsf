@@ -64,7 +64,7 @@
                 <rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
                     <rampc:PasswordType>Digest</rampc:PasswordType>
                     <!--rampc:AuthnModuleName>E:\wsf\c\trunk\wso2-wsf-c-bin-2.0.0-win32/bin/samples/rampart/authn_provider/libauthn.so</rampc:AuthnModuleName-->
-                    <rampc:PasswordCallbackClass>E:\wsf\c\trunk\wso2-wsf-c-bin-2.0.0-win32/samples/lib/rampartc/pwcb.dll</rampc:PasswordCallbackClass>
+                    <rampc:PasswordCallbackClass>AXIS2C_HOME/samples/lib/rampartc/pwcb.dll</rampc:PasswordCallbackClass>
                 </rampc:RampartConfig>
             </wsp:All>
         </wsp:ExactlyOne>

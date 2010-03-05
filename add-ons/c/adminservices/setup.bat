@@ -80,7 +80,7 @@
 
 :customize_services
 @echo.
-@deploy.js %home%\services\SecurityAdminService\policies\scenario1-policy.xml %home%\services\SecurityAdminService\policies\scenario1-policy.xml %home%
+@deploy.js %home%\services\SecurityAdminService\policies\scenario1-policy.xml %home%
 @echo Customizing services ... [OK]
 @goto customize_carbon
 
