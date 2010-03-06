@@ -20,7 +20,9 @@ libKeyStoreAdminService_la_SOURCES = axis2_skel_KeyStoreAdminService.c \
 							   codegen/adb_Exception.c \
 							   codegen/adb_KeyStoreData.c
 
-libKeyStoreAdminService_la_LIBADD = ../util/libservice_admin_util.la
+libKeyStoreAdminService_la_LIBADD = ../util/libservice_admin_util.la \
+				$(prefix)/lib/librampart.la
+	
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
