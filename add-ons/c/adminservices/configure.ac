@@ -172,7 +172,6 @@ AC_CONFIG_FILES([Makefile \
     keystore_admin/Makefile \
     logging_admin/Makefile \
     module_admin/Makefile \
-    resource_admin/Makefile \
     server_admin/Makefile \
     service_admin/Makefile \
     service_group_admin/Makefile \
