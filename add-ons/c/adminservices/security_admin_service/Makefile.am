@@ -34,6 +34,6 @@ EXTRA_DIST= resources/services.xml resources/scenario10-policy.xml resources/sce
 
 install-data-hook:
 	mkdir -p $(prefix)/services/SecurityAdminService/policies
-	cp resources/scenario*-policy.xml $(prefix)/services/SecurityAdminService/policies
+	cp -f resources/scenario*-policy.xml $(prefix)/services/SecurityAdminService/policies
 
 

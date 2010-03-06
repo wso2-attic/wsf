@@ -30,4 +30,9 @@ INCLUDES = -I$(top_builddir)/include \
 		   	@NEETHIINC@ \
 		   	@UTILINC@
 
-EXTRA_DIST= resources/services.xml resources/KeyStoreAdminService.wsdl codegen/adb_addKeyStore.h codegen/adb_Exception.h codegen/adb_getKeyStoresResponse.h codegen/adb_importCertToStore.h codegen/adb_SecurityConfigException.h codegen/adb_CertData.h codegen/adb_getKeystoreInfo.h codegen/adb_getStoreEntries.h codegen/adb_KeyStoreData.h codegen/axis2_extension_mapper.h codegen/adb_deleteStore.h codegen/adb_getKeystoreInfoResponse.h codegen/adb_getStoreEntriesResponse.h codegen/adb_SecurityConfigExceptionE0.h codegen/axis2_skel_KeyStoreAdminService.h
+EXTRA_DIST= resources/services.xml resources/KeyStoreAdminService.wsdl resources/wso2wsfc.dat resources/wso2wsfc.p12 codegen/adb_addKeyStore.h codegen/adb_Exception.h codegen/adb_getKeyStoresResponse.h codegen/adb_importCertToStore.h codegen/adb_SecurityConfigException.h codegen/adb_CertData.h codegen/adb_getKeystoreInfo.h codegen/adb_getStoreEntries.h codegen/adb_KeyStoreData.h codegen/axis2_extension_mapper.h codegen/adb_deleteStore.h codegen/adb_getKeystoreInfoResponse.h codegen/adb_getStoreEntriesResponse.h codegen/adb_SecurityConfigExceptionE0.h codegen/axis2_skel_KeyStoreAdminService.h
+
+install-data-hook:
+	mkdir -p $(prefix)/services/KeyStoreAdminService/keystores
+	cp -f resources/wso2wsfc.* $(prefix)/services/KeyStoreAdminService/keystores
+
