@@ -21,7 +21,7 @@ libSecurityAdminService_la_SOURCES = axis2_skel_SecurityAdminService.c \
 									   codegen/adb_getSecurityScenario.c \
 									   codegen/adb_getScenarios.c \
 									   codegen/adb_SecurityScenarioData.c
-libSecurityAdminService_la_LIBADD = 
+libSecurityAdminService_la_LIBADD =../util/libservice_admin_util.la 
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
