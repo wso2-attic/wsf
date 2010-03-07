@@ -560,14 +560,14 @@ wsf_worker_process_request (
 				wsf_worker_send_mtom_message(response, env, mime_parts TSRMLS_CC);
 			}
 
-            axis2_msg_ctx_free(out_msg_ctx, env);
+             axis2_msg_ctx_free(out_msg_ctx, env); 
             msg_ctx_map[AXIS2_WSDL_MESSAGE_LABEL_OUT] = NULL;
         }
         if (in_msg_ctx)
         {
             msg_id = axutil_strdup(env, axis2_msg_ctx_get_msg_id(in_msg_ctx, env));
             msg_ctx_map[AXIS2_WSDL_MESSAGE_LABEL_IN] = NULL;
-            axis2_msg_ctx_free(in_msg_ctx, env);
+             /* axis2_msg_ctx_free(in_msg_ctx, env); */
         }
 
         if(!axis2_op_ctx_is_in_use(op_ctx, env))
