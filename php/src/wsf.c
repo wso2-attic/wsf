@@ -1670,15 +1670,16 @@ PHP_METHOD (ws_service, reply)
 		req_info.content_type = (char *) SG (request_info).content_type;
 		req_info.request_method = (char *) SG (request_info).request_method;
 		req_info.query_string = (char *) SG (request_info).query_string;
-    	
-		if (zend_hash_find (&EG(symbol_table), "HTTP_RAW_POST_DATA", sizeof ("HTTP_RAW_POST_DATA"), 
-                    (void **)&raw_post) != FAILURE  && ((*raw_post)->type ==  IS_STRING)){
-			char *value = NULL;
-			req_info.request_data = Z_STRVAL_PP (raw_post);
-			req_info.request_data_length = Z_STRLEN_PP (raw_post);
-			value = (char*)Z_STRVAL_PP(raw_post);
-		}else {
-			if(req_info.request_method && strcmp(req_info.request_method,WSF_HTTP_PUT) == 0)
+    		
+		/* HTTP_RAW_POST_DATA variable is not on by default. Using php://input instead 	
+		if(req_info.request_method && strcmp(req_info.request_method,WSF_HTTP_POST) == 0){
+			if (zend_hash_find (&EG(symbol_table), "HTTP_RAW_POST_DATA", sizeof ("HTTP_RAW_POST_DATA"), 
+                    		(void **)&raw_post) != FAILURE  && ((*raw_post)->type ==  IS_STRING)){
+				char *value = NULL;
+				req_info.request_data = Z_STRVAL_PP (raw_post);
+				req_info.request_data_length = Z_STRLEN_PP (raw_post);
+				value = (char*)Z_STRVAL_PP(raw_post);
+			}else
 			{
 				zval function, retval , *param = NULL;
 				int new_len = 0;
@@ -1698,16 +1699,47 @@ PHP_METHOD (ws_service, reply)
 						req_info.request_data_length = Z_STRLEN(retval);
 						AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
 							"php://input data found");
+					}else
+					{
+						php_error_docref(NULL TSRMLS_CC, E_ERROR, "raw post data not found");
+					}
+				}
+
+			}
+		}else {
+			if(req_info.request_method && strcmp(req_info.request_method,WSF_HTTP_PUT) == 0) */
+			{
+				zval function, retval , *param = NULL;
+				int new_len = 0;
+				INIT_ZVAL(retval);
+				MAKE_STD_ZVAL(param);
+
+				ZVAL_STRING(param, "php://input", 1);
+				ZVAL_STRING(&function, "file_get_contents", 1);
+				if (call_user_function(EG(function_table), NULL, &function, 
+					&retval, 1, &param  TSRMLS_CC) == SUCCESS) 
+				{
+					if (Z_TYPE (retval) == IS_STRING)
+					{	
+						char *data = NULL;
+						data = Z_STRVAL(retval);
+						req_info.request_data = Z_STRVAL(retval);
+						req_info.request_data_length = Z_STRLEN(retval);
+						AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
+							"php://input data found");
+					}else
+					{
+						php_error_docref(NULL TSRMLS_CC, E_ERROR, "raw post data not found");
 					}
 				}
 			}
-			
+		/*		
 			AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
 				"raw post data not found");
 			if(req_info.request_method && strcmp(req_info.request_method,WSF_HTTP_POST) == 0){
 				php_error_docref(NULL TSRMLS_CC, E_ERROR, "raw post data not found");
 			}
-		}
+		} */
     } 
 	else if(ZEND_NUM_ARGS() > 0 && arg_data_len > 0)
 	{
