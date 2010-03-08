@@ -130,9 +130,11 @@ AC_ARG_WITH(wsfc,
     dnl Find wsfc include dir in the path
     if test -d $withval; then
         wsfcinc="-I$withval"
+        wsfclib="-L$withval/../../lib"
     dnl else find the wsfcinc include dir in $(AXIS2C_HOME)/include
     elif test -d '$(WSFC_HOME)/include'; then
         wsfcinc="-I$(WSFC_HOME)/include/wsfc-2.0.0"
+        wsfclib="-L$(WSFC_HOME)/lib"
     else
         AC_MSG_ERROR(could not find wsfcinc. stop)
     fi
@@ -150,6 +152,7 @@ UTILINC=$wsfcinc
 NEETHIINC=$wsfcinc
 SAVANINC=$wsfcinc
 RAMPARTINC=$wsfcinc
+SAVANLIB=$wsfclib
 
 AC_SUBST(SAVANINC)
 AC_SUBST(RAMPARTINC)
@@ -161,6 +164,7 @@ AC_SUBST(NEETHIINC)
 AC_SUBST(OMXMLSEC_LIBS)
 AC_SUBST(RAMPART_LIBS)
 AC_SUBST(SECCONV_LIBS)
+AC_SUBST(SAVANLIB)
 
 AC_SUBST(TESTDIR)
 AC_SUBST(SAMPLES)
@@ -181,6 +185,9 @@ AC_CONFIG_FILES([Makefile \
     transport_admin/Makefile \
     usermanager/Makefile \
     operation_admin/Makefile \
+    bam_publisher/Makefile \
+    bam_publisher/module/Makefile \
+    bam_publisher/services/Makefile \
     security_admin_service/Makefile
     ])
     
