@@ -185,9 +185,6 @@ AC_CONFIG_FILES([Makefile \
     transport_admin/Makefile \
     usermanager/Makefile \
     operation_admin/Makefile \
-    bam_publisher/Makefile \
-    bam_publisher/module/Makefile \
-    bam_publisher/services/Makefile \
     security_admin_service/Makefile
     ])
     
