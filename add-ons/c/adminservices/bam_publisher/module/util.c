@@ -46,6 +46,8 @@ bam_publisher_util_get_payload (
     axiom_element_t *event_element = NULL;
     axiom_node_t *svc_invocation_data_node = NULL;
     axiom_element_t *svc_invocation_data_element = NULL;
+    axiom_node_t *is_aggregate_node = NULL;
+    axiom_element_t *is_aggregate_element = NULL;
     axiom_node_t *server_name_node = NULL;
     axiom_element_t *server_name_element = NULL;
     axiom_node_t *min_res_time_node = NULL;
@@ -83,6 +85,10 @@ bam_publisher_util_get_payload (
     
     svc_invocation_data_element = axiom_element_create(env, event_node, 
             STATISTICS_DATA_ELEMENT_NAME_SERVICE_STATISTICS_DATA, stat_ns, &svc_invocation_data_node);
+
+    is_aggregate_element = axiom_element_create(env, svc_invocation_data_node, 
+            STATISTICS_DATA_ELEMENT_IS_AGGREGATE, stat_ns, &is_aggregate_node);
+    axiom_element_set_text(is_aggregate_element, env, "false", is_aggregate_node);
 
     server_name_element = axiom_element_create(env, svc_invocation_data_node, 
             STATISTICS_DATA_ELEMENT_NAME_SERVER_NAME, stat_ns, &server_name_node);

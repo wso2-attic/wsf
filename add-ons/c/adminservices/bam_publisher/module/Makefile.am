@@ -8,8 +8,7 @@ libbam_publisher_la_SOURCES = svc_stat_handler.c \
 								 util.c \
 								 statistics.c 
 libbam_publisher_la_LIBADD = ../../util/libservice_admin_util.la \
-							 ../../../savanc/src/core/libmod_savan.la \
-							 ../../../savanc/src/publishers/default/libsavan_publisher.la
+							 @SAVANLIB@ -lsavan_publisher
 
 INCLUDES = -I$(top_builddir)/include \
 			-I. \
