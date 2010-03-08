@@ -15,7 +15,7 @@ data_DATA= README \
 logs_DATA=
 docs_DATA=
 samples_DATA=
-EXTRA_DIST = build.sh autogen.sh CREDITS LICENSE build axis2c_build.sh guththila tools AUTHORS NOTICE xdocs samples
+EXTRA_DIST = build.sh autogen.sh CREDITS LICENSE build guththila tools AUTHORS NOTICE xdocs samples
 
 dist-hook:
 	sh dist.sh
