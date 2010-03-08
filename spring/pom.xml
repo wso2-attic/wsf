@@ -68,6 +68,14 @@
                     <groupId>org.apache.woden</groupId>
                     <artifactId>woden-impl-dom</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>xalan</groupId>
+                    <artifactId>xalan</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -93,11 +101,23 @@
             <groupId>org.apache.axis2</groupId>
             <artifactId>axis2-transport-http</artifactId>
             <version>${axis2.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.axis2</groupId>
+                    <artifactId>axis2-kernel</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.axis2</groupId>
             <artifactId>axis2-transport-local</artifactId>
             <version>${axis2.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.axis2</groupId>
+                    <artifactId>axis2-kernel</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.ws.commons.schema</groupId>
@@ -201,7 +221,7 @@
             <version>${rampart.version}</version>
             <type>mar</type>
             <exclusions>
-                 <exclusion>
+                <exclusion>
                     <groupId>opensaml</groupId>
                     <artifactId>opensaml</artifactId>
                 </exclusion>

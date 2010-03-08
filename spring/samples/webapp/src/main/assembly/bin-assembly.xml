@@ -1,64 +1,69 @@
 <assembly>
-	<!--<includeBaseDirectory>true</includeBaseDirectory>-->
-	<includeBaseDirectory>false</includeBaseDirectory>
-	<!-- <baseDirectory>wsf-spring</baseDirectory> -->
-	<formats>
-		<format>war</format>
-	</formats>
-	<artifactId>wsf-spring</artifactId>
-	<fileSets>
-		<fileSet>
-			<directory>src/main/webapp/WEB-INF</directory>
-			<outputDirectory>WEB-INF</outputDirectory>
-			<includes>
-				<include>applicationContext.xml</include>
-				<include>axis2Config.xml</include>
-				<include>web.xml</include>
-			</includes>
-		</fileSet>
-		<fileSet>
-			<directory>src/main/resources</directory>
-			<outputDirectory>WEB-INF/classes</outputDirectory>
-			<includes>
-				<include>secureProductManagerPolicy.xml</include>
-				<include>service.jks</include>
-				</includes>
-		</fileSet>
-		<fileSet>
-			<directory>target</directory>
-			<outputDirectory>WEB-INF/lib</outputDirectory>
-			<includes>
-				<include>wsf-spring-sample-${wsf-spring.version}.jar</include>
-			</includes>
-		</fileSet>
-		<fileSet>
-			<directory>../../core/target</directory>
-			<outputDirectory>WEB-INF/lib</outputDirectory>
-			<includes>
-				<include>wsf-spring-${wsf-spring.version}.jar</include>
-			</includes>
-		</fileSet>
-	</fileSets>
-	<dependencySets>
-		<dependencySet>
-			<outputDirectory>WEB-INF/lib</outputDirectory>
-			<includes>
-				<include>*:jar:*</include>
-			</includes>
-		</dependencySet>
-		<dependencySet>
+    <!--<includeBaseDirectory>true</includeBaseDirectory>-->
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <!-- <baseDirectory>wsf-spring</baseDirectory> -->
+    <formats>
+        <format>war</format>
+    </formats>
+    <artifactId>wsf-spring</artifactId>
+    <fileSets>
+        <fileSet>
+            <directory>src/main/webapp/WEB-INF</directory>
+            <outputDirectory>WEB-INF</outputDirectory>
+            <includes>
+                <include>applicationContext.xml</include>
+                <include>axis2Config.xml</include>
+                <include>web.xml</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>src/main/resources</directory>
+            <outputDirectory>WEB-INF/classes</outputDirectory>
+            <includes>
+                <include>secureProductManagerPolicy.xml</include>
+                <include>service.jks</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>target</directory>
+            <outputDirectory>WEB-INF/lib</outputDirectory>
+            <includes>
+                <include>wsf-spring-sample-${wsf-spring.version}.jar</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../core/target</directory>
+            <outputDirectory>WEB-INF/lib</outputDirectory>
+            <includes>
+                <include>wsf-spring-${wsf-spring.version}.jar</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>WEB-INF/lib</outputDirectory>
+            <includes>
+                <include>*:jar:*</include>
+            </includes>
+            <excludes>
+                <exclude>xerces:xercesImpl:jar</exclude>
+                <exclude>xml-apis:xml-apis:jar</exclude>
+                <exclude>xerces:xmlParserAPIs:jar</exclude>
+            </excludes>
+        </dependencySet>
+        <dependencySet>
             <outputDirectory>WEB-INF/lib</outputDirectory>
             <outputFileNameMapping>${artifactId}-${addressing.version}.${extension}</outputFileNameMapping>
             <includes>
                 <include>org.apache.axis2:addressing:mar</include>
             </includes>
         </dependencySet>
-		<dependencySet>
+        <dependencySet>
             <outputDirectory>WEB-INF/lib</outputDirectory>
             <outputFileNameMapping>${artifactId}-${rampart.version}.${extension}</outputFileNameMapping>
             <includes>
                 <include>org.apache.rampart:rampart:mar</include>
             </includes>
         </dependencySet>
-	</dependencySets>
+    </dependencySets>
 </assembly>
