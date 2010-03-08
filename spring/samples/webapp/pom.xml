@@ -16,42 +16,43 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-	<groupId>org.wso2.spring.ws</groupId>
-	<artifactId>wsf-spring-sample</artifactId>
-	<version>1.5</version>
-	<packaging>jar</packaging>
-	<parent>
+    <parent>
         <groupId>org.wso2.spring.ws</groupId>
-    	<artifactId>wsf-spring-parent</artifactId>
-        <version>1.5</version>
+        <artifactId>wsf-spring-parent</artifactId>
+        <version>1.6-SNAPSHOT</version>
     </parent>
-	<dependencies>
-		<dependency>
-			<groupId>org.apache.axis2</groupId>
-			<artifactId>axis2-adb-codegen</artifactId>
-			<version>${axis2.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.axis2</groupId>
-			<artifactId>axis2-mtompolicy</artifactId>
-			<version>${axis2.version}</version>
-		</dependency>
-	</dependencies>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.spring.ws</groupId>
+    <artifactId>wsf-spring-sample</artifactId>
+    <version>1.6-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-	<!-- Build Settings -->
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-adb-codegen</artifactId>
+            <version>${axis2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-mtompolicy</artifactId>
+            <version>${axis2.version}</version>
+        </dependency>
+    </dependencies>
+
+    <!-- Build Settings -->
     <build>
-    	<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0</version>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-				</configuration>
-			</plugin>
-			<plugin>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0</version>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.2-beta-1</version>
@@ -70,17 +71,17 @@
                     </execution>
                 </executions>
             </plugin>
-		</plugins>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<excludes>
-					<exclude>service.jks</exclude>
-					<exclude>secureProductManagerPolicy.xml</exclude>
-				</excludes>
-			</resource>
-		</resources>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>service.jks</exclude>
+                    <exclude>secureProductManagerPolicy.xml</exclude>
+                </excludes>
+            </resource>
+        </resources>
     </build>
-	<!-- Project Info -->
-	<name>WSO2 Spring Web Services - Sample Web Application</name>
+    <!-- Project Info -->
+    <name>WSO2 Spring Web Services - Sample Web Application</name>
 </project>

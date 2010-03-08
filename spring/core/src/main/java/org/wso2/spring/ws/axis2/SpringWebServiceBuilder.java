@@ -55,8 +55,6 @@ import org.apache.axis2.wsdl.WSDLConstants;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyEngine;
 import org.apache.ws.commons.schema.utils.NamespaceMap;
-import org.codehaus.jam.JAnnotation;
-import org.codehaus.jam.JMethod;
 import org.wso2.spring.ws.SpringWebService;
 import org.wso2.spring.ws.beans.MessageReceiverBean;
 import org.wso2.spring.ws.beans.OperationBean;
@@ -634,16 +632,5 @@ public class SpringWebServiceBuilder {
 		// }
 		// }
 	}
-
-	private static String getSimpleName(JMethod method) {
-		JAnnotation methodAnnon = method
-				.getAnnotation(AnnotationConstants.WEB_METHOD);
-		if (methodAnnon != null) {
-			if (methodAnnon.getValue(SpringAxisConstants.OPERATION_NAME) != null) {
-				return methodAnnon.getValue(SpringAxisConstants.OPERATION_NAME)
-						.asString();
-			}
-		}
-		return method.getSimpleName();
-	}
+	
 }

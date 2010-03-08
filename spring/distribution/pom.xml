@@ -1,44 +1,45 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<!-- The Basics -->
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.wso2.spring.ws</groupId>
-	<artifactId>wsf-spring-distribution</artifactId>
-	<version>1.5</version>
-	<packaging>pom</packaging>
-	<parent>
-		<groupId>org.wso2.spring.ws</groupId>
-		<artifactId>wsf-spring-parent</artifactId>
-		<version>1.5</version>
-	</parent>
-	<!-- Build Settings -->
-	<build>
-	  <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <version>2.2-beta-1</version>
-            <executions>
-                <execution>
-                    <id>distribution-package</id>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>single</goal>
-                    </goals>
-                    <configuration>
-						<finalName>wsf-spring-${wsf-spring.version}</finalName>
-                        <descriptors>
-                            <descriptor>src/main/assembly/bin-assembly.xml</descriptor>
-							<descriptor>src/main/assembly/src-assembly.xml</descriptor>
-                        </descriptors>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>     
-		</plugins>
-	</build>
-	<!-- Project Info -->
-	<name>WSO2 Spring Web Services Framework - Distribution</name>
-	<url>http://wso2.org</url>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>org.wso2.spring.ws</groupId>
+        <artifactId>wsf-spring-parent</artifactId>
+        <version>1.6-SNAPSHOT</version>
+    </parent>
+    <!-- The Basics -->
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.spring.ws</groupId>
+    <artifactId>wsf-spring-distribution</artifactId>
+    <version>1.6-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <!-- Build Settings -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-1</version>
+                <executions>
+                    <execution>
+                        <id>distribution-package</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>wsf-spring-${wsf-spring.version}</finalName>
+                            <descriptors>
+                                <descriptor>src/main/assembly/bin-assembly.xml</descriptor>
+                                <descriptor>src/main/assembly/src-assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <!-- Project Info -->
+    <name>WSO2 Spring Web Services Framework - Distribution</name>
+    <url>http://wso2.org</url>
 </project>

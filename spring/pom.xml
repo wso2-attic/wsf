@@ -15,153 +15,148 @@
 -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<!-- The Basics-->
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.wso2.spring.ws</groupId>
-	<artifactId>wsf-spring-parent</artifactId>
-	<packaging>pom</packaging>
-	<dependencies>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.4</version>
-			<scope>compile</scope>
-		</dependency>
-		<!-- Spring dependencies -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-tomcat-weaver</artifactId>
-			<version>${spring.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>tomcat</groupId>
-					<artifactId>catalina</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.springframework</groupId>
-					<artifactId>spring-context</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring</artifactId>
-			<version>${spring.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>tomcat</groupId>
-					<artifactId>catalina</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<!-- Axis 2 dependencies -->
-		<dependency>
-			<groupId>org.apache.axis2</groupId>
-			<artifactId>axis2-kernel</artifactId>
-			<version>${axis2.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.woden</groupId>
-					<artifactId>woden-impl-dom</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.axis2</groupId>
-			<artifactId>axis2-adb</artifactId>
-			<version>${axis2.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.axis2</groupId>
-					<artifactId>axis2-kernel</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>xalan</groupId>
-					<artifactId>xalan</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>xerces</groupId>
-					<artifactId>xercesImpl</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<!--
-		<dependency>
-			<groupId>org.apache.axis2</groupId>
-			<artifactId>axis2-transports</artifactId>
-			<version>${axis2.version}</version>
-		</dependency>
-		-->
-		<dependency>
-			<groupId>annogen</groupId>
-			<artifactId>annogen</artifactId>
-			<version>${annogen.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>backport-util-concurrent</groupId>
-			<artifactId>backport-util-concurrent</artifactId>
-			<version>${backport.util.concurrent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.ws.commons.schema</groupId>
-			<artifactId>XmlSchema</artifactId>
-			<version>${XmlSchema.version}</version>
-		</dependency>
-		<!-- AXIOM dependencies-->
-		<dependency>
-			<groupId>org.apache.ws.commons.axiom</groupId>
-			<artifactId>axiom-api</artifactId>
-			<version>${axiom.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.ws.commons.axiom</groupId>
-			<artifactId>axiom-impl</artifactId>
-			<version>${axiom.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.ws.commons.axiom</groupId>
-			<artifactId>axiom-dom</artifactId>
-			<version>${axiom.version}</version>
-		</dependency>
-		<!-- Commons dependencies-->
-		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-			<version>${commons.httpclient.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-fileupload</groupId>
-			<artifactId>commons-fileupload</artifactId>
-			<version>${commons.fileupload.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>${commons.logging.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<artifactId>avalon-framework</artifactId>
-					<groupId>avalon-framework</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>logkit</artifactId>
-					<groupId>logkit</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<!-- Other depdendencies-->
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
-		<dependency>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <!-- The Basics-->
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.spring.ws</groupId>
+    <artifactId>wsf-spring-parent</artifactId>
+    <version>1.6-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- Spring dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tomcat-weaver</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>tomcat</groupId>
+                    <artifactId>catalina</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>tomcat</groupId>
+                    <artifactId>catalina</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- Axis 2 dependencies -->
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-kernel</artifactId>
+            <version>${axis2.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.woden</groupId>
+                    <artifactId>woden-impl-dom</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-adb</artifactId>
+            <version>${axis2.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.axis2</groupId>
+                    <artifactId>axis2-kernel</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xalan</groupId>
+                    <artifactId>xalan</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-transport-http</artifactId>
+            <version>${axis2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-transport-local</artifactId>
+            <version>${axis2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.schema</groupId>
+            <artifactId>XmlSchema</artifactId>
+            <version>${XmlSchema.version}</version>
+        </dependency>
+        <!-- AXIOM dependencies-->
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-api</artifactId>
+            <version>${axiom.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-impl</artifactId>
+            <version>${axiom.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-dom</artifactId>
+            <version>${axiom.version}</version>
+        </dependency>
+        <!-- Commons dependencies-->
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>${commons.httpclient.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>${commons.fileupload.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>${commons.logging.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>avalon-framework</artifactId>
+                    <groupId>avalon-framework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>logkit</artifactId>
+                    <groupId>logkit</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- Other depdendencies-->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.woden</groupId>
             <artifactId>woden-api</artifactId>
             <version>${woden.version}</version>
@@ -171,41 +166,45 @@
             <artifactId>woden-impl-dom</artifactId>
             <version>${woden.version}</version>
         </dependency>
-		<dependency>
-			<groupId>wsdl4j</groupId>
-			<artifactId>wsdl4j</artifactId>
-			<version>${wsdl4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>${javamail.version}</version>
-		</dependency>
-		<!-- Module jars -->
-		<dependency>
-			<groupId>org.apache.neethi</groupId>
-			<artifactId>neethi</artifactId>
-			<version>${neethi.version}</version>
-		</dependency>
-		<!-- Module Dependencies -->
-		<dependency>
-			<groupId>org.apache.axis2</groupId>
-			<artifactId>addressing</artifactId>
-			<version>${addressing.version}</version>
-			<type>mar</type>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.axis2</groupId>
-					<artifactId>axis2-kernel</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.rampart</groupId>
-			<artifactId>rampart</artifactId>
-			<version>${rampart.version}</version>
-			<type>mar</type>
-			<exclusions>
+        <dependency>
+            <groupId>wsdl4j</groupId>
+            <artifactId>wsdl4j</artifactId>
+            <version>${wsdl4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>${javamail.version}</version>
+        </dependency>
+        <!-- Module jars -->
+        <dependency>
+            <groupId>org.apache.neethi</groupId>
+            <artifactId>neethi</artifactId>
+            <version>${neethi.version}</version>
+        </dependency>
+        <!-- Module Dependencies -->
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>addressing</artifactId>
+            <version>${addressing.version}</version>
+            <type>mar</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.axis2</groupId>
+                    <artifactId>axis2-kernel</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.rampart</groupId>
+            <artifactId>rampart</artifactId>
+            <version>${rampart.version}</version>
+            <type>mar</type>
+            <exclusions>
+                 <exclusion>
+                    <groupId>opensaml</groupId>
+                    <artifactId>opensaml</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>org.apache.axis2</groupId>
                     <artifactId>axis2-kernel</artifactId>
@@ -243,12 +242,16 @@
                     <artifactId>woden</artifactId>
                 </exclusion>
             </exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.rampart</groupId>
-			<artifactId>rampart-core</artifactId>
-			<version>${rampart.version}</version>
-			<exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.rampart</groupId>
+            <artifactId>rampart-core</artifactId>
+            <version>${rampart.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>opensaml</groupId>
+                    <artifactId>opensaml</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>org.apache.axis2</groupId>
                     <artifactId>axis2-kernel</artifactId>
@@ -286,48 +289,45 @@
                     <artifactId>woden</artifactId>
                 </exclusion>
             </exclusions>
-		</dependency>
-	</dependencies>
-	<version>1.5</version>
-		<!--
-	WSF-Spring modules set.
-	-->
-	<modules>
-		<module>core</module> 	
-		<module>samples/webapp</module>
-	</modules>
-	<properties>
-		<wsf-spring.version>1.5</wsf-spring.version>
-		<axis2.version>1.4.1</axis2.version>
-		<axiom.version>1.2.7</axiom.version>
-		<addressing.version>1.41</addressing.version>
-		<rampart.version>1.4</rampart.version>
-		<XmlSchema.version>1.4.2</XmlSchema.version>
-		<neethi.version>2.0.4</neethi.version>
-		<woden.version>1.0M8</woden.version>
-		<wsdl4j.version>1.6.2</wsdl4j.version>
-		<annogen.version>0.1.0</annogen.version>
-		<javamail.version>1.4</javamail.version>
-		<commons.httpclient.version>3.1</commons.httpclient.version>
-		<commons.logging.version>1.1.1</commons.logging.version>
-		<backport.util.concurrent.version>3.1</backport.util.concurrent.version>	
-		<log4j.version>1.2.13</log4j.version>
-		<httpcore.version>4.0-beta1</httpcore.version>
-		<commons.fileupload.version>1.2</commons.fileupload.version>
-		<xerces.version>2.8.1</xerces.version>
-		<!--<clover.license.file>TODO</clover.license.file>-->
-		<tomcat.version>6.0.14</tomcat.version>
-		<xalan.version>2.7.0</xalan.version>
-		<spring.version>2.0.7</spring.version>
-		<!-- -maven plugin versions -->
-		<maven.clean.version>2.1</maven.clean.version>
-		<maven.gpg.version>1.0-alpha-3</maven.gpg.version>
-		<maven.antrun.version>1.2</maven.antrun.version>
-	</properties>
-	<!-- Build Settings -->
-	<build>
-		<plugins>
-			<plugin>
+        </dependency>
+    </dependencies>
+
+    <!--
+     WSF-Spring modules set.
+     -->
+    <modules>
+        <module>core</module>
+        <module>samples/webapp</module>
+        <module>distribution</module>
+    </modules>
+    <properties>
+        <wsf-spring.version>1.6-SNAPSHOT</wsf-spring.version>
+        <axis2.version>1.5.1</axis2.version>
+        <axiom.version>1.2.8</axiom.version>
+        <addressing.version>1.5.1</addressing.version>
+        <rampart.version>1.5</rampart.version>
+        <XmlSchema.version>1.4.3</XmlSchema.version>
+        <neethi.version>2.0.4</neethi.version>
+        <woden.version>1.0M8</woden.version>
+        <wsdl4j.version>1.6.2</wsdl4j.version>
+        <javamail.version>1.4</javamail.version>
+        <commons.httpclient.version>3.1</commons.httpclient.version>
+        <commons.logging.version>1.1.1</commons.logging.version>
+        <log4j.version>1.2.13</log4j.version>
+        <httpcore.version>4.0</httpcore.version>
+        <commons.fileupload.version>1.2</commons.fileupload.version>
+        <tomcat.version>6.0.14</tomcat.version>
+        <xalan.version>2.7.0</xalan.version>
+        <spring.version>2.0.7</spring.version>
+        <!-- -maven plugin versions -->
+        <maven.clean.version>2.1</maven.clean.version>
+        <maven.gpg.version>1.0-alpha-3</maven.gpg.version>
+        <maven.antrun.version>1.2</maven.antrun.version>
+    </properties>
+    <!-- Build Settings -->
+    <build>
+        <plugins>
+            <plugin>
                 <inherited>false</inherited>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>${maven.clean.version}</version>
@@ -337,141 +337,121 @@
                             <directory>distribution/target</directory>
                             <followSymlinks>false</followSymlinks>
                         </fileset>
-					</filesets>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	<!-- More Project Info -->
-	<name>WSO2 Spring Web Services Framework</name>
-	<description>
-		WSO2 WSF/Spring provides an amazingly simple Code First approach
-		to create Web Services for the Spring user. This framework
-		integrates the Apache Axis2 web services engine into Spring.
-		Thus, providing all the power and versatility of the Axis2
-		engine to the Spring user.
+                    </filesets>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <!-- More Project Info -->
+    <name>WSO2 Spring Web Services Framework</name>
+    <description>
+        WSO2 WSF/Spring provides an amazingly simple Code First approach
+        to create Web Services for the Spring user. This framework
+        integrates the Apache Axis2 web services engine into Spring.
+        Thus, providing all the power and versatility of the Axis2
+        engine to the Spring user.
 
-		Now, with just a few entries in the application context, Spring
-		users can enjoy the benefits of Service Oriented Architecture
-		using Web Services in their applications.
-	</description>
-	<url>http://wso2.org</url>
-	<licenses>
-		<license>
-			<name>Apache License Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
-		</license>
-	</licenses>
-	<organization>
-		<name>WSO2 Inc</name>
-		<url>http://www.wso2.com</url>
-	</organization>
-	<!-- ========== -->
-	<!-- Developers -->
-	<!-- ========== -->
-	<developers>
-		<developer>
-			<name>Sanjaya Karunasena</name>
-			<id>sanjayak</id>
-			<email>sanjayak AT wso2.com</email>
-			<organization>WSO2 Inc.</organization>
-			<organizationUrl>http://www.wso2.org</organizationUrl>
-		</developer>
-		<developer>
-			<name>Tharindu Mathew</name>
-			<id>tharindu</id>
-			<email>tharindu AT wso2.com</email>
-			<organization>WSO2 Inc.</organization>
-			<organizationUrl>http://www.wso2.org</organizationUrl>
-		</developer>
-		<developer>
-			<name>Sanka Samaranayake</name>
-			<id>sanka</id>
-			<email>sanka AT wso2.com</email>
-			<organization>WSO2 Inc.</organization>
-			<organizationUrl>http://www.wso2.org</organizationUrl>
-		</developer>
-		<developer>
-			<name>Buddika Sanjeewa</name>
-			<id>buddikas</id>
-			<email>buddikas AT wso2.com</email>
-			<organization>WSO2 Inc.</organization>
-			<organizationUrl>http://www.wso2.org</organizationUrl>
-		</developer>
-	</developers>
-	<!-- Environmental Settings -->
-	<issueManagement>
-		<system>JIRA</system>
-		<url>https://wso2.org/jira/browse/WSFSPRING</url>
-	</issueManagement>
-	<repositories>
-		<repository>
-			<id>wso2-maven2-repository</id>
-			<url>http://dist.wso2.org/maven2</url>
-		</repository>
-		<repository>
-			<id>ws-zones-repository</id>
-			<url>http://ws.zones.apache.org/repository2</url>
-		</repository>
-		<repository>
-			<id>apache-snapshots</id>
-			<name>Apache Development Repository</name>
-			<url>http://people.apache.org/repo/m2-snapshot-repository</url>
-		</repository>
-	</repositories>
-	<distributionManagement>
-		<repository>
-			<id>wso2-maven2-repository</id>
-			<name>WSO2 Maven2 Repository</name>
-			<url>sftp://maven2@dist.wso2.org/home/httpd/dist.wso2.org/maven2</url>
-		</repository>
-		<snapshotRepository>
-			<id>wso2-maven2-snapshot-repository</id>
-			<name>WSO2 Maven2 Repository</name>
-			<url>sftp://maven2@dist.wso2.org/home/httpd/dist.wso2.org/maven2</url>
-		</snapshotRepository>
-	</distributionManagement>
-	<profiles>
-		<profile>
-			<activation>
-				<property>
-					<name>release</name>
-				</property>
-			</activation>
-			<modules>
-				<module>distribution</module>
-			</modules>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>${maven.gpg.version}</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
+        Now, with just a few entries in the application context, Spring
+        users can enjoy the benefits of Service Oriented Architecture
+        using Web Services in their applications.
+    </description>
+    <url>http://wso2.org</url>
+    <licenses>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+    <organization>
+        <name>WSO2 Inc</name>
+        <url>http://www.wso2.com</url>
+    </organization>
+    <!-- Environmental Settings -->
+    <issueManagement>
+        <system>JIRA</system>
+        <url>https://wso2.org/jira/browse/WSFSPRING</url>
+    </issueManagement>
+    <repositories>
+        <repository>
+            <id>wso2-maven2-repository</id>
+            <url>http://dist.wso2.org/maven2</url>
+        </repository>
+        <repository>
+            <id>wso2-maven2-repository</id>
+            <name>WSO2 Maven2 Repository</name>
+            <url>http://dist.wso2.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+        </repository>
+        <repository>
+            <id>ws-zones-repository</id>
+            <url>http://ws.zones.apache.org/repository2</url>
+        </repository>
+        <repository>
+            <id>apache-snapshots</id>
+            <name>Apache Development Repository</name>
+            <url>http://people.apache.org/repo/m2-snapshot-repository</url>
+        </repository>
+    </repositories>
+    <distributionManagement>
+        <repository>
+            <id>wso2-maven2-repository</id>
+            <name>WSO2 Maven2 Repository</name>
+            <url>sftp://maven2@dist.wso2.org/home/httpd/dist.wso2.org/maven2</url>
+        </repository>
+        <snapshotRepository>
+            <id>wso2-maven2-snapshot-repository</id>
+            <name>WSO2 Maven2 Repository</name>
+            <url>sftp://maven2@dist.wso2.org/home/httpd/dist.wso2.org/maven2</url>
+        </snapshotRepository>
+    </distributionManagement>
+    <profiles>
+        <profile>
+            <activation>
+                <property>
+                    <name>release</name>
+                </property>
+            </activation>
+            <modules>
+                <module>distribution</module>
+            </modules>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven.gpg.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
-						<version>${maven.antrun.version}</version>
+                        <version>${maven.antrun.version}</version>
                         <executions>
                             <execution>
                                 <phase>verify</phase>
                                 <configuration>
                                     <tasks>
                                         <checksum forceOverwrite="yes" algorithm="MD5" fileext=".md5">
-											<fileset dir="target">
-												<include name="*.jar" />
-												<include name="*.zip" />
-											</fileset>
-										</checksum>
+                                            <fileset dir="target">
+                                                <include name="*.jar"/>
+                                                <include name="*.zip"/>
+                                            </fileset>
+                                        </checksum>
                                     </tasks>
                                 </configuration>
                                 <goals>
@@ -480,8 +460,8 @@
                             </execution>
                         </executions>
                     </plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

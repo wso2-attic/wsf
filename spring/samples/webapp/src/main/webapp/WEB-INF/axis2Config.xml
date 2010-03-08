@@ -85,7 +85,6 @@
 		</property>
 		<property name="transportSenders">
 			<list>
-				<ref bean="axis2TransportSenderTCP"/>
 				<ref bean="axis2TransportSenderlocal"/>
 				<ref bean="axis2TransportSender"/>
 				<ref bean="axis2TransportSenderHTTPS"/>
@@ -180,11 +179,6 @@
 				<entry key="Transfer-Encoding" value="chunked" />
 			</map>
 		</property>
-	</bean>
- 
-	<bean id="axis2TransportSenderTCP" class="org.wso2.spring.ws.beans.TransportSenderBean">
-		<property name="name" value="tcp"></property>
-		<property name="clazz" value="org.apache.axis2.transport.tcp.TCPTransportSender"></property>
 	</bean>
  
 	<bean id="axis2TransportSenderlocal" class="org.wso2.spring.ws.beans.TransportSenderBean">
