@@ -44,10 +44,10 @@ AC_ARG_WITH(wsfc,
     ;;
   *)
     AC_MSG_RESULT(yes)
-    dnl Find axis2_util include dir in the path
+    dnl Find wsfc include dir in the path
     if test -d $withval; then
         wsfcinc="-I$withval"
-    dnl else find the axis2_util include dir in $(AXIS2C_HOME)/include
+    dnl else find the wsfc include dir in $(WSFC_HOME)/include
     elif test -d '$(WSFC_HOME)/include'; then
         wsfcinc="-I$(WSFC_HOME)/include/"
     else
@@ -59,9 +59,9 @@ AC_ARG_WITH(wsfc,
 )
 
 WSFCINC=$wsfcinc
-AXIS2INC="$wsfcinc/wsfc-2.2.0"
-SANDESHA2INC="$wsfcinc/wsfc-2.2.0"
-RAMPARTINC="$wsfcinc/wsfc-2.2.0"
+AXIS2INC="$wsfcinc"
+SANDESHA2INC="$wsfcinc"
+RAMPARTINC="$wsfcinc"
 
 AC_SUBST(WSFCINC)
 AC_SUBST(AXIS2INC)
