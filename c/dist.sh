@@ -4,7 +4,7 @@ grep -rl AXIS2C_HOME *| xargs sed -i "s/AXIS2C_HOME/WSFC_HOME/g"
 export WSFC_HOME=`pwd`/deploy
 find . -name "*configure.ac" | xargs sed -i "s/-Werror//g"
 #make distclean
-./configure --prefix=`pwd`/deploy --enable-openssl=yes --with-xmpp=yes --enable-tests=yes --with-apache2=/usr/local/apache2/include --with-axis2=`pwd`/axis2c/include --enable-sandesha=yes --enable-rampart=yes --enable-wsclient=yes --enable-savan=yes --enable-tcp=yes --with-archive --enable-service --with-xpath
+./configure --prefix=`pwd`/deploy --enable-openssl=yes --with-xmpp=yes --enable-tests=yes --with-apache2=/usr/local/apache2/include --with-axis2=`pwd`/axis2c/include --enable-sandesha=yes --enable-rampart=yes --enable-wsclient=yes --enable-savan=yes --enable-xpath --enable-service --enable-tcp=yes --with-archive --enable-service --with-xpath
 make 
 make install
 make samples
