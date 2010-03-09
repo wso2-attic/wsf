@@ -49,7 +49,7 @@ if ! test -d $1/samples/src/c/wsclient; then
 fi
 
 if test -e wsf_c/rampartc/Makefile; then
-cd wsf_c/rampartc/samples; ./configure --prefix=$1  --with-axis2=$1/include/axis2-1.6.0; make; make install;
+cd wsf_c/rampartc/samples; ./configure --prefix=$1  --with-axis2=$1/include/wsfc-2.0.0; make; make install;
 cd ../../../
 fi
 
