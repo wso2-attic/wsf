@@ -82,7 +82,7 @@ using namespace <xsl:value-of select="@cppNamespace"/>;
 
               OMElement* WSF_CALL onFault(OMElement *message);
 
-              void WSF_CALL init();
+              virtual bool WSF_CALL init();
 
               ~<xsl:value-of select="@name"/>(); 
       };
