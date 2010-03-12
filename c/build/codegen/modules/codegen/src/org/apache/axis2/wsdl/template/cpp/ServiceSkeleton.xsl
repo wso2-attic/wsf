@@ -98,11 +98,11 @@
     }
 
 
-	void WSF_CALL
+	bool WSF_CALL
 	<xsl:value-of select="$method-prefix"/>::init()
 	{
 
-      return;
+      return true;
 	}
 
 
