@@ -302,6 +302,8 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
         {
             addAttribute(doc,"option","0",rootElement);
         }
+
+        //if(codeGenConfiguration.getUri2PackageNameMap())
         addAttribute(doc, "isServer",codeGenConfiguration.isServerSide()? "1" : "0", rootElement);
         //System.out.println(DOM2Writer.nodeToString(doc));
         CPPVCProjectWriter vcProjectWriter = new CPPVCProjectWriter(
@@ -329,7 +331,6 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
 
      protected void writeCallback() throws Exception {
          Document callbackModel = createDOMDocumentForCallback();
-
         CPPCallbackHeaderWriter writerCallback =
                 new CPPCallbackHeaderWriter((getOutputDirectory(codeGenConfiguration.getOutputLocation(),
                                              codeGenConfiguration.getSourceLocation())),
@@ -367,6 +368,9 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
     addAttribute(doc, "name", name, rootElement);
     addAttribute(doc, "servicename",serviceName, rootElement);
     addAttribute(doc, "caps-name",name.toUpperCase(),rootElement);
+
+      if(codeGenConfiguration.getUri2PackageNameMap() != null)
+            addAttribute(doc, "enableNS2P","yes", rootElement);
     //TODO JAXRPC mapping support should be considered here ??
     this.loadOperations(doc, rootElement, null);
 
@@ -409,7 +413,8 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
         addAttribute(doc, "namespace", serviceTns, rootElement);
         addAttribute(doc, "interfaceName", serviceCName, rootElement);
         addAttribute(doc, "callbackName", callbackName, rootElement);
-
+        if(codeGenConfiguration.getUri2PackageNameMap() != null)
+                addAttribute(doc, "enableNS2P","yes", rootElement);
 
         /* The following block of code is same as for the
          * AxisServiceBasedMultiLanguageEmitter createDOMDocumentForInterfaceImplementation()
@@ -488,7 +493,8 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
         addAttribute(doc, "prefix", skelName, rootElement); //prefix to be used by the functions
         addAttribute(doc, "qname", serviceName + "|" + serviceTns, rootElement);
 
-
+        if(codeGenConfiguration.getUri2PackageNameMap() != null)
+                addAttribute(doc, "enableNS2P","yes", rootElement);
         fillSyncAttributes(doc, rootElement);
         loadOperations(doc, rootElement, null);
 
@@ -535,7 +541,8 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
 
         //attach a list of faults
         rootElement.appendChild(getUniqueListofFaults(doc));
-
+        if(codeGenConfiguration.getUri2PackageNameMap() != null)
+                addAttribute(doc, "enableNS2P","yes", rootElement);
         doc.appendChild(rootElement);
         return doc;
 
@@ -573,7 +580,8 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
 
          //attach a list of faults
          rootElement.appendChild(getUniqueListofFaults(doc));
-
+         if(codeGenConfiguration.getUri2PackageNameMap() != null)
+                addAttribute(doc, "enableNS2P","yes", rootElement);
          doc.appendChild(rootElement);
          return doc;
 
@@ -785,6 +793,12 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
             typeMappingStr = CPP_DEFAULT_TYPE;
         }
 
+        String filename = typeMappingStr.replace( "::", "_" );
+
+
+        addAttribute(doc, "filename", filename, paramElement);
+
+
         addAttribute(doc, "type", typeMappingStr, paramElement);
         //adds the short type
         addShortType(paramElement, (paramQName == null) ? null : paramQName.getLocalPart());
@@ -884,6 +898,15 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
         addAttribute(doc, "caps-type", paramType.toUpperCase(), param);
         addAttribute(doc, "type", paramType, param);
 
+
+String filename = paramType.replace( "::", "_" );
+
+
+        addAttribute(doc, "filename", filename, param);
+
+
+
+
         if (!paramType.equals("") && !paramType.equals("void") &&
                 !typeMappingStr.equals(CPP_DEFAULT_TYPE) && typeMappingStr.contains("::") && !typeMappingStr.contains("std::string") ) {
             addAttribute(doc, "ours", "yes", param);
@@ -961,6 +984,14 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
                         : typeMapping;
 
                 addAttribute(doc, "type", typeMappingStr, param);
+                
+String filename = typeMappingStr.replace( "::", "_" );
+
+
+        addAttribute(doc, "filename", filename, param);
+                
+                
+                
                 addAttribute(doc, "location", location, param);
                 if (header.isMustUnderstand()) {
                     addAttribute(doc, "mustUnderstand", "true", param);
@@ -1133,6 +1164,12 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
                 addAttribute(doc, "type", (typeMapping == null)
                         ? ""
                         : typeMapping, paramElement);
+String filename = typeMapping.replace( "::", "_" );
+
+
+        addAttribute(doc, "filename", filename, paramElement);
+
+
 
                 //add the short name
                 addShortType(paramElement, (msg.getElementQName() == null) ? null :

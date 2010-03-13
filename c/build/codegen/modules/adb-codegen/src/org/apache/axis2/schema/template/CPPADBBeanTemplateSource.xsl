@@ -32,7 +32,7 @@
          */
          
         #include "<xsl:value-of select="$axis2_name"/>.h"
-
+        
         <xsl:apply-templates/>
     </xsl:template>
     <!--cater for the multiple classes - unwrappped mode -->
@@ -74,6 +74,14 @@
             <xsl:otherwise></xsl:otherwise>
         </xsl:choose>
         </xsl:variable>
+        <xsl:variable name="CPPNamespaceFilePrefix">
+        <xsl:choose>
+            <xsl:when test="@cppNamespace">
+                <xsl:value-of select="@cppNamespace"/><xsl:text>_</xsl:text>
+            </xsl:when>
+            <xsl:otherwise></xsl:otherwise>
+        </xsl:choose>
+        </xsl:variable>
 
         <!-- checking for is union -->
         <xsl:variable name="isUnion" select="@union"/>
@@ -84,8 +92,15 @@
          * This file was auto-generated from WSDL
          * by the Apache Axis2/C version: SNAPSHOT  Built on : Mar 10, 2008 (08:35:52 GMT+00:00)
          */
-
-        #include "<xsl:value-of select="$axis2_name"/>.h"
+        <xsl:choose>
+          <xsl:when test="@enableNS2P">
+            #include "<xsl:value-of select="$CPPNamespaceFilePrefix"/><xsl:value-of select="$axis2_name"/>.h"
+          </xsl:when>
+          <xsl:otherwise>
+            #include "<xsl:value-of select="$axis2_name"/>.h"
+          </xsl:otherwise>
+        </xsl:choose>
+        
         #include &lt;Environment.h&gt;
         #include &lt;WSFError.h&gt;
 

@@ -30,19 +30,31 @@
  * by the Apache Axis2 version: #axisVersion# #today#
  */
        <xsl:variable name="servicename" select="@servicename"></xsl:variable>
+       <xsl:variable name="enableNS2P" select="@enableNS2P"></xsl:variable>
 
     <xsl:for-each select="method">
         <xsl:variable name="outParamType" select="output/param[@location='body']/@type"></xsl:variable>
+        <xsl:variable name="filename" select="output/param[@location='body']/@filename"></xsl:variable>
         <xsl:variable name="outParamName" select="output/param/@name"></xsl:variable>
         <xsl:variable name="outParamComplexType" select="output/param[@location='body']/@complextype"></xsl:variable>
         <xsl:variable name="outParamCount" select="count(output/param[@location='body']/param)"></xsl:variable>
         <xsl:variable name="mep"><xsl:value-of select="@mep"/></xsl:variable>
         <xsl:variable name="isUnwrapParameters" select="input/param[@location='body' and @type!='']/@unwrappParameters"/>
         <xsl:if test="output/param/@ours">
-#include "<xsl:value-of select="substring-after($outParamType,'::')"/>.h"
+            <xsl:variable name="outParamFilename">
+                <xsl:choose>
+                    <xsl:when test="$enableNS2P">
+                        <xsl:value-of select="$filename"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="substring-after($outParamType,'::')"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:variable>
+#include "<xsl:value-of select="$outParamFilename"/>.h"
         </xsl:if>
        <xsl:for-each select="output/param[@location='soap_header']">
-       <xsl:variable name="outParamHeader"><xsl:value-of select="@type"/> </xsl:variable>
+       <xsl:variable name="outParamHeader"><xsl:value-of select="@type"/></xsl:variable>
            <xsl:if test="@ours">
 #include "<xsl:value-of select="substring-after($outParamHeader,'::')"/>.h"
            </xsl:if>

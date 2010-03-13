@@ -70,16 +70,23 @@
        <xsl:variable name="ordered"><xsl:value-of select="@ordered"/></xsl:variable>
        <xsl:variable name="particleClass"><xsl:value-of select="@particleClass"/></xsl:variable> <!-- particle classes are used to represent schema groups -->
        <xsl:variable name="hasParticleType"><xsl:value-of select="@hasParticleType"/></xsl:variable> <!-- particle classes are used to represent schema groups -->
-
        <xsl:variable name="simple"><xsl:value-of select="@simple"/></xsl:variable>
        <xsl:variable name="choice"><xsl:value-of select="@choice"/></xsl:variable>
-
+        <xsl:variable name="enableNS2P"><xsl:value-of select="@enableNS2P"/></xsl:variable>
         <!-- checking for is union -->
         <xsl:variable name="isUnion" select="@union"/>
+      <xsl:choose>
+        <xsl:when test="@enableNS2P">
+          #ifndef <xsl:value-of select="@cppNamespace"/>_<xsl:value-of select="$caps_axis2_name"/>_H
+          #define <xsl:value-of select="@cppNamespace"/>_<xsl:value-of select="$caps_axis2_name"/>_H
+        </xsl:when>
+        <xsl:otherwise>
+          #ifndef <xsl:value-of select="$caps_axis2_name"/>_H
+          #define <xsl:value-of select="$caps_axis2_name"/>_H
 
-        #ifndef <xsl:value-of select="$caps_axis2_name"/>_H
-        #define <xsl:value-of select="$caps_axis2_name"/>_H
-
+        </xsl:otherwise>
+      </xsl:choose>
+      
        /**
         * <xsl:value-of select="$axis2_name"/>.h
         *
@@ -98,8 +105,15 @@
 
         <xsl:for-each select="property">
           <xsl:if test="@ours">
-          <xsl:variable name="propertyType" select="@type"/>
-       #include "<xsl:value-of select="substring-after($propertyType,'::')"/>.h"
+            <xsl:choose>
+              <xsl:when test="$enableNS2P">
+                <xsl:variable name="filenameStr" select="@filename"/>
+                #include "<xsl:value-of select="$filenameStr"/>.h"
+              </xsl:when>
+              <xsl:otherwise>
+                #include "<xsl:value-of select="substring-after(@type,'::')"/>.h"
+              </xsl:otherwise>
+            </xsl:choose>
           </xsl:if>
         </xsl:for-each>
         <!--include special headers-->

@@ -32,10 +32,10 @@
     <xsl:variable name="caps_name"><xsl:value-of select="@caps-name"/></xsl:variable>
     <xsl:variable name="outputlocation"><xsl:value-of select="@outputlocation"/></xsl:variable>
     <xsl:variable name="targetsourcelocation"><xsl:value-of select="@targetsourcelocation"/></xsl:variable>
-
+    <xsl:variable name="enableNS2P"><xsl:value-of select="@enableNS2P"/></xsl:variable>
  <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Keyword="Win32Proj"
 	>
 <xsl:if test="$isServer='0'">
@@ -188,19 +188,46 @@
             <xsl:choose>
             <xsl:when test="$option=1">
                 <xsl:for-each select="input/param[@type!='' and @ours ]">
-                <xsl:variable name="inputtype" select="substring-after(@type,'::')"/>
+                  <xsl:variable name="inputtype">
+                    <xsl:choose>
+                      <xsl:when test="$enableNS2P">
+                        <xsl:value-of select="@filename"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:value-of select="substring-after(@type,'::')"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:variable>
                      <File>
                          <xsl:attribute name="RelativePath">.\<xsl:value-of select="$targetsourcelocation"/>\<xsl:value-of select='$inputtype'/>.cpp</xsl:attribute>
                     </File>
                </xsl:for-each>
                 <xsl:for-each select="output/param[@type!='' and @ours]">
-                 <xsl:variable name="outputtype1" select="substring-after(@type,'::')"/>
+                  <xsl:variable name="outputtype1">
+                    <xsl:choose>
+                      <xsl:when test="$enableNS2P">
+                        <xsl:value-of select="@filename"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:value-of select="substring-after(@type,'::')"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:variable>
                         <File>
                          <xsl:attribute name="RelativePath">.\<xsl:value-of select="$targetsourcelocation"/>\<xsl:value-of select="$outputtype1"/>.cpp</xsl:attribute>
                     </File>
                </xsl:for-each>
                  <xsl:for-each select="fault/param[@type!='']">
-                    <xsl:variable name="faulttype" select="substring-after(@type,'::')"/>
+                   <xsl:variable name="faulttype">
+                     <xsl:choose>
+                       <xsl:when test="$enableNS2P">
+                         <xsl:value-of select="@filename"/>
+                       </xsl:when>
+                       <xsl:otherwise>
+                         <xsl:value-of select="substring-after(@type,'::')"/>
+                       </xsl:otherwise>
+                     </xsl:choose>
+                   </xsl:variable>
                         <File>
                          <xsl:attribute name="RelativePath">.\<xsl:value-of select="$targetsourcelocation"/>\<xsl:value-of select="$faulttype"/>.cpp</xsl:attribute>
                         </File>
@@ -208,19 +235,46 @@
             </xsl:when>
             <xsl:otherwise>
                 <xsl:for-each select="input/param[@type!='' and @ours ]">
-                <xsl:variable name="inputtype" select="substring-after(@type,'::')"/>
-                     <File>
+                  <xsl:variable name="inputtype">
+                    <xsl:choose>
+                      <xsl:when test="$enableNS2P">
+                        <xsl:value-of select="@filename"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:value-of select="substring-after(@type,'::')"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:variable>
+                  <File>
                          <xsl:attribute name="RelativePath">.\<xsl:value-of select='$inputtype'/>.cpp</xsl:attribute>
-                    </File>
+                  </File>
                </xsl:for-each>
                 <xsl:for-each select="output/param[@type!='' and @ours]">
-                 <xsl:variable name="outputtype1" select="substring-after(@type,'::')"/>
+                  <xsl:variable name="outputtype1">
+                    <xsl:choose>
+                      <xsl:when test="$enableNS2P">
+                        <xsl:value-of select="@filename"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:value-of select="substring-after(@type,'::')"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:variable>
                         <File>
                          <xsl:attribute name="RelativePath">.\<xsl:value-of select="$outputtype1"/>.cpp</xsl:attribute>
                     </File>
                </xsl:for-each>
                  <xsl:for-each select="fault/param[@type!='']">
-                    <xsl:variable name="faulttype" select="substring-after(@type,'::')"/>
+                   <xsl:variable name="faulttype">
+                     <xsl:choose>
+                       <xsl:when test="$enableNS2P">
+                         <xsl:value-of select="@filename"/>
+                       </xsl:when>
+                       <xsl:otherwise>
+                         <xsl:value-of select="substring-after(@type,'::')"/>
+                       </xsl:otherwise>
+                     </xsl:choose>
+                   </xsl:variable>
                         <File>
                          <xsl:attribute name="RelativePath">.\<xsl:value-of select="$faulttype"/>.cpp</xsl:attribute>
                         </File>
@@ -251,19 +305,45 @@
             <xsl:choose>
                 <xsl:when test="$option=1">
                 <xsl:for-each select="input/param[@type!='' and @ours ]">
-                    <xsl:variable name="inputtype" select="substring-after(@type,'::')"/>
-                    <File>
+                  <xsl:variable name="inputtype">
+                    <xsl:choose>
+                      <xsl:when test="$enableNS2P">
+                        <xsl:value-of select="@filename"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:value-of select="substring-after(@type,'::')"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:variable><File>
                         <xsl:attribute name="RelativePath">.\<xsl:value-of select="$targetsourcelocation"/>\<xsl:value-of select='$inputtype'/>.h</xsl:attribute>
                     </File>
                 </xsl:for-each>
                 <xsl:for-each select="output/param[@type!='' and @ours]">
-                    <xsl:variable name="outputtype1" select="substring-after(@type,'::')"/>
+                  <xsl:variable name="outputtype1">
+                    <xsl:choose>
+                      <xsl:when test="$enableNS2P">
+                        <xsl:value-of select="@filename"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:value-of select="substring-after(@type,'::')"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:variable>
                     <File>
                         <xsl:attribute name="RelativePath">.\<xsl:value-of select="$targetsourcelocation"/>\<xsl:value-of select="$outputtype1"/>.h</xsl:attribute>
                     </File>
                 </xsl:for-each>
                 <xsl:for-each select="fault/param[@type!='']">
-                    <xsl:variable name="faulttype" select="substring-after(@type,'::')"/>
+                  <xsl:variable name="faulttype">
+                    <xsl:choose>
+                      <xsl:when test="$enableNS2P">
+                        <xsl:value-of select="@filename"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:value-of select="substring-after(@type,'::')"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:variable>
                     <File>
                         <xsl:attribute name="RelativePath">.\<xsl:value-of select="$targetsourcelocation"/>\<xsl:value-of select="$faulttype"/>.h</xsl:attribute>
                     </File>
@@ -271,20 +351,46 @@
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:for-each select="input/param[@type!='' and @ours ]">
-                        <xsl:variable name="inputtype" select="substring-after(@type,'::')"/>
+                      <xsl:variable name="inputtype">
+                        <xsl:choose>
+                          <xsl:when test="$enableNS2P">
+                            <xsl:value-of select="@filename"/>
+                          </xsl:when>
+                          <xsl:otherwise>
+                            <xsl:value-of select="substring-after(@type,'::')"/>
+                          </xsl:otherwise>
+                        </xsl:choose>
+                      </xsl:variable>
                             <File>
                                 <xsl:attribute name="RelativePath">.\<xsl:value-of select='$inputtype'/>.h</xsl:attribute>
                             </File>
                     </xsl:for-each>
                     <xsl:for-each select="output/param[@type!='' and @ours]">
-                        <xsl:variable name="outputtype1" select="substring-after(@type,'::')"/>
+                      <xsl:variable name="outputtype1">
+                        <xsl:choose>
+                          <xsl:when test="$enableNS2P">
+                            <xsl:value-of select="@filename"/>
+                          </xsl:when>
+                          <xsl:otherwise>
+                            <xsl:value-of select="substring-after(@type,'::')"/>
+                          </xsl:otherwise>
+                        </xsl:choose>
+                      </xsl:variable>
                             <File>
                                 <xsl:attribute name="RelativePath">.\<xsl:value-of select="$outputtype1"/>.h</xsl:attribute>
                             </File>
                     </xsl:for-each>
                     <xsl:for-each select="fault/param[@type!='']">
-                        <xsl:variable name="faulttype" select="substring-after(@type,'::')"/>
-                            <File>
+                      <xsl:variable name="faulttype">
+                        <xsl:choose>
+                          <xsl:when test="$enableNS2P">
+                            <xsl:value-of select="@filename"/>
+                          </xsl:when>
+                          <xsl:otherwise>
+                            <xsl:value-of select="substring-after(@type,'::')"/>
+                          </xsl:otherwise>
+                        </xsl:choose>
+                      </xsl:variable>    <File>
                                 <xsl:attribute name="RelativePath">.\<xsl:value-of select="$faulttype"/>.h</xsl:attribute>
                             </File>
                     </xsl:for-each>

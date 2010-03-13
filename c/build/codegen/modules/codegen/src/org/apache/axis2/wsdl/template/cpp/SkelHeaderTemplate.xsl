@@ -25,7 +25,7 @@
     <xsl:variable name="caps_svc_name"><xsl:value-of select="@caps-name"/></xsl:variable>
     <xsl:variable name="method-prefix"><xsl:value-of select="@prefix"/></xsl:variable>
     <xsl:variable name="qname"><xsl:value-of select="@qname"/></xsl:variable>
-
+    <xsl:variable name="enableNS2P"><xsl:value-of select="@enableNS2P"/></xsl:variable>
     /**
      * <xsl:value-of select="@name"/>.h
      *
@@ -40,15 +40,42 @@
     #include &lt;MessageContext.h&gt;
    <xsl:for-each select="method">
     <xsl:for-each select="input/param[@type!='' and @ours]">
-     <xsl:variable name="inputtype1" select="substring-after(@type,'::')"/>
+     <xsl:variable name="inputtype1">
+         <xsl:choose>
+             <xsl:when test="$enableNS2P">
+                 <xsl:value-of select="@filename"/>
+             </xsl:when>
+             <xsl:otherwise>
+                 <xsl:value-of select="substring-after(@type,'::')"/>
+             </xsl:otherwise>
+         </xsl:choose>
+     </xsl:variable>
      #include &lt;<xsl:value-of select="$inputtype1"/>.h&gt;
     </xsl:for-each>
     <xsl:for-each select="output/param[@type!='' and @ours]">
-     <xsl:variable name="outputtype1" select="substring-after(@type,'::')"/>
+         <xsl:variable name="outputtype1">
+         <xsl:choose>
+             <xsl:when test="$enableNS2P">
+                 <xsl:value-of select="@filename"/>
+             </xsl:when>
+             <xsl:otherwise>
+                 <xsl:value-of select="substring-after(@type,'::')"/>
+             </xsl:otherwise>
+         </xsl:choose>
+     </xsl:variable>
      #include &lt;<xsl:value-of select="$outputtype1"/>.h&gt;
     </xsl:for-each>
     <xsl:for-each select="fault/param[@type!='']">
-     <xsl:variable name="faulttype1" select="substring-after(@type,'::')"/>
+         <xsl:variable name="faulttype1">
+         <xsl:choose>
+             <xsl:when test="$enableNS2P">
+                 <xsl:value-of select="@filename"/>
+             </xsl:when>
+             <xsl:otherwise>
+                 <xsl:value-of select="substring-after(@type,'::')"/>
+             </xsl:otherwise>
+         </xsl:choose>
+     </xsl:variable>
      #include &lt;<xsl:value-of select="$faulttype1"/>.h&gt;
     </xsl:for-each>
    </xsl:for-each>

@@ -88,6 +88,7 @@ public class CPPBeanWriter implements BeanWriter {
     private Map baseTypeMap = new JavaTypeMap().getTypeMap();
 
     private Map ns2packageNameMap = new HashMap();
+    boolean enableNS2P = false;
 
     private Map cppNamespacesToClassnamesMap = new HashMap();
 
@@ -144,6 +145,10 @@ public class CPPBeanWriter implements BeanWriter {
     public void init(CompilerOptions options) throws SchemaCompilationException {
         try {
             initWithFile(options.getOutputLocation());
+            packageName = options.getPackageName();
+            ns2packageNameMap = options.getNs2PackageMap();
+            if(options.getNs2PackageMap() != null)
+                enableNS2P = true;
 
             writeClasses = options.isWriteOutput();
             //packageName = options.getPackageName();
@@ -328,10 +333,13 @@ public class CPPBeanWriter implements BeanWriter {
     public String makeFullyQualifiedClassName(QName qName) {
 
         String originalName = qName.getLocalPart();
-        if(this.packageName == null){
-            this.packageName = getPackage(qName.getNamespaceURI());
+        String packageName = this.packageName;
+        
+        if(packageName == null){
+            packageName = getPackage(qName.getNamespaceURI());
         }
-        this.cppNamespace = CUtils.makeCPPNamespace(this.packageName);
+        
+        String cppNamespace = CUtils.makeCPPNamespace(packageName);
         String className = null;
         String fullyQualifiedClassName =null;
         String classPrefix= null;
@@ -339,14 +347,14 @@ public class CPPBeanWriter implements BeanWriter {
         if(!wrapClasses){
               className = makeUniqueCPPClassName(this.namesList, originalName);
         }else{
-            if (!this.cppNamespacesToClassnamesMap.containsKey(this.cppNamespace)) {
-                    this.cppNamespacesToClassnamesMap.put(this.cppNamespace, new ArrayList());
+            if (!this.cppNamespacesToClassnamesMap.containsKey(cppNamespace)) {
+                    this.cppNamespacesToClassnamesMap.put(cppNamespace, new ArrayList());
             }
-            className = makeUniqueCPPClassName((List) this.cppNamespacesToClassnamesMap.get(this.cppNamespace), originalName);
+            className = makeUniqueCPPClassName((List) this.cppNamespacesToClassnamesMap.get(cppNamespace), originalName);
         }
 
          if (wrapClasses){
-            classPrefix = (this.cppNamespace == null ? DEFAULT_CPP_NAMESPACE + "::"
+            classPrefix = (cppNamespace == null ? DEFAULT_CPP_NAMESPACE + "::"
                     : cppNamespace)
                     + WRAPPED_DATABINDING_CLASS_NAME;
          }
@@ -434,7 +442,17 @@ public class CPPBeanWriter implements BeanWriter {
             if (writeClasses) {
                 //create the file
                 //String fileName = className.substring(0, className.length() -1);
-                String fileName = className;
+                
+                String fileName;
+                
+                if ( cppNamespace != "" && enableNS2P)
+                {
+                  fileName = cppNamespace + "_" + className;
+                }
+                else
+                {
+                  fileName = className;                
+                }
 
                 File outSource = createOutFile(fileName, ".cpp");
                 File outHeader = createOutFile(fileName, ".h");
@@ -508,7 +526,9 @@ public class CPPBeanWriter implements BeanWriter {
         String capsName = className.toUpperCase();
 
         XSLTUtils.addAttribute(model, "caps-name", capsName, rootElt);
-
+        if(enableNS2P){
+            XSLTUtils.addAttribute(model, "enableNS2P", "yes", rootElt);
+        }
 
         if (!wrapClasses) {
             XSLTUtils.addAttribute(model, "unwrapped", "yes", rootElt);
@@ -735,13 +755,20 @@ public class CPPBeanWriter implements BeanWriter {
             }
             CClassNameForElement = getShortTypeName(CClassNameForElement);
 
+            String filename = CClassNameForElement.replace( "::", "_" );
+
+            XSLTUtils.addAttribute(model, "filename", filename, property);
+            if(enableNS2P)
+                XSLTUtils.addAttribute(model, "enableNS2P", "yes", property);
 
             XSLTUtils.addAttribute(model, "type", CClassNameForElement, property);
+
 
             /**
              * Caps for use in C macros
              */
             XSLTUtils.addAttribute(model, "caps-cname", xmlName, property);
+
             //XSLTUtils.addAttribute(model, "caps-cname", xmlName.substring(4, xmlName.length() -3 ).toUpperCase(), property);
 
             XSLTUtils.addAttribute(model, "caps-type", CClassNameForElement.toUpperCase(), property);
