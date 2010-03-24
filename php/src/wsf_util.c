@@ -976,8 +976,10 @@ int wsf_util_get_attachments_from_soap_envelope (
                     int data_len = 0;
 					if(!axiom_data_handler_get_cached(data_handler, env))
 					{
-						axiom_data_handler_read_from (data_handler, env, &data, &data_len);
-	                    add_assoc_stringl (cid2str, cid, data, data_len, 1);
+						data = axiom_data_handler_get_input_stream(data_handler, env);
+						data_len = axiom_data_handler_get_input_stream_len(data_handler, env);
+						/* axiom_data_handler_read_from (data_handler, env, &data, &data_len);*/
+	                    			add_assoc_stringl (cid2str, cid, data, data_len, 1);
 					}else
 					{
 						data = axiom_data_handler_get_file_name(data_handler, env);

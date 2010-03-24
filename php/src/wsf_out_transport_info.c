@@ -158,7 +158,7 @@ axis2_status_t WSF_CALL wsf_http_out_transport_info_set_content_type (
 
     info_impl = AXIS2_INTF_TO_IMPL (info);
 
-    if (NULL != info_impl->encoding)
+    if (NULL != info_impl->encoding && axutil_strstr(content_type, "charset=") == NULL)
     {
         	tmp1 = axutil_stracat (env, content_type, ";charset=");
         	tmp2 = axutil_stracat (env, tmp1, info_impl->encoding);
