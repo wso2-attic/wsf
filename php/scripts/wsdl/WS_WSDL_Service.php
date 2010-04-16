@@ -40,9 +40,14 @@ class WS_WSDL_Service
             $this->S_name = "ws_default_service";
 
         $this->endpoint = $ep;
-        $a_url = parse_url($ep);
-        $this->port = $a_url['port'];
-
+        $url = parse_url($ep);
+        if(array_key_exists('port',$url))
+	{
+		$this->port = $url['port'];
+	}else{
+		$this->port=80;
+	}
+	
     }
 
     /**
