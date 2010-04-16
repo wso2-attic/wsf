@@ -46,11 +46,14 @@ class WS_WSDL_Binding
         $this->wsdl_location = $wsdl_ep;
         $this->fun_mapping = $ops_to_functions;
         $this->r_actions = $r_actions;
-	$a_url = parse_url($this->wsdl_location);
-        $this->port = $a_url['port'];
-
-    }
-
+	$url = parse_url($this->wsdl_location);
+        if(array_key_exists('port',$url))
+	{
+		$this->port = $url['port'];
+	}else{
+		$this->port=80;
+ 	}
+}
     /**
      * Function for creating Binding element when the binding style in doc-lit
      * @param DomDocument $binding_doc DomDocument element of the wsdl document 
