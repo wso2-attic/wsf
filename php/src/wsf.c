@@ -1265,6 +1265,7 @@ static void generate_wsdl_for_service(zval *svc_zval,
         service_name = svc_info->svc_name;
 
         if (!in_cmd) {
+            smart_str_appends(&full_path, "http://");
             smart_str_appends(&full_path, req_info->svr_name);
             if (req_info->svr_port != WSF_DEFAULT_PORT) {
                 char svr_port[10];
@@ -1277,17 +1278,18 @@ static void generate_wsdl_for_service(zval *svc_zval,
             smart_str_appends(&full_path, SG(request_info).path_translated);
             smart_str_0(&full_path);
         }
-        params[0] = &param1;
-        params[1] = &param2;
-        params[2] = &param3;
-        params[3] = &param4;
-        params[4] = &param5;
-        params[5] = &param6;
-        params[6] = &param7;
-        params[7] = &param8;
-        params[8] = &param9;
-        params[9] = &param10;
-        params[10] = &param11;
+
+        params[0] = &param1; /** service name */
+        params[1] = &param2; /** functions */
+        params[2] = &param3; /** wsdl generation class map */
+        params[3] = &param4; /** Binding name */
+        params[4] = &param5; /** wsdl version */
+        params[5] = &param6; /** full path */
+        params[6] = &param7; /** operation value */
+        params[7] = &param8; /** classmap */
+        params[8] = &param9; /** annotations */
+        params[9] = &param10; /** actions array */
+        params[10] = &param11; /** use WSA */
 
         /** for WSDL version. default is wsdl 1.1*/
         if ((stricmp(wsdl_ver_str, WSF_WSDL)) == 0) {
