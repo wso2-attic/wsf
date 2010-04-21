@@ -175,6 +175,10 @@ typedef enum ws_input_types
 #define WSF_HEADER_MUST_UNDERSTAND 	"mustUnderstand"
 #define WSF_HEADER_PREFIX        "prefix"
 
+/** http Headers */
+
+#define WSF_HTTP_HEADERS "httpHeaders"
+
 /** security policy */
 #define WSF_POLICY_NAME			"policy"
 #define WSF_SECURITY_TOKEN 		"securityToken"

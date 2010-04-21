@@ -22,6 +22,7 @@
 #include <axutil_log_default.h>
 #include <axutil_uuid_gen.h>
 #include <axiom_util.h>
+#include <axis2_http_header.h>
 #include "wsf_client.h"
 #include "wsf_policy.h"
 #include "zend_exceptions.h"
@@ -73,6 +74,12 @@ int wsf_client_set_timeout(
     axutil_env_t *env,
     axis2_options_t *client_options TSRMLS_DC);
     
+void wsf_client_set_http_headers (
+    HashTable * client_ht,
+    HashTable * msg_ht,
+    axutil_env_t * env,
+    axis2_options_t * client_options,
+    axis2_svc_client_t * svc_client TSRMLS_DC);
 
 int is_addr_action_present_in_options(
 	HashTable *msg_ht, 
@@ -692,6 +699,10 @@ wsf_client_add_properties (
         add_property_zval(this_ptr, WSF_PROXY_AUTH_TYPE, *tmp);
 		
     }
+	if (zend_hash_find (ht, WSF_HTTP_HEADERS, sizeof (WSF_HTTP_HEADERS),
+		(void **) & tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
+         add_property_zval(this_ptr, WSF_HTTP_HEADERS, *tmp);
+    }
 }
 
 static int
@@ -1112,6 +1123,8 @@ wsf_client_set_options (
             client_options, svc_client TSRMLS_CC);
 
         wsf_client_set_timeout(client_ht, env, client_options TSRMLS_CC);
+		wsf_client_set_http_headers (client_ht, msg_ht, env,
+							client_options, svc_client TSRMLS_CC);
     }
     return status;
 }
@@ -1741,5 +1754,53 @@ wsf_client_enable_proxy (
         axis2_svc_client_set_proxy (svc_client, env, proxy_host, proxy_port);
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
             "Setting proxy options %s -- %s -- ", proxy_host, proxy_port);
+    }
+}
+
+void
+wsf_client_set_http_headers (
+    HashTable * client_ht,
+    HashTable * msg_ht,
+    axutil_env_t * env,
+    axis2_options_t * client_options,
+    axis2_svc_client_t * svc_client TSRMLS_DC)
+{
+    zval **tmp = NULL;
+    axutil_property_t *header_property;
+    axutil_array_list_t *header_list = axutil_array_list_create (env, 2);
+
+    if (zend_hash_find (client_ht, WSF_HTTP_HEADERS, sizeof (WSF_HTTP_HEADERS), 
+		(void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_ARRAY) {
+       
+        HashTable *ht = Z_ARRVAL_PP (tmp);
+        HashPosition pos;
+        zval **val = NULL;
+        char *key = NULL;
+        uint key_length = 0;
+        int key_flags = 0;
+        ulong num_key = 0;
+
+        zend_hash_internal_pointer_reset_ex(ht, &pos);
+
+        while (zend_hash_get_current_data_ex (ht, (void **) &val, &pos) != FAILURE &&
+            (key_flags = zend_hash_get_current_key_ex (ht, &key, &key_length, &num_key, FALSE, &pos)) != FAILURE)
+        {
+            if(Z_TYPE_PP(val) == IS_STRING && key_flags == HASH_KEY_IS_STRING)
+            {
+                axis2_http_header_t *axis2_header =  axis2_http_header_create(env, key, Z_STRVAL_PP(val));
+                axutil_array_list_add (header_list, env, (void *)axis2_header);
+                AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "wsf_client_set_http_headers adding header %s: %s", key, Z_STRVAL_PP(val));
+            }
+            zend_hash_move_forward_ex (ht, &pos);
+        }
+
+        header_property = axutil_property_create(env);
+        if (header_property && header_list)
+        {
+            axutil_property_set_value(header_property, env, header_list);
+            axutil_property_set_free_func (header_property, env, axutil_array_list_free_void_arg);
+            axis2_options_set_property(client_options, env, AXIS2_TRANSPORT_HEADER_PROPERTY, header_property);
+        }
+        
     }
 }
