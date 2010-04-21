@@ -41,7 +41,7 @@ Description of Options used:
     -o <output Location> : output file location
     -ss : Generate server side code (i.e. skeletons). Default is off
     -sd : Generate service descriptor (i.e. services.xml). Default is off. Valid with -ss
-    -d <databinding> : valid databinding is adb. 
+    -d <databinding> : valid databinding is adb. none option will generate code without data binding. This is a faster way to generate skeletons and stubs when you intend to hand code the business logic. 
     -g : Generates all the classes. valid only with the -ss (This will generate client and server codes)
     -u : unpacks the databinding classes
     -f : Generate the source output folder without the src directory
