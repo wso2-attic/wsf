@@ -21,6 +21,11 @@ $reqPayloadString = <<<XML
 XML;
 
 try {
+	
+	$my_cert = ws_get_cert_from_file("../keys/alice_cert.cert");
+    $my_key = ws_get_key_from_file("../keys/alice_key.pem");
+    
+    
     // Create message with request payload and options
     $reqMessage = new WSMessage($reqPayloadString,
                          array("to" => "http://localhost/samples/security/username_token/service.php",
@@ -31,7 +36,9 @@ try {
     $policy = new WSPolicy(array("security" => $security_options));
     $security_token = new WSSecurityToken(array("user" => "Raigama",
                                                 "password" => "RaigamaPW",
-                                                "passwordType" => "Digest"));
+                                                "passwordType" => "Digest",
+    											"privateKey" => $my_key,
+                                           		"certificate" => $my_cert,));
     
     // Create client with options
     $client = new WSClient(array("useWSA" => TRUE,

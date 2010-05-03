@@ -21,6 +21,9 @@ function echoFunction($inMessage) {
     return $returnMessage;
 }
 
+$cert = ws_get_cert_from_file("../keys/bob_cert.cert");
+$pvt_key = ws_get_key_from_file("../keys/bob_key.pem");
+
 // Operations and associated options
 $operations = array("echoString" => "echoFunction");
 $actions = array("http://php.axis2.org/samples/echoString" => "echoString");
@@ -30,7 +33,9 @@ $security_options = array("useUsernameToken" => TRUE);
 $policy = new WSPolicy(array("security"=>$security_options));
 $security_token = new WSSecurityToken(array("user" => "Raigama",
                                             "password" => "RaigamaPW",
-                                            "passwordType" => "Digest"));
+                                            "passwordType" => "Digest",
+											"privateKey" => $pvt_key,
+                                       		"certificate" => $cert));
 
 // Create service with options
 $service = new WSService(array("operations" => $operations,
