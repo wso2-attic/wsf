@@ -30,7 +30,9 @@ $policy_xml = file_get_contents("policy.xml");
 $policy = new WSPolicy($policy_xml);
 $security_token = new WSSecurityToken(array("user" => "Alice",
                                             "password" => "abcd!123",
-                                            "passwordType" => "Digest"));
+                                            "passwordType" => "Digest",
+											"privateKey" => $pvt_key,
+                                       		"certificate" => $cert));
 
 // Create service with options
 $service = new WSService(array("operations" => $operations,
