@@ -38,7 +38,7 @@ try {
                                                 "password" => "RaigamaPW",
                                                 "passwordType" => "Digest",
     											"privateKey" => $my_key,
-                                           		"certificate" => $my_cert,));
+                                           		"certificate" => $my_cert));
     
     // Create client with options
     $client = new WSClient(array("useWSA" => TRUE,
