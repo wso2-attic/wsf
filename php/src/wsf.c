@@ -1265,7 +1265,6 @@ static void generate_wsdl_for_service(zval *svc_zval,
         service_name = svc_info->svc_name;
 
         if (!in_cmd) {
-            smart_str_appends(&full_path, "http://");
             smart_str_appends(&full_path, req_info->svr_name);
             if (req_info->svr_port != WSF_DEFAULT_PORT) {
                 char svr_port[10];
