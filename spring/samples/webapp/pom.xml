@@ -82,6 +82,7 @@
             </resource>
         </resources>
     </build>
+
     <!-- Project Info -->
     <name>WSO2 Spring Web Services - Sample Web Application</name>
 </project>

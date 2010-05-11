@@ -323,6 +323,7 @@
     <properties>
         <wsf-spring.version>1.6-SNAPSHOT</wsf-spring.version>
         <axis2.version>1.5.1</axis2.version>
+	<axis2.codegen.version>1.4</axis2.codegen.version>
         <axiom.version>1.2.8</axiom.version>
         <addressing.version>1.5.1</addressing.version>
         <rampart.version>1.5</rampart.version>
@@ -418,6 +419,12 @@
             <name>Apache Development Repository</name>
             <url>http://people.apache.org/repo/m2-snapshot-repository</url>
         </repository>
+	<repository>
+            <id>apache-repo</id>
+            <name>Apache Repository</name>
+            <url>http://people.apache.org/repo/m2-ibiblio-rsync-repository</url>
+        </repository>
+
     </repositories>
     <distributionManagement>
         <repository>
