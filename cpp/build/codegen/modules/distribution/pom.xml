@@ -1,0 +1,147 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements. See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership. The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied. See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<project
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.wso2.wsf</groupId>
+        <artifactId>wsf-cpp-parent</artifactId>
+        <version>1.0</version>
+        <relativePath>../parent/pom.xml</relativePath>
+    </parent>
+
+    <groupId>org.wso2.wsf</groupId>
+    <artifactId>distribution</artifactId>
+    <name>Apache Axis2 - Distribution</name>
+    <description>Apache Axis2 Distribution</description>
+    <packaging>pom</packaging>
+
+    <properties>
+        <docs.folder.version>1_4</docs.folder.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.sun.xml.fastinfoset</groupId>
+            <artifactId>FastInfoset</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant-launcher</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.schema</groupId>
+            <artifactId>XmlSchema</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.neethi</groupId>
+            <artifactId>neethi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${stax.impl.groupid}</groupId>
+            <artifactId>${stax.impl.artifact}</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>wsdl4j</groupId>
+            <artifactId>wsdl4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.woden</groupId>
+            <artifactId>woden-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.woden</groupId>
+            <artifactId>woden-impl-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-kernel</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-adb</artifactId>
+        </dependency> 
+    </dependencies>
+    <distributionManagement>
+        <repository>
+            <id>apache-repo</id>
+            <name>Maven Central Repository</name>
+            <url>
+                scpexe://people.apache.org//www/people.apache.org/repo/m2-ibiblio-rsync-repository
+            </url>
+        </repository>
+        <snapshotRepository>
+            <id>apache-snapshots</id>
+            <name>Apache Development Repository</name>
+            <url>scpexe://people.apache.org//www/people.apache.org/repo/m2-snapshot-repository</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+              <!--  <version>${maven.assembly.version}</version> -->
+                <executions>
+                    <execution>
+                        <id>distribution-package</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>wsf-cpp-${version}</finalName>
+                            <descriptors>
+                                <descriptor>src/main/assembly/bin-assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
