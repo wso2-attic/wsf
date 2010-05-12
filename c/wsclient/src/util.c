@@ -228,7 +228,7 @@ wsclient_soap_out (const axutil_env_t *env,
 										  env);
 			if (buffer)
 			{
-				printf ("%s \n", buffer);
+				printf ("%s", buffer);
 				AXIS2_FREE (env->allocator, buffer);
 			}
 		}
