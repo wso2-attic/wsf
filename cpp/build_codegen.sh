@@ -8,7 +8,7 @@ export DIL=`pwd`/deploy
 fi
 
 
-cd wsf_c/build/codegen
+cd build/codegen
 mvn clean install -Drelease
 cd modules/distribution/target/ 
 unzip wsf-cpp-1.0-bin.zip
