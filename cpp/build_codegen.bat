@@ -1,6 +1,6 @@
 echo off
 
-cd wsf_c\build\codegen
+cd build\codegen
 
 mvn clean install -Drelease
 
