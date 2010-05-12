@@ -5,7 +5,7 @@ call init.bat
 set WRD=%CD%
 set DIL=%CD%\wso2-wsf-cpp-bin-%WSFCPP_VERSION%-win32
 
-cd wsf_c\build\codegen\modules\distribution\target\ 
+cd build\codegen\modules\distribution\target\ 
 
 unzip wsf-cpp-1.0-bin.zip
 
