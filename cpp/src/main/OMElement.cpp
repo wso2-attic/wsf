@@ -278,8 +278,8 @@ bool OMElement::addAttribute(OMAttribute * attribute)
 
 bool OMElement::declareDefaultNamespace(std::string uri)
 {
-    axiom_namespace_t * ns =
-        axiom_element_declare_default_namespace(_wsf_axiom_element, Environment::getEnv(), const_cast<char *>(uri.c_str()));
+    axiom_namespace_t * ns = axiom_namespace_create(Environment::getEnv(), const_cast<char *>(uri.c_str()), NULL);
+    axiom_element_declare_namespace(_wsf_axiom_element, Environment::getEnv(), getAxiomNode(), ns);
     if (ns)
     {
         if (_default_namespace)
@@ -287,8 +287,8 @@ bool OMElement::declareDefaultNamespace(std::string uri)
             _default_namespace->setAxiomNamespace(NULL);
             delete _default_namespace;
         }
-        _default_namespace = new OMNamespace(axiom_namespace_get_uri(ns, Environment::getEnv()),
-            axiom_namespace_get_prefix(ns, Environment::getEnv()));
+        _default_namespace = new OMNamespace(uri, "");
+		axiom_namespace_free(ns, Environment::getEnv());
         return true;
     }
     return false;
@@ -334,9 +334,9 @@ OMNode * OMElement::getFirstChild()
     return *_child_nodes.begin();
 }
 
-OMNamespace * OMElement::getNamespace(bool is_default)
+OMNamespace * OMElement::getNamespace()
 {
-    if (is_default)
+    /*if (is_default)
     {
         axiom_namespace_t * ns =
             axiom_element_get_default_namespace(_wsf_axiom_element, Environment::getEnv(), getAxiomNode());
@@ -354,7 +354,7 @@ OMNamespace * OMElement::getNamespace(bool is_default)
     if (_namespace)
     {
         return _namespace;
-    }
+    }*/
     axiom_namespace_t * ns =
         axiom_element_get_namespace(_wsf_axiom_element, Environment::getEnv(), getAxiomNode());
     if(!ns)
@@ -374,10 +374,10 @@ OMNamespace * OMElement::getNamespaceLocal(bool is_default)
     return _namespace;
 }
 
-bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
+bool OMElement::setNamespace(OMNamespace * ns)
 {
     axis2_status_t status = AXIS2_FAILURE;
-    if (no_find)
+    /*if (no_find)
     {
         status = axiom_element_set_namespace_with_no_find_in_current_scope(
             _wsf_axiom_element, Environment::getEnv(), ns->getAxiomNamespace());
@@ -391,7 +391,9 @@ bool OMElement::setNamespace(OMNamespace * ns, bool no_find)
     {
         status = axiom_element_declare_namespace(
             _wsf_axiom_element, Environment::getEnv(), getAxiomNode(), ns->getAxiomNamespace());
-    }
+    }*/
+	status = axiom_element_declare_namespace(
+		_wsf_axiom_element, Environment::getEnv(), getAxiomNode(), ns->getAxiomNamespace());
     if (status == AXIS2_SUCCESS)
     {
         _added_namespaces.push_back(ns);
@@ -459,12 +461,12 @@ bool OMElement::insertSiblingBefore(OMNode * to_insert)
 	return false;
 }
 
-bool OMElement::build()
+/*bool OMElement::build()
 {
     axis2_status_t status =
         axiom_element_build(_wsf_axiom_element, Environment::getEnv(), getAxiomNode());
     return (status == AXIS2_SUCCESS);
-}
+}*/
 
 OMElement * OMElement::getChildElement(std::string localname, OMNamespace * ns)
 {
@@ -578,7 +580,7 @@ string OMElement::getLocalname()
 	return "";
 }
 
-bool OMElement::removeAttribute(OMAttribute * attribute)
+/*bool OMElement::removeAttribute(OMAttribute * attribute)
 {
     for (vector<OMAttribute *>::iterator i = _added_attributes.begin();
         i < _added_attributes.end(); i++)
@@ -598,7 +600,7 @@ bool OMElement::removeAttribute(OMAttribute * attribute)
         }
     }
     return false;
-}
+}*/
 
 string OMElement::getAttributeValue(std::string name, OMNamespace * ns)
 {
