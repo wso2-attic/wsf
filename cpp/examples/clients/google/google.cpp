@@ -60,8 +60,8 @@ int main(int argc, char* argv[])
     OMAttribute * at1 = new OMAttribute("encodingStyle", "http://schemas.xmlsoap.org/soap/encoding/", ns0);
     OMElement * payload = new OMElement(NULL,"doSpellingSuggestion", ns1);
     payload->addAttribute(at1);
-    payload->setNamespace(ns2, false);
-    payload->setNamespace(ns3, false);
+    payload->setNamespace(ns2);
+    payload->setNamespace(ns3);
     OMElement * child1 = new OMElement(payload,"key", NULL);
 
 	OMAttribute * at2 = new OMAttribute("type", "xsd:string", new OMNamespace(*ns2));
