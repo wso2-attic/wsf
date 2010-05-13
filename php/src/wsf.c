@@ -161,7 +161,7 @@ zend_function_entry php_ws_client_class_functions[] = {
 zend_function_entry php_ws_client_proxy_class_functions[] = {
     PHP_ME(ws_client_proxy, __call, ws_client_proxy_call_args, ZEND_ACC_PUBLIC)
     PHP_ME(ws_client_proxy, __construct, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(ws_client, __destruct, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(ws_client_proxy, __destruct, NULL, ZEND_ACC_PUBLIC)
     PHP_MALIAS(ws_client_proxy, getFunctions, get_functions, NULL, ZEND_ACC_PUBLIC)
     PHP_MALIAS(ws_client_proxy, getTypes, get_types, NULL, ZEND_ACC_PUBLIC)
     PHP_MALIAS(ws_client_proxy, getLocation, get_location, NULL, ZEND_ACC_PUBLIC) {
