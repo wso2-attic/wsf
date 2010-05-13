@@ -193,27 +193,18 @@ namespace wso2wsf
 
         /**
          * Declare a namespace in current element (in the scope of this element).
-         * It checks to see if it is already declared. If no_find is true, this will
-         * not search the namespace in the scope nor will declare in the current
-         * element, as in set_namespace. This will just assign the given namespace
-         * to the element.
+         * It checks to see if it is already declared. 
          * @param ns pointer to the namespace struct to be declared.
-         * @param no_find true for no-find mode.
          * @return status of the op. true on success else false.
          */
-        WSF_EXTERN bool WSF_CALL setNamespace(OMNamespace * ns, bool no_find);
+        WSF_EXTERN bool WSF_CALL setNamespace(OMNamespace * ns);
 
         /**
          * Get the OMNamespace of associated with this element. If the object is not yet built, it will be built and 
          * returned. 
-         * @param is_default whether the retrieved namespace is default. If the default value is set,
-		 * it will only return a namespace, if a default namespace exists. Otherwise, the namespace
-		 * applicable to this element will be returned.
-		 * Note:- The is_default parameter is Deprecated and is kept for backward compatibility. It will 
-		 * be dropped in future releases.
          * @return pointer to Namespace. NULL if there is no namespace.
          */
-        WSF_EXTERN OMNamespace* WSF_CALL getNamespace(bool is_default = false);
+        WSF_EXTERN OMNamespace* WSF_CALL getNamespace();
 
 
         /**
@@ -271,14 +262,14 @@ namespace wso2wsf
          */
         WSF_EXTERN std::string WSF_CALL getAttributeValue(std::string name);
 
-        /**
+        /*
          * removes an attribute from the element attribute list
          * user must free this attribute, element free function does not free
          * attributes that are not is it's attribute list.
          * @param attribute attribute to be removed.
          * @return true if attribute was found and removed, else false.
          */
-        WSF_EXTERN bool WSF_CALL removeAttribute(OMAttribute * attribute);
+        //WSF_EXTERN bool WSF_CALL removeAttribute(OMAttribute * attribute);
 
         /**
          * returns the localname of this element
@@ -325,13 +316,13 @@ namespace wso2wsf
          */
         WSF_EXTERN OMElement * WSF_CALL getChildElement(std::string localname, OMNamespace * ns);
 
-        /**
+        /*
          * builds this om_element_node completely, This is only possible
          * if the om_stax_builder is associated with the om_element_node,
          * @return true if this element node was successfully completed,
          * otherwise returns false.
          */
-        WSF_EXTERN bool WSF_CALL build();
+        //WSF_EXTERN bool WSF_CALL build();
 
         /**
           * get the first child of node
