@@ -2,7 +2,7 @@ dnl run autogen.sh to generate the configure script.
 
 AC_PREREQ(2.59)
 
-AC_INIT(axis2_util-src, 1.4.0)
+AC_INIT(axis2_util-src, 1.6.0)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE
@@ -49,7 +49,7 @@ AC_CHECK_LIB(z, inflate)
 #CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration "
+    CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration -D_GNU_SOURCE"
 fi
 LDFLAGS="$LDFLAGS -lpthread"
 
@@ -196,7 +196,7 @@ AC_ARG_WITH(archive,
     ;;
   *)
     AC_MSG_RESULT(yes)
-    zliblibs="$(top_builddir)/src/minizip/libaxis2_minizip.la"
+    zliblibs="minizip/libaxis2_minizip.la"
     CFLAGS="$CFLAGS -DAXIS2_ARCHIVE_ENABLED"
     if test -d $withval; then
         zlibinc="-I$withval"
@@ -218,7 +218,7 @@ CFLAGS="$CFLAGS $GUTHTHILA_CFLAGS"
 UTILINC=$axis2_utilinc
 ZLIBINC=$zlibinc
 ZLIBLIBS=$zliblibs
-VERSION_NO="1:0:1"
+VERSION_NO="4:0:4"
 
 AC_SUBST(VERSION_NO)
 AC_SUBST(UTILINC)
@@ -235,6 +235,19 @@ AC_CONFIG_FILES([Makefile \
     src/minizip/Makefile \
     src/stomp/Makefile \
     include/Makefile \
+    test/Makefile \
+    test/util/Makefile \
+    test/allocator/Makefile \
+    test/date_time/Makefile \
+    test/duration/Makefile \
+    test/link_list/Makefile \
+    test/properties/Makefile \
+    test/rand/Makefile \
+    test/stack/Makefile \
+    test/string_util/Makefile \
+    test/uri/Makefile \
+    test/url/Makefile \
+    test/utils/Makefile \
     ])
     
 AC_OUTPUT
