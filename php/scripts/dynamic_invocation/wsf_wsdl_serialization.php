@@ -154,7 +154,7 @@ function wsf_create_payload_for_array(DomDocument $payload_dom,
     $classmap = NULL;
     if($sig_node->hasAttributes()) {
         if(!is_array($user_arguments)) {
-            ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, $payload_node->localName. 
+            ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, $payload_dom->localName. 
                 " can not be empty, note: just set to NULL to make it as NULL");
             wsf_set_nil_element(NULL, $parent_node, $root_node, $prefix_i, $namespace_map);
             return;
