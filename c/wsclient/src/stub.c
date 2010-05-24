@@ -854,7 +854,6 @@ else
                 status = axis2_svc_client_set_policy(svc_client, env, policy);
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                             "[wsclient] Policy set for the file %s", policy_file);
-                printf("\nPolicy set for the file. %s\n", policy_file);
 
                 if(status == AXIS2_FAILURE)
                 {
