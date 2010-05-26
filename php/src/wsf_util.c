@@ -1544,6 +1544,7 @@ int wsf_util_find_and_set_svc_ctx(
     axis2_svc_grp_ctx_t *svc_grp_ctx = NULL;
     const axis2_char_t *svc_grp_id = NULL;
     svc_grp = axis2_svc_get_parent(svc_info->svc, env);
+	if(svc_grp)
     svc_grp_id = axis2_svc_grp_get_name(svc_grp, env);
     if(svc_grp_id) {
         svc_grp_ctx = axis2_conf_ctx_get_svc_grp_ctx(conf_ctx, env, svc_grp_id);
