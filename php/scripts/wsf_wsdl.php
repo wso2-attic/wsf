@@ -199,12 +199,14 @@ function wsf_get_wsdl_str_from_url($wsdl_url,$user_parameters)
  * @param array $function_parameters details of the invoked function
  * @return array $return_value array of details to be passed to C level
  */
-function wsf_extract_wsdl_info($user_parameters) {
+function wsf_extract_wsdl_info($wsdata) {
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
     require_once('dynamic_invocation/wsf_wsdl_util.php');
     
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "calling for the wsdl info");
 
+    $user_parameters = $wsdata->WSDL_UserParameters;
+    
     $is_wsdl_11 = TRUE;
     $wsdl_11_dom = NULL;
 
@@ -309,9 +311,7 @@ function wsf_extract_wsdl_info($user_parameters) {
  * @param string $sig_model_string the sig model as a string
  * @return array $return_value array of details to be passed to C level
  */
-function wsf_process_wsdl($user_parameters, $function_parameters, 
-                            $wsdl_dom_string, $is_wsdl_11, $sig_model_string,
-                            $is_multiple_interfaces)
+function wsf_process_wsdl($wsdata)
 {
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
     require_once('dynamic_invocation/wsf_wsdl_util.php');
@@ -319,6 +319,14 @@ function wsf_process_wsdl($user_parameters, $function_parameters,
     
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "wsf_process_wsdl called");
 
+    $user_parameters = $wsdata->WSDL_UserParameters; 
+    $function_parameters = $wsdata->WSDL_FunctionParameters;
+    $wsdl_dom_string = $wsdata->WSDL_SigModelDom;
+    $is_wsdl_11 = $wsdata->WSDL_IsWSDL11;
+    $sig_model_string = $wsdata->WSDL_SigModelString;
+    $is_multiple_interfaces = $wsdata->WSDL_IsMultipleInterfaces;
+    
+    
     $return_value = array();
     $policy_array = array();
     $binding_array = array();
@@ -487,11 +495,7 @@ function wsf_process_wsdl($user_parameters, $function_parameters,
  * @return mixed an object, an array or a simple type in line with the 
  * expected format of the response
  */
-function wsf_process_response($response_payload_string, 
-                    $response_header_string,
-                    $response_sig_model_string,
-                    $response_parameters,
-                    $wsdldom_string)
+function wsf_process_response($wsdata)
 {
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
     require_once('dynamic_invocation/wsf_wsdl_util.php');
@@ -499,6 +503,12 @@ function wsf_process_response($response_payload_string,
     
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "wsf_process_response is called");
 
+    $response_payload_string = $wsdata->WSDL_ResponseBuffer;
+    $response_header_string = $wsdata->WSDL_ResponseHeaderBuffer;
+    $response_sig_model_string = $wsdata->WSDL_ResponseSigModelString;
+    $response_parameters = $wsdata->WSDL_ResponseParameters;
+    $wsdldom_string = $wsdata->WSDL_DomString;
+    
     $payload_dom = new DomDocument(); 
     $sig_model_dom = new DomDocument();
     $wsdl_dom = new DomDocument();
@@ -523,17 +533,24 @@ function wsf_process_response($response_payload_string,
                                     $sig_model_dom, $response_parameters);
     
     return $response_class;
+    
 }
 
-function wsf_process_wsdl_for_service($parameters, $operation_array,
-                            $wsdl_dom_string, $is_wsdl_11, $sig_model_string,
-                            $is_multiple_interfaces)
+function wsf_process_wsdl_for_service($wsdata)
 {
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
     require_once('dynamic_invocation/wsf_wsdl_util.php');
     require_once('dynamic_invocation/wsf_wsdl_service.php');
 
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "wsf_process_wsdl_for_service called");
+	
+    $parameters = $wsdata->WSDL_ParamArray; 
+    $operation_array = $wsdata->WSDL_Operations;
+    $wsdl_dom_string = $wsdata->WSDL_string;
+    $is_wsdl_11 = $wsdata->WSDL_IsWSDL11;
+    $sig_model_string = $wsdata->WSDL_SigModelString;
+    $is_multiple_interfaces = $wsdata->WSDL_IsMultipleInterfaces;
+    
     
     $wsdl_dom = new DomDocument();
     $sig_model_dom  = new DOMDocument();
@@ -602,12 +619,14 @@ function wsf_process_wsdl_for_service($parameters, $operation_array,
     return $return_array;
 }
 
-function wsf_wsdl_process_in_msg($parameters)
+function wsf_wsdl_process_in_msg($wsdata)
 {
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
     require_once('dynamic_invocation/wsf_wsdl_util.php');
     require_once('dynamic_invocation/wsf_wsdl_service.php');
 
+    $parameters = $wsdata->WSDL_ParamArray;
+    
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "wsf_wsdl_process_in_msg is called");
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, print_r($parameters, TRUE));
 

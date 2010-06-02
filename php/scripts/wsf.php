@@ -87,14 +87,30 @@ function ws_reply($options)
     $svr->reply();
 }
 
-function ws_generate_wsdl($service_name, $fn_arry, $class_arry, $binding_style, 
-                          $wsdl_version, $request_uri, $op_arry,
-                          $classmap = NULL, $annotations = NULL, $actions = NULL, $use_wsa = NULL)
-{
+
+
+function ws_generate_wsdl($wsdata) {
+	
     require_once("wsdl/WS_WSDL_Creator.php");
     require_once("wsdl/WS_WSDL_Consts.php");
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
 
+    $service_name = $wsdata->serviceName;
+    $fn_arry = $wsdata->WSDLGEN_Functions;
+    $class_arry = $wsdata->WSDLGEN_Svcinfo_Classmap;
+    $binding_style = $wsdata->WSDLGen_binding;
+    $wsdl_version = $wsdata->WSDLGen_wsdlversion; 
+    $request_uri = $wsdata->WSDLGen_path;
+    $op_arry = $wsdata->WSDLGen_operations;
+    $classmap = $wsdata->WSDLGen_Classmap;
+    $annotations = $wsdata->WSDLGen_annotations;
+    $actions = $wsdata->WSDLGen_actions;
+    $use_wsa = $wsdata->WSDLGen_usewsa;
+
+
+    require_once("wsdl/WS_WSDL_Creator.php");
+    require_once("wsdl/WS_WSDL_Consts.php");
+    require_once('dynamic_invocation/wsf_wsdl_consts.php');
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "class arry:".print_r($class_arry, TRUE));
     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "actions arry:".print_r($actions, TRUE));
 
@@ -118,7 +134,6 @@ function ws_generate_wsdl($service_name, $fn_arry, $class_arry, $binding_style,
 
     $namespace = WS_WSDL_Const::WS_WSDL_DEFAULT_NS;
 
-    /* obtain the namespace form the first class name */
     $first_class_name = "";
     $first_op_name = "";
     if($class_arry && is_array($class_arry)) {
@@ -165,7 +180,6 @@ function ws_generate_wsdl($service_name, $fn_arry, $class_arry, $binding_style,
     $wsdl_out = $wsdl->WS_WSDL_Out();
 
 
-    /* converting wsdl1.1 to 2 */
     if(strcmp($wsdl_version , WS_WSDL_Const::WSF_WSDL_VERSION2_0) == 0) {
         $converted_wsdl = ws_convert_to_wsdl20($wsdl_out);
         return $converted_wsdl;
@@ -175,7 +189,7 @@ function ws_generate_wsdl($service_name, $fn_arry, $class_arry, $binding_style,
         return $wsdl_out;
     }
 }
-
+ 
 
 function ws_convert_to_wsdl20($wsdl_out)
 {
