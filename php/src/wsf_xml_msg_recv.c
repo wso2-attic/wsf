@@ -564,6 +564,9 @@ wsf_xml_msg_recv_invoke_mixed(
 
     zval **output_headers = NULL;
 
+	zval *wsdata_obj;
+	zend_class_entry **ce;
+
     if (!in_msg_ctx || !function_name)
     {
         return NULL;
@@ -737,8 +740,7 @@ wsf_xml_msg_recv_invoke_mixed(
             }
         }
     }
-
-    params[0] = &param1;
+	
 
     MAKE_STD_ZVAL(param_array);
     array_init(param_array);
@@ -776,8 +778,18 @@ wsf_xml_msg_recv_invoke_mixed(
     add_assoc_zval(param_array, "class_args", class_args);
 
     ZVAL_STRING(&request_function, WSF_WSDL_PROCESS_IN_MSG, 0);
-    ZVAL_ZVAL(params[0], param_array, NULL, NULL);
+    
+	MAKE_STD_ZVAL(wsdata_obj);
+	zend_lookup_class("WSData", strlen("WSData"), &ce TSRMLS_CC);
+	object_init_ex(wsdata_obj, *ce);
+    
+	add_property_zval(wsdata_obj, "WSDL_ParamArray", param_array);
+	
+	params[0] = &param1;
+
+	ZVAL_ZVAL(params[0], wsdata_obj, NULL, NULL);
     INIT_PZVAL(params[0]);
+
 
     if (call_user_function(EG(function_table), (zval **) NULL,
             &request_function, &retval, 1, params TSRMLS_CC) == SUCCESS)

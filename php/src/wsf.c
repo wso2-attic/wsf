@@ -58,6 +58,7 @@ zend_class_entry * ws_client_proxy_class_entry;
 zend_class_entry * ws_security_token_class_entry;
 zend_class_entry * ws_policy_class_entry;
 zend_class_entry * ws_param_class_entry;
+zend_class_entry * ws_data_class_entry;
 
 /* True global values, worker is thread safe,
  *  message receiver does not have state*/
@@ -112,6 +113,10 @@ PHP_FUNCTION(ws_get_cert_from_file);
 PHP_METHOD(ws_fault, __construct);
 PHP_METHOD(ws_fault, __destruct);
 PHP_METHOD(ws_fault, __toString);
+
+/** WSData class entry*/
+PHP_METHOD(ws_data, __construct);
+
 
 /** WSPolicy class functions */
 PHP_METHOD(ws_policy, __construct);
@@ -199,6 +204,12 @@ zend_function_entry php_ws_policy_class_functions[] = {
     PHP_ME(ws_policy, __construct, NULL, ZEND_ACC_PUBLIC) {
         NULL, NULL, NULL}
 };
+
+zend_function_entry php_ws_data_class_functions[] = {
+    PHP_ME(ws_data, __construct, NULL, ZEND_ACC_PUBLIC) {
+        NULL, NULL, NULL}
+};
+
 
 /* {{{ wsf_functions[] */
 zend_function_entry wsf_functions[] = {
@@ -338,6 +349,10 @@ PHP_MINIT_FUNCTION(wsf) {
 
     INIT_CLASS_ENTRY(ce, "WSPolicy", php_ws_policy_class_functions);
     ws_policy_class_entry = zend_register_internal_class(&ce TSRMLS_CC);
+
+	INIT_CLASS_ENTRY(ce, "WSData", php_ws_data_class_functions);
+    ws_data_class_entry = zend_register_internal_class(&ce TSRMLS_CC);
+
 
     REGISTER_LONG_CONSTANT("WS_SOAP_ROLE_NEXT", WSF_SOAP_ROLE_NEXT, CONST_CS | CONST_PERSISTENT);
     REGISTER_LONG_CONSTANT("WS_SOAP_ROLE_NONE", WSF_SOAP_ROLE_NONE, CONST_CS | CONST_PERSISTENT);
@@ -1174,71 +1189,36 @@ PHP_METHOD(ws_service, __destruct) {
 
 /* } }} end WSService::__destruct */
 
-
-static void generate_wsdl_for_service(zval *svc_zval,
-        wsf_svc_info_t *svc_info,
-        wsf_request_info_t *req_info, char *wsdl_ver_str,
-        int in_cmd TSRMLS_DC) {
-    char *service_name = NULL;
-    zval func, retval, param1, param2, param3, param4, param5, param6,
-            param7, param8, param9, param10, param11;
-
-    zval * params[11];
-    axutil_hash_index_t * hi = NULL;
-    zval *functions = NULL;
-    zend_file_handle script;
+static void
+serve_static_wsdl(char *wsdl_location TSRMLS_DC)
+{
+	int len = 0;
     char *val = NULL;
-    int len = 0;
-    zval **tmpval = NULL;
-    char *binding_name = NULL;
-    char *wsdl_version = NULL;
-    smart_str full_path = {0};
-    zval *op_val = NULL;
-    FILE *new_fp = NULL;
-    zval **class_map = NULL;
-
-    zval **wsdl_location = NULL;
-    php_stream *stream = NULL;
     int args_count = 0;
+	zval function, retval, *param = NULL;
+    int new_len = 0;
+      
+    INIT_ZVAL(retval);
+    MAKE_STD_ZVAL(param);
 
-
-    if (zend_hash_find(Z_OBJPROP_P(svc_zval), WSF_WSDL_CLASSMAP, sizeof (WSF_WSDL_CLASSMAP),
-            (void **) & class_map) != SUCCESS) {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "classmap not present");
-    }
-
-
-    if ((zend_hash_find(Z_OBJPROP_P(svc_zval), WSF_WSDL, sizeof (WSF_WSDL),
-            (void **) & wsdl_location) == SUCCESS && Z_TYPE_PP(wsdl_location) == IS_STRING)) {
-        /** WSDL is specified, so load and display from there */
-        zval function, retval, *param = NULL;
-        int new_len = 0;
-
-        INIT_ZVAL(func);
-        INIT_ZVAL(retval);
-        MAKE_STD_ZVAL(param);
-        /*
-                if (sapi_module.pretty_name && strcmp(sapi_module.pretty_name,"CGI/FastCGI") == 0) {
-                        sapi_add_header ("Content-Type:application/xml\n",
-                                sizeof ("Content-Type:application/xml\n"), 1);
-                }else
-                {
-         */
-        sapi_add_header("Content-Type:application/xml",
+	sapi_add_header("Content-Type:application/xml",
                 sizeof ("Content-Type:application/xml") - 1, 1);
-        /*} */
+	
+    ZVAL_STRING(param, wsdl_location, 1);
+    ZVAL_STRING(&function, "file_get_contents", 1);
 
-        ZVAL_STRING(param, Z_STRVAL_PP(wsdl_location), 1);
-        ZVAL_STRING(&function, "file_get_contents", 1);
-        if (call_user_function(EG(function_table), NULL, &function,
-                &retval, 1, &param TSRMLS_CC) == SUCCESS) {
-            char *wsdl_string = NULL;
+	if (call_user_function(EG(function_table), NULL, &function, 
+			&retval, 1, &param TSRMLS_CC) == SUCCESS) {
+            
+			char *wsdl_string = NULL;
             char *wsdl_string1 = NULL;
 
             if (Z_TYPE_P(&retval) == IS_STRING) {
+
                 wsdl_string = estrdup(Z_STRVAL(retval));
                 len = Z_STRLEN(retval);
-                if (strstr(wsdl_string, "<?xml version=\"1.0\"")) {
+                /** remove xml version declaration */
+				if (strstr(wsdl_string, "<?xml version=\"1.0\"")) {
                     new_len = strlen("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                     wsdl_string = (wsdl_string + new_len);
                     wsdl_string1 = estrdup(strstr(wsdl_string, "<"));
@@ -1257,173 +1237,207 @@ static void generate_wsdl_for_service(zval *svc_zval,
                 php_error_docref(NULL TSRMLS_CC, E_ERROR, "WSDL Generation failed for the given WSDL");
             }
         }
-
         zval_ptr_dtor(&param);
         zval_dtor(&function);
         zval_dtor(&retval);
+}
+
+
+
+static void 
+generate_wsdl_for_service(
+		zval *svc_zval,
+        wsf_svc_info_t *svc_info,
+        wsf_request_info_t *req_info, 
+		char *wsdl_ver_str,
+        int in_cmd TSRMLS_DC) {
+
+	zval **wsdl_location = NULL;
+
+	/** WSDL is specified, so load and display from there */
+    if ((zend_hash_find(Z_OBJPROP_P(svc_zval), WSF_WSDL, sizeof (WSF_WSDL),
+            (void **) &wsdl_location) == SUCCESS && Z_TYPE_PP(wsdl_location) == IS_STRING)) {
+				
+				char *wsdl_file_location = Z_STRVAL_PP(wsdl_location);
+				serve_static_wsdl(wsdl_file_location TSRMLS_CC);
     } else {
-        service_name = svc_info->svc_name;
+	
+		char *service_name;
+		zval func, retval, param0;
+		zval * params[1];
+		int len = 0;
+		char *val = NULL;
+		int args_count = 0;
+	
+		zval **class_map;
+    
+		axutil_hash_index_t * hi = NULL;
+		zval *functions = NULL;
 
-        if (!in_cmd) {
-            smart_str_appends(&full_path, req_info->svr_name);
-            if (req_info->svr_port != WSF_DEFAULT_PORT) {
-                char svr_port[10];
-                sprintf(svr_port, ":%ld", req_info->svr_port);
-                smart_str_appends(&full_path, svr_port);
-            }
-            smart_str_appends(&full_path, req_info->request_uri);
-            smart_str_0(&full_path);
-        } else {
-            smart_str_appends(&full_path, SG(request_info).path_translated);
-            smart_str_0(&full_path);
+		/** For opening php script */
+		zend_file_handle script;
+		php_stream *stream;
+		FILE *new_fp;
+
+		zval **tmpval;
+		char *binding_name;
+		char *wsdl_version;
+		smart_str full_path = {0};
+		zval *op_val;
+	
+		zval *wsdata_obj;
+		zend_class_entry **ce;
+
+
+		service_name = svc_info->svc_name;
+
+		if (!in_cmd) {
+			smart_str_appends(&full_path, req_info->svr_name);
+			if (req_info->svr_port != WSF_DEFAULT_PORT) {
+				char svr_port[10];
+				sprintf(svr_port, ":%ld", req_info->svr_port);
+				smart_str_appends(&full_path, svr_port);
+			}
+			smart_str_appends(&full_path, req_info->request_uri);
+			smart_str_0(&full_path);
+		} else {
+			smart_str_appends(&full_path, SG(request_info).path_translated);
+			smart_str_0(&full_path);
+		}
+
+
+		
+
+	
+    /** for WSDL version. default is wsdl 1.1*/
+    if ((stricmp(wsdl_ver_str, WSF_WSDL)) == 0) {
+        wsdl_version = strdup(WSF_WSDL_1_1);
+    } else {
+        wsdl_version = strdup(WSF_WSDL_2_0);
+    }
+    /** getting the correct binding style */
+    if ((zend_hash_find(Z_OBJPROP_P(svc_zval), WSF_BINDING_STYLE, sizeof (WSF_BINDING_STYLE),
+            (void **) & tmpval)) == SUCCESS && Z_TYPE_PP(tmpval) == IS_STRING) {
+        binding_name = Z_STRVAL_PP(tmpval);
+    } else {
+        binding_name = WSF_STYLE_DOCLIT;
+    }
+
+    /** Get the functions in the service.php file to an array */
+    MAKE_STD_ZVAL(functions);
+    array_init(functions);
+    
+	MAKE_STD_ZVAL(op_val);
+    array_init(op_val);
+    if (svc_info->ops_to_functions) {
+        for (hi = axutil_hash_first(svc_info->ops_to_functions, ws_env_svr); hi;
+                hi = axutil_hash_next(ws_env_svr, hi)) {
+            void *value = NULL;
+            const void *key = NULL;
+            axutil_hash_this(hi, &key, NULL, &value);
+            add_next_index_string(functions, (char *) value, 1);
+            add_assoc_string(op_val, (char *) key, (char *) value, 1);
         }
-
-        params[0] = &param1; /** service name */
-        params[1] = &param2; /** functions */
-        params[2] = &param3; /** wsdl generation class map */
-        params[3] = &param4; /** Binding name */
-        params[4] = &param5; /** wsdl version */
-        params[5] = &param6; /** full path */
-        params[6] = &param7; /** operation value */
-        params[7] = &param8; /** classmap */
-        params[8] = &param9; /** annotations */
-        params[9] = &param10; /** actions array */
-        params[10] = &param11; /** use WSA */
-
-        /** for WSDL version. default is wsdl 1.1*/
-        if ((stricmp(wsdl_ver_str, WSF_WSDL)) == 0) {
-            wsdl_version = strdup(WSF_WSDL_1_1);
-        } else {
-            wsdl_version = strdup(WSF_WSDL_2_0);
-        }
-        /** getting the correct binding style */
-        if ((zend_hash_find(Z_OBJPROP_P(svc_zval), WSF_BINDING_STYLE, sizeof (WSF_BINDING_STYLE),
-                (void **) & tmpval)) == SUCCESS && Z_TYPE_PP(tmpval) == IS_STRING) {
-            binding_name = Z_STRVAL_PP(tmpval);
-        } else {
-            binding_name = WSF_STYLE_DOCLIT;
-        }
-
-        /** find the functions in the service.php file */
-        MAKE_STD_ZVAL(functions);
-        array_init(functions);
-        MAKE_STD_ZVAL(op_val);
-        array_init(op_val);
-        if (svc_info->ops_to_functions) {
-            for (hi = axutil_hash_first(svc_info->ops_to_functions, ws_env_svr); hi;
-                    hi = axutil_hash_next(ws_env_svr, hi)) {
-                void *value = NULL;
-                const void *key = NULL;
-                axutil_hash_this(hi, &key, NULL, &value);
-                add_next_index_string(functions, (char *) value, 1);
-                add_assoc_string(op_val, (char *) key, (char *) value, 1);
-            }
-        }
-
-        ZVAL_STRING(&func, WSF_WSDL_GENERATION_FUNCTION, 0);
-        ZVAL_STRING(params[0], service_name, 0);
-        INIT_PZVAL(params[0]);
-        ZVAL_ZVAL(params[1], functions, NULL, NULL);
-        INIT_PZVAL(params[1]);
-
-        if (svc_info->wsdl_gen_class_map) {
-            ZVAL_ZVAL(params[2], svc_info->wsdl_gen_class_map, NULL, NULL);
-        } else {
-            ZVAL_NULL(params[2]);
-        }
-        INIT_PZVAL(params[2]);
-
-        if (binding_name) {
-            ZVAL_STRING(params[3], binding_name, 0);
-            INIT_PZVAL(params[3]);
-        }
-        if (wsdl_version) {
-            ZVAL_STRING(params[4], wsdl_version, 0);
-            INIT_PZVAL(params[4]);
-        }
-
-        ZVAL_STRING(params[5], full_path.c, 0);
-        INIT_PZVAL(params[5]);
-
-        ZVAL_ZVAL(params[6], op_val, NULL, NULL);
-        INIT_PZVAL(params[6]);
-
-        if (class_map) {
-            ZVAL_ZVAL(params[7], *class_map, NULL, NULL);
-        } else {
-            ZVAL_NULL(params[7]);
-        }
-        INIT_PZVAL(params[7]);
-
-        if (svc_info->wsdl_gen_annotations) {
-            ZVAL_ZVAL(params[8], svc_info->wsdl_gen_annotations, NULL, NULL);
-        } else {
-            ZVAL_NULL(params[8]);
-        }
-        INIT_PZVAL(params[8]);
-
-        if (svc_info->wsdl_gen_actions) {
-            ZVAL_ZVAL(params[9], svc_info->wsdl_gen_actions, NULL, NULL);
-        } else {
-            ZVAL_NULL(params[9]);
-        }
-        INIT_PZVAL(params[9]);
+    }
 
 
-        /*  the useWSA option */
-        if (svc_info->use_wsa) {
-            ZVAL_BOOL(params[10], svc_info->use_wsa);
-        } else {
-            ZVAL_NULL(params[10]);
-        }
-        INIT_PZVAL(params[10]);
+	
+	INIT_ZVAL(func);
+	ZVAL_STRING(&func, WSF_WSDL_GENERATION_FUNCTION, 0);
+    
+	
+	/** Create an object of type WSData */
 
-        args_count = 11;
+	MAKE_STD_ZVAL(wsdata_obj);
+	zend_lookup_class("WSData", strlen("WSData"), &ce TSRMLS_CC);
+	object_init_ex(wsdata_obj, *ce);
 
-        script.type = ZEND_HANDLE_FP;
+	/** Add properties to WSData Object */
+	add_property_string(wsdata_obj, "serviceName", service_name, 1);
+	add_property_zval(wsdata_obj, "WSDLGEN_Functions", functions);
+	
+    if (svc_info->wsdl_gen_class_map) {
+		add_property_zval(wsdata_obj, "WSDLGEN_Svcinfo_Classmap", svc_info->wsdl_gen_class_map);
+    }
+	else {
+		add_property_null(wsdata_obj, "WSDLGEN_Svcinfo_Classmap");
+	}
+       
+    if (binding_name) {
+		add_property_string(wsdata_obj, "WSDLGen_binding", binding_name,1);
+    }
+    if (wsdl_version) {
+		add_property_string(wsdata_obj, "WSDLGen_wsdlversion",wsdl_version, 1); 
+    }
 
-        script.filename = WSF_SCRIPT_FILENAME;
+	add_property_string(wsdata_obj, "WSDLGen_path", full_path.c, 1);
 
-        script.opened_path = NULL;
+	add_property_zval(wsdata_obj, "WSDLGen_operations", op_val);
+       
+	if (zend_hash_find(Z_OBJPROP_P(svc_zval), WSF_WSDL_CLASSMAP, sizeof (WSF_WSDL_CLASSMAP),
+        (void **) & class_map) == SUCCESS) {
+		add_property_zval(wsdata_obj, "WSDLGen_Classmap", *class_map);
+	}else{
+		add_property_null(wsdata_obj, "WSDLGen_Classmap");
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "classmap not present");
+	}
 
-        script.free_filename = 0;
+    if (svc_info->wsdl_gen_annotations) {
+		add_property_zval(wsdata_obj, "WSDLGen_annotations", svc_info->wsdl_gen_annotations);
+    } else {
+		add_property_null(wsdata_obj, "WSDLGen_annotations");
+    }
 
-        stream = php_stream_open_wrapper(WSF_SCRIPT_FILENAME, "rb",
-                USE_PATH | REPORT_ERRORS | ENFORCE_SAFE_MODE, NULL);
+    if (svc_info->wsdl_gen_actions) {
+		add_property_zval(wsdata_obj, "WSDLGen_actions", svc_info->wsdl_gen_actions);
+    } else {
+		add_property_null(wsdata_obj, "WSDLGen_actions");
+    }
+    
+	if (svc_info->use_wsa) {
+		add_property_bool(wsdata_obj, "WSDLGen_usewsa", svc_info->use_wsa); 
+    }else
+	{
+		add_property_null(wsdata_obj, "WSDLGen_usewsa");
+	}
 
-        if (!stream) {
-            return;
-        }
+	params[0] = &param0; /** service name */
+	ZVAL_ZVAL(params[0], wsdata_obj, NULL, NULL);
+		
+    args_count = 1;
 
-        if (php_stream_cast(stream, PHP_STREAM_AS_STDIO | PHP_STREAM_CAST_RELEASE,
-                (void*) & new_fp, REPORT_ERRORS) == FAILURE) {
-            php_error_docref(NULL TSRMLS_CC, E_ERROR, "Unable to open script file or file not found:");
-        }
+    script.type = ZEND_HANDLE_FP;
 
-        if (new_fp) {
-            int status;
-            script.handle.fp = new_fp;
-            status = php_lint_script(&script TSRMLS_CC);
-            if (call_user_function(EG(function_table), (zval **) NULL,
-                    &func, &retval, args_count, params TSRMLS_CC) == SUCCESS) {
+    script.filename = WSF_SCRIPT_FILENAME;
+
+    script.opened_path = NULL;
+
+    script.free_filename = 0;
+
+    stream = php_stream_open_wrapper(WSF_SCRIPT_FILENAME, "rb",
+            USE_PATH | REPORT_ERRORS | ENFORCE_SAFE_MODE, NULL);
+
+    if (!stream) {
+        return;
+    }
+
+    if (php_stream_cast(stream, PHP_STREAM_AS_STDIO | PHP_STREAM_CAST_RELEASE,
+            (void*) & new_fp, REPORT_ERRORS) == FAILURE) {
+        php_error_docref(NULL TSRMLS_CC, E_ERROR, "Unable to open script file or file not found:");
+    }
+
+    if (new_fp) {
+        int status;
+        script.handle.fp = new_fp;
+        status = php_lint_script(&script TSRMLS_CC);
+        if (call_user_function(EG(function_table), (zval **) NULL,
+                &func, &retval, args_count, params TSRMLS_CC) == SUCCESS) {
 
                 if (Z_TYPE(retval) == IS_STRING) {
                     val = estrdup(Z_STRVAL(retval));
                     len = Z_STRLEN(retval);
-                    /**
-                     *  Deploying in cgi mode in IIS will cause problems without that /n"
-                     *  If you are using this in IIS with php deployed as cgi, uncomment the following
-                     */
-                    /*
-                    if (sapi_module.pretty_name && strcmp(sapi_module.pretty_name,"CGI/FastCGI") == 0) {
-                            sapi_add_header ("Content-Type:application/xml\n",
-                                    sizeof ("Content-Type:application/xml\n"), 1);
-                    }else
-                    {
-                     */
                     sapi_add_header("Content-Type:application/xml",
                             sizeof ("Content-Type:application/xml") - 1, 1);
-                    /* } */
                     php_write(val, len TSRMLS_CC);
                     if (val) {
                         efree(val);
@@ -1433,11 +1447,9 @@ static void generate_wsdl_for_service(zval *svc_zval,
                 }
             }
         }
-        /*
         smart_str_free(&full_path);
         zval_ptr_dtor(&op_val);
         zval_ptr_dtor(&functions);
-         */
         /** end WSDL generation*/
     }
 }
@@ -1479,8 +1491,6 @@ PHP_METHOD(ws_service, reply) {
                 "Error building the configuration, please check your php.ini entries");
         return;
     }
-
-
 
     zend_is_auto_global("_SERVER", sizeof ("_SERVER") - 1 TSRMLS_CC);
 
@@ -1943,6 +1953,13 @@ PHP_METHOD(ws_policy, __construct) {
     if (NULL != properties) {
         wsf_policy_set_policy_options(object, properties, env TSRMLS_CC);
     }
+}
+/* }}} */
+
+/* {{{ WSPolicy::__construct) { */
+PHP_METHOD(ws_data, __construct)
+{
+
 }
 /* }}} */
 
