@@ -51,23 +51,30 @@ import org.python.core.*;
 public class PythonScriptReceiver extends AbstractInOutMessageReceiver implements MessageReceiver {
     private static final Log log = LogFactory.getLog(PythonScriptReceiver.class);
 
+    /**
+     * Retreives information from incoming message. Apply business logic to the innformation retreived. Creates a out
+     * message from the result.
+     *
+     * @param inMessage Incominng message.
+     * @param outMessage Outgoing message.
+     * @throws AxisFault AxisFault.
+     */
     public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage) throws AxisFault {
         SOAPEnvelope soapEnvelope = inMessage.getEnvelope();
         try {
-            String pMethod = null;
-            String pArgs = null;
+            String pMethod;
+
             try {
                 pMethod = getPythonMethod(inMessage);
-                pArgs = getArgs(inMessage);
             } catch (XMLStreamException e) {
                 throw new AxisFault(e.getMessage());
             }
+
             String pReader = readPythonScript(inMessage);
 
             if (pReader == null) {
                 throw new AxisFault("Unable to load Python file");
-            }
-            if (pMethod == null) {
+            } if (pMethod == null) {
                 throw new AxisFault("Unable to read the method");
             }
 
@@ -159,7 +166,7 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
                 OMElement element =
                         buildResponse(annotated, response, xmlSchemaElement);
                 if (log.isDebugEnabled()) {
-                    log.debug("The built element is " + element.toString());
+                    log.debug("The built element is : " + element.toString());
                 }
                 if (element != null) {
                     body.addChild(element);
@@ -171,11 +178,10 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
             // This is a workaround to avoid Axis2 sending the SOAPFault with a
             // http-400 code when sending using SOAP1. We explicitly set the
             // FualtCode to 'Receiver'.
-            fault.setFaultCode(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(soapEnvelope.getNamespace().getNamespaceURI())
-                    ? SOAP12Constants.SOAP_DEFAULT_NAMESPACE_PREFIX + ":" + SOAP12Constants
-                    .FAULT_CODE_RECEIVER
-                    : SOAP12Constants.SOAP_DEFAULT_NAMESPACE_PREFIX + ":" + SOAP11Constants
-                    .FAULT_CODE_RECEIVER);
+            fault.setFaultCode(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.
+                    equals(soapEnvelope.getNamespace().getNamespaceURI())
+                    ? SOAP12Constants.SOAP_DEFAULT_NAMESPACE_PREFIX + ":" + SOAP12Constants.FAULT_CODE_RECEIVER
+                    : SOAP12Constants.SOAP_DEFAULT_NAMESPACE_PREFIX + ":" + SOAP11Constants.FAULT_CODE_RECEIVER);
             throw fault;
         }
 
@@ -221,8 +227,6 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
         AxisService service = inMessage.getAxisService();
         Parameter implInfoParam = service.getParameter(PythonScriptEngineConstants.PYTHON_SCRIPT);
 
-// HERE I am changing the code to suit my sample--------------------------------
-//        Parameter implInfoParam = service.getParameter("ServiceScript");
         if (implInfoParam == null) {
             throw new AxisFault(Messages.getMessage("Parameter is not specified", PythonScriptEngineConstants.PYTHON_SCRIPT));
         }
@@ -283,6 +287,15 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
 
     }
 
+    /**
+     * Handles complex type requests.
+     *
+     * @param complexType complexType object.
+     * @param payload payload.
+     * @param paramNames parameter nanmes.
+     * @return List.
+     * @throws AxisFault AxisFault.
+     */
     private List<Object> handleComplexTypeInRequest(XmlSchemaComplexType complexType, OMElement payload,
                                             List<String> paramNames)
             throws AxisFault {
@@ -321,8 +334,7 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
                     }
                     List<String> innerParamNames = new ArrayList<String>();
                     List<Object> innerParams = handleComplexTypeInRequest((XmlSchemaComplexType) schemaType,
-                            complexTypePayload,
-                            innerParamNames);
+                            complexTypePayload, innerParamNames);
                 } else if (schemaType instanceof XmlSchemaSimpleType) {
                     // Handle enumerations in here.
                     XmlSchemaSimpleType xmlSchemaSimpleType = (XmlSchemaSimpleType) schemaType;
@@ -344,6 +356,14 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
         return params;
     }
 
+    /**
+     * Handle simple types requests.
+     *
+     * @param payload payload.
+     * @param innerElement inner element contained.
+     * @return Object.
+     * @throws AxisFault AxisFault.
+     */
     private Object handleSimpleTypeInRequest(OMElement payload, XmlSchemaElement innerElement) throws AxisFault {
         long maxOccurs = innerElement.getMaxOccurs();
         // Check whether the schema advertises this element as an array
@@ -628,7 +648,8 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
     }
 
 
-    private void handleSimpleTypeinResponse(XmlSchemaElement innerElement, Object pyObject,
+    private void handleSimpleTypeinResponse(XmlSchemaElement innerElement,
+                                            Object pyObject,
                                             OMFactory factory,
                                             OMElement outElement) throws AxisFault {
         long maxOccurs = innerElement.getMaxOccurs();
@@ -648,8 +669,8 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
                 handleSchemaTypeinResponse(innerElement, pyObject, factory));
     }
 
-    private OMElement buildResponse(boolean annotated, Object result,
-                                    XmlSchemaElement innerElement) throws AxisFault {
+    private OMElement buildResponse(boolean annotated, Object result, XmlSchemaElement innerElement)
+            throws AxisFault {
         // Check whether the innerElement is null.
         if (innerElement != null) {
             return createResponseElement(result, innerElement.getName(), !annotated);
@@ -685,8 +706,8 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
      * @return - OMelement which represents the pyObject
      * @throws AxisFault - Thrown in case an exception occurs during the conversion
      */
-    private OMElement createResponseElement(Object pyObject, String elementName,
-                                            boolean addTypeInfo) throws AxisFault {
+    private OMElement createResponseElement(Object pyObject, String elementName, boolean addTypeInfo)
+            throws AxisFault {
         //String className = pyObject.getClass().getName();
         OMFactory fac = OMAbstractFactory.getOMFactory();
         //OMNamespace namespace = fac.createOMNamespace("http://www.wso2.org/ns/py    type", "py");
@@ -768,8 +789,7 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
     }
 
 
-    private OMElement handleSchemaTypeinResponse(XmlSchemaElement innerElement, Object pyObject,
-                                                 OMFactory factory)
+    private OMElement handleSchemaTypeinResponse(XmlSchemaElement innerElement, Object pyObject, OMFactory factory)
             throws AxisFault {
         QName qName = innerElement.getSchemaTypeName();
         OMElement element = factory.createOMElement(innerElement.getName(), null);
@@ -810,8 +830,7 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
     }
 
 
-    private Object handleSimpleElement(OMElement payload,
-                                       String innerElementName, long minOccurs, QName schemaType)
+    private Object handleSimpleElement(OMElement payload, String innerElementName, long minOccurs, QName schemaType)
             throws AxisFault {
         QName payloadQname = payload.getQName();
         OMElement omElement = null;
