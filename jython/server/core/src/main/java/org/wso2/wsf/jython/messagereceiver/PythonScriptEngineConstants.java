@@ -16,6 +16,9 @@
 
 package org.wso2.wsf.jython.messagereceiver;
 
+/**
+ * Holds constants for the Python deployer.
+ */
 public interface PythonScriptEngineConstants {
 
     public static final String ANNOTATED = "Annotated";
