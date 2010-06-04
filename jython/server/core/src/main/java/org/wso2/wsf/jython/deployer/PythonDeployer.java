@@ -65,7 +65,7 @@ public class PythonDeployer implements Deployer {
             deploymentFileData.setClassLoader(axisConfig.getServiceClassLoader());
             AxisServiceGroup serviceGroup = new AxisServiceGroup(axisConfig);
             serviceGroup.setServiceGroupClassLoader(deploymentFileData.getClassLoader());
-            ArrayList serviceList = processService(deploymentFileData, serviceGroup,
+            ArrayList<AxisService> serviceList = processService(deploymentFileData, serviceGroup,
                     configCtx, repoPath);
             if (serviceList != null) {
                 DeploymentEngine.addServiceGroup(serviceGroup, serviceList, deploymentFileData
@@ -118,7 +118,7 @@ public class PythonDeployer implements Deployer {
         }
     }
 
-    public ArrayList processService(DeploymentFileData currentFile,
+    public ArrayList<AxisService> processService(DeploymentFileData currentFile,
                                     AxisServiceGroup axisServiceGroup, ConfigurationContext configCtx, String repoPath)
             throws AxisFault {
         try {
@@ -184,7 +184,7 @@ public class PythonDeployer implements Deployer {
             HashMap map = (HashMap) ob2.__tojava__(HashMap.class);
 
             annotationsToSchema(map, axisService, schemaGenerator);
-            ArrayList serviceList = new ArrayList();
+            ArrayList<AxisService> serviceList = new ArrayList<AxisService>();
             serviceList.add(axisService);
             return serviceList;
         } catch (Exception e) {
@@ -214,7 +214,7 @@ public class PythonDeployer implements Deployer {
             String str = String.valueOf(map.get(key));
             str = str.substring(1, str.length() - 1);
             //create the schema for the deployed script
-            HashMap hmap = new HashMap();
+            HashMap<String, String> hmap = new HashMap<String, String>();
             String st[], stTemp[];
             st = str.split(",");
             if (log.isDebugEnabled()) {
@@ -235,22 +235,22 @@ public class PythonDeployer implements Deployer {
             ComplexType innerInComplexType = new ComplexType();
 
             String opName = "";
-            Iterator k3 = hmap.keySet().iterator();
+            Iterator<String> k3 = hmap.keySet().iterator();
             while (k3.hasNext()) {
-                String key2 = (String) k3.next();
+                String key2 = k3.next();
                 if (key2.equals("operationName")) {
-                    opName = (String) hmap.get(key2);
-                    inComplexType.setName((String) hmap.get(key2));
+                    opName = hmap.get(key2);
+                    inComplexType.setName(hmap.get(key2));
                     if (log.isDebugEnabled()) {
                         log.debug("\noperation name found = = = " + opName);
                     }
                 }
             }
 
-            Iterator k2 = hmap.keySet().iterator();
+            Iterator<String> k2 = hmap.keySet().iterator();
             while (k2.hasNext()) {
-                String key2 = (String) k2.next();
-                String value2 = (String) hmap.get(key2);
+                String key2 = k2.next();
+                String value2 = hmap.get(key2);
                 if (log.isDebugEnabled()) {
                     log.debug("\nKey2 " + key2 + " === Value " + value2);
                 }
