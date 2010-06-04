@@ -24,12 +24,27 @@ import org.apache.axis2.databinding.types.PositiveInteger;
 import org.apache.axis2.databinding.types.NegativeInteger;
 import org.python.core.PyInteger;
 
+/**
+ * Converts Python Objects to java Objects.
+ */
 public class PyToOMConverter {
-
+    /**
+     * Converts a given python Object to String. 
+     * 
+     * @param pyObject python Object.
+     * @return returns a String. 
+     */
     public static String convertToString(Object pyObject) {
         return pyObject.toString();
     }
 
+    /**
+     * Converts a given python Object to Float.
+     * 
+     * @param pyObject python Object.
+     * @return returns a String. 
+     * @throws org.apache.axis2.AxisFault AxisFault
+     */
     public static String convertToFloat(Object pyObject) throws AxisFault {
         try {
             Float floatObject = (Float) pyObject;
@@ -39,6 +54,13 @@ public class PyToOMConverter {
         }
     }
 
+    /**
+     * Converts a given python Object to Integer.
+     *
+     * @param pyObject python Object.
+     * @return returns a String. 
+     * @throws org.apache.axis2.AxisFault AxisFault
+     */
     public static String convertToInteger(Object pyObject) throws AxisFault {
         try {
             Integer integer = (Integer) pyObject;
@@ -48,6 +70,13 @@ public class PyToOMConverter {
         }
     }
 
+    /**
+     * Converts a given python Object to Int.
+     *
+     * @param pyObject python Object.
+     * @return returns a String. 
+     * @throws org.apache.axis2.AxisFault AxisFault
+     */
     public static String convertToInt(Object pyObject) throws AxisFault {
         try {
             Integer integer;
@@ -62,6 +91,13 @@ public class PyToOMConverter {
         }
     }
 
+    /**
+     * Converts a given python Object to NonPositiveInteger.
+     *
+     * @param pyObject python Object.
+     * @return returns a String. 
+     * @throws org.apache.axis2.AxisFault AxisFault
+     */
     public static String convertToNonPositiveInteger(Object pyObject) throws AxisFault {
         try {
             NonPositiveInteger integer =
@@ -72,6 +108,13 @@ public class PyToOMConverter {
         }
     }
 
+    /**
+     * Converts a given python Object to NonNegativeInteger.
+     *
+     * @param pyObject python Object.
+     * @return returns a String. 
+     * @throws org.apache.axis2.AxisFault AxisFault
+     */
     public static String convertToNonNegativeInteger(Object pyObject) throws AxisFault {
         try {
             NonNegativeInteger integer =
@@ -82,6 +125,13 @@ public class PyToOMConverter {
         }
     }
 
+    /**
+     * Converts a given python Object to PositiveInteger.
+     *
+     * @param pyObject python Object.
+     * @return returns a String. 
+     * @throws org.apache.axis2.AxisFault AxisFault
+     */
     public static String convertToPositiveInteger(Object pyObject) throws AxisFault {
         try {
             PositiveInteger integer = ConverterUtil.convertToPositiveInteger(pyObject.toString());
@@ -91,6 +141,13 @@ public class PyToOMConverter {
         }
     }
 
+    /**
+     * Converts a given python Object to NegativeInteger.
+     *
+     * @param pyObject python Object.
+     * @return returns a String. 
+     * @throws org.apache.axis2.AxisFault AxisFault
+     */
     public static String convertToNegativeInteger(Object pyObject) throws AxisFault {
         try {
             NegativeInteger integer = ConverterUtil.convertToNegativeInteger(pyObject.toString());
@@ -100,6 +157,13 @@ public class PyToOMConverter {
         }
     }
 
+    /**
+     * Converts a given python Object to Long.
+     *
+     * @param pyObject python Object.
+     * @return returns a String. 
+     * @throws org.apache.axis2.AxisFault AxisFault
+     */
     public static String convertToLong(Object pyObject) throws AxisFault {
         try {
             Long longvalue = (Long) pyObject;
@@ -108,7 +172,5 @@ public class PyToOMConverter {
             throw new AxisFault("Unable to convert the return value to long");
         }
     }
-
-    //public static String convertToDictionary
 
 }
