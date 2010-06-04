@@ -55,7 +55,7 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
      * Retreives information from incoming message. Apply business logic to the innformation retreived. Creates a out
      * message from the result.
      *
-     * @param inMessage Incominng message.
+     * @param inMessage  Incominng message.
      * @param outMessage Outgoing message.
      * @throws AxisFault AxisFault.
      */
@@ -74,7 +74,8 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
 
             if (pReader == null) {
                 throw new AxisFault("Unable to load Python file");
-            } if (pMethod == null) {
+            }
+            if (pMethod == null) {
                 throw new AxisFault("Unable to read the method");
             }
 
@@ -190,8 +191,8 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
     /**
      * @param str The string to embed in the OMElement
      * @return an OMElement
-     * @throws javax.xml.stream.XMLStreamException XMLStreamException
-     *
+     * @throws javax.xml.stream.XMLStreamException
+     *          XMLStreamException
      */
     private OMElement getpayLoad(String str) throws XMLStreamException {
         XMLStreamReader xmlReader =
@@ -206,7 +207,7 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
     /**
      * @param inMessage Incominng message.
      * @return the pythonscript message to invoke.
-     * @throws AxisFault AxisFault.
+     * @throws AxisFault          AxisFault.
      * @throws XMLStreamException XMLStreamException.
      */
     public String getPythonMethod(MessageContext inMessage) throws AxisFault, XMLStreamException {
@@ -291,13 +292,13 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
      * Handles complex type requests.
      *
      * @param complexType complexType object.
-     * @param payload payload.
-     * @param paramNames parameter nanmes.
+     * @param payload     payload.
+     * @param paramNames  parameter nanmes.
      * @return List.
      * @throws AxisFault AxisFault.
      */
     private List<Object> handleComplexTypeInRequest(XmlSchemaComplexType complexType, OMElement payload,
-                                            List<String> paramNames)
+                                                    List<String> paramNames)
             throws AxisFault {
         XmlSchemaParticle particle = complexType.getParticle();
         List<Object> params = new ArrayList<Object>();
@@ -359,7 +360,7 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
     /**
      * Handle simple types requests.
      *
-     * @param payload payload.
+     * @param payload      payload.
      * @param innerElement inner element contained.
      * @return Object.
      * @throws AxisFault AxisFault.
@@ -385,7 +386,7 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
      * Creates an array object that can be passed into a JS function
      *
      * @param iterator Iterator to the omelements that belong to the array
-     * @param type The schematype of the omelement
+     * @param type     The schematype of the omelement
      * @return An array Object that can be passed into a JS function
      * @throws AxisFault In case an exception occurs
      */
@@ -404,7 +405,7 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
      * Creates an object that can be passed into a pythonscript function from an OMElement.
      *
      * @param omElement The OMElement that the parameter should be created for
-     * @param type The schemaType of the incoming message element
+     * @param type      The schemaType of the incoming message element
      * @return An Object that can be passed into a Py function
      * @throws AxisFault In case an exception occurs
      */
@@ -579,7 +580,7 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
      * Returns a fault string.
      *
      * @param value value.
-     * @param type type.
+     * @param type  type.
      * @return fault string.
      */
     private String getFaultString(String value, String type) {
@@ -590,7 +591,7 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
      * Check whether it is requierd or not.
      *
      * @param innerElement inner xml schema element.
-     * @param object object.
+     * @param object       object.
      * @return boolean.
      * @throws AxisFault AxisFault.
      */
@@ -610,10 +611,10 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
     /**
      * Handle complex type in response.
      *
-     * @param complexType xml schema complex type.
-     * @param outElement out element.
-     * @param response response.
-     * @param fac OMFactory.
+     * @param complexType  xml schema complex type.
+     * @param outElement   out element.
+     * @param response     response.
+     * @param fac          OMFactory.
      * @param isInnerParam is it a inner param or not.
      * @throws AxisFault AxisFault.
      */
@@ -640,7 +641,7 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
                     XmlSchemaComplexType innerComplexType = (XmlSchemaComplexType) schemaType;
                     OMElement complexTypeElement = fac.createOMElement(name, outElement.getNamespace());
                     outElement.addChild(complexTypeElement);
-                    handleComplexTypeInResponse(innerComplexType, complexTypeElement, response, fac,true);
+                    handleComplexTypeInResponse(innerComplexType, complexTypeElement, response, fac, true);
                 } else {
                     Object object = response;
                     if (isInnerParam || count > 1) {
@@ -666,9 +667,9 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
      * Handles simpe types inn the response.
      *
      * @param innerElement inner xml schema element.
-     * @param pyObject python object.
-     * @param factory OMFactory.
-     * @param outElement out element.
+     * @param pyObject     python object.
+     * @param factory      OMFactory.
+     * @param outElement   out element.
      * @throws AxisFault AxisFault.
      */
     private void handleSimpleTypeinResponse(XmlSchemaElement innerElement,
@@ -695,8 +696,8 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
     /**
      * Builds the response.
      *
-     * @param annotated whether the script is annotated or not.
-     * @param result result obtained after executing the python method.
+     * @param annotated    whether the script is annotated or not.
+     * @param result       result obtained after executing the python method.
      * @param innerElement inner xml schema element.
      * @return OMElement.
      * @throws AxisFault AxisFault.
@@ -732,7 +733,7 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
     /**
      * Given pyObject is converted to corresponding OMElement.
      *
-     * @param pyObject The object that needs to be converted.
+     * @param pyObject    The object that needs to be converted.
      * @param elementName The element name of the wrapper.
      * @param addTypeInfo Whether type information should be added into the element as an attribute.
      * @return OMelement which represents the pyObject.
@@ -825,8 +826,8 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
      * Handles schema type in the responnse.
      *
      * @param innerElement inner xml schema element.
-     * @param pyObject python object.
-     * @param factory OMFactory.
+     * @param pyObject     python object.
+     * @param factory      OMFactory.
      * @return OMElements.
      * @throws AxisFault AxisFault.
      */
@@ -840,28 +841,23 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
             }
             // need to set annotated as false cause we need to set xsi:type
             return buildResponse(false, pyObject, innerElement);
-        }
-        if (qName.equals(Constants.XSD_INTEGER)) {
+        } else if (qName.equals(Constants.XSD_INTEGER)) {
             String str = PyToOMConverter.convertToInteger(pyObject);
             element.setText(str);
             return element;
-        }
-        if (qName.equals(Constants.XSD_INT)) {
+        } else if (qName.equals(Constants.XSD_INT)) {
             String str = PyToOMConverter.convertToInt(pyObject);
             element.setText(str);
             return element;
-        }
-        if (qName.equals(Constants.XSD_FLOAT)) {
+        } else if (qName.equals(Constants.XSD_FLOAT)) {
             String str = PyToOMConverter.convertToFloat(pyObject);
             element.setText(str);
             return element;
-        }
-        if (qName.equals(Constants.XSD_LONG)) {
+        } else if (qName.equals(Constants.XSD_LONG)) {
             String str = PyToOMConverter.convertToLong(pyObject);
             element.setText(str);
             return element;
-        }
-        if (qName.equals(Constants.XSD_STRING)) {
+        } else if (qName.equals(Constants.XSD_STRING)) {
             String str = PyToOMConverter.convertToString(pyObject);
             element.setText(str);
             return element;
@@ -873,10 +869,10 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
     /**
      * Handles simple elements.
      *
-     * @param payload payload.
+     * @param payload          payload.
      * @param innerElementName name of the inner element.
-     * @param minOccurs min occurs.
-     * @param schemaType schema thype.
+     * @param minOccurs        min occurs.
+     * @param schemaType       schema thype.
      * @return Object.
      * @throws AxisFault AxisFault.
      */
