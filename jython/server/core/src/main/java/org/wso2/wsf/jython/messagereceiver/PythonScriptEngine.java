@@ -22,6 +22,9 @@ import org.python.util.PythonInterpreter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * Contain the logic for programmetically executing python scripts.
+ */
 public class PythonScriptEngine {
     private static final Log log = LogFactory.getLog(PythonScriptEngine.class);
 
@@ -29,15 +32,15 @@ public class PythonScriptEngine {
      * Takes the path of the python script, method name and method arguments and executes the given method and
      * returns the result
      *
-     * @param method
-     * @param reader
-     * @param args
-     * @return String
+     * @param method method to be executed.
+     * @param reader python script which contains the methods to be executed.
+     * @param args method arguments.
+     * @return String returns the result after executing the method.
      */
     public static Object invoke(String method, String reader, Object args[]) {
         PySystemState.initialize();
-        PythonInterpreter interp = new PythonInterpreter();
-        interp.execfile(reader);
+        PythonInterpreter interpreter = new PythonInterpreter();
+        interpreter.execfile(reader);
 
         String str = "";
         int len = args.length;
@@ -55,16 +58,23 @@ public class PythonScriptEngine {
             log.debug("String to be evaluated : " + s4);
         }
 
-        return interp.eval(s4);
+        return interpreter.eval(s4);
     }
 
-
+    /**
+     * Checks whether a given object is null.
+     *
+     * @param object object to be checked.
+     * @return returns the result in boolean.
+     */
     public static boolean isNull(Object object) {
-        System.out.println(object == null);
+        log.info(object == null);
         return object == null;
     }
 
-
+    /**
+     * Util method that can be used to execute a python script programmetically.
+     */
     public void executeScript() {
         PySystemState.initialize();
         PythonInterpreter interp = new PythonInterpreter();
@@ -75,7 +85,7 @@ public class PythonScriptEngine {
         interp.execfile(str2);
 
         PyObject x = interp.get("d");
-        System.out.println("d: original value " + x);
+        log.info("d: original value " + x);
         int s1 = 45, s2 = 45;
         String s3 = "addNumbers(" + s1 + "," + s2 + ")";
         PyObject y = interp.eval(s3);
