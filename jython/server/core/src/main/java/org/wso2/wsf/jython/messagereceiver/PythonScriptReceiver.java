@@ -45,6 +45,9 @@ import java.util.*;
 
 import org.python.core.*;
 
+/**
+ * Message receiver for python deployer.
+ */
 public class PythonScriptReceiver extends AbstractInOutMessageReceiver implements MessageReceiver {
     private static final Log log = LogFactory.getLog(PythonScriptReceiver.class);
 
@@ -97,7 +100,8 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
                     //we allow only a sequence of spaces
                     if (textPayLoad.getText().trim().length() > 0) {
                         throw new AxisFault(
-                                "Non-XML payload is not allowed. PayLoad inside the SOAP body needs to be an XML element.");
+                                "Non-XML payload is not allowed. PayLoad inside the SOAP body" +
+                                        " needs to be an XML element.");
                     }
                 }
             }
@@ -110,7 +114,7 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
             if (parameter != null) {
                 annotated = (Boolean) parameter.getValue();
             }
-            // ------------ annotated = true is done for a test . delete it after the proj is finished!
+            // TODO: annotated = true is done for a test . delete it after the proj is finished!
             annotated = true;
 
             Object response = PythonScriptEngine.invoke(pMethod, pReader, (java.lang.Object[]) (args));
@@ -180,7 +184,7 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
     /**
      * @param str The string to embed in the OMElement
      * @return an OMElement
-     * @throws javax.xml.stream.XMLStreamException
+     * @throws javax.xml.stream.XMLStreamException XMLStreamException
      *
      */
     private OMElement getpayLoad(String str) throws XMLStreamException {
@@ -194,10 +198,10 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
     }
 
     /**
-     * @param inMessage
-     * @return the pythonscript message to invoke
-     * @throws AxisFault
-     * @throws XMLStreamException
+     * @param inMessage Incominng message.
+     * @return the pythonscript message to invoke.
+     * @throws AxisFault AxisFault.
+     * @throws XMLStreamException XMLStreamException.
      */
     public String getPythonMethod(MessageContext inMessage) throws AxisFault, XMLStreamException {
         //Look at the method name. if available this should be a pythonscript method
@@ -209,9 +213,9 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
     }
 
     /**
-     * @param inMessage
-     * @return the pythonscript source file
-     * @throws AxisFault
+     * @param inMessage Incominng message.
+     * @return the pythonscript source file.
+     * @throws AxisFault AxisFault.
      */
     public String readPythonScript(MessageContext inMessage) throws AxisFault {
         AxisService service = inMessage.getAxisService();
@@ -264,9 +268,9 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
     }
 
     /**
-     * @param inMessage
-     * @return arguments to be sent to the pythonscript function
-     * @throws XMLStreamException
+     * @param inMessage Incominng message.
+     * @return arguments to be sent to the pythonscript function.
+     * @throws XMLStreamException XMLStreamException.
      */
     public String getArgs(MessageContext inMessage) throws XMLStreamException {
 
@@ -573,7 +577,8 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
     }
 
 
-    private void handleComplexTypeInResponse(XmlSchemaComplexType complexType, OMElement outElement,
+    private void handleComplexTypeInResponse(XmlSchemaComplexType complexType,
+                                             OMElement outElement,
                                              Object response,
                                              OMFactory fac,
                                              boolean isInnerParam) throws AxisFault {

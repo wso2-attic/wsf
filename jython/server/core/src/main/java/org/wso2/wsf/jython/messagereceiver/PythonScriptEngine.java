@@ -86,9 +86,10 @@ public class PythonScriptEngine {
 
         PyObject x = interp.get("d");
         log.info("d: original value " + x);
+
         int s1 = 45, s2 = 45;
         String s3 = "addNumbers(" + s1 + "," + s2 + ")";
-        PyObject y = interp.eval(s3);
+        log.info(interp.eval(s3));
     }
 
 }
