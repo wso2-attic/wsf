@@ -384,11 +384,10 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
     /**
      * Creates an array object that can be passed into a JS function
      *
-     * @param iterator - Iterator to the omelements that belong to the array
-     * @param type     - The schematype of the omelement
-     *                 //@param engine   Reference to the pythonscript engine
-     * @return - An array Object that can be passed into a JS function
-     * @throws AxisFault - In case an exception occurs
+     * @param iterator Iterator to the omelements that belong to the array
+     * @param type The schematype of the omelement
+     * @return An array Object that can be passed into a JS function
+     * @throws AxisFault In case an exception occurs
      */
     private Object handleArray(Iterator iterator, QName type)
             throws AxisFault {
@@ -404,11 +403,10 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
     /**
      * Creates an object that can be passed into a pythonscript function from an OMElement.
      *
-     * @param omElement - The OMElement that the parameter should be created for
-     * @param type      - The schemaType of the incoming message element
-     *                  //@param engine    - Reference to the pythonscript engine
-     * @return - An Object that can be passed into a Py function
-     * @throws AxisFault - In case an exception occurs
+     * @param omElement The OMElement that the parameter should be created for
+     * @param type The schemaType of the incoming message element
+     * @return An Object that can be passed into a Py function
+     * @throws AxisFault In case an exception occurs
      */
     private Object createParam(OMElement omElement, QName type)
             throws AxisFault {
@@ -577,12 +575,25 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
         return omElement.getText();
     }
 
-
+    /**
+     * Returns a fault string.
+     *
+     * @param value value.
+     * @param type type.
+     * @return fault string.
+     */
     private String getFaultString(String value, String type) {
         return "Unable to convert value \"" + value + "\" to " + type;
     }
 
-
+    /**
+     * Check whether it is requierd or not.
+     *
+     * @param innerElement inner xml schema element.
+     * @param object object.
+     * @return boolean.
+     * @throws AxisFault AxisFault.
+     */
     private boolean checkRequired(XmlSchemaElement innerElement, Object object) throws AxisFault {
         if (PythonScriptEngine.isNull(object)) {
             if (innerElement.getSchemaTypeName() == Constants.XSD_ANYTYPE ||
@@ -596,7 +607,16 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
         return false;
     }
 
-
+    /**
+     * Handle complex type in response.
+     *
+     * @param complexType xml schema complex type.
+     * @param outElement out element.
+     * @param response response.
+     * @param fac OMFactory.
+     * @param isInnerParam is it a inner param or not.
+     * @throws AxisFault AxisFault.
+     */
     private void handleComplexTypeInResponse(XmlSchemaComplexType complexType,
                                              OMElement outElement,
                                              Object response,
@@ -647,7 +667,15 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
         }
     }
 
-
+    /**
+     * Handles simpe types inn the response.
+     *
+     * @param innerElement inner xml schema element.
+     * @param pyObject python object.
+     * @param factory OMFactory.
+     * @param outElement out element.
+     * @throws AxisFault AxisFault.
+     */
     private void handleSimpleTypeinResponse(XmlSchemaElement innerElement,
                                             Object pyObject,
                                             OMFactory factory,
@@ -669,6 +697,15 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
                 handleSchemaTypeinResponse(innerElement, pyObject, factory));
     }
 
+    /**
+     * Builds the response.
+     *
+     * @param annotated whether the script is annotated or not.
+     * @param result result obtained after executing the python method.
+     * @param innerElement inner xml schema element.
+     * @return OMElement.
+     * @throws AxisFault AxisFault.
+     */
     private OMElement buildResponse(boolean annotated, Object result, XmlSchemaElement innerElement)
             throws AxisFault {
         // Check whether the innerElement is null.
@@ -698,18 +735,19 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
 
 
     /**
-     * Given pyObject is converted to corresponding OMElement
+     * Given pyObject is converted to corresponding OMElement.
      *
-     * @param pyObject    - The object that needs to be converted
-     * @param elementName - The element name of the wrapper
-     * @param addTypeInfo - Whether type information should be added into the element as an attribute
-     * @return - OMelement which represents the pyObject
-     * @throws AxisFault - Thrown in case an exception occurs during the conversion
+     * @param pyObject The object that needs to be converted.
+     * @param elementName The element name of the wrapper.
+     * @param addTypeInfo Whether type information should be added into the element as an attribute.
+     * @return OMelement which represents the pyObject.
+     * @throws AxisFault Thrown in case an exception occurs during the conversion.
      */
     private OMElement createResponseElement(Object pyObject, String elementName, boolean addTypeInfo)
             throws AxisFault {
         //String className = pyObject.getClass().getName();
         OMFactory fac = OMAbstractFactory.getOMFactory();
+
         //OMNamespace namespace = fac.createOMNamespace("http://www.wso2.org/ns/py    type", "py");
         OMNamespace xsiNamespace = fac.createOMNamespace("http://www.w3.org/2001/XMLSchema-instance", "xsi");
         OMNamespace xsNamespace = fac.createOMNamespace("http://www.w3.org/2001/XMLSchema", "xs");
@@ -788,7 +826,15 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
         return element;
     }
 
-
+    /**
+     * Handles schema type in the responnse.
+     *
+     * @param innerElement inner xml schema element.
+     * @param pyObject python object.
+     * @param factory OMFactory.
+     * @return OMElements.
+     * @throws AxisFault AxisFault.
+     */
     private OMElement handleSchemaTypeinResponse(XmlSchemaElement innerElement, Object pyObject, OMFactory factory)
             throws AxisFault {
         QName qName = innerElement.getSchemaTypeName();
@@ -829,7 +875,16 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
         return element;
     }
 
-
+    /**
+     * Handles simple elements.
+     *
+     * @param payload payload.
+     * @param innerElementName name of the inner element.
+     * @param minOccurs min occurs.
+     * @param schemaType schema thype.
+     * @return Object.
+     * @throws AxisFault AxisFault.
+     */
     private Object handleSimpleElement(OMElement payload, String innerElementName, long minOccurs, QName schemaType)
             throws AxisFault {
         QName payloadQname = payload.getQName();
