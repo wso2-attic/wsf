@@ -37,9 +37,7 @@ public class PythonScriptEngine {
     public static Object invoke(String method, String reader, Object args[]) {
         PySystemState.initialize();
         PythonInterpreter interp = new PythonInterpreter();
-        String fileName = reader;
-        //String fileName = "/home/heshan/workspace/Axis2Service ver2/src/messagereceiver/filepy.py";
-        interp.execfile(fileName);
+        interp.execfile(reader);
 
         String str = "";
         int len = args.length;
@@ -50,34 +48,37 @@ public class PythonScriptEngine {
                 str = str + args[i] + ",";
             }
         }
+
         //PyFloat, PyInteger, PyLong , PyString, PyList, PyDictionary, PyTuple, PyArray, PyComplex,
         String s4 = "" + method + "(" + str + ")";
         if (log.isDebugEnabled()) {
             log.debug("String to be evaluated : " + s4);
         }
+
         return interp.eval(s4);
     }
 
 
- public static boolean isNull(Object object) {
+    public static boolean isNull(Object object) {
         System.out.println(object == null);
         return object == null;
     }
 
 
-  /*     public void execute() {
+    public void executeScript() {
         PySystemState.initialize();
         PythonInterpreter interp = new PythonInterpreter();
-        //interp.exec("import sys");
-        //interp.exec("print sys");
+
+        interp.exec("import sys");
+        interp.exec("print sys");
         String str2 = "filepy.py";
         interp.execfile(str2);
+
         PyObject x = interp.get("d");
         System.out.println("d: original value " + x);
         int s1 = 45, s2 = 45;
         String s3 = "addNumbers(" + s1 + "," + s2 + ")";
         PyObject y = interp.eval(s3);
     }
-*/
-    
+
 }
