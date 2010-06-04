@@ -751,7 +751,7 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
 
         // Get the OMNode inside the pyObjecting object
         if (pyObject instanceof PyString) {
-            element.setText((String) pyObject);
+            element.setText(pyObject.toString());
             if (addTypeInfo) {
                 element.declareNamespace(xsNamespace);
                 element.addAttribute("type", "xs:string", xsiNamespace);
@@ -835,29 +835,29 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
             throws AxisFault {
         QName qName = innerElement.getSchemaTypeName();
         OMElement element = factory.createOMElement(innerElement.getName(), null);
-        if (qName.equals(Constants.XSD_ANYTYPE)) {
+        if (Constants.XSD_ANYTYPE.equals(qName)) {
             if (PythonScriptEngine.isNull(pyObject)) {
                 return element;
             }
             // need to set annotated as false cause we need to set xsi:type
             return buildResponse(false, pyObject, innerElement);
-        } else if (qName.equals(Constants.XSD_INTEGER)) {
+        } else if (Constants.XSD_INTEGER.equals(qName)) {
             String str = PyToOMConverter.convertToInteger(pyObject);
             element.setText(str);
             return element;
-        } else if (qName.equals(Constants.XSD_INT)) {
+        } else if (Constants.XSD_INT.equals(qName)) {
             String str = PyToOMConverter.convertToInt(pyObject);
             element.setText(str);
             return element;
-        } else if (qName.equals(Constants.XSD_FLOAT)) {
+        } else if (Constants.XSD_FLOAT.equals(qName)) {
             String str = PyToOMConverter.convertToFloat(pyObject);
             element.setText(str);
             return element;
-        } else if (qName.equals(Constants.XSD_LONG)) {
+        } else if (Constants.XSD_LONG.equals(qName)) {
             String str = PyToOMConverter.convertToLong(pyObject);
             element.setText(str);
             return element;
-        } else if (qName.equals(Constants.XSD_STRING)) {
+        } else if (Constants.XSD_STRING.equals(qName)) {
             String str = PyToOMConverter.convertToString(pyObject);
             element.setText(str);
             return element;
