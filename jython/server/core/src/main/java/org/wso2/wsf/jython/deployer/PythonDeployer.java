@@ -65,8 +65,7 @@ public class PythonDeployer implements Deployer {
             deploymentFileData.setClassLoader(axisConfig.getServiceClassLoader());
             AxisServiceGroup serviceGroup = new AxisServiceGroup(axisConfig);
             serviceGroup.setServiceGroupClassLoader(deploymentFileData.getClassLoader());
-            ArrayList<AxisService> serviceList = processService(deploymentFileData, serviceGroup,
-                    configCtx, repoPath);
+            ArrayList<AxisService> serviceList = processService(deploymentFileData, serviceGroup, repoPath);
             if (serviceList != null) {
                 DeploymentEngine.addServiceGroup(serviceGroup, serviceList, deploymentFileData
                         .getFile().toURL(), deploymentFileData, axisConfig);
@@ -119,12 +118,13 @@ public class PythonDeployer implements Deployer {
     }
 
     public ArrayList<AxisService> processService(DeploymentFileData currentFile,
-                                    AxisServiceGroup axisServiceGroup, ConfigurationContext configCtx, String repoPath)
+                                    AxisServiceGroup axisServiceGroup, String repoPath)
             throws AxisFault {
         try {
             String serviceName = DescriptionBuilder.getShortFileName(currentFile.getName());
             axisServiceGroup.setServiceGroupName(currentFile.getName());
-            AxisService axisService = null;
+            AxisService axisService;
+
             if (log.isDebugEnabled()) {
                 System.out.println(" Script Repo Path : " + repoPath);
                 log.debug(serviceName + " python script is being processed !");
@@ -132,6 +132,7 @@ public class PythonDeployer implements Deployer {
                 log.debug("currentFileName AbsolutePath :" + currentFile.getAbsolutePath());
                 log.debug("currnetFileName              :" + currentFile.getName());
             }
+
             axisService = new AxisService();
             Parameter servicePythonParameter = new Parameter("PythonScript", currentFile.getFile());
             axisService.addParameter(servicePythonParameter);
@@ -148,7 +149,7 @@ public class PythonDeployer implements Deployer {
                     Java2WSDLConstants.URI_2001_SCHEMA_XSD);
             axisService.setNameSpacesMap(map2);
 
-            String schemaTargetNamespace = "http://services.mashup.wso2.org/" + serviceName + "?xsd";
+            //String schemaTargetNamespace = "http://services.mashup.wso2.org/" + serviceName + "?xsd";
 
             // setting up the schema
             MyTypes types = new MyTypes();
@@ -156,7 +157,7 @@ public class PythonDeployer implements Deployer {
             XmlSchema schema = schemaGenerator.getSchema();
             axisService.addSchema(schema);
 
-            QName paramElementQname = new QName(schemaTargetNamespace, "PythonParameter");
+            //QName paramElementQname = new QName(schemaTargetNamespace, "PythonParameter");
 
             // setting the python.path variable progarmmatically
             Properties props = new Properties();
@@ -250,7 +251,6 @@ public class PythonDeployer implements Deployer {
                 }
 
                 String strTemp2[];
-                boolean isInnerComplex = false;
 
                 //Setting complex types within complex types
                 if (value2.contains("~")) {
@@ -258,7 +258,6 @@ public class PythonDeployer implements Deployer {
                         log.debug("\n\n---------Start:  an inner complex type --------------");
                         log.debug(" Inner complex type name is  ---  " + key2);
                     }
-                    isInnerComplex = true;
                     innerInComplexType.setName(key2);
                     /*innerInComplexType*/
                     //Key2 var3 === Value (a=string~b=integer)~
@@ -326,7 +325,10 @@ public class PythonDeployer implements Deployer {
     }
 
 
-    private void processOperation(AxisService axisService, QName inParamElementQname, QName outParamElementQname, String method) throws AxisFault {
+    private void processOperation(AxisService axisService,
+                                  QName inParamElementQname,
+                                  QName outParamElementQname,
+                                  String method) throws AxisFault {
         AxisOperation axisOp = new InOutAxisOperation(new QName(method));
         axisOp.setMessageReceiver(new PythonScriptReceiver());
         axisOp.setStyle(WSDLConstants.STYLE_DOC);
