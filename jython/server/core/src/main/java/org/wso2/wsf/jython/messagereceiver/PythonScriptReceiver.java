@@ -332,9 +332,9 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
                                 "Required element " + complexType.getName()
                                         + " defined in the schema can not be found in the request");
                     }
-                    List<String> innerParamNames = new ArrayList<String>();
+                    /*List<String> innerParamNames = new ArrayList<String>();
                     List<Object> innerParams = handleComplexTypeInRequest((XmlSchemaComplexType) schemaType,
-                            complexTypePayload, innerParamNames);
+                            complexTypePayload, innerParamNames);*/
                 } else if (schemaType instanceof XmlSchemaSimpleType) {
                     // Handle enumerations in here.
                     XmlSchemaSimpleType xmlSchemaSimpleType = (XmlSchemaSimpleType) schemaType;
@@ -452,7 +452,7 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
         }
         if (Constants.XSD_INTEGER.equals(type)) {
             try {
-                if ((value == null) || value.equals("")) {
+                if (value.equals("") || value == null) {
                     return Integer.MIN_VALUE;
                 }
                 if (value.startsWith("+")) {
@@ -634,18 +634,13 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
                 String name = innerElement.getName();
                 XmlSchemaType schemaType = innerElement.getSchemaType();
                 if (schemaType instanceof XmlSchemaComplexType) {
-                    Object object = response;
-
-                    if (checkRequired(innerElement, object)) {
+                    if (checkRequired(innerElement, response)) {
                         continue;
                     }
                     XmlSchemaComplexType innerComplexType = (XmlSchemaComplexType) schemaType;
-                    OMElement complexTypeElement =
-                            fac.createOMElement(name, outElement.getNamespace());
+                    OMElement complexTypeElement = fac.createOMElement(name, outElement.getNamespace());
                     outElement.addChild(complexTypeElement);
-
-                    handleComplexTypeInResponse(innerComplexType, complexTypeElement, object, fac,
-                            true);
+                    handleComplexTypeInResponse(innerComplexType, complexTypeElement, response, fac,true);
                 } else {
                     Object object = response;
                     if (isInnerParam || count > 1) {
