@@ -20,13 +20,6 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.transport.http.SimpleHTTPServer;
 
-/**
- * Created by IntelliJ IDEA.
- * User: heshan Suriyaarachchi
- * Date: Mar 25, 2008
- * Time: 2:07:50 PM
- * To change this template use File | Settings | File Templates.
- */
 public class JPythonServer {
     public static void main(String[] args) throws Exception{
         ConfigurationContext configCtx = ConfigurationContextFactory.createConfigurationContextFromFileSystem("/home/heshan/repo","/home/heshan/IdeaProjects/PythDeployer/src/org/wso2/wsf/jython/deployer/axis.xml");
