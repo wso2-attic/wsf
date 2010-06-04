@@ -31,7 +31,6 @@ public class JPythonServer {
                 ConfigurationContextFactory.createConfigurationContextFromFileSystem(repolocation, axis2XmlFilePath);
         SimpleHTTPServer  server = new SimpleHTTPServer(configCtx ,8080);
         server.start();
-        System.out.println(" simpleHTTP server started !");
-        
+        System.out.println(" simpleHTTP server started !");        
     }
 }

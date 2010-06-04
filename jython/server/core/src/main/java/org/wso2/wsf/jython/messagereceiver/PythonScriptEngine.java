@@ -53,10 +53,9 @@ public class PythonScriptEngine {
         //PyFloat, PyInteger, PyLong , PyString, PyList, PyDictionary, PyTuple, PyArray, PyComplex,
         String s4 = "" + method + "(" + str + ")";
         if (log.isDebugEnabled()) {
-            log.debug("String to be evaluated -->" + s4);
+            log.debug("String to be evaluated : " + s4);
         }
-        PyObject retObj = interp.eval(s4);
-        return retObj;
+        return interp.eval(s4);
     }
 
 
