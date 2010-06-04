@@ -122,8 +122,8 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
             if (parameter != null) {
                 annotated = (Boolean) parameter.getValue();
             }
-            // TODO: annotated = true is done for a test . delete it after the proj is finished!
-            annotated = true;
+            // annotated=true is done for a test . delete it after the proj is finished!
+            // annotated = true;
 
             Object response = PythonScriptEngine.invoke(pMethod, pReader, (java.lang.Object[]) (args));
             if (log.isDebugEnabled()) {
@@ -392,7 +392,7 @@ public class PythonScriptReceiver extends AbstractInOutMessageReceiver implement
      */
     private Object handleArray(Iterator iterator, QName type)
             throws AxisFault {
-        ArrayList objectList = new ArrayList();
+        ArrayList<Object> objectList = new ArrayList<Object>();
         while (iterator.hasNext()) {
             OMElement omElement = (OMElement) iterator.next();
             objectList.add(createParam(omElement, type));
