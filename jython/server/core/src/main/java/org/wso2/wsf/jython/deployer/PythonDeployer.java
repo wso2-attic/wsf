@@ -122,14 +122,13 @@ public class PythonDeployer implements Deployer {
                                     AxisServiceGroup axisServiceGroup, ConfigurationContext configCtx, String repoPath)
             throws AxisFault {
         try {
-            String shortFileName = DescriptionBuilder.getShortFileName(currentFile.getName());
-            String serviceName = shortFileName;
+            String serviceName = DescriptionBuilder.getShortFileName(currentFile.getName());
             axisServiceGroup.setServiceGroupName(currentFile.getName());
             AxisService axisService = null;
             if (log.isDebugEnabled()) {
                 System.out.println(" Script Repo Path : " + repoPath);
-                log.debug(shortFileName + " python script is being processed !");
-                log.debug("shortFileName                :" + shortFileName);
+                log.debug(serviceName + " python script is being processed !");
+                log.debug("serviceName                :" + serviceName);
                 log.debug("currentFileName AbsolutePath :" + currentFile.getAbsolutePath());
                 log.debug("currnetFileName              :" + currentFile.getName());
             }
@@ -173,10 +172,10 @@ public class PythonDeployer implements Deployer {
             InputStream inpStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("Processor.py");
             interp.execfile(inpStream);
 
-            String scriptName = "import " + shortFileName;
+            String scriptName = "import " + serviceName;
             interp.exec(scriptName);
             //interp.exec("import Processor");
-            String stt = "getDictionary(" + shortFileName + ")";
+            String stt = "getDictionary(" + serviceName + ")";
             PyObject ob1 = interp.eval(stt);
 
             String st2 = "dictToJavaMap(" + ob1 + ")";
@@ -202,11 +201,10 @@ public class PythonDeployer implements Deployer {
      */
     private void annotationsToSchema(HashMap map, AxisService axisService, SchemaGenerator schemaGenerator) {
         //HashMap map = (HashMap) obj2.__tojava__(HashMap.class);
-        Iterator k = map.keySet().iterator();
-        while (k.hasNext()) {
+        for (Object o : map.keySet()) {
             //['returns:double', 'operationName:double', 'double', ' MyClass.multiply', ' var1:integer', ' var2:integer']
             //{'operationName': 'add','returns': 'int','var1': 'integer','var2': 'integer'}
-            String key = (String) k.next();
+            String key = (String) o;
             if (log.isDebugEnabled()) {
                 log.debug("\nKey " + key + " === Value " + map.get(key));
             }
@@ -235,9 +233,7 @@ public class PythonDeployer implements Deployer {
             ComplexType innerInComplexType = new ComplexType();
 
             String opName = "";
-            Iterator<String> k3 = hmap.keySet().iterator();
-            while (k3.hasNext()) {
-                String key2 = k3.next();
+            for (String key2 : hmap.keySet()) {
                 if (key2.equals("operationName")) {
                     opName = hmap.get(key2);
                     inComplexType.setName(hmap.get(key2));
@@ -247,9 +243,7 @@ public class PythonDeployer implements Deployer {
                 }
             }
 
-            Iterator<String> k2 = hmap.keySet().iterator();
-            while (k2.hasNext()) {
-                String key2 = k2.next();
+            for (String key2 : hmap.keySet()) {
                 String value2 = hmap.get(key2);
                 if (log.isDebugEnabled()) {
                     log.debug("\nKey2 " + key2 + " === Value " + value2);
@@ -272,8 +266,8 @@ public class PythonDeployer implements Deployer {
                     value2 = value2.replace("(", "");
                     value2 = value2.replace(")", "");
                     strTemp2 = value2.split("~");
-                    for (int i = 0; i < strTemp2.length; i++) {
-                        String complexItems[] = strTemp2[i].split("=");
+                    for (String aStrTemp2 : strTemp2) {
+                        String complexItems[] = aStrTemp2.split("=");
                         // o contains the key
                         // 1 contains the value
                         SimpleType simpleType3 = new SimpleType();
