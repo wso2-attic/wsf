@@ -20,9 +20,15 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.transport.http.SimpleHTTPServer;
 
+/**
+ * This class programmetically starts up the Python deployer.
+ */
 public class JPythonServer {
     public static void main(String[] args) throws Exception{
-        ConfigurationContext configCtx = ConfigurationContextFactory.createConfigurationContextFromFileSystem("/home/heshan/repo","/home/heshan/IdeaProjects/PythDeployer/src/org/wso2/wsf/jython/deployer/axis.xml");
+        String repolocation = "/home/heshan/repo";
+        String axis2XmlFilePath = "/home/heshan/IdeaProjects/PythDeployer/src/org/wso2/wsf/jython/deployer/axis.xml";
+        ConfigurationContext configCtx =
+                ConfigurationContextFactory.createConfigurationContextFromFileSystem(repolocation, axis2XmlFilePath);
         SimpleHTTPServer  server = new SimpleHTTPServer(configCtx ,8080);
         server.start();
         System.out.println(" simpleHTTP server started !");
