@@ -41,6 +41,9 @@ import java.io.*;
 import org.wso2.wsf.jython.messagereceiver.PythonScriptReceiver;
 import org.wso2.wsf.jython.deployer.schemagenarator.*;
 
+/**
+ * Python service deployer.
+ */
 public class PythonDeployer implements Deployer {
     private static final Log log = LogFactory.getLog(PythonDeployer.class);
 
@@ -118,7 +121,7 @@ public class PythonDeployer implements Deployer {
     }
 
     public ArrayList<AxisService> processService(DeploymentFileData currentFile,
-                                    AxisServiceGroup axisServiceGroup, String repoPath)
+                                                 AxisServiceGroup axisServiceGroup, String repoPath)
             throws AxisFault {
         try {
             String serviceName = DescriptionBuilder.getShortFileName(currentFile.getName());
@@ -128,7 +131,7 @@ public class PythonDeployer implements Deployer {
             if (log.isDebugEnabled()) {
                 System.out.println(" Script Repo Path : " + repoPath);
                 log.debug(serviceName + " python script is being processed !");
-                log.debug("serviceName                :" + serviceName);
+                log.debug("serviceName                  :" + serviceName);
                 log.debug("currentFileName AbsolutePath :" + currentFile.getAbsolutePath());
                 log.debug("currnetFileName              :" + currentFile.getName());
             }
@@ -196,9 +199,9 @@ public class PythonDeployer implements Deployer {
      * Reads the annotations in the python script and maps the annotations to schema. Generates the xml schema for the
      * python service
      *
-     * @param map             - The HashMap which contains the annotations of the python service
-     * @param axisService     - The axis service
-     * @param schemaGenerator - The schema generator
+     * @param map             The HashMap which contains the annotations of the python service
+     * @param axisService     The axis service
+     * @param schemaGenerator The schema generator
      */
     private void annotationsToSchema(HashMap map, AxisService axisService, SchemaGenerator schemaGenerator) {
         //HashMap map = (HashMap) obj2.__tojava__(HashMap.class);
@@ -310,7 +313,7 @@ public class PythonDeployer implements Deployer {
                 inSchemaElement = schemaGenerator.createInputElement(inComplexType, opName);
                 outSchemaElement = schemaGenerator.createOutputElement(outComplexType, opName);
             } catch (Exception e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
             QName inParamElementQname = inSchemaElement.getQName(); // set this to the QName of the in message
             QName outParamElementQname = outSchemaElement.getQName();

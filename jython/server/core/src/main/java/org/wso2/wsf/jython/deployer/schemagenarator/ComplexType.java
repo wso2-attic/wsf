@@ -20,9 +20,9 @@ import java.util.ArrayList;
 
 public class ComplexType extends Type{
 
-    private ArrayList members = new ArrayList();
+    private ArrayList<Type> members = new ArrayList<Type>();
 
-    public ArrayList getMembers() {
+    public ArrayList<Type> getMembers() {
         return members;
     }
 

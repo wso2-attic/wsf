@@ -32,6 +32,9 @@ import org.apache.ws.commons.schema.utils.NamespaceMap;
 import javax.xml.namespace.QName;
 import java.util.Iterator;
 
+/**
+ * Schema generation class.
+ */
 public class SchemaGenerator {
 
     private String schemaTargetNamespace;
@@ -126,7 +129,7 @@ public class SchemaGenerator {
         xmlSchema.getItems().add(xmlSchemaComplexType);
 
         XmlSchemaSequence xmlSchemaSequence = new XmlSchemaSequence();
-        Iterator iterator = complexType.getMembers().iterator();
+        Iterator<Type> iterator = complexType.getMembers().iterator();
         while (iterator.hasNext()) {
             Object object = iterator.next();
             XmlSchemaElement xmlSchemaElement;
@@ -183,9 +186,8 @@ public class SchemaGenerator {
         simpleType.setContent(simpleTypeRestriction);
 
         // Create enumeration facets for each value
-        for (int i = 0; i < enums.length; i++) {
-
-            String enumeration = enums[i].trim();
+        for (String anEnum : enums) {
+            String enumeration = anEnum.trim();
             XmlSchemaEnumerationFacet enumerationFacet = new XmlSchemaEnumerationFacet();
             enumerationFacet.setValue(enumeration);
             simpleTypeRestriction.getFacets().add(enumerationFacet);
