@@ -40,6 +40,7 @@ import java.io.*;
 
 import org.wso2.wsf.jython.messagereceiver.PythonScriptReceiver;
 import org.wso2.wsf.jython.deployer.schemagenarator.*;
+import org.wso2.wsf.jython.deployer.util.PythonDeploymentException;
 
 /**
  * Python service deployer.
@@ -53,12 +54,10 @@ public class PythonDeployer implements Deployer {
 
     private ConfigurationContext configCtx;
 
-
     public void init(ConfigurationContext configCtx) {
         this.configCtx = configCtx;
         this.axisConfig = this.configCtx.getAxisConfiguration();
     }
-
 
     public void deploy(DeploymentFileData deploymentFileData) {
         StringWriter errorWriter = new StringWriter();
@@ -121,8 +120,8 @@ public class PythonDeployer implements Deployer {
     }
 
     public ArrayList<AxisService> processService(DeploymentFileData currentFile,
-                                                 AxisServiceGroup axisServiceGroup, String repoPath)
-            throws AxisFault {
+                                                 AxisServiceGroup axisServiceGroup,
+                                                 String repoPath) throws PythonDeploymentException {
         try {
             String serviceName = DescriptionBuilder.getShortFileName(currentFile.getName());
             axisServiceGroup.setServiceGroupName(currentFile.getName());
@@ -191,7 +190,7 @@ public class PythonDeployer implements Deployer {
             serviceList.add(axisService);
             return serviceList;
         } catch (Exception e) {
-            throw new DeploymentException(e);
+            throw new PythonDeploymentException(e);
         }
     }
 
@@ -202,8 +201,9 @@ public class PythonDeployer implements Deployer {
      * @param map             The HashMap which contains the annotations of the python service
      * @param axisService     The axis service
      * @param schemaGenerator The schema generator
+     * @throws org.wso2.wsf.jython.deployer.util.PythonDeploymentException PythonDeploymentException
      */
-    private void annotationsToSchema(HashMap map, AxisService axisService, SchemaGenerator schemaGenerator) {
+    private void annotationsToSchema(HashMap map, AxisService axisService, SchemaGenerator schemaGenerator) throws PythonDeploymentException {
         //HashMap map = (HashMap) obj2.__tojava__(HashMap.class);
         for (Object o : map.keySet()) {
             //['returns:double', 'operationName:double', 'double', ' MyClass.multiply', ' var1:integer', ' var2:integer']
@@ -311,22 +311,28 @@ public class PythonDeployer implements Deployer {
             XmlSchemaElement outSchemaElement = null;
             try {
                 inSchemaElement = schemaGenerator.createInputElement(inComplexType, opName);
+            } catch (Exception e) {
+                throw new PythonDeploymentException("Error occured while generating " +
+                        "the schema for incoming message" + e);
+            }
+
+            try {
                 outSchemaElement = schemaGenerator.createOutputElement(outComplexType, opName);
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new PythonDeploymentException("Error occured while generating " +
+                        "the schema for outgoing message" + e);
             }
+
             QName inParamElementQname = inSchemaElement.getQName(); // set this to the QName of the in message
             QName outParamElementQname = outSchemaElement.getQName();
-
             try {
                 processOperation(axisService, inParamElementQname, outParamElementQname, opName);
             } catch (AxisFault axisFault) {
-                //throw new AxisFault(axisFault.getMessage());
-                axisFault.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                 throw new PythonDeploymentException("Error occured while processing the " +
+                         "service operation " + axisFault);
             }
         }
     }
-
 
     private void processOperation(AxisService axisService,
                                   QName inParamElementQname,
@@ -372,12 +378,9 @@ public class PythonDeployer implements Deployer {
     }
 
     public void setDirectory(String s) {
-
     }
 
     public void setExtension(String s) {
-
     }
-
 
 }
