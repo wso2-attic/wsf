@@ -19,8 +19,7 @@ package org.wso2.wsf.jython.deployer.schemagenarator;
 import javax.xml.namespace.QName;
 import java.util.HashMap;
 
-public abstract class
-        TypeTable {
+public abstract class TypeTable {
 
     protected HashMap simpleTypetoxsd;
     protected HashMap complexTypeMap;

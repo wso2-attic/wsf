@@ -30,7 +30,6 @@ import org.apache.ws.commons.schema.constants.Constants;
 import org.apache.ws.commons.schema.utils.NamespaceMap;
 
 import javax.xml.namespace.QName;
-import java.util.Iterator;
 
 /**
  * Schema generation class.
@@ -47,8 +46,6 @@ public class SchemaGenerator {
 
     private TypeTable typeTable;
 
-    private String DEFAULT_SCHEMA_NAMESPACE_PREFIX = "xs";
-    private String URI_2001_SCHEMA_XSD = "http://www.w3.org/2001/XMLSchema";
     private String RESPONSE = "Response";
 
     public NamespaceMap getNamespaceMap() {
@@ -65,8 +62,9 @@ public class SchemaGenerator {
         xmlSchema.setAttributeFormDefault(new XmlSchemaForm(XmlSchemaForm.UNQUALIFIED));
         xmlSchema.setElementFormDefault(new XmlSchemaForm(XmlSchemaForm.UNQUALIFIED));
 
-        nameSpacesMap.put(DEFAULT_SCHEMA_NAMESPACE_PREFIX,
-                          URI_2001_SCHEMA_XSD);
+        String URI_2001_SCHEMA_XSD = "http://www.w3.org/2001/XMLSchema";
+        String DEFAULT_SCHEMA_NAMESPACE_PREFIX = "xs";
+        nameSpacesMap.put(DEFAULT_SCHEMA_NAMESPACE_PREFIX, URI_2001_SCHEMA_XSD);
         nameSpacesMap.put(prefix, this.schemaTargetNamespace);
         xmlSchema.setNamespaceContext(nameSpacesMap);
     }
@@ -129,17 +127,15 @@ public class SchemaGenerator {
         xmlSchema.getItems().add(xmlSchemaComplexType);
 
         XmlSchemaSequence xmlSchemaSequence = new XmlSchemaSequence();
-        Iterator<Type> iterator = complexType.getMembers().iterator();
-        while (iterator.hasNext()) {
-            Object object = iterator.next();
+        for (Type type : complexType.getMembers()) {
             XmlSchemaElement xmlSchemaElement;
-            if (object instanceof SimpleType) {
-                SimpleType simpleType = (SimpleType) object;
+            if (type instanceof SimpleType) {
+                SimpleType simpleType = (SimpleType) type;
                 if ((xmlSchemaElement = createXMLSchemaElement(simpleType.getName(), simpleType.getType())) != null) {
                     xmlSchemaSequence.getItems().add(xmlSchemaElement);
                 }
-            } else if (object instanceof ComplexType) {
-                ComplexType complexTypeParam = (ComplexType) object;
+            } else if (type instanceof ComplexType) {
+                ComplexType complexTypeParam = (ComplexType) type;
                 if ((xmlSchemaElement = handleComplexType(complexTypeParam, elementName +
                         complexTypeParam.getName() + TYPE)) != null) {
                     xmlSchemaElement.setName(complexTypeParam.getName());
