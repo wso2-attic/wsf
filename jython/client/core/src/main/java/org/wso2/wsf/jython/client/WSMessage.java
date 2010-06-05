@@ -16,15 +16,15 @@
 
 package org.wso2.wsf.jython.client;
 
-import org.wso2.wsf.jython.client.WSClient;
-
-
 import java.util.HashMap;
-
 import org.python.core.PyDictionary;
 
+/**
+ * Web service message class.
+ */
 public class WSMessage {
     private HashMap map;
+
     private String payload;
 
     /**

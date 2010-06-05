@@ -42,12 +42,20 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 
+/**
+ * Web service client.
+ */
 public class WSClient {
     private ServiceClient client = null;
+
     private Options options = null;
+
     private boolean engageAddressing = false;
+
     private boolean hasAttachments = false;
+
     private HashMap<String, String> map;
+
     static PythonInterpreter interp;
 
     /**
@@ -231,7 +239,6 @@ public class WSClient {
         }
         return response;
     }
-
 
     private static Policy loadPolicy(String xmlPath) throws Exception {
         StAXOMBuilder builder = new StAXOMBuilder(xmlPath);

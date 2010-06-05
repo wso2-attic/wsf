@@ -20,6 +20,9 @@ import org.python.util.PythonInterpreter;
 import org.python.core.PySystemState;
 import java.util.Properties;
 
+/**
+ * Executes a python/jython script programmetically.
+ */
 public class test {
     static PythonInterpreter interp = new PythonInterpreter();
 

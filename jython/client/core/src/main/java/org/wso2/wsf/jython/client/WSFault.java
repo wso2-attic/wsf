@@ -18,7 +18,11 @@ package org.wso2.wsf.jython.client;
 
 import org.apache.axis2.AxisFault;
 
+/**
+ * Web servcie fault class.
+ */
 public class WSFault extends AxisFault {
+
     public WSFault(String str) {
         super(str);
     }
