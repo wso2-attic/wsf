@@ -41,7 +41,6 @@ import javax.activation.DataHandler;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class WSClient {
     private ServiceClient client = null;
@@ -88,9 +87,8 @@ public class WSClient {
 
         options = new Options();
 
-        Iterator it = map.keySet().iterator();
-        while (it.hasNext()) {
-            String key = (String) it.next();
+        for (Object o : map.keySet()) {
+            String key = (String) o;
             //System.out.println("\nKey2 " + key + " === Value " +/*(String)*/ map.get(key));            
             if ("to".equalsIgnoreCase(key)) {   // Setting End Point Reference
                 options.setTo(new EndpointReference((String) map.get(key)));
@@ -179,8 +177,8 @@ public class WSClient {
                     String strTemp[];
                     map = new HashMap<String, String>();
 
-                    for (int i = 0; i < str.length; i++) {
-                        strTemp = str[i].split(":");
+                    for (String aStr : str) {
+                        strTemp = aStr.split(":");
                         map.put(strTemp[0].trim(), strTemp[1].trim());
                     }
 
@@ -214,11 +212,9 @@ public class WSClient {
 
         // if attachments are available , add them to the OMElement
         if (hasAttachments) {
-            Iterator<String> k2 = map.keySet().iterator();
-            while (k2.hasNext()) {
-                String key2 = k2.next();
+            for (String key : map.keySet()) {
                 //System.out.println("key" + key2 + "||" + map.get(key2));
-                FileDataSource fileDataSource = new FileDataSource(map.get(key2));
+                FileDataSource fileDataSource = new FileDataSource(map.get(key));
                 DataHandler expectedDataHandler = new DataHandler(fileDataSource);
                 OMFactory factory = OMAbstractFactory.getOMFactory();
                 OMTextImpl expectedTextData = new OMTextImpl(expectedDataHandler, true, factory);
