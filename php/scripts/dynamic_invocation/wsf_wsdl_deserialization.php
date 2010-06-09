@@ -866,7 +866,7 @@ function wsf_infer_content_model(DomNode &$current_child, DomNode $sig_node, $cl
                     }
                     else
                     {
-                        if($min_occurs == 0) {
+                        if($min_occurs != 0) {
                             ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "minOccurs != 0 element ". $param_name ." doesn't exist in the sequence.");
                             if($current_child->localName != NULL){
                                 ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, $current_child->localName. " is found in place of ". $param_name);
