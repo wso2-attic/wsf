@@ -1280,9 +1280,21 @@ wsf_xml_msg_recv_set_soap_fault(
         axiom_node_t *text_node = NULL;
         detail = Z_STRVAL_PP(tmp);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "Setting fault detail %s", detail);
-        axiom_element_create(env, NULL, "error", NULL, &detail_node);
-        axiom_text_create(env, detail_node, detail, &text_node);
-    }
+        text_node = axiom_node_create_from_buffer(env, detail);
+		if(text_node && axiom_node_get_node_type(text_node,env) == AXIOM_ELEMENT)
+		{
+			detail_node = text_node;
+		}else
+		{
+			axiom_element_create(env, NULL, "error", NULL, &detail_node);
+			if(text_node)
+			{
+				axiom_node_add_child(detail_node, env, text_node);
+			}else{
+				axiom_text_create(env, detail_node, detail, &text_node);
+			}
+		}
+	}
 
     out_envelope = axiom_soap_envelope_create(env, env_ns);
     out_header = axiom_soap_header_create_with_parent(env, out_envelope);
