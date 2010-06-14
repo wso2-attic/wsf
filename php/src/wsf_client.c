@@ -486,6 +486,14 @@ wsf_client_add_properties (
 		}
     }
 
+	if(zend_hash_find(ht, WSF_TRANSPORT_URL, sizeof(WSF_TRANSPORT_URL), (void**)&tmp) == SUCCESS )
+	{
+		if(Z_TYPE_PP(tmp) == IS_STRING)
+		{
+			add_property_stringl(this_ptr, WSF_TRANSPORT_URL, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
+		}
+	}
+
     /** addressing properties */
     if (zend_hash_find (ht, WSF_ACTION, sizeof (WSF_ACTION),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) 
@@ -957,6 +965,17 @@ wsf_client_set_endpoint_and_soap_action (
         return AXIS2_FAILURE;
     }
 
+
+	/** Set transport URL */
+	if (client_ht && zend_hash_find (client_ht, WSF_TRANSPORT_URL, sizeof (WSF_TRANSPORT_URL), 
+		(void **) &msg_tmp) == SUCCESS && Z_TYPE_PP(msg_tmp) == IS_STRING) 
+	{
+
+		axutil_property_t *transport_url = 
+			axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, AXIS2_FALSE, NULL, Z_STRVAL_PP(msg_tmp));
+		axis2_options_set_property(client_options, env, AXIS2_TRANSPORT_URL, transport_url);
+
+    }
 	/** set soap action */
     wsf_client_set_soap_action (client_ht, msg_ht, env, client_options TSRMLS_CC);
     return AXIS2_SUCCESS;
