@@ -57,7 +57,7 @@ are required.</p>
       <td style="width: 37px">string</td>
       <td>"/path_to_php_ext/wsf_c"</td>
       <td>Path to where you have WSO2 WSF/C installed.</td>
-      <td style="width: 78px">PHP_INI_ALL</td>
+      <td style="width: 78px">PHP_INI_SYSTEM</td>
     </tr>
     <tr>
       <td style="height: 55px">wsf.log_path</td>
@@ -67,7 +67,7 @@ are required.</p>
 </td>
       <td style="height: 55px">Path to the folder into which the WSO2 WSF/PHP log files will be written. <br>
     log files named wsf_php_client.log and wsf_php_server.log will be written to this given location.</td>
-      <td style="width: 78px; height: 55px">PHP_INI_ALL</td>
+      <td style="width: 78px; height: 55px">PHP_INI_SYSTEM</td>
     </tr>
     <tr>
       <td>wsf.log_level</td>
@@ -83,7 +83,7 @@ are required.</p>
     2 -&gt; WARNING&nbsp; ( Errors and Warnings will be logged)<br />
     3 -&gt; INFO &nbsp; &nbsp; &nbsp; ( Errors , Warnings and Information will be logged)<br />
     4 -&gt; DEBUG &nbsp; ( All log messages including debug messages will be logged)</td>
-      <td style="width: 78px">PHP_INI_ALL</td>
+      <td style="width: 78px">PHP_INI_SYSTEM</td>
     </tr>
         <tr>
       <td>wsf.rm_db_dir</td>
@@ -99,7 +99,7 @@ are required.</p>
         If you are on a Linux/Unix platform ,make sure to specify a directory location has that has write
         permissions for the apache server.By default "/tmp" directory will be used. If you are on windows,
         make sure to specify directory with write permissions to apache server.</td>
-      <td style="width: 78px">PHP_INI_ALL</td>
+      <td style="width: 78px">PHP_INI_SYSTEM</td>
     </tr>
     <tr>
       <td>wsf.attachment_cache_dir</td>
@@ -111,7 +111,7 @@ are required.</p>
     This is the location where the cached attachments will be saved. This will happen
             only if you have enabled attachment caching and the attachment size if larger than
             1 Mb. &nbsp;</td>
-      <td style="width: 78px">PHP_INI_ALL</td>
+      <td style="width: 78px">PHP_INI_SYSTEM</td>
     </tr>
      <tr>
       <td>wsf.enable_attachment_caching</td>
@@ -123,7 +123,7 @@ are required.</p>
                 than 1Mb. That is, received attachments will be saved to the attachment cache directory.
                 When sending attachments with this option set to 1 will send attachments in a memory
                 efficient way.</td>
-      <td style="width: 78px">PHP_INI_ALL</td>
+      <td style="width: 78px">PHP_INI_SYSTEM</td>
     </tr>
   </tbody>
 </table>
