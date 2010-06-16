@@ -67,6 +67,25 @@ wsf_out_transport_info_impl_set_char_encoding(
     return 0;
 }
 
+axis2_status_t AXIS2_CALL
+wsf_out_transport_info_impl_set_cookie_header(
+    axis2_out_transport_info_t * info,
+    const axutil_env_t * env,
+    const axis2_char_t * cookie_header)
+{
+	return AXIS2_SUCCESS;
+}
+
+axis2_status_t AXIS2_CALL
+wsf_out_transport_info_impl_set_session(
+    axis2_out_transport_info_t * info,
+    const axutil_env_t * env,
+    const axis2_char_t * session_id,
+    const axis2_char_t * session_value)
+{
+	return AXIS2_SUCCESS;
+}
+
 void AXIS2_CALL
 wsf_out_transport_info_impl_free(
     axis2_out_transport_info_t * out_transport_info,
@@ -79,6 +98,8 @@ wsf_out_transport_info_impl_free(
 static const axis2_out_transport_info_ops_t ops_var = {
     wsf_out_transport_info_impl_set_content_type,
     wsf_out_transport_info_impl_set_char_encoding,
+	wsf_out_transport_info_impl_set_cookie_header,
+	wsf_out_transport_info_impl_set_session,
     wsf_out_transport_info_impl_free
 };
 
