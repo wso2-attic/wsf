@@ -92,6 +92,8 @@ typedef enum ws_input_types
 #define WSF_TO				"to"    /** endpoint uri */
 #define WSF_TRANSPORT_URL   "transportURL"  /** Transport URL */
 
+#define WSF_ADDR_MUST_UNDERSTAND "WSAMustUnderstand" /** must understand property */
+
 #define WSF_SWA     		"swa"
 #define WSF_USE_WSA         "useWSA"
 #define WSF_ACTION			"action"        /** addressing options */

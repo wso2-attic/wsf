@@ -571,6 +571,10 @@ PHP_METHOD(ws_message, __construct) {
                 (void**) & tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING) {
             add_property_stringl(object, WSF_ACTION, Z_STRVAL_PP(tmp), Z_STRLEN_PP(tmp), 1);
         }
+		if (zend_hash_find(ht, WSF_ADDR_MUST_UNDERSTAND, sizeof (WSF_ADDR_MUST_UNDERSTAND),
+			(void**) & tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL) {
+				add_property_bool(object, WSF_ADDR_MUST_UNDERSTAND, Z_BVAL_PP(tmp));
+        }
         if (zend_hash_find(ht, WSF_REPLY_TO, sizeof (WSF_REPLY_TO),
                 (void**) & tmp) == SUCCESS) {
             if (Z_TYPE_PP(tmp) == IS_STRING) {

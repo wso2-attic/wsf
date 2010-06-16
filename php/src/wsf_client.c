@@ -419,6 +419,14 @@ wsf_client_set_addressing_options_to_options (
 		}
         axis2_options_set_from (client_options, env, from_epr);
     }
+	if (zend_hash_find (ht, WSF_ADDR_MUST_UNDERSTAND, sizeof (WSF_ADDR_MUST_UNDERSTAND),
+		(void **) &tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_BOOL && Z_BVAL_PP(tmp) == 1) 
+	{
+		axutil_property_t *must_understand_prop = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, AXIS2_FALSE,
+			NULL, AXIS2_VALUE_TRUE);
+		if(must_understand_prop)
+			axis2_options_set_property(client_options, env, AXIS2_ADDR_ADD_MUST_UNDERSTAND_TO_ADDR_HEADERS, must_understand_prop);
+	}
     return addr_action_present;
 }
 
@@ -494,6 +502,13 @@ wsf_client_add_properties (
 		}
 	}
 
+	if(zend_hash_find(ht, WSF_ADDR_MUST_UNDERSTAND, sizeof(WSF_ADDR_MUST_UNDERSTAND), (void**)&tmp) == SUCCESS )
+	{
+		if(Z_TYPE_PP(tmp) == IS_BOOL)
+		{
+			add_property_bool(this_ptr, WSF_ADDR_MUST_UNDERSTAND, Z_BVAL_PP(tmp));
+		}
+	}
     /** addressing properties */
     if (zend_hash_find (ht, WSF_ACTION, sizeof (WSF_ACTION),
             (void **) &tmp) == SUCCESS && Z_TYPE_PP (tmp) == IS_STRING) 
