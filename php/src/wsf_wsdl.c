@@ -1186,7 +1186,7 @@ wsf_wsdl_do_request(zval *client_zval,
                     if(zend_hash_find(ht_return, WSF_WSDL_RESPONSE_PAYLOAD_PARAM,
                                       sizeof(WSF_WSDL_RESPONSE_PAYLOAD_PARAM),
                                       (void **)&tmp) == SUCCESS) {
-                        ZVAL_ZVAL(return_value, *tmp, 0, 0);
+                        ZVAL_ZVAL(return_value, *tmp, 1, 0);
                     }
                     if(zend_hash_find(ht_return, WSF_WSDL_RESPONSE_HEADER_PARAM,
                                       sizeof(WSF_WSDL_RESPONSE_HEADER_PARAM),
@@ -1210,7 +1210,7 @@ wsf_wsdl_do_request(zval *client_zval,
                                     // we assign return header pointers to all the references called with the proxy method 
                                     if(zend_hash_get_current_data_ex (Z_ARRVAL_P(header_params),
                                                         (void **) &param_ret, &pos_ret) == SUCCESS) {
-                                        ZVAL_ZVAL(*param_arg, *param_ret, 0, 0);
+                                        ZVAL_ZVAL(*param_arg, *param_ret, 1, 0);
                                         zend_hash_move_forward_ex (Z_ARRVAL_P(header_params), &pos_ret);
                                     }
                                 }
