@@ -16,7 +16,7 @@
  */
 
 function sendFault($inMessage) {
-    throw new WSFault("Sender", "Testing WSFault");
+    return new WSFault("Sender", "Testing WSFault");
 }
 
 $operations = array("getFault" => "sendFault");
