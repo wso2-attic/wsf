@@ -75,7 +75,7 @@ try {
     printf("Response = %s <br/>\n", htmlspecialchars($responsePayload->str));
 } catch (Exception $e) {
     if ($e instanceof WSFault) {
-        printf("Soap Fault: %s\n", $e->Reason);
+        printf("Please specify a correct google key");
     } else {
         printf("Message = %s\n",$e->getMessage());
     }
