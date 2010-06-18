@@ -894,6 +894,7 @@ wsf_xml_msg_recv_invoke_wsmsg(
     zend_class_entry **ce = NULL;
     zval *msg = NULL;
 
+
     if (!in_msg_ctx)
         return NULL;
 
@@ -926,6 +927,7 @@ wsf_xml_msg_recv_invoke_wsmsg(
     request_xop = svc_info->request_xop;
 
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX " Calling php service");
+
 
     output_headers = wsf_xml_msg_recv_process_incomming_headers(soap_envelope, env TSRMLS_CC);
     zend_try
@@ -1072,9 +1074,12 @@ wsf_xml_msg_recv_invoke_wsmsg(
                 instanceof_function(Z_OBJCE_P(EG(exception)), ws_fault_class_entry TSRMLS_CC))
         {
             wsf_xml_msg_recv_set_soap_fault(env, in_msg_ctx, out_msg_ctx, EG(exception) TSRMLS_CC);
-            zend_clear_exception(TSRMLS_C);
 
-        } else if (Z_TYPE(retval) == IS_OBJECT && instanceof_function(Z_OBJCE(retval),
+        }else if(Z_TYPE(retval) == IS_OBJECT && instanceof_function(Z_OBJCE(retval),
+                ws_fault_class_entry TSRMLS_CC)){
+        	wsf_xml_msg_recv_set_soap_fault(env, in_msg_ctx, out_msg_ctx, &retval TSRMLS_CC);
+
+        }else if (Z_TYPE(retval) == IS_OBJECT && instanceof_function(Z_OBJCE(retval),
                 ws_message_class_entry TSRMLS_CC))
         {
             zval **msg_tmp = NULL;
@@ -1154,15 +1159,17 @@ wsf_xml_msg_recv_invoke_wsmsg(
 
     zend_catch
     {
+
         if (EG(exception) && Z_TYPE_P(EG(exception)) == IS_OBJECT &&
                 instanceof_function(Z_OBJCE_P(EG(exception)), ws_fault_class_entry TSRMLS_CC))
         {
-            wsf_xml_msg_recv_set_soap_fault(env, in_msg_ctx, out_msg_ctx, EG(exception) TSRMLS_CC);
+        	wsf_xml_msg_recv_set_soap_fault(env, in_msg_ctx, out_msg_ctx, EG(exception) TSRMLS_CC);
             zend_clear_exception(TSRMLS_C);
         } else
         {
             _bailout = 1;
         }
+
     }
     zend_end_try();
 
