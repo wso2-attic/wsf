@@ -45,9 +45,9 @@ function get_my_password_function($username)
 
 $operations = array("echoString" => "echoFunction");
 $actions = array("http://php.axis2.org/samples/echoString" => "echoString");
-$sec_array = array("useUsernameToken" => TRUE);
+$policy_file = file_get_contents("policy.xml");
 
-$policy = new WSPolicy(array("security"=>$sec_array));
+$policy = new WSPolicy($policy_file);
 $sec_token = new WSSecurityToken(array("passwordCallback" => "get_my_password_function",
                                        "passwordType" => "Digest"));
 
