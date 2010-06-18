@@ -26,9 +26,11 @@
   * Google search uses SOAP 1.1.
  */
 
-$apikey = "";
+$apikey = "abc";
 $search = 'WSO2';
+if(isset($_POST['apikey']))
 $apikey = $_POST['apikey'];
+if(isset($_POST['search']))
 $search = $_POST['search'];
 ?>
 
@@ -39,7 +41,7 @@ $search = $_POST['search'];
 </head>
 <body>
 <h2>Google Search</h2>
-<form method="post" action="<?php echo $PHP_SELF;?>">
+<form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
 Your Google api key :<input type="text" size="60" maxlength="60" name="apikey"/><br/><br/>
 Keywords for searching :<input type="text" size="60" maxlength="60" name="search"/><br/><br/>
 <input style="margin-left:200px;" type="submit" value="submit" name="submit"/>
