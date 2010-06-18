@@ -25,7 +25,9 @@
  */
 $apikey = "";
 $spell_word ="temparatue";
+if(isset($_POST['apikey']))
 $apikey = $_POST['apikey'];
+if(isset($_POST['spell_word']))
 $spell_word = $_POST['spell_word'];
 ?>
 <html>
@@ -34,7 +36,7 @@ $spell_word = $_POST['spell_word'];
 </head>
 <body>
 <h2>Google Spell Service</h2>
-<form method="post" action="<?php echo $PHP_SELF;?>">
+<form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
 Your Google api key :<input type="text" size="60" maxlength="60" name="apikey"/><br/><br/>
 Word to Spell :<input type="text" size="60" maxlength="60" name="spell_word"/><br/><br/>
 
