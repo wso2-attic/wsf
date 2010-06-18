@@ -1,3 +1,10 @@
+WSO2 WSF/PHP 2.1.0
+======================
+* API importments for addressing, security
+* Compatibility changes for PHP 5.3.*
+* Many bug fixes
+* Many Improvments to WS-Security
+
 WSO2 WSF/PHP 2.0.0
 ======================
 * Improved REST Support with cababilities to map uri to operations and support
