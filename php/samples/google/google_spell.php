@@ -64,7 +64,7 @@ try {
 
 } catch (Exception $e) {
     if ($e instanceof WSFault) {
-        printf("Soap Fault: %s\n", $e->Reason);
+        printf("Please enter a correct API Key");
     } else {
         printf("Message = %s\n",$e->getMessage());
     }
