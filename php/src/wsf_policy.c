@@ -1053,7 +1053,7 @@ wsf_password_callback_function (
 	{
         if (Z_TYPE_P (&retval) == IS_STRING) 
 		{
-            val = estrdup (Z_STRVAL (retval));
+            val = strdup (Z_STRVAL (retval));
         }
     }
 	wsf_callback_args_free(callback_args, env);
