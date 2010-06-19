@@ -17,9 +17,9 @@
 
 // Username Password mapping table
 $user_pass_mapping = array(
-					"Raigama" => "RaigamaPW",
-					"Alice" => "abcd!123",
-					"Bob" => "wxyz!123");
+			"Raigama" => "RaigamaPW",
+			"Alice" => "abcd!123",
+			"Bob" => "wxyz!123");
 
 function echoFunction($inMessage) {
 
@@ -33,7 +33,6 @@ function get_my_password_function($username)
 	//logic to get password from any source (ex: using mysql database
 	// etc)
 	global $user_pass_mapping;
-
 	if(isset($user_pass_mapping[$username])){
 		$password = $user_pass_mapping[$username];
 		return $password;
