@@ -25,9 +25,9 @@ try {
     $reqMessage = new WSMessage($reqPayloadString,
                                 array("to"=>"http://localhost/samples/security/replay_detect/service.php",
                                       "action" => "http://wso2.org/wsfphp/samples/echoString"));
-    
-    $security_options = array("useUsernameToken" => TRUE );
-    $policy = new WSPolicy(array("security" => $security_options));
+   
+    $policy_file = file_get_contents("policy.xml"); 
+    $policy = new WSPolicy($policy_file);
     $security_token = new WSSecurityToken(array("user" => "Raigama",
                                                 "password" => "RaigamaPW",
                                                 "passwordType" => "Digest"));
