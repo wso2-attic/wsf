@@ -15,14 +15,18 @@
  * limitations under the License.
  */
 
-
-$scenario = $_POST["scenario"];
-$epr = $_POST["epr"];
+if(isset($_POST["scenario"]))
+	$scenario = $_POST["scenario"];
+if(isset($_POST["epr"]))
+	$epr = $_POST["epr"];
 $imageID = 1;
-$qosAddr = $_POST["qosAddr"];
+if(isset($_POST["qosAddr"]))
+	$qosAddr = $_POST["qosAddr"];
 $qosMTOM;
 $qosRM;
-
+$qosAddr =FALSE;
+$recvMsg="";
+$sentMsg="";
 session_start();
 $message = "";
 if (!isset($_SESSION['message'])) {
@@ -40,7 +44,7 @@ if (!isset($_SESSION['message'])) {
 		<title>WSF/PHP MTOM ADDRESSING</title>
 	</head>
 	<body>
-	<form method="post" action="<?php echo $PHP_SELF;?>">
+	<form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
 	<table cols="2" border="1" cellpadding="10" cellspacing="0" align="center" width="100%">
 	<tr>
 	    <td>
