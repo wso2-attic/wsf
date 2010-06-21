@@ -52,16 +52,17 @@ XML;
 
 	return $returnMessage;
 }
-$pub_key = ws_get_cert_from_file("../../keys/alice_cert.cert");
+$alice_cert = ws_get_cert_from_file("../../keys/alice_cert.cert");
 
-$pub_key = ws_get_cert_from_file("../../keys/alice_cert.cert");
+$pub_key = ws_get_cert_from_file("../../keys/bob_cert.cert");
 $pvt_key = ws_get_key_from_file("../../keys/bob_key.pem");
 
 $policy_xml = file_get_contents("policySignOnlyMtom.xml");
 $policy = new WSPolicy($policy_xml);
 
 $sec_token = new WSSecurityToken(array("privateKey" => $pvt_key,
-                                       "receiverCertificate" =>$pub_key));
+					"certificate"=>$pub_key,
+                                       "receiverCertificate" =>$alice_cert));
 
 $actions = array("http://wso2.org/upload" => "upload");
 $operations = array("upload" => "getAttachment");
