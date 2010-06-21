@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cp -r axis2c/samples ../wso2-wsf-php-src-2.0.0/wsf_c/axis2c/
+cp -r axis2c/samples ../wso2-wsf-php-src-2.1.0/wsf_c/axis2c/
 
 rm -rf `find . -type d -name .svn`
 rm -rf `find . -type f -name *.la`
