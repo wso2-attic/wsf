@@ -97,8 +97,9 @@ function sct_get_callback($sct_id,$sct_id_type, $is_encryption)
 }
 
 try {
+	$pub_key = ws_get_cert_from_file("../../keys/alice_cert.cert");
 	$rec_cert = ws_get_cert_from_file("../../keys/bob_cert.cert");
-    $pvt_key = ws_get_key_from_file("../../keys/alice_key.pem");
+        $pvt_key = ws_get_key_from_file("../../keys/alice_key.pem");
 
     $reqMessage = new WSMessage($reqPayloadString,
         array(
@@ -110,10 +111,11 @@ try {
     $security_token = new WSSecurityToken(array("user" => "Raigama",
                                                 "password" => "RaigamaPW",
                                                 "passwordType" => "Digest",
+						"privateKey" => $pvt_key,
+						"certificate"=>$pub_key, 
+						"receiverCertificate" => $rec_cert,
                                                 "storeSCTCallback" => "sct_store_callback",
                                                 "getSCTCallback" => "sct_get_callback",
-												"privateKey" => $pvt_key, 
-												"receiverCertificate" => $rec_cert,
                                                 "deleteSCTCallback"=>"sct_delete_callback"));
     
     $client = new WSClient(array("useWSA" => TRUE,
