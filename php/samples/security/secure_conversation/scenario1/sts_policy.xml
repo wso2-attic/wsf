@@ -46,6 +46,7 @@
 			</sp:EncryptedParts>
 			<sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
 				<sp:Body/>
+				<sp:Header Namespace="http://www.w3.org/2005/08/addressing"/>
 			</sp:SignedParts>
 		</wsp:All>
 	</wsp:ExactlyOne>
