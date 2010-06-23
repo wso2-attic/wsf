@@ -106,6 +106,7 @@ $policy = new WSPolicy($policy_xml);
 $policy_xml = file_get_contents("sts_policy.xml");
 $sts_policy = new WSPolicy($policy_xml);
 
+$pub_key = ws_get_cert_from_file("../../keys/bob_cert.cert");
 $rec_cert = ws_get_cert_from_file("../../keys/alice_cert.cert");
 $pvt_key = ws_get_key_from_file("../../keys/bob_key.pem");
 
@@ -115,6 +116,7 @@ $security_token = new WSSecurityToken(array("user" => "Raigama",
 					    "storeSCTCallback" => "sct_store_callback",
 					    "getSCTCallback" => "sct_get_callback",
 					    "privateKey" => $pvt_key, 
+					    "certificate"=> $pub_key,
 					    "receiverCertificate" => $rec_cert,
 				    	    "deleteSCTCallback"=>"sct_delete_callback"));
 
