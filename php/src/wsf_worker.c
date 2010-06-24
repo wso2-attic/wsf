@@ -292,30 +292,31 @@ static void wsf_worker_send_mtom_message(
 
 static void 
 wsf_worker_write_response(wsf_response_info_t *response TSRMLS_DC)
-	{
+{
 	if(response && response->http_status_code_name)
-		{
+	{
 		char status_line[100];
 		char *content_type = NULL; 
 		sprintf(status_line, "%s %d %s" , response->http_protocol,response->http_status_code, 
 			response->http_status_code_name );
 		sapi_add_header(status_line, strlen(status_line), 1);
 		if(response->http_status_code == AXIS2_HTTP_RESPONSE_ACK_CODE_VAL)
-			{
+		{
 			sapi_add_header ("Content-Length: 0", sizeof ("Content-Length: 0") - 1, 1);
-			}
+		}
 		if(response->content_type)
-			{
+		{
 			content_type = emalloc(strlen (response->content_type) * sizeof (char) + 20);
 			sprintf (content_type, "Content-Type: %s", response->content_type);
 			sapi_add_header (content_type, strlen (content_type), 1);
 			if(response->response_data)
-				{
+			{
 				php_write (response->response_data, response->response_length TSRMLS_CC);
-				}
 			}
+			efree(content_type);
 		}
 	}
+}
 
 int
 wsf_worker_process_request (
