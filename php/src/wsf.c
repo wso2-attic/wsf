@@ -1614,8 +1614,8 @@ PHP_METHOD(ws_service, reply) {
             INIT_ZVAL(retval);
             MAKE_STD_ZVAL(param);
 
-            ZVAL_STRING(param, "php://input", 1);
-            ZVAL_STRING(&function, "file_get_contents", 1);
+            ZVAL_STRING(param, "php://input", 0);
+            ZVAL_STRING(&function, "file_get_contents", 0);
             if (call_user_function(EG(function_table), NULL, &function,
                     &retval, 1, &param TSRMLS_CC) == SUCCESS) {
                 if (Z_TYPE(retval) == IS_STRING) {
@@ -1629,6 +1629,7 @@ PHP_METHOD(ws_service, reply) {
                     php_error_docref(NULL TSRMLS_CC, E_ERROR, "raw post data not found");
                 }
             }
+            efree(param);
         }
         /*
                 AXIS2_LOG_DEBUG(ws_env_svr->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
