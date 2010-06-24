@@ -1651,6 +1651,7 @@ void wsf_util_process_ws_service_operations(
 
      	    wsf_util_create_op_and_add_to_svc (svc_info, ws_env_svr,
                 op_name_to_store, ht_ops_to_mep TSRMLS_CC);
+     	    efree(function_name);
 		 } 
         zend_hash_move_forward_ex (ht_ops_to_funcs, &pos);
         i++;
