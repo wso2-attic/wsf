@@ -1,5 +1,5 @@
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,14 +43,6 @@ static zval*
 wsf_xml_msg_recv_process_incomming_headers(
         axiom_soap_envelope_t *envelope,
         const axutil_env_t *env TSRMLS_DC);
-
-/*
-static axiom_node_t *
-wsf_xml_msg_recv_process_outgoing_headers(
-axutil_env_t *env,
-axis2_msg_ctx_t *in_msg_ctx,
-zval *msg TSRMLS_DC);
- */
 
 static axis2_char_t *wsf_xml_msg_recv_get_method_name(
         axis2_msg_ctx_t * msg_ctx,
