@@ -1,7 +1,8 @@
 dnl run autogen.sh to generate the configure script.
+
 AC_PREREQ(2.59)
 
-AC_INIT(axis2c-src, 1.4.0)
+AC_INIT(axis2c-src, 1.6.0)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([tar-ustar])
@@ -45,6 +46,7 @@ fi
 dnl Checks for libraries.
 AC_CHECK_LIB(dl, dlopen)
 AC_CHECK_LIB(z, inflate)
+AC_CHECK_LIB(socket,socket,LDFLAGS="$LDFLAGS -lsocket",)
 
 if test -d $srcdir/util; then
     AC_CONFIG_SUBDIRS(util)
@@ -61,7 +63,7 @@ fi
 #CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -Wno-implicit-function-declaration"
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS -ansi -Wall  -Wno-implicit-function-declaration -g"
+    CFLAGS="$CFLAGS -ansi -Wall  -Wno-implicit-function-declaration -g -D_GNU_SOURCE"
 #    CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration"
 fi
 LDFLAGS="$LDFLAGS -lpthread"
@@ -131,9 +133,32 @@ AC_ARG_WITH(archive,
   AC_MSG_RESULT(no)
 )
 
+GUTHTHILA_LIBS=""
+
+AC_MSG_CHECKING(whether to build guththila xml parser library)
+AC_ARG_ENABLE(guththila, [  --enable-guththila    
+                          build Guththila XML parser library wrapper (default=yes)],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    WRAPPER_DIR="guththila"
+
+    ;;
+  esac ],
+  AC_MSG_RESULT(yes)
+  WRAPPER_DIR="guththila"
+  AC_CONFIG_SUBDIRS(guththila)
+  GUTHTHILA_LIBS="/guththila/src/"
+  GUTHTHILA_DIR="guththila"
+
+)
+
 AC_MSG_CHECKING(whether to build libxml2 xml parser library)
 AC_ARG_ENABLE(libxml2, [  --enable-libxml2    
-                          build Libxml2 XML parser library wrapper (default=yes)],
+                          build Libxml2 XML parser library wrapper (default=no)],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
@@ -147,34 +172,8 @@ AC_ARG_ENABLE(libxml2, [  --enable-libxml2
     LDFLAGS="$LDFLAGS $PARSER_LIBS"
     ;;
   esac ],
-  AC_MSG_RESULT(yes)
-  WRAPPER_DIR="libxml2"
-)
-
-GUTHTHILA_LIBS=""
-
-AC_MSG_CHECKING(whether to build guththila xml parser library)
-AC_ARG_ENABLE(guththila, [  --enable-guththila    
-                          build Guththila XML parser library wrapper (default=no)],
-[ case "${enableval}" in
-  no)
-    AC_MSG_RESULT(no)
-    ;;
-  *)
-    AC_MSG_RESULT(yes)
-    WRAPPER_DIR="guththila"
-    if test -d $srcdir/guththila; then
-        AC_CONFIG_SUBDIRS(guththila)
-    fi
-
-    GUTHTHILA_LIBS="/guththila/src/"
-    GUTHTHILA_DIR="guththila"
-
-    ;;
-  esac ],
   AC_MSG_RESULT(no)
 )
-
 
 
 AC_MSG_CHECKING(whether to build tcp transport)
@@ -187,6 +186,22 @@ AC_ARG_ENABLE(tcp, [  --enable-tcp
   *)
     AC_MSG_RESULT(yes)
     TCP_DIR="tcp"
+
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
+AC_MSG_CHECKING(whether to build udp transport)
+AC_ARG_ENABLE(udp, [  --enable-udp
+                          build udp transport (default=no)],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    UDP_DIR="udp"
 
     ;;
   esac ],
@@ -256,8 +271,8 @@ AC_ARG_ENABLE(tests, [  --enable-tests
                           build tests (default=no)],
 [ case "${enableval}" in
   yes)
-    AC_MSG_RESULT(yes)
-    TESTDIR="test"
+    AC_MSG_RESULT(no)
+    TESTDIR=""
     ;;
   *)
     AC_MSG_RESULT(no)
@@ -272,7 +287,7 @@ AC_ARG_ENABLE(tests, [  --enable-tests
 
 AC_MSG_CHECKING(whether to enable trace)
 AC_ARG_ENABLE(trace, [  --enable-trace    
-                          enable logging trace messages useful when debugging (default=no)],
+                          enable logging trace messages, useful when debugging (default=no)],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
@@ -306,7 +321,7 @@ AC_ARG_ENABLE(multi-thread, [  --enable-multi-thread
 
 AC_MSG_CHECKING(whether to use openssl)
 AC_ARG_ENABLE(openssl, [  --enable-openssl  
-                          enable OpenSSL support in client transport (default=yes)],
+                          enable OpenSSL support in client transport (default=no)],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
@@ -319,11 +334,11 @@ AC_ARG_ENABLE(openssl, [  --enable-openssl
     ssl_enabled=true
     ;;
   esac ],
-  AC_MSG_RESULT(yes)
-  CFLAGS="$CFLAGS -DAXIS2_SSL_ENABLED"
-  ssl_enabled=true
-  opensslinc="-I/usr/include/openssl"
-  openssllib=""
+    AC_MSG_RESULT(yes)
+    CFLAGS="$CFLAGS -DAXIS2_SSL_ENABLED"
+    ssl_enabled=true
+	opensslinc="-I/usr/include/openssl"
+	openssllib=""
 
 )
 
@@ -361,16 +376,16 @@ AC_ARG_WITH(xmpp,
     if test -d $withval; then
         iksemelinc="-I$withval/include"
         iksemellib="-L$withval/lib -liksemel"
-        XMPP_DIR="xmpp"
+    	XMPP_DIR="xmpp"
     dnl else find the iksemel include dir in /usr/include
     elif test -d '/usr'; then
         iksemelinc="-I/usr/include"
         iksemellib="-L/usr/lib -liksemel"
-        XMPP_DIR="xmpp"
+    	XMPP_DIR="xmpp"
     else
         AC_MSG_ERROR(could not find iksemel. stop)
     fi
-    XMPP_DIR="xmpp"
+	XMPP_DIR="xmpp"
     ;;
   esac ],
   AC_MSG_RESULT(no)
@@ -394,19 +409,42 @@ AC_ARG_ENABLE(gssapi, [  --enable-gssapi      enable gssapi (default=no)],
   CFLAGS="$CFLAGS"
 )
 
+#AC_MSG_CHECKING(whether to build xmpp)
+#AC_ARG_ENABLE(xmpp, [  --enable-xmpp
+#                          enable xmpp build (default=no)],
+#[ case "${enableval}" in
+#  no)
+#    AC_MSG_RESULT(no)
+#    CFLAGS="$CFLAGS"
+#    xmpp_enabled=false
+#    ;;
+#  *)
+#    AC_MSG_RESULT(yes)
+#    XMPP_DIR="xmpp"
+#    CFLAGS="$CFLAGS -DAXIS2_XMPP_ENABLED"
+#    xmpp_enabled=false
+#    ;;
+#  esac ],
+#  AC_MSG_RESULT(no)
+#  CFLAGS="$CFLAGS"
+#)
 
 
 APACHE2INC=$apache2inc
 IKSEMELINC=$iksemelinc
+IKSEMELLIB=$iksemellib
 APRINC=$aprinc
-VERSION_NO="3:1:3"
+VERSION_NO="6:0:6"
+OPENSSLINC=$opensslinc
+OPENSSLLIB=$openssllib
 
 AC_SUBST(OPENSSLLIB)
 AC_SUBST(OPENSSLINC)
-AC_SUBST(XMPP_DIR)
 AC_SUBST(VERSION_NO)
 AC_SUBST(PARSER_LIBS)
 AC_SUBST(APACHE2INC)
+AC_SUBST(IKSEMELINC)
+AC_SUBST(IKSEMELLIB)
 AC_SUBST(APRINC)
 AC_SUBST(DICLIENT_DIR)
 AC_SUBST(TESTDIR)
@@ -414,7 +452,9 @@ AC_SUBST(SAMPLES)
 AC_SUBST(APACHE2BUILD)
 AC_SUBST(PARSER_DIR)
 AC_SUBST(WRAPPER_DIR)
+AC_SUBST(XMPP_DIR)
 AC_SUBST(TCP_DIR)
+AC_SUBST(UDP_DIR)
 AC_SUBST(GUTHTHILA_DIR)
 AC_SUBST(GUTHTHILA_LIBS)
 AC_SUBST(ZLIBBUILD)
@@ -422,7 +462,6 @@ AM_CONDITIONAL(AXIS2_SSL_ENABLED, test x$ssl_enabled = xtrue)
 AM_CONDITIONAL(AXIS2_LIBCURL_ENABLED, test x$libcurl_enabled = xtrue)
 AM_CONDITIONAL(AXIS2_XMPP_GSSAPI, test x$gssapi_enabled = xtrue)
 AM_CONDITIONAL(AXIS2_XMPP_ENABLED, test x$xmpp_enabled = xtrue)
-
 
 #export PARSER_DIR
 export WRAPPER_DIR
@@ -456,6 +495,10 @@ AC_CONFIG_FILES([Makefile \
     src/core/transport/xmpp/receiver/Makefile \
     src/core/transport/xmpp/server/Makefile \
     src/core/transport/xmpp/server/simple_xmpp_server/Makefile \
+    src/core/transport/udp/Makefile \
+    src/core/transport/udp/sender/Makefile \
+    src/core/transport/udp/receiver/Makefile \
+    src/core/transport/udp/server/Makefile \
     src/core/deployment/Makefile \
     src/core/clientapi/Makefile \
     src/core/receivers/Makefile \
@@ -463,20 +506,6 @@ AC_CONFIG_FILES([Makefile \
     src/modules/Makefile \
     src/modules/mod_addr/Makefile \
     src/modules/mod_log/Makefile \
-    test/Makefile \
-    test/core/Makefile \
-    test/core/description/Makefile \
-    test/core/clientapi/Makefile \
-    test/core/deployment/Makefile \
-    test/core/context/Makefile \
-    test/core/engine/Makefile \
-    test/core/addr/Makefile \
-    test/core/transport/Makefile\
-    test/core/transport/http/Makefile \
-    tools/tcpmon/Makefile \
-    tools/tcpmon/src/Makefile \
-    tools/md5/Makefile \
-    tools/md5/src/Makefile \
     ides/Makefile \
     include/Makefile \
     axis2c.pc
