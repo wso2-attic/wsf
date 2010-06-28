@@ -1347,7 +1347,7 @@ generate_wsdl_for_service(
 
 	
 	INIT_ZVAL(func);
-	ZVAL_STRING(&func, WSF_WSDL_GENERATION_FUNCTION, 0);
+	ZVAL_STRING(&func, WSF_WSDL_GENERATION_FUNCTION, 1);
     
 	
 	/** Create an object of type WSData */
@@ -1453,7 +1453,7 @@ generate_wsdl_for_service(
         }
         smart_str_free(&full_path);
         /*
-	zval_ptr_dtor(&op_val); 
+		zval_ptr_dtor(&op_val); 
         zval_ptr_dtor(&functions); */ 
         /** end WSDL generation*/
     }
@@ -1615,8 +1615,8 @@ PHP_METHOD(ws_service, reply) {
             INIT_ZVAL(retval);
             MAKE_STD_ZVAL(param);
 
-            ZVAL_STRING(param, "php://input", 0);
-            ZVAL_STRING(&function, "file_get_contents", 0);
+            ZVAL_STRING(param, "php://input", 1);
+            ZVAL_STRING(&function, "file_get_contents", 1);
             if (call_user_function(EG(function_table), NULL, &function,
                     &retval, 1, &param TSRMLS_CC) == SUCCESS) {
                 if (Z_TYPE(retval) == IS_STRING) {
