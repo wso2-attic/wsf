@@ -1452,8 +1452,9 @@ generate_wsdl_for_service(
             }
         }
         smart_str_free(&full_path);
-        zval_ptr_dtor(&op_val);
-        zval_ptr_dtor(&functions);
+        /*
+	zval_ptr_dtor(&op_val); 
+        zval_ptr_dtor(&functions); */ 
         /** end WSDL generation*/
     }
 }
