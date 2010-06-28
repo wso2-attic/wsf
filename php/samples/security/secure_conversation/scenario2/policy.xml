@@ -37,16 +37,17 @@
                                   <sp:Strict/>
                                 </wsp:Policy>
                               </sp:Layout>
+				<sp:AlgorithmSuite>
+					<wsp:Policy>
+						<sp:Basic256Rsa15/>
+					</wsp:Policy>
+				</sp:AlgorithmSuite>
                               <sp:IncludeTimestamp/>
                             </wsp:Policy>
                           </sp:AsymmetricBinding>
-                          <rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
-                            <rampc:TimeToLive>360</rampc:TimeToLive>
-                          </rampc:RampartConfig>
                         </wsp:All>
                       </wsp:ExactlyOne>
                     </wsp:Policy>
-
                   </sp:BootstrapPolicy>
                 </wsp:Policy>
               </sp:SecureConversationToken>
@@ -86,16 +87,17 @@
                                   <sp:Strict/>
                                 </wsp:Policy>
                               </sp:Layout>
+				<sp:AlgorithmSuite>
+					<wsp:Policy>
+						<sp:Basic256Rsa15/>
+					</wsp:Policy>
+				</sp:AlgorithmSuite>
                               <sp:IncludeTimestamp/>
                             </wsp:Policy>
                           </sp:AsymmetricBinding>
-                          <rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
-                            <rampc:TimeToLive>360</rampc:TimeToLive>
-                          </rampc:RampartConfig>
                         </wsp:All>
                       </wsp:ExactlyOne>
                     </wsp:Policy>
-
                   </sp:BootstrapPolicy>
                 </wsp:Policy>
               </sp:SecureConversationToken>
