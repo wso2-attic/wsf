@@ -1,9 +1,9 @@
 #############################################################################
 ### General Build Configuration Parameters
 
-WSFPHP_VERSION=2.0.0
+WSFPHP_VERSION=2.1.0
 # To build with debug symbols set DEBUG = 1
-DEBUG =0
+DEBUG =1
 #CRUNTIME Library (Use /MD or /MT)
 CRUNTIME=/MT
 # Visual Studio version
@@ -12,22 +12,21 @@ EMBED_MANIFEST=0
 ZTS =1
 #############################################################################
 ### WSF/C Build Configuration Parameters
-ENABLE_LIBXML2=1
+ENABLE_LIBXML2=0
 
 # Path to libxml2 installation
-LIBXML2_BIN_DIR = E:\libxml2-2.6.30.win32
+#LIBXML2_BIN_DIR = D:\libxml2-2.6.30.win32
 
 # Path to iconv installation
-ICONV_BIN_DIR = E:\iconv-1.9.2.win32
+#ICONV_BIN_DIR = D:\iconv-1.9.2.win32
 
 # Enable/disable SSL client transport, to enable set ENABLE_SSL = 1
 ENABLE_SSL = 1
 # Path to OpenSSL installation, required if SSL transport is enabled 
 #( Use OpenSSL .98e or above MSI installer )
-OPENSSL_BIN_DIR = E:\OpenSSL
+OPENSSL_BIN_DIR = D:\OpenSSL
 
 #############################################################################
 # Configuration for building wsf/php extension using its own build
-PHP_SRC_DIR = E:\php\php-5.2.5
-PHP_BIN_DIR = E:\php\php-5.2.5-Win32
-BINDLIB_DIR = E:\php\bindlib-cvs-vc8
+PHP_SRC_DIR = D:\php\5.3.0\php-5.3.0
+PHP_BIN_DIR = D:\php\5.3.0\php-5.3.0-Win32
