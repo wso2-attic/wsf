@@ -95,7 +95,7 @@ void wsf_wsdl_extract_wsdl_information_for_service(
 	
     
 
-	ZVAL_STRING(&check_function, WSF_WSDL_CHECK_FUNCTION, 0);
+	ZVAL_STRING(&check_function, WSF_WSDL_CHECK_FUNCTION, 1);
 	if (call_user_function (EG (function_table), (zval **) NULL, 
 		&check_function, &retval1, 0,NULL TSRMLS_CC) == SUCCESS)
 	{
@@ -179,7 +179,7 @@ void wsf_wsdl_extract_wsdl_information_for_service(
         add_assoc_string(user_parameters, WSF_PORT_NAME, svc_info->port_name, 1);
     }
  
-    ZVAL_STRING(&request_function, WSF_WSDL_EXTRACT_WSDL, 0);
+    ZVAL_STRING(&request_function, WSF_WSDL_EXTRACT_WSDL, 1);
 
 	MAKE_STD_ZVAL(wsdata_obj);
 	zend_lookup_class("WSData", strlen("WSData"), &ce TSRMLS_CC);
@@ -362,7 +362,7 @@ void wsf_wsdl_extract_wsdl_information_for_client(
         add_assoc_string(user_parameters, WSF_PORT_NAME, Z_STRVAL_PP(port_name), 1);
     }
 
-    ZVAL_STRING(&request_function, WSF_WSDL_EXTRACT_WSDL, 0);
+    ZVAL_STRING(&request_function, WSF_WSDL_EXTRACT_WSDL, 1);
 
 	MAKE_STD_ZVAL(wsdata_obj);
 	zend_lookup_class("WSData", strlen("WSData"), &ce TSRMLS_CC);
@@ -379,7 +379,7 @@ void wsf_wsdl_extract_wsdl_information_for_client(
 		int lint_script = 1;
 		{
 			zval check_function, retval1;
-			ZVAL_STRING(&check_function, WSF_WSDL_CHECK_FUNCTION, 0);
+			ZVAL_STRING(&check_function, WSF_WSDL_CHECK_FUNCTION, 1);
 			if (call_user_function (EG (function_table), (zval **) NULL, 
 				&check_function, &retval1, 0,NULL TSRMLS_CC) == SUCCESS)
 			{
@@ -632,7 +632,7 @@ void wsf_wsdl_create_dynamic_client(
     add_assoc_long(function_parameters, WSF_WSDL_ARG_COUNT, arg_count);
     add_assoc_zval(function_parameters, WSF_WSDL_ARG_ARRAY, args);
     
-    ZVAL_STRING(&request_function, WSF_WSDL_REQ_FUNCTION, 0);
+    ZVAL_STRING(&request_function, WSF_WSDL_REQ_FUNCTION, 1);
     
 	add_property_zval(wsdata_obj, "WSDL_UserParameters", user_parameters);
 
@@ -662,7 +662,7 @@ void wsf_wsdl_create_dynamic_client(
 		int lint_script = 1;
 		{
 			zval check_function, retval1;
-			ZVAL_STRING(&check_function, WSF_WSDL_CHECK_FUNCTION, 0);
+			ZVAL_STRING(&check_function, WSF_WSDL_CHECK_FUNCTION, 1);
 			if (call_user_function (EG (function_table), (zval **) NULL, 
 				&check_function, &retval1, 0,NULL TSRMLS_CC) == SUCCESS)
 			{
@@ -1149,7 +1149,7 @@ wsf_wsdl_do_request(zval *client_zval,
             add_assoc_zval (response_parameters, WSF_ATTACHMENTS , cid2str);
             add_assoc_zval (response_parameters, WSF_CID2CONTENT_TYPE , cid2contentType);
 
-            ZVAL_STRING(&response_function, WSF_WSDL_RES_FUNCTION, 0);
+            ZVAL_STRING(&response_function, WSF_WSDL_RES_FUNCTION, 1);
 
 			MAKE_STD_ZVAL(wsdata_obj);
 			zend_lookup_class("WSData", strlen("WSData"), &ce TSRMLS_CC);
@@ -1635,7 +1635,7 @@ void wsf_wsdl_process_service(wsf_svc_info_t *svc_info, const axutil_env_t *env 
         } 
     }	
     
-    ZVAL_STRING(&request_function, WSF_WSDL_SERVICE_REQ_FUNCTION, 0);
+    ZVAL_STRING(&request_function, WSF_WSDL_SERVICE_REQ_FUNCTION, 1);
     
     if(!svc_info->generated_svc_name){
         add_assoc_string(param_array, WSF_SERVICE_NAME, svc_info->svc_name, 1);
@@ -1926,7 +1926,7 @@ void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axu
         } 
     }	
     
-    ZVAL_STRING(&request_function, WSF_WSDL_SERVICE_REQ_FUNCTION, 0);
+    ZVAL_STRING(&request_function, WSF_WSDL_SERVICE_REQ_FUNCTION, 1);
     
     if(!svc_info->generated_svc_name){
         add_assoc_string(param_array, WSF_SERVICE_NAME, svc_info->svc_name, 1);
@@ -1973,7 +1973,7 @@ void wsf_wsdl_set_sig_model(char *wsdl_path, wsf_svc_info_t *svc_info, const axu
 		int lint_script = 1;
 		{
 			zval check_function, retval1;
-			ZVAL_STRING(&check_function, WSF_WSDL_CHECK_FUNCTION, 0);
+			ZVAL_STRING(&check_function, WSF_WSDL_CHECK_FUNCTION, 1);
 			if (call_user_function (EG (function_table), (zval **) NULL, 
 				&check_function, &retval1, 0,NULL TSRMLS_CC) == SUCCESS)
 			{
