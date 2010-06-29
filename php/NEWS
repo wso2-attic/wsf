@@ -1,7 +1,7 @@
-WSO2 Web Services Framework for PHP v2.0.0 Released
+WSO2 Web Services Framework for PHP v2.1.0 Released
 =====================================================
 
-We are pleased to announce the release of WSO2 WSF/PHP 2.0.0
+We are pleased to announce the release of WSO2 WSF/PHP 2.1.0
 
 WSO2 Web Services Framework for PHP (WSO2 WSF/PHP), is an open source,
 enterprise grade, PHP extension for providing and consuming Web Services in PHP.
@@ -47,46 +47,37 @@ Key Features
       * WS-SecurityPolicy based configuration
       * WS-Secure Conversation
 
-6. WS-Reliable Messaging
-      * Single channel one way and two way reliable messaging
-
-7. WSDL Generation for Server Side
+6. WSDL Generation for Server Side
       * WSDL generation based on annotations and function signatures, and 
         serving on ?wsdl or ?wsdl2 requests
 
-8. WSDL mode support for both client and server side
+7. WSDL mode support for both client and server side
       * Write services and client based on a given WSDL
       * WS-Addressing and WS-SecurityPolicy is supported in WSDL mode
       * MTOM is now supported with WSDL mode
   
-9. REST Support
+8. REST Support
       * Expose a single service script both as SOAP and REST service
 
-10. Provide easy to use classes for common services
+9. Provide easy to use classes for common services
       * Consume some well known services such as Yahoo search and Flickr 
         and Amazon services using predefined classes
 
-11. wsdl2php.php script. This script can generate PHP classes for services 
+10. wsdl2php.php script. This script can generate PHP classes for services 
     and clients for a given WSDL to be used with WSDL Mode .
 
-12. Data Services API
+11. Data Services API
     PHP Data Services API that enables exposing database queries as web services.
     
 
 --------------------------------
 Major Changes Since Last Release
 ================================
-* Added PKCS12 Keystore Support
-* Added Secure Conversation Support
-* Added Replay Detection Support
-* Contract First Web Services support for MTOM
-* SWA ( Soap With Attachments ) Support added
-* MTOM Attachment caching support added
-* HTTP Chunking support added
-* REST API Improved to support HTTP verbs GET,DELETE,PUT and POST
-* New PHP Data Services Solution
-* WS-RM 1.1 added
-* Many Bug Fixes
+* Many bugs fixed in WS-Security and WSDL Mode
+* API Improments for Callback Handling
+* API Improments for WS-Addressing.
+* Compatibility changes with PHP 5.3
+
 
 -------------------
 Reporting Problems
