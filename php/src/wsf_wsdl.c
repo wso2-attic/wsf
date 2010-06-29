@@ -939,6 +939,7 @@ wsf_wsdl_do_request(zval *client_zval,
 	{
         axutil_string_t *action_string = axutil_string_create (env, soap_action);
         axis2_options_set_soap_action (client_options, env, action_string);
+		axis2_options_set_action(client_options, env, soap_action);
         AXIS2_LOG_DEBUG (env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX \
         "soap action present :- %s", soap_action);
     }
