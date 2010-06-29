@@ -39,4 +39,4 @@ try {
 }
 ?>
 --EXPECT--
-Response = &lt;echoString/&gt; <br>
+Response = &lt;echoString&gt;&lt;/echoString&gt; <br>
