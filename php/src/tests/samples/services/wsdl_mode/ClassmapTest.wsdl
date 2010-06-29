@@ -43,7 +43,7 @@
     </wsdl:binding>
     <wsdl:service name="MyService">
         <wsdl:port name="MyServiceSOAP12port_http" binding="ns0:MyServiceSOAP12Binding">
-            <soap:address location="http://localhost/services/wsdl_mode/ClassmapTestService.php?wsdl"/>
+            <soap:address location="http://localhost/services/wsdl_mode/ClassmapTestService.php"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>
