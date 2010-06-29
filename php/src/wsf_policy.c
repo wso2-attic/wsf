@@ -619,7 +619,7 @@ wsf_set_rampart_options (
 		zval **tmp = NULL;
 		wsf_callback_args_t *callback_args = NULL;
 		callback_args = wsf_callback_args_create(env);
-		callback_args->callback_function = Z_STRVAL_PP(token_val);
+		callback_args->callback_function = axutil_strdup(env, Z_STRVAL_PP(token_val));
 		if (zend_hash_find(ht_token, WSF_PASSWORD_CALLBACK_ARGS, sizeof(WSF_PASSWORD_CALLBACK_ARGS),
 			(void **)&tmp) == SUCCESS)
 		{
