@@ -135,9 +135,9 @@ class WS_WSDL_Operations
         if($classname != NULL)
         {
             $class = new ReflectionClass($classname);
-            $method = $class->getMethod($operationName);
+            $operation = $class->getMethod($operationName);
 
-            $doc_comment = $method->getDocComment();
+            $doc_comment = $operation->getDocComment();
         }
         else
         {
