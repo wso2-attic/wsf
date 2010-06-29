@@ -992,7 +992,9 @@ function wsf_infer_attributes(DomNode $parent_node, DomNode $sig_node) {
                         $parse_tree[$param_name] = $converted_value;
                     }
                 }
-            }
+            }else if($sig_param_node->nodeName == WSF_INHERITED_CONTENT) {
+		 $parse_tree = array_merge($parse_tree, wsf_infer_attributes($parent_node, $sig_param_node));
+	    } 
         }
     }
     return $parse_tree;
