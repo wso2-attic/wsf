@@ -6,7 +6,7 @@ cp build/wsf_c/Makefile.am wsf_c/
 cd wsf_c
 build/copy_build_files.sh
 cd ..
-#cp build/wsf_c/axis2c/configure.ac wsf_c/axis2c/
+cp build/wsf_c/axis2c/configure.ac wsf_c/axis2c/
 #cp build/wsf_c/axis2c/axiom/configure.ac wsf_c/axis2c/axiom
 #cp build/wsf_c/axis2c/axiom/src/parser/Makefile.am wsf_c/axis2c/axiom/src/parser/
 #cp build/wsf_c/axis2c/tools/tcpmon/configure.ac wsf_c/axis2c/tools/tcpmon
