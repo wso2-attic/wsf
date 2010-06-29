@@ -797,7 +797,8 @@ function wsf_build_content_model(DomNode $sig_node, array $user_arguments,
     $sig_param_nodes = $sig_node->childNodes;
     foreach($sig_param_nodes as $sig_param_node) {
         if($sig_param_node->nodeName == WSF_PARAM) {
-            $param_name = $sig_param_node->attributes->getNamedItem(WSF_NAME)->value;
+            if($sig_param_node->attributes->getNamedItem(WSF_NAME))
+	    $param_name = $sig_param_node->attributes->getNamedItem(WSF_NAME)->value;
 
             // users are not expected to provide it in exact sequence..
             // for both all and sequences we build the xml same order as in the schema
