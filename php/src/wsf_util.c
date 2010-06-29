@@ -1386,6 +1386,9 @@ wsf_util_handle_fault_reason(
             if(text_value)
 			{
 				add_property_string(fault_obj, WSF_FAULT_REASON , text_value, 1);
+
+				zend_update_property_string(zend_exception_get_default(TSRMLS_C), fault_obj,
+					"message", sizeof("message")-1, text_value TSRMLS_CC);
             }
         }
 	}else if(soap_version == AXIOM_SOAP11)
@@ -1394,6 +1397,8 @@ wsf_util_handle_fault_reason(
 		if(text_value)
 		{
 			add_property_string(fault_obj, WSF_FAULT_REASON, text_value, 1);
+			zend_update_property_string(zend_exception_get_default(TSRMLS_C), fault_obj,
+					"message", sizeof("message")-1, text_value TSRMLS_CC);
 		}
 	}
 }
