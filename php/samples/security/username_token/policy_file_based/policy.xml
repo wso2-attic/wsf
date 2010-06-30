@@ -26,6 +26,11 @@
                             <sp:Strict/>
                         </wsp:Policy>
                     </sp:Layout>
+                    <sp:AlgorithmSuite>
+                        <wsp:Policy>
+                            <sp:Basic256Rsa15/>
+                        </wsp:Policy>
+                    </sp:AlgorithmSuite>
                 </wsp:Policy>
             </sp:AsymmetricBinding>
             <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">

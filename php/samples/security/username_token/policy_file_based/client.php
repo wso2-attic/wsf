@@ -22,9 +22,10 @@ XML;
 
 try {
 	
-	$my_cert = ws_get_cert_from_file("../keys/alice_cert.cert");
-    $my_key = ws_get_key_from_file("../keys/alice_key.pem");
-    // Create message with request payload and options
+    $my_cert = ws_get_cert_from_file("../../keys/alice_cert.cert");
+    $my_key = ws_get_key_from_file("../../keys/alice_key.pem");
+    $recv_cert = ws_get_cert_from_file("../../keys/bob_cert.cert");
+// Create message with request payload and options
     $reqMessage = new WSMessage($reqPayloadString,
                          array("to" => "http://localhost/samples/security/username_token/policy_file_based/service.php",
                                "action" => "http://php.axis2.org/samples/echoString"));
@@ -35,8 +36,9 @@ try {
     $security_token = new WSSecurityToken(array("user" => "Alice",
                                                 "password" => "abcd!123",
                                                 "passwordType" => "Digest",
-    											"privateKey" => $my_key,
-                                           		"certificate" => $my_cert));
+    						"privateKey" => $my_key,
+                                           	"receiverCertificate"=>$recv_cert,
+						"certificate" => $my_cert));
     
     // Create client with options
     $client = new WSClient(array("useWSA" => TRUE,
