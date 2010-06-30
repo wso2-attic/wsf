@@ -15,27 +15,34 @@
  * limitations under the License.
  */
 
+// User defined function implementing service operation 
 function echoFunction($inMessage) {
-
     $returnMessage = new WSMessage($inMessage->str);
-
     return $returnMessage;
 }
 
+
+
+$cert = ws_get_cert_from_file("../keys/bob_cert.cert");
+$key = ws_get_key_from_file("../keys/bob_key.pem");
+
 $operations = array("echoString" => "echoFunction");
-$actions = array("http://php.axis2.org/samples/echoString" => "echoString");
-$sec_array = array("includeTimeStamp" => TRUE);
+$actions = array("http://wso2.org/wsfphp/samples/echoString" => "echoString");
 
-$policy = new WSPolicy(array("security"=> $sec_array));
-$sec_token = new WSSecurityToken(array("ttl" => 100));
+// Security options
+$sec_array = array("includeTimeStamp" => TRUE );
+$policy = new WSPolicy(array("security" => $sec_array));
+$security_token = new WSSecurityToken(array("ttl"=>100,
+  					    "privateKey" => $key,
+                                       	    "certificate" => $cert));
 
-$svr = new WSService(array("operations" => $operations,
-                           "actions" => $actions,
-                           "policy" => $policy,
-                           "securityToken" => $sec_token));
-        
-$svr->reply();
+// Create service with options
+$service = new WSService(array("operations" => $operations,
+                               "actions" => $actions,
+                               "policy" => $policy,
+                               "securityToken" => $security_token));
+
+// Reply to requests
+$service->reply();
 
 ?>
-
-
