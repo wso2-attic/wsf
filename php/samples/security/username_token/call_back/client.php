@@ -22,7 +22,7 @@ XML;
 try {
 
     $reqMessage = new WSMessage($reqPayloadString,
-                                array("to" => "http://localhost:8080/samples/security/username_token/call_back/service.php",
+                                array("to" => "http://localhost/samples/security/username_token/call_back/service.php",
                                       "action" => "http://php.axis2.org/samples/echoString"));
     
     $policy_file = file_get_contents("policy.xml");
