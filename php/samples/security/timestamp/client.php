@@ -28,7 +28,7 @@ try {
 	
     // Create message with request payload and options
     $reqMessage = new WSMessage($reqPayloadString,
-                         array("to" => "http://localhost:8080/samples/security/timestamp/service.php",
+                         array("to" => "http://localhost/samples/security/timestamp/service.php",
                                "action" => "http://wso2.org/wsfphp/samples/echoString"));
    
     // Set up security options
