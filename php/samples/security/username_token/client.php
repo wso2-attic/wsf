@@ -22,7 +22,7 @@ XML;
 
 try {
 	
-	$my_cert = ws_get_cert_from_file("../keys/alice_cert.cert");
+    $my_cert = ws_get_cert_from_file("../keys/alice_cert.cert");
     $my_key = ws_get_key_from_file("../keys/alice_key.pem");
     
     
@@ -37,8 +37,8 @@ try {
     $security_token = new WSSecurityToken(array("user" => "Raigama",
                                                 "password" => "RaigamaPW",
                                                 "passwordType" => "Digest",
-    											"privateKey" => $my_key,
-                                           		"certificate" => $my_cert));
+    						"privateKey" => $my_key,
+                                           	"certificate" => $my_cert));
     
     // Create client with options
     $client = new WSClient(array("useWSA" => TRUE,
