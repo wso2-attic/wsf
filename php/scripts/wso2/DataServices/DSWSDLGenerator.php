@@ -329,7 +329,7 @@ class DSWSDLGenerator {
 
         // derive the schema for queries
         foreach($queries as $query_name => $nested_query) {
-            $current_element = $this->generate_output_element($op_name, $nested_query, &$complex_types, $dbe);
+            $current_element = $this->generate_output_element($op_name, $nested_query, $complex_types, $dbe);
             $elements_arr[] = $current_element;
             $element_to_name_map[$query_name] = $current_element;
         }
