@@ -16,25 +16,17 @@ Contents:
 
 	You need to download following dependency libraries:
 
-	libxml2 binary distribution   
-        iconv binary distribution
 	OpenSSL binary distribution
-	PHP Source
-	PHP Binary
-	bindlib [ win32 buildtools for PHP ]
+	PHP Source 5.3.*
+	PHP Binary 5.3.*
 
 	In addition you need to have visual studio installed on your system.
 	
-	obtain libxml2 and iconv win32 binaries from [1].
-	obtain OpenSSL binary from [2] [the build system assumes that you install openssl from msi].
-	obtain PHP Source and Bianry from [3].
-	obtain bindlib from [4].
+	obtain OpenSSL binary from [1] [the build system assumes that you install openssl from msi].
+	obtain PHP Source and Bianry from [2].
 
-
-	[1] http://www.zlatkovic.com/pub/libxml/
-	[2] http://www.slproweb.com/products/Win32OpenSSL.html
-	[3] http://www.php.net/downloads.php
-	[4] http://pecl2.php.net/downloads/php-windows-builds/php-libs/VC8/x86/bindlib-cvs-vc8.zip
+	[1] http://www.slproweb.com/products/Win32OpenSSL.html
+	[2] http://www.php.net/downloads.php
 
         
     b. WSF/PHP extension is build on top of WSF/C Web Services Framework. The extension source code
@@ -61,14 +53,12 @@ Contents:
        to the same directory.
 
        ( Before running the build.bat file, add your vcvars32.bat file location to PATH environment variable. 
-	    If you are using vc2005, it is located in C:\Program Files\Microsoft Visual Studio 8\VC\bin)
+	 If you are using vc2008, it is located in C:\Program Files\Microsoft Visual Studio 9\VC\bin)
 
  2. Installing WSO2 WSF/PHP Binary
 
 	You need to download following dependency libraries:
 
-	libxml2 binary distribution 
-	iconv binary distribution
 	OpenSSL binary distribution
 	PHP Binary
 	
