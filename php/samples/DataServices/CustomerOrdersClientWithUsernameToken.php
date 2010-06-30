@@ -24,8 +24,8 @@ try {
 
 
     // Set up security options
-    $security_options = array("useUsernameToken" => TRUE );
-    $policy = new WSPolicy(array("security" => $security_options));
+    $policy_file = file_get_contents("policy.xml");
+    $policy = new WSPolicy($policy_file);
     $security_token = new WSSecurityToken(array("user" => "Raigama",
                                                 "password" => "RaigamaPW",
                                                 "passwordType" => "Digest"));

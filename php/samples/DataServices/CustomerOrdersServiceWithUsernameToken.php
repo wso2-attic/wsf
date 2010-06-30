@@ -45,8 +45,8 @@ $operations = array("customerOrders" => array("inputFormat" => $inputFormat, "ou
 $actions = array("http://wso2.org/samples/dataservices/customerOrders" => "customerOrders");
 
 // Set up security options
-$security_options = array("useUsernameToken" => TRUE );
-$policy = new WSPolicy(array("security" => $security_options));
+$policy_file = file_get_contents("policy.xml");
+$policy = new WSPolicy($policy_file);
 $security_token = new WSSecurityToken(array("user" => "Raigama",
                                             "password" => "RaigamaPW",
                                             "passwordType" => "Digest"));
