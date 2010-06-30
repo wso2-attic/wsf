@@ -133,20 +133,6 @@ security/secure_mtom/signing/service.php 	      - MTOM upload service with signi
 security/secure_mtom/complete/client.php 	      - UsernameToken, Timestamp, Encryption and Siginig enabled client 
 security/secure_mtom/complete/service.php 	      - UsernameToken, Timestamp, Encryption and Siginig enabled Service
 
-
-Reliable Messaging Samples
---------------------------
-Before running the samples you need to set up the database used by the WSF/PHP.
-Please refer to the docs/rm_manual.html for how to set up the database.
-
-reliable/echo_client_rm.php			   - Single Channel two way RM Client
-reliable/echo_service_rm.php                       - Single Channel one way RM Service
-reliable/mtom_upload_client_rm.php                 - Single Channel two way RM Slient sending an MTOM attachment
-reliable/mtom_upload_service_rm.php                - Single Channel two way RM Service
-reliable/ping_client_rm.php                        - Single Channel one way RM Client
-reliable/ping_service_rm.php                       - Single Channel one way RM Service
-reliable/ping_client_rm_multiple_messages.php      - Single Channel one way RM service with multiple messages
-
 WSDL mode
 ----------
 
