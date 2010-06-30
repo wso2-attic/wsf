@@ -21,6 +21,11 @@
                             </sp:X509Token>
                         </wsp:Policy>
                     </sp:RecipientToken>
+                    <sp:AlgorithmSuite>
+                        <wsp:Policy>
+                            <sp:Basic256Rsa15/>
+                        </wsp:Policy>
+                    </sp:AlgorithmSuite>
                     <sp:Layout>
                         <wsp:Policy>
                             <sp:Strict/>
@@ -29,6 +34,14 @@
                     <sp:IncludeTimestamp/>
                 </wsp:Policy>
             </sp:AsymmetricBinding>
+            <rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
+                <rampc:TimeToLive>360</rampc:TimeToLive>
+				<rampc:ClockSkewBuffer>60</rampc:ClockSkewBuffer>
+				<rampc:PrecisionInMilliseconds>False</rampc:PrecisionInMilliseconds>
+                <rampc:ReceiverCertificate>WSFC_HOME/samples/src/rampartc/data/keys/ahome/bob_cert.cert</rampc:ReceiverCertificate>
+                <rampc:Certificate>WSFC_HOME/samples/src/rampartc/data/keys/ahome/alice_cert.cert</rampc:Certificate>
+                <rampc:PrivateKey>WSFC_HOME/samples/src/rampartc/data/keys/ahome/alice_key.pem</rampc:PrivateKey>
+            </rampc:RampartConfig>
         </wsp:All>
     </wsp:ExactlyOne>
 </wsp:Policy>
