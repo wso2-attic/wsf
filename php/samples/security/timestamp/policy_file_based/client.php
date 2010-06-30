@@ -28,7 +28,7 @@ try {
 	// Create message with request payload and options
     $reqMessage = new WSMessage($reqPayloadString,
                          array("to" => "http://localhost/samples/security/timestamp/policy_file_based/service.php",
-                               "action" => "http://php.axis2.org/samples/echoString"));
+                               "action" => "http://wso2.org/wsfphp/samples/echoString"));
    
     // Set up security options
     $policy_xml = file_get_contents("policy.xml");

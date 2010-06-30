@@ -27,7 +27,7 @@ $cert = ws_get_cert_from_file("../../keys/bob_cert.cert");
 $key = ws_get_key_from_file("../../keys/bob_key.pem");
 
 $operations = array("echoString" => "echoFunction");
-$actions = array("http://php.axis2.org/samples/echoString" => "echoString");
+$actions = array("http://wso2.org/wsfphp/samples/echoString" => "echoString");
 
 // Security options
 $policy_xml = file_get_contents("spolicy.xml");
