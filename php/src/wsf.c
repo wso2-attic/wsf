@@ -1309,152 +1309,150 @@ generate_wsdl_for_service(
 			smart_str_0(&full_path);
 		}
 
+		/** for WSDL version. default is wsdl 1.1*/
+		if ((stricmp(wsdl_ver_str, WSF_WSDL)) == 0) {
+			wsdl_version = strdup(WSF_WSDL_1_1);
+		} else {
+			wsdl_version = strdup(WSF_WSDL_2_0);
+		}
+		/** getting the correct binding style */
+		if ((zend_hash_find(Z_OBJPROP_P(svc_zval), WSF_BINDING_STYLE, sizeof (WSF_BINDING_STYLE),
+				(void **) & tmpval)) == SUCCESS && Z_TYPE_PP(tmpval) == IS_STRING) {
+			binding_name = Z_STRVAL_PP(tmpval);
+		} else {
+			binding_name = WSF_STYLE_DOCLIT;
+		}
 
+		/** Get the functions in the service.php file to an array */
+		MAKE_STD_ZVAL(functions);
+		array_init(functions);
+	    
+		MAKE_STD_ZVAL(op_val);
+		array_init(op_val);
+		if (svc_info->ops_to_functions) {
+			for (hi = axutil_hash_first(svc_info->ops_to_functions, ws_env_svr); hi;
+					hi = axutil_hash_next(ws_env_svr, hi)) {
+				void *value = NULL;
+				const void *key = NULL;
+				axutil_hash_this(hi, &key, NULL, &value);
+				add_next_index_string(functions, (char *) value, 1);
+				add_assoc_string(op_val, (char *) key, (char *) value, 1);
+			}
+		}
+
+		INIT_ZVAL(func);
+		ZVAL_STRING(&func, WSF_WSDL_GENERATION_FUNCTION, 1);
+	    
+		/** Create an object of type WSData */
+
+		MAKE_STD_ZVAL(wsdata_obj);
+		zend_lookup_class("WSData", strlen("WSData"), &ce TSRMLS_CC);
+		object_init_ex(wsdata_obj, *ce);
+
+		/** Add properties to WSData Object */
+		add_property_string(wsdata_obj, "serviceName", service_name, 1);
+		add_property_zval(wsdata_obj, "WSDLGEN_Functions", functions);
 		
+		if (svc_info->wsdl_gen_class_map) {
+			add_property_zval(wsdata_obj, "WSDLGEN_Svcinfo_Classmap", svc_info->wsdl_gen_class_map);
+		}
+		else {
+			add_property_null(wsdata_obj, "WSDLGEN_Svcinfo_Classmap");
+		}
+	       
+		if (binding_name) {
+			add_property_string(wsdata_obj, "WSDLGen_binding", binding_name,1);
+		}else{
+			add_property_null(wsdata_obj, "WSDLGen_binding");
+		}
+		if (wsdl_version) {
+			add_property_string(wsdata_obj, "WSDLGen_wsdlversion",wsdl_version, 1); 
+		}else{
+			add_property_null(wsdata_obj, "WSDLGen_wsdlversion"); 
+		}
 
-	
-    /** for WSDL version. default is wsdl 1.1*/
-    if ((stricmp(wsdl_ver_str, WSF_WSDL)) == 0) {
-        wsdl_version = strdup(WSF_WSDL_1_1);
-    } else {
-        wsdl_version = strdup(WSF_WSDL_2_0);
-    }
-    /** getting the correct binding style */
-    if ((zend_hash_find(Z_OBJPROP_P(svc_zval), WSF_BINDING_STYLE, sizeof (WSF_BINDING_STYLE),
-            (void **) & tmpval)) == SUCCESS && Z_TYPE_PP(tmpval) == IS_STRING) {
-        binding_name = Z_STRVAL_PP(tmpval);
-    } else {
-        binding_name = WSF_STYLE_DOCLIT;
-    }
+		add_property_string(wsdata_obj, "WSDLGen_path", full_path.c, 1);
 
-    /** Get the functions in the service.php file to an array */
-    MAKE_STD_ZVAL(functions);
-    array_init(functions);
-    
-	MAKE_STD_ZVAL(op_val);
-    array_init(op_val);
-    if (svc_info->ops_to_functions) {
-        for (hi = axutil_hash_first(svc_info->ops_to_functions, ws_env_svr); hi;
-                hi = axutil_hash_next(ws_env_svr, hi)) {
-            void *value = NULL;
-            const void *key = NULL;
-            axutil_hash_this(hi, &key, NULL, &value);
-            add_next_index_string(functions, (char *) value, 1);
-            add_assoc_string(op_val, (char *) key, (char *) value, 1);
-        }
-    }
+		add_property_zval(wsdata_obj, "WSDLGen_operations", op_val);
+	       
+		if (zend_hash_find(Z_OBJPROP_P(svc_zval), WSF_WSDL_CLASSMAP, sizeof (WSF_WSDL_CLASSMAP),
+			(void **) & class_map) == SUCCESS) {
+			add_property_zval(wsdata_obj, "WSDLGen_Classmap", *class_map);
+		}else{
+			add_property_null(wsdata_obj, "WSDLGen_Classmap");
+			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "classmap not present");
+		}
 
+		if (svc_info->wsdl_gen_annotations) {
+			add_property_zval(wsdata_obj, "WSDLGen_annotations", svc_info->wsdl_gen_annotations);
+		} else {
+			add_property_null(wsdata_obj, "WSDLGen_annotations");
+		}
 
-	
-	INIT_ZVAL(func);
-	ZVAL_STRING(&func, WSF_WSDL_GENERATION_FUNCTION, 1);
-    
-	
-	/** Create an object of type WSData */
+		if (svc_info->wsdl_gen_actions) {
+			add_property_zval(wsdata_obj, "WSDLGen_actions", svc_info->wsdl_gen_actions);
+		} else {
+			add_property_null(wsdata_obj, "WSDLGen_actions");
+		}
+	    
+		if (svc_info->use_wsa) {
+			add_property_bool(wsdata_obj, "WSDLGen_usewsa", svc_info->use_wsa); 
+		}else
+		{
+			add_property_null(wsdata_obj, "WSDLGen_usewsa");
+		}
 
-	MAKE_STD_ZVAL(wsdata_obj);
-	zend_lookup_class("WSData", strlen("WSData"), &ce TSRMLS_CC);
-	object_init_ex(wsdata_obj, *ce);
+		params[0] = &param0; /** service name */
+		ZVAL_ZVAL(params[0], wsdata_obj, NULL, NULL);
+		INIT_PZVAL(params[0]);
 
-	/** Add properties to WSData Object */
-	add_property_string(wsdata_obj, "serviceName", service_name, 1);
-	add_property_zval(wsdata_obj, "WSDLGEN_Functions", functions);
-	
-    if (svc_info->wsdl_gen_class_map) {
-		add_property_zval(wsdata_obj, "WSDLGEN_Svcinfo_Classmap", svc_info->wsdl_gen_class_map);
-    }
-	else {
-		add_property_null(wsdata_obj, "WSDLGEN_Svcinfo_Classmap");
-	}
-       
-    if (binding_name) {
-		add_property_string(wsdata_obj, "WSDLGen_binding", binding_name,1);
-    }
-    if (wsdl_version) {
-		add_property_string(wsdata_obj, "WSDLGen_wsdlversion",wsdl_version, 1); 
-    }
+		args_count = 1;
 
-	add_property_string(wsdata_obj, "WSDLGen_path", full_path.c, 1);
+		script.type = ZEND_HANDLE_FP;
 
-	add_property_zval(wsdata_obj, "WSDLGen_operations", op_val);
-       
-	if (zend_hash_find(Z_OBJPROP_P(svc_zval), WSF_WSDL_CLASSMAP, sizeof (WSF_WSDL_CLASSMAP),
-        (void **) & class_map) == SUCCESS) {
-		add_property_zval(wsdata_obj, "WSDLGen_Classmap", *class_map);
-	}else{
-		add_property_null(wsdata_obj, "WSDLGen_Classmap");
-		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "classmap not present");
-	}
+		script.filename = WSF_SCRIPT_FILENAME;
 
-    if (svc_info->wsdl_gen_annotations) {
-		add_property_zval(wsdata_obj, "WSDLGen_annotations", svc_info->wsdl_gen_annotations);
-    } else {
-		add_property_null(wsdata_obj, "WSDLGen_annotations");
-    }
+		script.opened_path = NULL;
 
-    if (svc_info->wsdl_gen_actions) {
-		add_property_zval(wsdata_obj, "WSDLGen_actions", svc_info->wsdl_gen_actions);
-    } else {
-		add_property_null(wsdata_obj, "WSDLGen_actions");
-    }
-    
-	if (svc_info->use_wsa) {
-		add_property_bool(wsdata_obj, "WSDLGen_usewsa", svc_info->use_wsa); 
-    }else
-	{
-		add_property_null(wsdata_obj, "WSDLGen_usewsa");
-	}
+		script.free_filename = 0;
 
-	params[0] = &param0; /** service name */
-	ZVAL_ZVAL(params[0], wsdata_obj, NULL, NULL);
-		
-    args_count = 1;
+		stream = php_stream_open_wrapper(WSF_SCRIPT_FILENAME, "rb",
+				USE_PATH | REPORT_ERRORS | ENFORCE_SAFE_MODE, NULL);
 
-    script.type = ZEND_HANDLE_FP;
+		if (!stream) {
+			return;
+		}
 
-    script.filename = WSF_SCRIPT_FILENAME;
+		if (php_stream_cast(stream, PHP_STREAM_AS_STDIO | PHP_STREAM_CAST_RELEASE,
+				(void*) & new_fp, REPORT_ERRORS) == FAILURE) {
+			php_error_docref(NULL TSRMLS_CC, E_ERROR, "Unable to open script file or file not found:");
+		}
 
-    script.opened_path = NULL;
-
-    script.free_filename = 0;
-
-    stream = php_stream_open_wrapper(WSF_SCRIPT_FILENAME, "rb",
-            USE_PATH | REPORT_ERRORS | ENFORCE_SAFE_MODE, NULL);
-
-    if (!stream) {
-        return;
-    }
-
-    if (php_stream_cast(stream, PHP_STREAM_AS_STDIO | PHP_STREAM_CAST_RELEASE,
-            (void*) & new_fp, REPORT_ERRORS) == FAILURE) {
-        php_error_docref(NULL TSRMLS_CC, E_ERROR, "Unable to open script file or file not found:");
-    }
-
-    if (new_fp) {
-        int status;
-        script.handle.fp = new_fp;
-        status = php_lint_script(&script TSRMLS_CC);
-        if (call_user_function(EG(function_table), (zval **) NULL,
-                &func, &retval, args_count, params TSRMLS_CC) == SUCCESS) {
-
-                if (Z_TYPE(retval) == IS_STRING) {
-                    val = estrdup(Z_STRVAL(retval));
-                    len = Z_STRLEN(retval);
-                    sapi_add_header("Content-Type:application/xml",
-                            sizeof ("Content-Type:application/xml") - 1, 1);
-                    php_write(val, len TSRMLS_CC);
-                    if (val) {
-                        efree(val);
-                    }
-                } else {
-                    php_error_docref(NULL TSRMLS_CC, E_ERROR, "WSDL Generation Failed");
-                }
-            }
-        }
-        smart_str_free(&full_path);
-        /*
-		zval_ptr_dtor(&op_val); 
-        zval_ptr_dtor(&functions); */ 
+		if (new_fp) {
+			int status;
+			script.handle.fp = new_fp;
+			status = php_lint_script(&script TSRMLS_CC);
+			if (call_user_function(EG(function_table), (zval **) NULL,
+					&func, &retval, args_count, params TSRMLS_CC) == SUCCESS) {
+					
+					if (Z_TYPE(retval) == IS_STRING) {
+						val = estrdup(Z_STRVAL(retval));
+						len = Z_STRLEN(retval);
+						sapi_add_header("Content-Type:application/xml",
+								sizeof ("Content-Type:application/xml") - 1, 1);
+						php_write(val, len TSRMLS_CC);
+						if (val) {
+							efree(val);
+						}
+					} else {
+						php_error_docref(NULL TSRMLS_CC, E_ERROR, "WSDL Generation Failed");
+					}
+				}
+			}
+        
+		smart_str_free(&full_path);
+		/*zval_ptr_dtor(&op_val); 
+        zval_ptr_dtor(&functions);*/
         /** end WSDL generation*/
     }
 }
