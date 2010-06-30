@@ -35,7 +35,7 @@ Keyword for searching :<input type="text" size="60" maxlength="60" name="search"
 </body>
 </html>
 
-<?
+<?php
 if(isset($_POST['apikey']))
 {
 
@@ -50,7 +50,7 @@ XML;
 try {
 
     $flicker_client = new WSClient(
-        array("to" => "http://api.flickr.com/services/soap/"));
+        array("to" => "http://localhost:8081/services/soap/"));
 
                 
     $responseMessage = $flicker_client->request($requestPayloadString);
@@ -60,7 +60,7 @@ try {
 } catch (Exception $e) {
 
     if ($e instanceof WSFault) {
-        printf("Soap Fault: %s\n", $e->Reason);
+        printf("Request Failed, Please enter correct flickr api key \n");
     } else {
         printf("Message = %s\n",$e->getMessage());
     }
