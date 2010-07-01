@@ -16,7 +16,7 @@
  */
 
 /** The version of this WSO2 WSF for PHP file */
-define('WSF_VERSION', '1.3.2');
+define('WSF_VERSION', '2.1.0');
 
 function ws_request($payload, $options = array(NULL))
 {
@@ -111,8 +111,6 @@ function ws_generate_wsdl($wsdata) {
     require_once("wsdl/WS_WSDL_Creator.php");
     require_once("wsdl/WS_WSDL_Consts.php");
     require_once('dynamic_invocation/wsf_wsdl_consts.php');
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "class arry:".print_r($class_arry, TRUE));
-    ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "actions arry:".print_r($actions, TRUE));
 
     $r_actions = NULL;
     if($actions) {
