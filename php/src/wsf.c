@@ -1384,7 +1384,6 @@ generate_wsdl_for_service(
 			add_property_zval(wsdata_obj, "WSDLGen_Classmap", *class_map);
 		}else{
 			add_property_null(wsdata_obj, "WSDLGen_Classmap");
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, WSF_PHP_LOG_PREFIX "classmap not present");
 		}
 
 		if (svc_info->wsdl_gen_annotations) {
