@@ -49,9 +49,7 @@ class YahooClient extends WSClient
      */
     public function __construct($app_id)
     {
-        parent::__construct(array(
-                              "HTTPMethod"=>GET,
-                              "useSOAP"=>FALSE));
+	parent::__construct(array("HTTPMethod" => "GET", "useSOAP" => FALSE));
         $this->app_id = $app_id;
     }
 
@@ -224,8 +222,12 @@ class YahooClient extends WSClient
 
     private function prepareRequestOptions($options)
     {
-        $ret_options = array("appid"=> $options["appid"],
-                            "query" => $options["query"]);
+	
+        $ret_options = array();
+	if(isset($options["appid"]))
+		$ret_options["appid"] = $options["appid"];
+	if(isset($options["query"]))
+                $ret_options["query"] = $options["query"];
         /* copying request options, just to make sure they
            are in the correct order */
 
@@ -245,8 +247,7 @@ class YahooClient extends WSClient
         {
             return $res; // in a case of a fault or an error
         }
-        $res_dom = new DomDocument();
-
+        $res_dom = new DOMDocument();
         $res_dom->loadXML($res_xml);
         $res[self::RESPONSE_XML] = $res_xml;
         $res[self::RESPONSE_DOM] = $res_dom;
