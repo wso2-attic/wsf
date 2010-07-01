@@ -16,9 +16,12 @@
  */
 
     /* Extract the arguments from HTTP GET request */
-    $yahoo_query = $_GET["yahoo_query"];
-    $yahoo_method = $_GET["yahoo_method"];
-    $page = $_GET["page"];
+    if(isset($_GET["yahoo_query"]))
+    	$yahoo_query = $_GET["yahoo_query"];
+    if(isset($_GET["yahoo_method"]))
+    	$yahoo_method = $_GET["yahoo_method"];
+    if(isset($_GET["page"]))
+	$page = $_GET["page"];
 
     define("RESULTS_PER_PAGE" , 10);
 
@@ -52,12 +55,12 @@
                                     "results" => $results));
         }
         /* Check for the soap - fault */
-        if ($res["soap-fault"]) {
+        if (isset($res["soap-fault"])) {
             $soap_reason = $res["soap-fault-reason"];
             printf("SOAP fault : ${soap_reason}\n");
         }
         /* Check for the error */
-        elseif ($res["error"]) {
+        elseif (isset($res["error"])) {
             $error_message = $res["error-msg"];
             printf("Error Message: ${error_message}\n");
         }
@@ -128,7 +131,6 @@
                         echo "<div style=\"text-align:left; padding-bottom:15px\">";
                         echo "<h3><a href=\"${click_url}\">${title}</a></h3>";
                         echo "<p>${summary}</p>";
-                        echo "<b><a title=\"${display_url}\" href=\"${click_url}\"><font color=\"green\">${display_url}</font></a></b>";
                         echo "<font color=\"blue\"> News Source : <a href=\"${news_source_url}\">${news_source}</a></font></br>";
                         echo "<font color=\"blue\">Published Date: ${published} - Last Modified Date: ${modified}</font>";
                         echo "</div>";
@@ -150,7 +152,6 @@
                         echo "<img style=\"cursor:pointer\" src='${thumbnail_url}' onclick=\"window.location.href='${click_url}'\"></img>";
                         echo "<h3><a href=\"${click_url}\">${title}</a></h3>";
                         echo "<p>${summary}</p>";
-                        echo "<b><a title=\"${referer_url}\" href=\"${click_url}\"><font color=\"green\">${referer_url}</font></a></b>";
                         echo "<font color=\"blue\"> - Size: ${width} x ${height}</font>";
                         echo "</div>";
                         break;
@@ -166,7 +167,6 @@
                         echo "<div style=\"text-align:left; padding-bottom:15px\">";
                         echo "<h3><a href=\"${click_url}\">${title}</a></h3>";
                         echo "<p>${summary}</p>";
-                        echo "<b><a title=\"${display_url}\" href=\"${click_url}\"><font color=\"green\">${display_url}</font></a></b>";
                         echo "<font color=\"blue\"> - ${cache_size}k - <a href=\"${cache_url}\">Cached</a></font>";
                         echo "</div>";
                 }
