@@ -1326,9 +1326,12 @@ generate_wsdl_for_service(
 		/** Get the functions in the service.php file to an array */
 		MAKE_STD_ZVAL(functions);
 		array_init(functions);
-	    
+		INIT_PZVAL(functions);
+
 		MAKE_STD_ZVAL(op_val);
 		array_init(op_val);
+		INIT_PZVAL(op_val);
+
 		if (svc_info->ops_to_functions) {
 			for (hi = axutil_hash_first(svc_info->ops_to_functions, ws_env_svr); hi;
 					hi = axutil_hash_next(ws_env_svr, hi)) {
@@ -1348,7 +1351,8 @@ generate_wsdl_for_service(
 		MAKE_STD_ZVAL(wsdata_obj);
 		zend_lookup_class("WSData", strlen("WSData"), &ce TSRMLS_CC);
 		object_init_ex(wsdata_obj, *ce);
-
+		INIT_PZVAL(wsdata_obj);
+		
 		/** Add properties to WSData Object */
 		add_property_string(wsdata_obj, "serviceName", service_name, 1);
 		add_property_zval(wsdata_obj, "WSDLGEN_Functions", functions);
@@ -1451,8 +1455,8 @@ generate_wsdl_for_service(
 			}
         
 		smart_str_free(&full_path);
-		/*zval_ptr_dtor(&op_val); 
-        zval_ptr_dtor(&functions);*/
+		zval_ptr_dtor(&op_val); 
+        zval_ptr_dtor(&functions);
         /** end WSDL generation*/
     }
 }
