@@ -57,6 +57,8 @@ wsf.dll :
 	@rc.exe /r /fo "intdir/wsf.res" wsf.rc
 	@link.exe $(LDFLAGS) intdir\*.obj intdir\wsf.res $(LIBS) /DLL  /OUT:.\..\$(WSFPHP_BIN_DIR)\wsf.dll
 	if exist .\..\$(WSFPHP_BIN_DIR)\wsf.dll.manifest mt.exe -manifest .\..\$(WSFPHP_BIN_DIR)\wsf.dll.manifest -outputresource:.\..\$(WSFPHP_BIN_DIR)\wsf.dll;2
+	if exist .\..\$(WSFPHP_BIN_DIR)\wsf.lib del .\..\$(WSFPHP_BIN_DIR)\wsf.lib
+	if exist .\..\$(WSFPHP_BIN_DIR)\wsf.exp del .\..\$(WSFPHP_BIN_DIR)\wsf.exp
 
 wsfphp: wsf.dll
 
