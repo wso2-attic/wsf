@@ -77,7 +77,7 @@ Major Changes Since Last Release
 * API Improments for Callback Handling
 * API Improments for WS-Addressing.
 * Compatibility changes with PHP 5.3
-
+* Enabled buildin guththila xml parser.
 
 -------------------
 Reporting Problems
