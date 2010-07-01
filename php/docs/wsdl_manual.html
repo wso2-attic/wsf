@@ -12,7 +12,7 @@
 </head>
 
 <body xml:lang="en" lang="en">
-<h1>10. Using WSDL</h1>
+<h1>9. Using WSDL</h1>
 
 <p>In the WSDL mode, by providing a WSDL file, you can invoke a service or
 provide a service, without having to construct the payload manually. Few
@@ -20,7 +20,7 @@ simple steps are required to configure either the client or the service to
 use the WSDL mode.WSO2
     WSF/PHP supports both WSDL 1.1 and WSDL 2.0 in WSDL mode.</p>
 
-<h2 id="1">10.1. Writing a Simple Client to Use the WSDL Mode</h2>
+<h2 id="1">9.1. Writing a Simple Client to Use the WSDL Mode</h2>
 
 <p>
     There are two WSDL(WSDL 1.1 and WSDL 2.0) files provided in the samples\wsdl_mode folder and sample_wsdl_11.wsdl will be
@@ -58,7 +58,7 @@ First we will have a look at the schema for the input message. </span>
 		&lt;/xsd:complexType&gt;
   &lt;/xsd:element&gt;
 </span>
-<span><span><strong><span style="font-size: 10pt; font-family: Verdana">10.1.1.Associative array of arguments
+<span><strong><span style="font-size: 10pt; font-family: Verdana">9.1.1.Associative array of arguments
 </span></strong><span style="font-family: Verdana">As you can see, the input message element of the operation <strong>QueryPurchaseOrder </strong>
     in WSDL <strong>, </strong>is <strong>OrderInfo</strong> which is a complex type defined in the schema. The complex type <strong>OrderInfo </strong>has four elements. So the array that you have to construct will be as follows.
 
@@ -158,7 +158,7 @@ $<span style="color: #330066">order_info_array </span>= array("<span style="colo
 
 This same array structure applies for $billToArray as well.
 <span style="text-decoration: underline; color: #990000;"><strong></strong></span><span style="font-size: 10pt;">
-<strong>10.1.2. class objects 
+<strong>9.1.2. class objects 
 </strong><span style="font-size: 8pt">In this method user should provide a class map which includes the classes for the complex types defined in the WSDL for the corresponding
     operation he is going to invoke. In this example, you can see that there are four
     complex types associated with the operation <strong>QueryPurchaseOrder</strong>.
@@ -255,7 +255,7 @@ Since you passed an object to the operation, the returned value will
 
 </pre>
 
-<h3 id="H3_1">10.2. Writing a Simple Service to Use the WSDL Mode</h3>
+<h3 id="H3_1">9.2. Writing a Simple Service to Use the WSDL Mode</h3>
 
 <p>We will implement a service to accept the request sent by the above
 client.</p>
@@ -468,7 +468,7 @@ $operations</span> = array( "<span style="color: red">QueryPurchaseOrder</span>"
 <span style="color: blue">$service</span>-&gt;reply();
 </span></span></pre>
 
-<h3 id="3">10.3. WSDL Generation for a Given Service</h3>
+<h3 id="3">9.3. WSDL Generation for a Given Service</h3>
 
 <p>WSDL Generation in WSO2 WSF/PHP is done using PHP reflection and an
 annotation parser. In order to generate a WSDL from a given WSO2 WSF/PHP
@@ -487,7 +487,7 @@ echoService.php, a request should be sent as,</p>
 <a href="wsdl_generation_api.html">WSDL generation API document</a>.</p>
 
 
-<h3 id="4">10.4. WSDL to PHP Code Generation</h3>
+<h3 id="4">9.4. WSDL to PHP Code Generation</h3>
 
 <p>
 You can Generate the PHP code for a given WSDL using wsdl2php.php script bundle
