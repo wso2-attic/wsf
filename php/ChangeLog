@@ -1,10 +1,9 @@
 WSO2 WSF/PHP 2.1.0
 ======================
-* API importments for addressing, security
+* API improvements for WS-Addressing, WS-Security
 * Compatibility changes for PHP 5.3.*
 * Many bug fixes
-* Many Improvments to WS-Security
-* Enabled build in guththila xml parser.
+* Enabled built-in guththila xml parser.
 
 WSO2 WSF/PHP 2.0.0
 ======================
