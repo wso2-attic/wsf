@@ -14,12 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+if(isset($_POST["getResult"]))
 $getResult = $_POST["getResult"];
+if(isset($_POST["operation"]))
 $operation = $_POST["operation"];
+if(isset($_POST["epr"]))
 $epr = $_POST["epr"];
+if(isset($_POST["userid"]))
 $userid = $_POST["userid"];
+if(isset($_POST["password"]))
 $password = $_POST["password"];
+if(isset($_POST['symbol']))
 $symbol = $_POST['symbol'];
+if(isset($_POST["amount"]))
 $amount = $_POST["amount"];		    
 ?>
 
@@ -28,7 +35,7 @@ $amount = $_POST["amount"];
 <title> Trader Service </title>
 </head>
 <body>
-<form method="post" action="<?php echo $PHP_SELF;?>">
+<form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
 <table cols="4" border="1" cellpadding="10" cellspacing="0" align="center" width="100%" style="background-image: url(/images/cse.jpg);background-repeat: no-repeat;background-position: center right" bgcolor="#9999FF">
 <tr>
 <td>
@@ -162,8 +169,8 @@ XML;
        $strresponse = $response->str;
 
 // Making the $strresponse to normal string type thus $output
-       $dom = new DOMDocument;
-       $dom =DOMDocument::loadXML($strresponse);
+       $dom = new DOMDocument();
+       $dom->loadXML($strresponse);
        $result = $dom->getElementsByTagName( "result" );
        $output = $result->item(0)->nodeValue;
 //
