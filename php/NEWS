@@ -73,11 +73,12 @@ Key Features
 --------------------------------
 Major Changes Since Last Release
 ================================
-* Many bugs fixed in WS-Security and WSDL Mode
-* API Improments for Callback Handling
-* API Improments for WS-Addressing.
-* Compatibility changes with PHP 5.3
-* Enabled buildin guththila xml parser.
+* Many issues were fixed since last release.
+* API Improvements for WS-Addressing, WS-Security.
+* Compatibility changes for PHP 5.3. 
+* Enabled built-in guththila xml parser.
+* Preformance enhancements.
+
 
 -------------------
 Reporting Problems
