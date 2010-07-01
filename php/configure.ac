@@ -92,7 +92,7 @@ AC_ARG_ENABLE(rampart, [  --enable-rampart build ramprt. default=yes],
 )
 
 AC_MSG_CHECKING(whether to build libxml2 xml parser library)
-AC_ARG_ENABLE(libxml2, [  --enable-libxml2    build libxml2 xml parser library wrapper. default=yes],
+AC_ARG_ENABLE(libxml2, [  --enable-libxml2    build libxml2 xml parser library wrapper. default=no],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
@@ -106,7 +106,7 @@ AC_ARG_ENABLE(libxml2, [  --enable-libxml2    build libxml2 xml parser library w
 
     ;;
   esac ],
-  AC_MSG_RESULT(yes)
+  AC_MSG_RESULT(no)
   WRAPPER_DIR="libxml2"
 )
 
@@ -114,7 +114,7 @@ AC_ARG_ENABLE(libxml2, [  --enable-libxml2    build libxml2 xml parser library w
 GUTHTHILA_LIBS=""
 
 AC_MSG_CHECKING(whether to build guththila xml parser library)
-AC_ARG_ENABLE(guththila, [  --enable-guththila    build guththila xml parser library wrapper. default=no],
+AC_ARG_ENABLE(guththila, [  --enable-guththila    build guththila xml parser library wrapper. default=yes],
 [ case "${enableval}" in
   no)
     AC_MSG_RESULT(no)
