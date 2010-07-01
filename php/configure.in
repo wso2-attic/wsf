@@ -3,11 +3,11 @@
 
 WSFPHP_VERSION=2.1.0
 # To build with debug symbols set DEBUG = 1
-DEBUG =1
+DEBUG =0
 #CRUNTIME Library (Use /MD or /MT)
-CRUNTIME=/MT
-# Visual Studio version
-EMBED_MANIFEST=0
+CRUNTIME=/MD
+# Embed Manifest files
+EMBED_MANIFEST=1
 # Build with thread safety
 ZTS =1
 #############################################################################
