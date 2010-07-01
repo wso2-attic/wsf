@@ -17,6 +17,7 @@
 
 $apikey = "";
 $search = "cars";
+if(isset($_POST['apikey']))
 $apikey = $_POST['apikey'];
 
 ?>
