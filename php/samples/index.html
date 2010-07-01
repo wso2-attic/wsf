@@ -467,7 +467,7 @@ window.addEvent('domready', function() {
         e.stop();
     });
 
-
+/*
     var securitysecconv2policyfilebasedclient = new Fx.Slide('code-security-secconv2-policy-file-based-client');
     securitysecconv2policyfilebasedclient.hide()
     $('toggle-security-secconv2-policy-file-based-client').addEvent('click', function(e) {
@@ -489,9 +489,7 @@ window.addEvent('domready', function() {
         securitysecconv2policyfilebasedpolicy.toggle();
         e.stop();
     });
-
-
-
+*/
     var securitysecuremtomencryptionclient = new Fx.Slide('code-security-secure-mtom-encryption-client');
     securitysecuremtomencryptionclient.hide()
     $('toggle-security-secure-mtom-encryption-client').addEvent('click', function(e) {
@@ -520,6 +518,7 @@ window.addEvent('domready', function() {
         securitysecuremtomsigningservice.toggle();
         e.stop();
     });
+    /*
     var reliableechoclientrm = new Fx.Slide('code-reliable-echo-client-rm');
     reliableechoclientrm.hide()
     $('toggle-reliable-echo-client-rm').addEvent('click', function(e) {
@@ -581,7 +580,7 @@ window.addEvent('domready', function() {
         reliablepingservicerm.toggle();
         e.stop();
     });
-    /* var reliablepingclientrmmultiplemessages = new Fx.Slide('code-reliable-ping-client-rm-multiple-messages');
+     var reliablepingclientrmmultiplemessages = new Fx.Slide('code-reliable-ping-client-rm-multiple-messages');
     reliablepingclientrmmultiplemessages.hide()
     $('toggle-reliable-ping-client-rm-multiple-messages').addEvent('click', function(e) {
         e = new Event(e);
@@ -675,7 +674,7 @@ window.addEvent('domready', function() {
 <div id="code-echo-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -719,7 +718,7 @@ try {
 <div id="code-echo-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -777,7 +776,7 @@ $service-&gt;reply($requestPayloadString);
 <div id="code-echo-client-addr"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -825,7 +824,7 @@ try {
 <div id="code-echo-service-addr"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -872,7 +871,7 @@ $service-&gt;reply();
 <div id="code-echo-client-soap11"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -933,7 +932,7 @@ try {
 <div id="code-echo-client-multiple-invocation"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -1001,7 +1000,7 @@ try
 <div id="code-notify-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -1047,7 +1046,7 @@ try {
 <div id="code-notify-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -1092,7 +1091,7 @@ $service-&gt;reply();
 <div id="code-fault-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -1125,7 +1124,7 @@ $service-&gt;reply();
 <div id="code-fault-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -1178,7 +1177,7 @@ try {
 <div id="code-math-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -1298,7 +1297,7 @@ $svr-&gt;reply($reqPayloadString);
 <div id="code-math-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -1436,7 +1435,7 @@ XML;
 <div id="code-echo-client-rest"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -1493,7 +1492,7 @@ try {
 <div id="code-add-soap-header-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -1564,7 +1563,7 @@ try {
 <div id="code-reply-echo-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -1608,7 +1607,7 @@ ws_reply(array(&quot;operations&quot; =&gt; $operations));
 <div id="code-request-client-dom"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -1667,7 +1666,7 @@ try {
 <div id="code-request-client-msg"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -1724,7 +1723,7 @@ try {
 <div id="code-request-client-str"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -1784,7 +1783,7 @@ try {
 <div id="code-google-google-search"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -1854,7 +1853,7 @@ try {
 <div id="code-google-google-spell"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -1917,7 +1916,7 @@ try {
 <div id="code-yahoo-yahoo-rest-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -1979,7 +1978,7 @@ try {
 <div id="code-mtom-mtom-download-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -2046,7 +2045,7 @@ try {
 <div id="code-mtom-mtom-download-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -2103,7 +2102,7 @@ $service-&gt;reply();
 <div id="code-mtom-mtom-upload-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -2155,7 +2154,7 @@ try {
 <div id="code-mtom-mtom-upload-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -2232,7 +2231,7 @@ $service-&gt;reply();
 <div id="code-mtom-mtom-upload-client-base64"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -2284,7 +2283,7 @@ try {
 <div id="code-mtom-mtom-upload-service-base64"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -2365,7 +2364,7 @@ $service-&gt;reply();
 <div id="code-wsdl-generation-doclit-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -2426,7 +2425,7 @@ try {
 <div id="code-wsdl-generation-doclit-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -2495,7 +2494,7 @@ $svr-&gt;reply();
 <div id="code-wsdl-generation-rpc-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -2559,7 +2558,7 @@ $svr-&gt;reply();
 <div id="code-security-username-token-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -2608,7 +2607,7 @@ $service-&gt;reply();
 <div id="code-security-username-token-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -2726,7 +2725,7 @@ try {
 <div id="code-security-username-token-policy-file-based-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -2775,7 +2774,7 @@ $service-&gt;reply();
 <div id="code-security-username-token-policy-file-based-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -2846,7 +2845,7 @@ try {
 <div id="code-security-username-token-call-back-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -2912,7 +2911,7 @@ $svr-&gt;reply();
 <div id="code-security-username-token-call-back-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -2979,7 +2978,7 @@ try {
 <div id="code-security-timestamp-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -3025,7 +3024,7 @@ $svr-&gt;reply();
 <div id="code-security-timestamp-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -3133,7 +3132,7 @@ try {
 <div id="code-security-timestamp-policy-file-based-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -3179,7 +3178,7 @@ $svr-&gt;reply();
 <div id="code-security-timestamp-policy-file-based-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -3244,7 +3243,7 @@ try {
 <div id="code-security-encryption-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -3295,7 +3294,7 @@ $svr-&gt;reply();
 <div id="code-security-encryption-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -3424,7 +3423,7 @@ try {
 <div id="code-security-encryption-policy-file-based-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -3473,7 +3472,7 @@ $svr-&gt;reply();
 <div id="code-security-encryption-policy-file-based-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -3542,7 +3541,7 @@ try {
 <div id="code-security-signing-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -3595,7 +3594,7 @@ $svr-&gt;reply();
 <div id="code-security-signing-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -3728,7 +3727,7 @@ try {
 <div id="code-security-signing-policy-file-based-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -3778,7 +3777,7 @@ $svr-&gt;reply();
 <div id="code-security-signing-policy-file-based-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -3852,7 +3851,7 @@ try {
 <pre class="prettyprint">
 &lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -3986,7 +3985,7 @@ $svr-&gt;reply();
 <pre class="prettyprint">
 &lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -4134,7 +4133,7 @@ try {
 <pre class="prettyprint">
 &lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -4187,7 +4186,7 @@ $svr-&gt;reply();
 <pre class="prettyprint">
 &lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -4263,7 +4262,7 @@ try {
 <div id="code-security-secure-mtom-encryption-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -4344,7 +4343,7 @@ $svr-&gt;reply();
 <div id="code-security-secure-mtom-encryption-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -4425,7 +4424,7 @@ try {
 <div id="code-security-secure-mtom-signing-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -4502,7 +4501,7 @@ $server-&gt;reply();
 <div id="code-security-secure-mtom-signing-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -4793,7 +4792,7 @@ try {
 <pre class="prettyprint">
 &lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -4929,7 +4928,7 @@ $svr-&gt;reply();
 <pre class="prettyprint">
 &lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -5074,7 +5073,7 @@ try {
 
 
 
-<!--sec-conv scenario2-->
+<!--sec-conv scenario2
 <tr class="odd">
   <td colspan="2" class="desc">Secure Conversation - Scenario2
 </td>
@@ -5239,7 +5238,7 @@ try {
 <pre class="prettyprint">
 &lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -5377,7 +5376,7 @@ try {
 <pre class="prettyprint">
 &lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -5522,7 +5521,7 @@ $svr-&gt;reply();
 <div id="code-reliable-mtom-upload-service-rm"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -5582,7 +5581,7 @@ $server-&gt;reply();
 <div id="code-reliable-echo-client-rm"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -5642,7 +5641,7 @@ try {
 <div id="code-reliable-echo-service-rm"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -5690,7 +5689,7 @@ $service-&gt;reply();
 <div id="code-reliable-mtom-upload-client-rm"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -5758,7 +5757,7 @@ try {
 <div id="code-reliable-ping-service-rm"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -5794,7 +5793,7 @@ $svr-&gt;reply();
 <div id="code-reliable-ping-client-rm"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -5855,7 +5854,7 @@ try {
 <pre class="prettyprint">
 &lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -5921,7 +5920,7 @@ try {
 <pre class="prettyprint">
 &lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -5985,7 +5984,7 @@ try {
 <pre class="prettyprint">
 &lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -6068,7 +6067,7 @@ try {
 <div id="code-wsdl-mode-wsdl-11-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -6098,7 +6097,7 @@ function QueryPurchaseOrderFunction($pro_name, $quantity, $date, $orderNo) {
                           					&quot;zip&quot; =&gt; 55432),
 	
                           &quot;product&quot; =&gt; array(&quot;productId&quot; =&gt; 2344, 
-                          					&quot;shippingDate&quot; =&gt; date(20080101), 
+                          					&quot;shippingDate&quot; =&gt; date(20100101), 
                           					&quot;status&quot; =&gt; TRUE));
 	return $return_value;
 }
@@ -6118,7 +6117,7 @@ $svr-&gt;reply();
 <div id="code-wsdl-mode-wsdl-11-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -6188,7 +6187,7 @@ try {
 <div id="code-wsdl-mode-wsdl-20-service"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -6224,7 +6223,7 @@ $svr-&gt;reply();
 <div id="code-wsdl-mode-wsdl-20-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -6514,7 +6513,7 @@ $_SESSION['message'] = $message;
 <div id="code-ssl-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -6569,7 +6568,7 @@ try {
 <div id="code-flickr-client"><br />
 <pre class="prettyprint">&lt;?php
 /*
- * Copyright 2005,2008 WSO2, Inc. http://wso2.com
+ * Copyright 2005,2010 WSO2, Inc. http://wso2.com
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
