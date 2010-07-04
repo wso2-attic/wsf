@@ -591,13 +591,14 @@ void wsf_wsdl_create_dynamic_client(
 				add_assoc_string(user_parameters, WSF_WSDL_ENDPOINT, Z_STRVAL_PP(end_point), 1);
 			}
 		}
-
     }
     if ( zend_hash_find ( Z_OBJPROP_P (client_zval), WSF_WSDL_CLASSMAP,  sizeof (WSF_WSDL_CLASSMAP),
 		(void **) &class_map) == SUCCESS && Z_TYPE_PP (class_map) == IS_ARRAY)
 	{
-            add_assoc_zval(user_parameters, WSF_WSDL_CLASSMAP, *class_map);
-            classmap = *class_map;
+			MAKE_STD_ZVAL(classmap);
+			array_init(classmap);
+			zend_hash_copy(Z_ARRVAL_P(classmap), Z_ARRVAL_PP(class_map), NULL, NULL, sizeof(zval*));
+			add_assoc_zval(user_parameters, WSF_WSDL_CLASSMAP, classmap);
             arguments = args;
     }
 
@@ -1141,11 +1142,9 @@ wsf_wsdl_do_request(zval *client_zval,
           
 			if(classmap){
                 add_assoc_zval(response_parameters, WSF_WSDL_CLASSMAP, classmap);
-				zval_add_ref(&classmap);
 			}
 			if(arguments){
                 add_assoc_zval(response_parameters, WSF_WSDL_ARGS, arguments);
-				zval_add_ref(&arguments);
 			}
             add_assoc_zval (response_parameters, WSF_ATTACHMENTS , cid2str);
             add_assoc_zval (response_parameters, WSF_CID2CONTENT_TYPE , cid2contentType);
@@ -1688,7 +1687,7 @@ void wsf_wsdl_process_service(wsf_svc_info_t *svc_info, const axutil_env_t *env 
                 policy_options = tmp;
                 wsf_wsdl_handle_server_security(svc_info, policy_options,
                                                 env TSRMLS_CC);
-            }
+			}
                             
         }
     }
