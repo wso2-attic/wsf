@@ -46,7 +46,7 @@ Contents:
 	    +--- scripts
          
        In the wso2-wsf-php-src directory you will find a file named configure.in file. Open this file
-       and set your dependency directory locations to relevent entries. You can build with debug symbol
+       and set your dependency directory locations to relevent entries. You can build with debug symbols
        by setting DEBUG=1 option.
 	
        Next run the build.bat file located in wso2-wsf-php-src directory. It should build the binary dist pack
@@ -59,17 +59,12 @@ Contents:
 
 	You need to download following dependency libraries:
 
-	OpenSSL binary distribution
-	PHP Binary
+	PHP binary distribution for VC9
 	
-	obtain libxml2 and iconv win32 binaries from [1].
-	obtain OpenSSL binary from [2] [the build system assumes that you install openssl from msi].
-	obtain PHP Bianry from [3].
+	obtain PHP Bianry from [1].
 
 
-	[1] http://www.zlatkovic.com/pub/libxml/
-	[2] http://www.slproweb.com/products/Win32OpenSSL.html
-	[3] http://www.php.net/downloads.php
+	[1] http://windows.php.net/download/
 
     1.If you built the extension from the source, you will find the wso2-wsf-php-bin-x.y.z-win32 (binary pack) 
       located in your source directory.
@@ -133,15 +128,12 @@ Contents:
 
 3. Binary Dependency version numbers.
 
-  WSO2-WSF-PHP-2.0.0 Win32 Binary Will be compiled using following version of dependency libraries.
+  WSO2-WSF-PHP-2.1.0 Win32 Binary Will be compiled using following version of dependency libraries.
 
-  1. PHP     5.2.6
-  2. Libxml2 2.7.3
-  3. Iconv   1.9.2 
-  4. openssl .98i (MSI)
+  1. PHP     5.3.0
+  2. openssl .98l (MSI)
 
 Note:- By default, we compiled WSF/PHP with SSL enabled. For it to work properly, apache needs to have SSL configured.
 ===============================================================================================
-If you need any help with building or installation , send a 
-mail to wsf-php-user@wso2.org
+If you need any help with building or installation , send a mail to wsf-php-user@wso2.org
 
