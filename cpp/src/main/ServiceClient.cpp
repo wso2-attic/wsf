@@ -696,7 +696,7 @@ bool ServiceClient::setProxy(string proxyHost, string proxyPort)
 	assert(isValid);
 	axis2_status_t status = AXIS2_SUCCESS;
 	status = axis2_svc_client_set_proxy(_wsf_service_client, Environment::getEnv(), 
-		(axis2_char_t *)proxyPort.c_str(), (axis2_char_t *)proxyPort.c_str());
+		(axis2_char_t *)proxyHost.c_str(), (axis2_char_t *)proxyPort.c_str());
 	return status ? true : false;
 }
 
