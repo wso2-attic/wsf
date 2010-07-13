@@ -67,12 +67,14 @@ OMAttribute::~OMAttribute()
 			_namespace->setAxiomNamespace(NULL);
             delete _namespace;
         }
-    }
-	else
+    }else
+    {
+	if(_namespace)
 	{
 		_namespace->setAxiomNamespace(NULL);
 		delete _namespace;
 	}
+    }
 
 }
 
