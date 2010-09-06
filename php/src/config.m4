@@ -19,7 +19,7 @@ if test "$PHP_WSF" = "yes"; then
 	PHP_ADD_INCLUDE(/usr/include/libxml2)
   	dnl # check for lib and symbol presence
 
-  	PHP_ADD_LIBRARY_WITH_PATH(axis2_parser, ../wsf_c/axis2c/axiom/src/parser/libxml2/.libs, WSF_SHARED_LIBADD)
+  	PHP_ADD_LIBRARY_WITH_PATH(axis2_parser, ../wsf_c/axis2c/axiom/src/parser/guththila/.libs, WSF_SHARED_LIBADD)
   	PHP_ADD_LIBRARY_WITH_PATH(axis2_axiom, ../wsf_c/axis2c/axiom/src/om/.libs, WSF_SHARED_LIBADD)
 	
 	PHP_ADD_LIBRARY_WITH_PATH(axis2_engine, ../wsf_c/axis2c/src/core/engine/.libs, WSF_SHARED_LIBADD)	
