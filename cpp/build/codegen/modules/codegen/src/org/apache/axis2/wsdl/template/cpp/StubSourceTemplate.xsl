@@ -382,8 +382,14 @@
               soap_action = "<xsl:value-of select="$soapAction"/>";
               soap_act = axutil_string_create(Environment::getEnv(), "<xsl:value-of select="$soapAction"/>");
               axis2_options_set_soap_action(options, Environment::getEnv(), soap_act);    
+              /* Set addressing action, same as soap action    */
+              axis2_options_set_action(options,Environment::getEnv(),soap_action);
             }
 
+            op_qname = axutil_qname_create(Environment::getEnv(),
+                                           "<xsl:value-of select="@localpart"/>" ,
+                                           "<xsl:value-of select="@namespace"/>",
+                                           NULL);
             <xsl:choose>
              <xsl:when test="$soapVersion='http://www.w3.org/2003/05/soap-envelope'">
             axis2_options_set_soap_version(options, Environment::getEnv(), AXIOM_SOAP12);
