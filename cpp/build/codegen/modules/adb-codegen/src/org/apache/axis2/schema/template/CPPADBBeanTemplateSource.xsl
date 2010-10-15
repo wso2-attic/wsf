@@ -5082,6 +5082,34 @@
                 </xsl:if>
                 return true;
              }
+
+
+             /**
+             * specialized enum constructor for <xsl:value-of select="$propertyName"/>.
+             */
+            <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::<xsl:value-of select="$axis2_name"/>(<xsl:value-of select="$constValue"/><xsl:value-of select="$enum"/><xsl:text> </xsl:text> arg_<xsl:value-of select="$CName"/>)
+             {             <xsl:if test="not($istype)">
+                   qname = NULL;
+             </xsl:if>
+
+
+           <xsl:if test="not($istype)">
+             <xsl:choose>
+               <xsl:when test="$nsuri and $nsuri != ''">
+                 qname =  axutil_qname_create (Environment::getEnv(),
+                       "<xsl:value-of select="$originalName"/>",
+                       "<xsl:value-of select="$nsuri"/>",
+                       NULL);
+               </xsl:when>
+               <xsl:otherwise>
+                qname =  axutil_qname_create (Environment::getEnv(),"<xsl:value-of select="$originalName"/>", NULL, NULL);
+               </xsl:otherwise>
+             </xsl:choose>
+           </xsl:if>
+
+            isValid<xsl:value-of select="$CName"/>  = set<xsl:value-of select="$CName"/>Enum( arg_<xsl:value-of select="$CName"/> );
+            }
+
             </xsl:if>
 
             <xsl:if test="@isarray">
