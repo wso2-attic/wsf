@@ -82,7 +82,7 @@
 		>
         <xsl:choose>
             <xsl:when test="$option=1">
-                 <xsl:attribute name="AdditionalIncludeDirectories">.;.\<xsl:value-of select="$targetsourcelocation"/>;$(WSFCPP_HOME)\include;$(WSFCPP_HOME)\platforms</xsl:attribute>
+                 <xsl:attribute name="AdditionalIncludeDirectories">.;.\<xsl:value-of select="$targetsourcelocation"/>;$(WSFCPP_HOME)\include;$(WSFCPP_HOME)\include\platforms</xsl:attribute>
             </xsl:when>
             <xsl:otherwise>
                  <xsl:attribute name="AdditionalIncludeDirectories">.;$(WSFCPP_HOME)\include;$(WSFCPP_HOME)\include\platforms</xsl:attribute>
