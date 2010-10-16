@@ -57,7 +57,9 @@ namespace wso2wsf
 		Options *clientOptions;
 		
     public:
-      		/**
+        
+      	
+      	/**
 		 * Initialize the Stub. 
 		 * @param client_home string referring to the client repository location.
 		 * @param endpointUri The endpoint URI of the service which will be invoked using this stub.
@@ -98,6 +100,11 @@ namespace wso2wsf
 		 * addAnnonymousOperations
 		 */ 
 		WSF_EXTERN void WSF_CALL addAnonymousOperations();
+
+		/**
+		 * Destroy the Stub. 
+		 */ 	 
+		WSF_EXTERN virtual WSF_CALL ~Stub();
 
 
     };
