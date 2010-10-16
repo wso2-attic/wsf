@@ -329,6 +329,13 @@ namespace <xsl:value-of select="@cppNamespace"/>
         <xsl:if test="count(property) > 0">
         <xsl:value-of select="$axis2_name"/>(<xsl:value-of select="$arg_list"/>);
         </xsl:if>
+	
+	
+
+        /**
+         * resetAll for <xsl:value-of select="$axis2_name"/>
+         */
+        WSF_EXTERN bool WSF_CALL resetAll();
         <!--
         <xsl:choose>
             <xsl:when test="count(property)">
@@ -702,13 +709,6 @@ namespace <xsl:value-of select="@cppNamespace"/>
             /************************** Getters and Setters For Enumerations ********************************/
             /********************* Enumeration Specific Operations: get_enum, set_enum **********************/
             
-	    /**
-            * specialized enum constructor for <xsl:value-of select="$axis2_name"/>.
-            * @param arg_<xsl:value-of select="$CName"/><xsl:text> </xsl:text> <xsl:value-of select="$enum"/>
-            * @return newly created <xsl:value-of select="$axis2_name"/> object
-            */
-            <xsl:value-of select="$axis2_name"/>(<xsl:value-of select="$constValue"/><xsl:value-of select="$enum"/><xsl:text> </xsl:text> arg_<xsl:value-of select="$CName"/>);
-             
             /**
             * Enum getter for <xsl:value-of select="$propertyName"/>.
             * @return <xsl:value-of select="$enum"/>; -1 on failure

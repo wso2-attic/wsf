@@ -336,6 +336,31 @@
 
         <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::~<xsl:value-of select="$axis2_name"/>()
         {
+            resetAll();
+        }
+
+        bool WSF_CALL <xsl:value-of select="$CPPNamespace"/><xsl:value-of select="$axis2_name"/>::resetAll()
+        {
+            //calls reset method for all the properties owned by this method which are pointers.
+
+            <xsl:for-each select="property">
+            <xsl:variable name="CName"><xsl:value-of select="@cname"></xsl:value-of></xsl:variable>
+            <xsl:choose>
+             <xsl:when test="@isarray or @ours or @type='axutil_qname_t*' or @type='axutil_duration_t*' or @type='axutil_uri_t*' or @type='axutil_date_time_t*' or @type='axutil_base64_binary_t*'">
+             reset<xsl:value-of select="$CName"/>();//<xsl:value-of select="@type"/>
+             </xsl:when>
+            </xsl:choose>
+            </xsl:for-each>
+
+
+        <xsl:if test="not($istype)">
+          if(qname != NULL)
+          {
+            axutil_qname_free( qname, Environment::getEnv());
+            qname = NULL;
+          }
+        </xsl:if>
+            return true;
 
         }
 
