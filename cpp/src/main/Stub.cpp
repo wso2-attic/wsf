@@ -21,6 +21,8 @@
 using namespace std;
 using namespace wso2wsf;
 
+
+
 void Stub::init(std::string& client_home, std::string& endpointUri)
 {
 	serviceClient = new ServiceClient(client_home, endpointUri);
@@ -63,5 +65,11 @@ bool Stub::engageModule(std::string moduleName)
 void Stub::addAnonymousOperations()
 {	
 	
+}
+
+Stub::~Stub()
+{
+	delete serviceClient;
+	serviceClient = NULL;
 }
 
