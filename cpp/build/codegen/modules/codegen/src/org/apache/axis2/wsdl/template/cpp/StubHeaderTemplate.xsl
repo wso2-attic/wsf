@@ -144,6 +144,12 @@ class <xsl:value-of select="@name"/> : public wso2wsf::Stub
         <xsl:value-of select="@name"/>(std::string&amp; client_home, std::string&amp; endpoint_uri);
 
         /**
+         *  Destructor of <xsl:value-of select="@servicename"/> class
+         */
+
+        ~<xsl:value-of select="@name"/>();
+
+        /**
          * Populate Services for <xsl:value-of select="@name"/>
          */
         void WSF_CALL
