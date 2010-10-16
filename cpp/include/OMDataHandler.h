@@ -111,7 +111,7 @@ namespace wso2wsf
          * @param output_stream_length size of retrieved stream.
          * @return true if operation was successful, false otherwise.
          */
-        WSF_EXTERN bool WSF_CALL read(axis2_byte_t ** output_stream, int * output_stream_length);
+        WSF_EXTERN bool WSF_CALL read(axis2_byte_t ** output_stream, size_t * output_stream_length);
 
         /**
          * Method to write to a stream.
