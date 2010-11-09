@@ -343,6 +343,21 @@ void wsf_wsdl_extract_wsdl_information_for_client(
 			{
 				add_assoc_string(user_parameters, WSF_HTTP_AUTH_TYPE, Z_STRVAL_PP(tmpval), 1);
 			}
+			if(zend_hash_find(ht, WSF_WSDL_CA_CERT, sizeof(WSF_WSDL_CA_CERT), (void **)&tmpval) == SUCCESS &&
+				Z_TYPE_PP(tmpval) == IS_STRING)
+			{
+				add_assoc_string(user_parameters, WSF_WSDL_CA_CERT, Z_STRVAL_PP(tmpval), 1);
+			}
+			if(zend_hash_find(ht, WSF_WSDL_CLIENT_CERT, sizeof(WSF_WSDL_CLIENT_CERT), (void**)&tmpval) == SUCCESS &&
+				Z_TYPE_PP(tmpval) == IS_STRING)
+			{
+				add_assoc_string(user_parameters, WSF_WSDL_CLIENT_CERT, Z_STRVAL_PP(tmpval), 1);
+			}
+			if(zend_hash_find(ht, WSF_WSDL_PASSPHRASE, sizeof(WSF_WSDL_PASSPHRASE), (void**)&tmpval) == SUCCESS &&
+				Z_TYPE_PP(tmpval) == IS_STRING)
+			{
+				add_assoc_string(user_parameters, WSF_WSDL_CLIENT_CERT, Z_STRVAL_PP(tmpval), 1);
+			}
 		}
 	}
     else {
