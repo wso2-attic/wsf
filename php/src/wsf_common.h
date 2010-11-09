@@ -145,6 +145,10 @@ typedef enum ws_input_types
 #define WSF_HTTP_AUTH_TYPE          "httpAuthType"
 #define WSF_PHP_AUTH_TYPE_BASIC			"Basic"
 
+#define WSF_WSDL_CA_CERT			"CACert"
+#define WSF_WSDL_CLIENT_CERT		"clientCert"
+#define WSF_WSDL_PASSPHRASE			"passphrase"
+
 /** proxy authentication */
 #define WSF_PROXY_AUTH_USERNAME      "proxyAuthUsername"
 #define WSF_PROXY_AUTH_PASSWORD      "proxyAuthPassword"
