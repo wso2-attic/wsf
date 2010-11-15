@@ -140,7 +140,7 @@ function wsf_process_multiple_interfaces($wsdl_dom) {
  * @param string $wsdl_location
  * @return DomDocument $wsdl_dom DomDocument of WSDL2.0
  */
-function wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, &$is_wsdl_11, &$wsdl_11_dom) {
+function wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, &$is_wsdl_11, &$wsdl_11_dom, $streamctx) {
     require_once('wsf_wsdl_consts.php');
 
     $xslt_wsdl_20_dom = new DOMDocument();
@@ -166,8 +166,8 @@ function wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, &$is_wsdl_11, &$wsdl_11_dom
                 $xslt->importStyleSheet($xslt_wsdl_20_dom);
 
                 //clear out the wsdl imports
-                $wsdl_dom = wsf_clear_wsdl_imports($wsdl_dom, $wsdl_location);
-                $wsdl_dom = wsf_clear_xsd_imports($wsdl_dom, $wsdl_location);
+                $wsdl_dom = wsf_clear_wsdl_imports($wsdl_dom, $wsdl_location, $streamctx);
+                $wsdl_dom = wsf_clear_xsd_imports($wsdl_dom, $wsdl_location, $streamctx);
                 //$wsdl_dom->preserveWhiteSpace = FALSE;
 
                 // we are serialized the dom to a string and convert it back as a string 
@@ -952,7 +952,7 @@ function wsf_is_rpc_enc_wsdl($binding_node, $operation_name) {
 /**
  * Returns a WSDL removing all the xsd:imports
  */
-function wsf_clear_xsd_imports($wsdl_dom, $relative_url) {
+function wsf_clear_xsd_imports($wsdl_dom, $relative_url, $stream_ctx) {
 
     $wsdl_root = $wsdl_dom->documentElement;
 
@@ -971,7 +971,7 @@ function wsf_clear_xsd_imports($wsdl_dom, $relative_url) {
                     continue;
                 }
                 if($schema_node->localName == "schema") {
-                    wsf_attach_xsd_imports($wsdl_types_node, $wsdl_dom, $schema_node, $relative_url, $already_added_xsds);
+                    wsf_attach_xsd_imports($wsdl_types_node, $wsdl_dom, $schema_node, $relative_url, $already_added_xsds, $stream_ctx);
                 }
             }
             break;
@@ -985,10 +985,10 @@ function wsf_clear_xsd_imports($wsdl_dom, $relative_url) {
  * Returns a WSDL removing all the wsdl:imports
  */
 
-function wsf_clear_wsdl_imports($wsdl_dom, $relative_url = "") {
+function wsf_clear_wsdl_imports($wsdl_dom, $relative_url = "", $stream_ctx) {
     
     $already_imported_wsdls = array();
-    $imports = wsf_get_wsdl_imports($wsdl_dom, $relative_url, $already_imported_wsdls);
+    $imports = wsf_get_wsdl_imports($wsdl_dom, $relative_url, $already_imported_wsdls, $stream_ctx);
 
     if(count($imports) == 0) {
         // no wsdl_imports
@@ -1195,9 +1195,9 @@ function wsf_clear_wsdl_imports($wsdl_dom, $relative_url = "") {
  * Returns WSDL importing elements array associated with
  * given wsdl
  */
-function wsf_get_wsdl_imports($wsdl_dom, $relative_url, &$already_imported_wsdls){
+function wsf_get_wsdl_imports($wsdl_dom, $relative_url, &$already_imported_wsdls , $streamctx){
     
-    $wsdl_dom = wsf_clear_xsd_imports($wsdl_dom, $relative_url);
+    $wsdl_dom = wsf_clear_xsd_imports($wsdl_dom, $relative_url, $streamctx);
     $root = $wsdl_dom->documentElement;
     $root_childs = $root->childNodes;
 
@@ -1230,10 +1230,10 @@ function wsf_get_wsdl_imports($wsdl_dom, $relative_url, &$already_imported_wsdls
                     $already_imported_wsdls[$imported_location] = TRUE;
                     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "importing wsdl: $imported_location from: $relative_url");
                     $imported_dom = new DOMDocument();
-                    $imported_content = file_get_contents($imported_location);
+                    $imported_content = file_get_contents($imported_location, 0, $streamctx);
                     if($imported_dom->loadXML($imported_content)) {
                         $imports[] = $imported_dom;
-                        $recursive_imports = wsf_get_wsdl_imports($imported_dom, $imported_location, $already_imported_wsdls);
+                        $recursive_imports = wsf_get_wsdl_imports($imported_dom, $imported_location, $already_imported_wsdls,$streamctx);
                         $imports = array_merge($imports, $recursive_imports);
                     }
                 }
@@ -1291,7 +1291,7 @@ function wsf_normalize_url($url) {
 }
 
 /* attache xsd imports to the original wsdl */
-function wsf_attach_xsd_imports($wsdl_types_node, $wsdl_dom, $schema_node, $relative_url, &$already_added_xsds) {
+function wsf_attach_xsd_imports($wsdl_types_node, $wsdl_dom, $schema_node, $relative_url, &$already_added_xsds, $stream_ctx) {
     $schema_childs = $schema_node->childNodes;
 
     /* extracting out relative url details */
@@ -1322,17 +1322,17 @@ function wsf_attach_xsd_imports($wsdl_types_node, $wsdl_dom, $schema_node, $rela
                     $imported_location = wsf_normalize_url($tmp_relative_url);
                 }
                 if(!array_key_exists($imported_location, $already_added_xsds) ||
-                       $already_added_xsds[$imported_location] == NULL) {
+                    $already_added_xsds[$imported_location] == NULL) {
                     $already_added_xsds[$imported_location] = TRUE;
                     ws_log_write(__FILE__, __LINE__, WSF_LOG_DEBUG, "importing xsd: $imported_location from: $relative_url");
                     $imported_dom = new DOMDocument();
-                    $imported_content = file_get_contents($imported_location);
+                    $imported_content = file_get_contents($imported_location, 0, $stream_ctx);
                     if($imported_dom->loadXML($imported_content)) {
                         $imported_root = $imported_dom->documentElement;
                         if($imported_root && $imported_root->nodeType == XML_ELEMENT_NODE &&
                                 $imported_root->localName == "schema") {
                             // do the same thing for the imported_schema
-                            wsf_attach_xsd_imports($wsdl_types_node, $wsdl_dom, $imported_root, $imported_location, $already_added_xsds);
+                            wsf_attach_xsd_imports($wsdl_types_node, $wsdl_dom, $imported_root, $imported_location, $already_added_xsds, $stream_ctx);
 
                             // append the schema to the first wsdl
                             wsf_wsdl_append_node($wsdl_types_node, $imported_root, $wsdl_dom);

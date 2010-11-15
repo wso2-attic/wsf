@@ -149,6 +149,10 @@ function wsf_get_wsdl_str_from_url($wsdl_url,$user_parameters)
 	$username = NULL;
 	$password  = NULL;
 	$password_type = NULL;
+	/** https client auth */
+	$cacert = NULL;
+	$clientcert = NULL;
+	$passphrase = NULL;
 	$options = NULL;
 	if(array_key_exists(WSF_HTTP_AUTH_USERNAME,$user_parameters))
 	{
@@ -164,6 +168,15 @@ function wsf_get_wsdl_str_from_url($wsdl_url,$user_parameters)
 	{
 		$password_type = $user_parameters[WSF_HTTP_AUTH_TYPE];	
 	}
+	if(array_key_exists(WSF_WSDL_CA_CERT, $user_parameters)){
+		$cacert = $user_parameters[WSF_WSDL_CA_CERT];
+	}
+	if(array_key_exists(WSF_WSDL_CLIENT_CERT, $user_parameters)){
+		$clientcert = $user_parameters[WSF_WSDL_CLIENT_CERT];
+	}
+	if(array_key_exists(WSF_WSDL_PASSPHRASE, $user_parameters)){
+		$passphrase = $user_parameters[WSF_WSDL_PASSPHRASE];
+	}
 	
 	if(!is_null($username) && !is_null($password) && !is_null($password_type))
 	{
@@ -178,7 +191,16 @@ function wsf_get_wsdl_str_from_url($wsdl_url,$user_parameters)
 		}
 	}else
 	{
-		$result = file_get_contents($wsdl_url);	
+		$stream_ctx = NULL;
+		if(!is_null($cacert) && !is_null($clientcert)){
+			$stream_ctx = stream_context_create(
+							array("ssl"=>array(
+								'cafile' => $cacert,
+								'local_cert'=>$clientcert,
+								'verify_peer'=>false,
+							)));
+		}
+		$result = file_get_contents($wsdl_url, 0 ,$stream_ctx);	
 		if(empty($result))
 		{
 			throw new WSFault("Receiver","Could not Load WSDL from $wsdl_url");
@@ -209,7 +231,24 @@ function wsf_extract_wsdl_info($wsdata) {
     
     $is_wsdl_11 = TRUE;
     $wsdl_11_dom = NULL;
+    
+    /** https client auth */
+	$cacert = NULL;
+	$clientcert = NULL;
+	$passphrase = NULL;
+	$stream_ctx = NULL;
 
+	/** wsf_get_wsdl_function using an stream context object */
+	
+	if(!is_null($cacert) && !is_null($clientcert)){
+			$stream_ctx = stream_context_create(
+							array("ssl"=>array(
+								'cafile' => $cacert,
+								'local_cert'=>$clientcert,
+								'verify_peer'=>false,
+							)));
+	}
+	
     $return_value = array();
 
     /* retrieving the user parameters */
@@ -259,7 +298,7 @@ function wsf_extract_wsdl_info($wsdata) {
     if ($is_multiple_interfaces == FALSE) {
         // this will return the wsdl2.0 dom and the information 
         // about is_wsdl_11 and wsdl_11_dom + bundles the imports, includes
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, $is_wsdl_11, $wsdl_11_dom);
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, $is_wsdl_11, $wsdl_11_dom, $stream_ctx);
         
         if(!$wsdl_dom) {
             ws_log_write(__FILE__, __LINE__, WSF_LOG_ERROR, "Error creating WSDL Dom Document,".
@@ -273,7 +312,7 @@ function wsf_extract_wsdl_info($wsdata) {
     else {
         // this will return the wsdl2.0 dom and the information
         // about is_wsdl_11 and wsdl_11_dom + bundles the imports, includes
-        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, $is_wsdl_11, $wsdl_11_dom);
+        $wsdl_dom = wsf_get_wsdl_dom($wsdl_dom, $wsdl_location, $is_wsdl_11, $wsdl_11_dom, $stream_ctx);
         $sig_model_dom = wsf_process_multiple_interfaces($wsdl_dom);
     }
     

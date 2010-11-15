@@ -22,6 +22,10 @@ define ("WSF_HTTP_AUTH_PASSWORD","httpAuthPassword");
 define ("WSF_HTTP_AUTH_DIGEST","Digest");
 define ("WSF_HTTP_AUTH_BASIC","Basic");
 define ("WSF_HTTP_AUTH_TYPE","httpAuthType");
+/* used when an https endpoint with client autentication is defined for the given wsdl */
+define ("WSF_WSDL_CA_CERT","CACert");
+define ("WSF_WSDL_CLIENT_CERT","clientCert");
+define ("WSF_WSDL_PASSPHRASE","passphrase");
 define("WSF_ENDPOINT", "endpoint");
 define("WSF_INVOKE_FUNCTION", "invoke_function");
 define("WSF_ARG_COUNT", "arg_count");
