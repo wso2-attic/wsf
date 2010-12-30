@@ -1666,11 +1666,25 @@ PHP_METHOD(ws_service, reply) {
     }
 
 
-    if (SG(request_info).query_string &&
-            ((stricmp(SG(request_info).query_string, WSF_WSDL) == 0)
+	if (SG(request_info).query_string){
+
+			if(((stricmp(SG(request_info).query_string, WSF_WSDL) == 0)
             || (stricmp(SG(request_info).query_string, WSF_WSDL2) == 0))) {
-        /** begin WSDL Generation */
-        generate_wsdl_for_service(obj, svc_info, &req_info, SG(request_info).query_string, 0 TSRMLS_CC);
+				/** begin WSDL Generation */
+				generate_wsdl_for_service(obj, svc_info, &req_info, SG(request_info).query_string, 0 TSRMLS_CC);
+			}
+			if(axutil_strcasestr(SG(request_info).query_string, WSF_XSD) != NULL)
+			{
+				char *querystr = NULL, *filename = NULL;
+				int length = 0;
+				querystr = SG(request_info).query_string;
+				length = strlen(querystr);
+				if(length > 4){
+					filename = axutil_string_substring_starting_at(querystr, 4);
+					if(VCWD_ACCESS(filename, F_OK) != -1)
+					serve_static_wsdl(filename TSRMLS_CC);
+				}
+			}
 
     } else {
 
