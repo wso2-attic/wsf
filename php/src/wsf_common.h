@@ -69,6 +69,7 @@ typedef enum ws_input_types
 #define WSF_OP_MEP       "opMEP"
 #define WSF_OP_PARAMS    "opParams"
 #define WSF_WSDL         "wsdl"
+#define WSF_XSD			 "xsd"
 #define WSF_OMIT_WSDL    "omitProcesswsdl"
 #define WSF_CLASSMAP     "classmap"
 #define WSF_CLASSES      "classes"
