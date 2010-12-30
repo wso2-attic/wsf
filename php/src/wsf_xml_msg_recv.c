@@ -307,7 +307,7 @@ wsf_xml_msg_recv_invoke_business_logic_sync(
     {
         /* this is where the default value for opParam is set,
            If the wsdl option is set go for the MIXED mode by default */
-        if (svc_info->wsdl == NULL)
+		if (svc_info->wsdl == NULL || svc_info->omit_wsdl)
         {
             result_node = wsf_xml_msg_recv_invoke_wsmsg(env, operation_name,
                     in_msg_ctx, out_msg_ctx, svc_info, classname, req_info->content_type TSRMLS_CC);
