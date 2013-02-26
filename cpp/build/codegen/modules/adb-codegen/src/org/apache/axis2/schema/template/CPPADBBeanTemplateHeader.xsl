@@ -145,7 +145,21 @@
         #include &lt;stdio.h&gt;
         #include &lt;OMElement.h&gt;
         #include &lt;ServiceClient.h&gt;
-        #include &lt;ADBDefines.h&gt;
+	#include &lt;ADBDefines.h&gt;
+
+	#ifdef WIN32
+
+	#ifdef WSDL2CPP_EXPORTS
+	#define WSDL2CPP_EXTERN __declspec(dllexport)
+	#else
+	#define WSDL2CPP_EXTERN __declspec(dllimport)
+	#endif
+
+	#else
+
+	#define WSDL2CPP_EXTERN
+
+	#endif
 
 namespace <xsl:value-of select="@cppNamespace"/>
 {
@@ -173,7 +187,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
         <xsl:variable name="isUnion" select="@union"/>
         
 
-        class <xsl:value-of select="$axis2_name"/> {
+        class WSDL2CPP_EXTERN <xsl:value-of select="$axis2_name"/> {
 
         private:
              <xsl:if test="not($istype)">
@@ -335,7 +349,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
         /**
          * resetAll for <xsl:value-of select="$axis2_name"/>
          */
-        WSF_EXTERN bool WSF_CALL resetAll();
+        bool WSF_CALL resetAll();
         <!--
         <xsl:choose>
             <xsl:when test="count(property)">
@@ -428,7 +442,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
          * Getter for <xsl:value-of select="$propertyName"/>. <xsl:if test="@isarray">Deprecated for array types, Use get<xsl:value-of select="$CName"/>At instead</xsl:if>
          * @return <xsl:value-of select="$paramComment"/>
          */
-        WSF_EXTERN <xsl:value-of select="$propertyType"/> WSF_CALL
+        <xsl:value-of select="$propertyType"/> WSF_CALL
         get<xsl:value-of select="$CName"/>();
 
         /**
@@ -437,14 +451,14 @@ namespace <xsl:value-of select="@cppNamespace"/>
          * @param arg_<xsl:value-of select="$CName"/><xsl:text> </xsl:text> <xsl:value-of select="$paramComment"/>
          * @return true on success, false otherwise
          */
-        WSF_EXTERN bool WSF_CALL
+        bool WSF_CALL
         set<xsl:value-of select="$CName"/>(<xsl:value-of select="$constValue"/><xsl:value-of select="$propertyType"/><xsl:text> </xsl:text> arg_<xsl:value-of select="$CName"/>);
 
         /**
          * Re setter for <xsl:value-of select="$propertyName"/>
          * @return true on success, false
          */
-        WSF_EXTERN bool WSF_CALL
+        bool WSF_CALL
         reset<xsl:value-of select="$CName"/>();
         </xsl:for-each>
 
@@ -481,7 +495,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
          * Getter for <xsl:value-of select="$propertyName"/>. Deprecated for array types, Use get<xsl:value-of select="$CName"/>At().
          * @return <xsl:value-of select="$paramComment"/>
          */
-        WSF_EXTERN <xsl:value-of select="$propertyType"/> WSF_CALL
+        <xsl:value-of select="$propertyType"/> WSF_CALL
         get<xsl:value-of select="$CName"/>();
 
         /**
@@ -574,7 +588,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
         * @param i index of the item to be obtained
          * @return ith <xsl:value-of select="$nativePropertyType"/> of the array
          */
-        WSF_EXTERN <xsl:value-of select="$nativePropertyType"/> WSF_CALL
+        <xsl:value-of select="$nativePropertyType"/> WSF_CALL
         get<xsl:value-of select="$CName"/>At(int i);
 
         /**
@@ -583,7 +597,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
          * @param <xsl:text>arg_</xsl:text> <xsl:value-of select="$CName"/> element to set <xsl:value-of select="$nativePropertyType"/> to the array
          * @return ith <xsl:value-of select="$nativePropertyType"/> of the array
          */
-        WSF_EXTERN bool WSF_CALL
+        bool WSF_CALL
         set<xsl:value-of select="$CName"/>At(int i,
                 <xsl:value-of select="$constValue"/><xsl:value-of select="$nativePropertyType"/><xsl:text> arg_</xsl:text> <xsl:value-of select="$CName"/>);
 
@@ -593,7 +607,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
          * @param <xsl:text>arg_</xsl:text> <xsl:value-of select="$CName"/> element to add <xsl:value-of select="$nativePropertyType"/> to the array
          * @return true on success, false otherwise.
          */
-        WSF_EXTERN bool WSF_CALL
+        bool WSF_CALL
         add<xsl:value-of select="$CName"/>(
             <xsl:value-of select="$constValue"/><xsl:value-of select="$nativePropertyType"/><xsl:text> arg_</xsl:text> <xsl:value-of select="$CName"/>);
 
@@ -601,7 +615,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
          * Get the size of the <xsl:value-of select="$propertyName"/> array.
          * @return the size of the <xsl:value-of select="$propertyName"/> array.
          */
-        WSF_EXTERN int WSF_CALL
+        int WSF_CALL
         sizeof<xsl:value-of select="$CName"/>();
 
         /**
@@ -609,7 +623,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
          * @param i index of the item to remove
          * @return true on success, false otherwise.
          */
-        WSF_EXTERN bool WSF_CALL
+        bool WSF_CALL
         remove<xsl:value-of select="$CName"/>At(int i);
 
         </xsl:if> <!-- xsl:if test="@isarray" -->
@@ -648,7 +662,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
          * @param i index of the item to return
          * @return ith <xsl:value-of select="$nativePropertyType"/> of the array
          */
-        WSF_EXTERN <xsl:value-of select="$nativePropertyType"/> WSF_CALL
+        <xsl:value-of select="$nativePropertyType"/> WSF_CALL
         get<xsl:value-of select="$CName"/>At(int i);
 
         /**
@@ -657,7 +671,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
          * @param <xsl:text>arg_</xsl:text> <xsl:value-of select="$CName"/> element to set <xsl:value-of select="$nativePropertyType"/> to the array
          * @return ith <xsl:value-of select="$nativePropertyType"/> of the array
          */
-        WSF_EXTERN bool WSF_CALL
+        bool WSF_CALL
         set<xsl:value-of select="$CName"/>At(int i,
         <xsl:value-of select="$constValue"/><xsl:value-of select="$nativePropertyType"/><xsl:text> arg_</xsl:text> <xsl:value-of select="$CName"/>);
 
@@ -667,7 +681,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
          * @param <xsl:text>arg_</xsl:text> <xsl:value-of select="$CName"/> element to add <xsl:value-of select="$nativePropertyType"/> to the array
          * @return true on success, false otherwise.
          */
-        WSF_EXTERN bool WSF_CALL
+        bool WSF_CALL
         add<xsl:value-of select="$CName"/>(
             <xsl:value-of select="$constValue"/><xsl:value-of select="$nativePropertyType"/><xsl:text> arg_</xsl:text> <xsl:value-of select="$CName"/>);
 
@@ -675,7 +689,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
          * Get the size of the <xsl:value-of select="$propertyName"/> array.
          * @return the size of the <xsl:value-of select="$propertyName"/> array.
          */
-        WSF_EXTERN int AXIS2_CALL
+        int WSF_CALL
         sizeof<xsl:value-of select="$CName"/>();
 
         /**
@@ -999,7 +1013,7 @@ namespace <xsl:value-of select="@cppNamespace"/>
          * Retrieve the current member type
          * @return Current member type as a string
          */
-        std::string AXIS2_CALL
+        std::string WSF_CALL
         currentMemberType();
     </xsl:if>
 

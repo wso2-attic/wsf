@@ -365,15 +365,6 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
    
     if (action != "")
     {
-        if (_options->getSoapVersion() == AXIOM_SOAP11)
-        {
-            axutil_string_t * soap_action = axutil_string_create(Environment::getEnv(), action.c_str());
-			/** cannot fail */
-            status = axis2_options_set_soap_action(_options->_wsf_options, Environment::getEnv(), soap_action);
-            axutil_string_free(soap_action, Environment::getEnv());
-        }
-        else
-        {
             axutil_qname_t * qname = axutil_qname_create(Environment::getEnv(), AXIS2_MODULE_ADDRESSING, NULL, NULL);
             axis2_bool_t engaged =
                 axis2_svc_is_module_engaged(axis2_svc_client_get_svc(_wsf_service_client, Environment::getEnv()),
@@ -383,9 +374,10 @@ OMElement * ServiceClient::request(OMElement * payload, ICallback * callback, st
             {
 				/** cannot fail */
                 status = axis2_options_set_action(_options->_wsf_options, Environment::getEnv(), action.c_str());
-                
             }
-        }
+	    axutil_string_t * soap_action = axutil_string_create(Environment::getEnv(), action.c_str());
+	    axis2_options_set_soap_action(_options->_wsf_options, Environment::getEnv(), soap_action);
+	    axutil_string_free(soap_action, Environment::getEnv());
     }
     axiom_node_t * node;
     if (!callback)
@@ -506,14 +498,6 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string operation
 	}
     if (action != "")
     {
-        if (_options->getSoapVersion() == AXIOM_SOAP11)
-        {
-            axutil_string_t * soap_action = axutil_string_create(Environment::getEnv(), action.c_str());
-            status = axis2_options_set_soap_action(_options->_wsf_options, Environment::getEnv(), soap_action);
-            axutil_string_free(soap_action, Environment::getEnv());
-        }
-        else
-        {
             axutil_qname_t * qname = axutil_qname_create(Environment::getEnv(), AXIS2_MODULE_ADDRESSING, NULL, NULL);
             axis2_bool_t engaged =
                 axis2_svc_is_module_engaged(axis2_svc_client_get_svc(_wsf_service_client, Environment::getEnv()),
@@ -523,7 +507,9 @@ bool ServiceClient::send(OMElement * payload, bool robust, std::string operation
             {
                 status = axis2_options_set_action(_options->_wsf_options, Environment::getEnv(), action.c_str());
             }
-        }
+	    axutil_string_t * soap_action = axutil_string_create(Environment::getEnv(), action.c_str());
+	    status = axis2_options_set_soap_action(_options->_wsf_options, Environment::getEnv(), soap_action);
+	    axutil_string_free(soap_action, Environment::getEnv());
     }
     if (robust)
     {

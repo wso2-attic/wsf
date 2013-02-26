@@ -466,7 +466,7 @@
           Checksum policy when not specified always defaults to 'warn'
           which is what we want.
        -->
-        <repository>
+	<!-- <repository>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
@@ -478,7 +478,7 @@
             <id>apache-ws-snapshots2</id>
             <name>Apache ws.zones - 2</name>
             <url>http://ws.zones.apache.org/repository2</url>
-        </repository>
+	</repository> -->
         <repository>
             <id>tomcat-repository</id>
             <url>http://tomcat.apache.org/dev/dist/m2-repository</url>
@@ -528,7 +528,7 @@
                 <enabled>false</enabled>
             </releases>
         </pluginRepository>
-        <pluginRepository>
+	<!-- <pluginRepository>
             <id>ws-zones</id>
             <name>Apache WS Zones Repository</name>
             <url>http://ws.zones.apache.org/repository2</url>
@@ -540,7 +540,7 @@
             <releases>
                 <enabled>true</enabled>
             </releases>
-        </pluginRepository>
+	</pluginRepository> -->
     </pluginRepositories>
 
     <dependencyManagement>

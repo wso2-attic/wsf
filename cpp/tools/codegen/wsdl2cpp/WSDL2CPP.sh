@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export CODEGEN_HOME=`pwd`/../
+export CODEGEN_HOME=$(cd $(dirname $0) && pwd)/../
 for f in $CODEGEN_HOME/lib/*.jar
 do
   CODEGEN_CLASSPATH=$CODEGEN_CLASSPATH:$f
