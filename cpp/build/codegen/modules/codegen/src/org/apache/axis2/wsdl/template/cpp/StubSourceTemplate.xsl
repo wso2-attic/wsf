@@ -57,6 +57,16 @@
       /**
        * <xsl:value-of select="@name"/> CPP implementation
        */
+       <xsl:value-of select="@name"/>::<xsl:value-of select="@name"/>()
+        {
+                std::string endpointUri= getEndpointUriOf<xsl:value-of select="$servicename"/>();
+
+                init(endpointUri);
+
+                populateServicesFor<xsl:value-of select="$servicename"/>();
+        }
+
+
        <xsl:value-of select="@name"/>::<xsl:value-of select="@name"/>(std::string&amp; clientHome)
         {
                 if(clientHome.empty())
@@ -77,19 +87,21 @@
       {
          std::string endpointUri;
 
-         if(clientHome.empty())
-         {
-            cout&lt;&lt;"Please specify the client home";
-         }
          endpointUri = endpointURI;
 
          if (endpointUri.empty())
          {
             endpointUri = getEndpointUriOf<xsl:value-of select="$servicename"/>();
-         }
+	 }
 
-
-         init(clientHome,endpointUri);
+	 if (clientHome.empty())
+	 {
+	   init(endpointUri);
+	 }
+	 else
+	 {
+           init(clientHome,endpointUri);
+	 }
 
          populateServicesFor<xsl:value-of select="$servicename"/>();
 
@@ -241,7 +253,7 @@
              <xsl:when test="$isUnwrapParameters">
                                            <xsl:for-each select="input/param/param[@type!='']">
                                                <xsl:if test="position() > 1"><xsl:text>,</xsl:text></xsl:if>
-                                               <xsl:value-of select="@type"/><xsl:text> _</xsl:text><xsl:value-of select="@name"/>
+                                               <xsl:value-of select="@type"/><xsl:text>* _</xsl:text><xsl:value-of select="@name"/>
                                            </xsl:for-each>
              </xsl:when>
              <xsl:otherwise>
@@ -385,7 +397,8 @@
               is_soap_act_set = AXIS2_FALSE;
               soap_action = "<xsl:value-of select="$soapAction"/>";
               soap_act = axutil_string_create(Environment::getEnv(), "<xsl:value-of select="$soapAction"/>");
-              axis2_options_set_soap_action(options, Environment::getEnv(), soap_act);    
+	      axis2_options_set_soap_action(options, Environment::getEnv(), soap_act);
+	      axis2_options_set_action(options, Environment::getEnv(), soap_action);
             }
 
             <xsl:choose>
@@ -672,7 +685,7 @@
         <xsl:when test="$isUnwrapParameters">
                                           <xsl:for-each select="input/param/param[@type!='']">
                                                <xsl:if test="position() > 1"><xsl:text>,</xsl:text></xsl:if>
-                                              <xsl:value-of select="@type"/><xsl:if test="input/param/param/@ours"><xsl:text>*</xsl:text></xsl:if><xsl:text> _</xsl:text><xsl:value-of select="@name"/>
+                                              <xsl:value-of select="@type"/><xsl:if test="input/param/param/@ours"><xsl:text>*</xsl:text></xsl:if><xsl:text>* _</xsl:text><xsl:value-of select="@name"/>
                                           </xsl:for-each>
         </xsl:when>
         <xsl:otherwise>
@@ -940,7 +953,7 @@
                          <!-- generate for unwrapped mode -->
                          <xsl:when test="$isUnwrapParameters">
                          if(ret_val == NULL) {
-                     callback->receiveResult_<xsl:value-of select="@name"/>((<xsl:value-of select="output/param/param/@type"/>)NULL<xsl:for-each select="output/param[@location='soap_header']">,
+                     callback->receiveResult_<xsl:value-of select="@name"/>((<xsl:value-of select="output/param/param/@type"/>*)NULL<xsl:for-each select="output/param[@location='soap_header']">,
                                                   <xsl:text>_</xsl:text><xsl:value-of select="@name"/>
                                                   </xsl:for-each><!-- xsl:if test="count(fault/*)">, fault </xsl:if -->);
                          }
@@ -1105,7 +1118,8 @@
               is_soap_act_set = AXIS2_FALSE;
               soap_action = "<xsl:value-of select="$soapAction"/>";
               soap_act = axutil_string_create(Environment::getEnv(), "<xsl:value-of select="$soapAction"/>");
-              axis2_options_set_soap_action(options, Environment::getEnv(), soap_act);
+	      axis2_options_set_soap_action(options, Environment::getEnv(), soap_act);
+	      axis2_options_set_action(options, Environment::getEnv(), soap_action);
             }
             <xsl:choose>
              <xsl:when test="$soapVersion='http://www.w3.org/2003/05/soap-envelope'">
@@ -1254,7 +1268,8 @@
             {
               soap_action = "<xsl:value-of select="$soapAction"/>";
               soap_act = axutil_string_create(Environment::getEnv(), "<xsl:value-of select="$soapAction"/>");
-              axis2_options_set_soap_action(options, Environment::getEnv(), soap_act);    
+	      axis2_options_set_soap_action(options, Environment::getEnv(), soap_act);
+	      axis2_options_set_action(options, Environment::getEnv(), soap_action);
             }
             <xsl:choose>
              <xsl:when test="$soapVersion='http://www.w3.org/2003/05/soap-envelope'">

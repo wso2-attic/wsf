@@ -25,5 +25,5 @@ else
 	cp -rf lib $DIL/bin/codegen/lib
 fi
 
-cd ../../../../../../../
+cd ../../../../../../
 cp -rf `pwd`/tools/codegen/wsdl2cpp $DIL/bin/codegen/

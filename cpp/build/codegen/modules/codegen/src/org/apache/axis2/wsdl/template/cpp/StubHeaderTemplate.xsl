@@ -88,6 +88,21 @@
 </xsl:for-each>
 </xsl:for-each>
 
+	#ifdef WIN32
+
+	#ifdef WSDL2CPP_EXPORTS
+	#define WSDL2CPP_EXTERN __declspec(dllexport)
+	#else
+	#define WSDL2CPP_EXTERN __declspec(dllimport)
+	#endif
+
+	#else
+
+	#define WSDL2CPP_EXTERN
+
+	#endif
+
+
 namespace <xsl:value-of select="@cppNamespace"/>
 {
 
@@ -124,11 +139,17 @@ typedef enum
  </xsl:if>
 </xsl:for-each>
 
-class <xsl:value-of select="@name"/> : public wso2wsf::Stub
+class WSDL2CPP_EXTERN <xsl:value-of select="@name"/> : public wso2wsf::Stub
 {
 
         public:
-        /**
+	/**
+         *  Constructor of <xsl:value-of select="@servicename"/> class
+         *  
+         */
+        <xsl:value-of select="@name"/>();
+
+	/**
          *  Constructor of <xsl:value-of select="@servicename"/> class
          *  @param client_home WSF/C home directory
          *  
@@ -194,7 +215,7 @@ class <xsl:value-of select="@name"/> : public wso2wsf::Stub
                 <xsl:when test="$isUnwrapParameters">
                       <xsl:for-each select="input/param/param[@type!='']">
                           <xsl:if test="position() > 1"><xsl:text>,</xsl:text></xsl:if>
-                          <xsl:value-of select="@type"/><xsl:text> _</xsl:text><xsl:value-of select="@name"/>
+                          <xsl:value-of select="@type"/><xsl:text>* _</xsl:text><xsl:value-of select="@name"/>
                       </xsl:for-each>
                 </xsl:when>
                 <xsl:otherwise>
@@ -250,7 +271,7 @@ class <xsl:value-of select="@name"/> : public wso2wsf::Stub
             <xsl:when test="$isUnwrapParameters">
                                               <xsl:for-each select="input/param/param[@type!='']">
                                                   <xsl:if test="position() > 1"><xsl:text>,</xsl:text></xsl:if>
-                                                  <xsl:value-of select="@type"/><xsl:text> _</xsl:text><xsl:value-of select="@name"/>
+                                                  <xsl:value-of select="@type"/><xsl:text>* _</xsl:text><xsl:value-of select="@name"/>
                                                 </xsl:for-each>
             </xsl:when>
             <xsl:otherwise>

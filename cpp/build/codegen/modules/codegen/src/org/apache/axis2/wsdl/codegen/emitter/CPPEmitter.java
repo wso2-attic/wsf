@@ -795,6 +795,10 @@ public class CPPEmitter extends AxisServiceBasedMultiLanguageEmitter {
 
         String filename = typeMappingStr.replace( "::", "_" );
 
+	if (typeMappingStr.endsWith("[]"))
+	{
+		typeMappingStr = "std::vector<" + typeMappingStr.replace("[]", "") + "*>";
+	}
 
         addAttribute(doc, "filename", filename, paramElement);
 
