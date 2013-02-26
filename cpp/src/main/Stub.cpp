@@ -29,6 +29,12 @@ void Stub::init(std::string& client_home, std::string& endpointUri)
 	clientOptions = serviceClient->getOptions();
 }
 
+void Stub::init(std::string& endpointUri)
+{
+	serviceClient = new ServiceClient(endpointUri);
+	clientOptions = serviceClient->getOptions();
+}
+
 Options* Stub::getOptions()
 {
 	return clientOptions;
