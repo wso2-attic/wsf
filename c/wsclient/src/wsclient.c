@@ -114,15 +114,15 @@ int main (int argc, char **argv)
 			case WSCLIENT_FAILURE:
 			{
 				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-								"[wsclient] wsclient invoke failed!");
-				printf ("\nwsclient invoke failed ! \n");
+								"[wsclient] wsclient invoke failed, generic!");
+				printf ("\nwsclient invoke failed, generic! \n");
 			}
 			break;
 			case WSCLIENT_ERROR_NO_DESTURI:
 			{
 				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-								"[wsclient] wsclient invoke failed !");
-				printf ("\nwsclient invoke failed ! \n");
+								"[wsclient] wsclient invoke failed, no dest_uri !");
+				printf ("\nwsclient invoke failed, no dest_uri! \n");
 			}
 			break;
 			case WSCLIENT_SUCCESS:
