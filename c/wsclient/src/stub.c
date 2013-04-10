@@ -994,7 +994,7 @@ else
 	    axis2_svc_client_set_options(svc_client, env, options);
 	else
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "svc_client && options failure");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[wsclient] svc_client && options failure");
 	    return WSCLIENT_FAILURE;
     }
 
