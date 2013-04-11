@@ -332,8 +332,6 @@ Rampart:\n"),
 			("\
        --encrypt-before-signing     Encrypts before signing(by default wsclient will sign before encrypting.\n"),
 			("\
-       --sign-body                  Signs the soap body.\n"),
-			("\
        --timestamp                  Generates a timestamp element in the security header.\n"),
 			("\
        --policy-file FILE           Path to the security policy file.\n"),
