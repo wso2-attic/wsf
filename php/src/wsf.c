@@ -1908,6 +1908,10 @@ PHP_METHOD(ws_security_token, __construct) {
                 (void **) & tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_LONG) {
             add_property_long(object, WSF_TTL, Z_LVAL_PP(tmp));
         }
+		 if (zend_hash_find(ht, WSF_CLOCK_SKEW_BUFFER, sizeof (WSF_CLOCK_SKEW_BUFFER),
+                (void **) & tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_LONG) {
+					add_property_long(object, WSF_CLOCK_SKEW_BUFFER, Z_LVAL_PP(tmp));
+        }
 
         if (zend_hash_find(ht, WSF_PKCS12_KEYSTORE, sizeof (WSF_PKCS12_KEYSTORE),
                 (void **) & tmp) == SUCCESS && Z_TYPE_PP(tmp) == IS_STRING) {
