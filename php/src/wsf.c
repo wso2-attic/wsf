@@ -458,8 +458,12 @@ php_ws_object_new_ex(
 
     ALLOC_HASHTABLE(intern->std.properties);
     zend_hash_init(intern->std.properties, 0, NULL, ZVAL_PTR_DTOR, 0);
+#if PHP_VERSION_ID < 50399
     zend_hash_copy(intern->std.properties, &class_type->default_properties,
             (copy_ctor_func_t) zval_add_ref, (void *) & tmp, sizeof (void *));
+#else
+        object_properties_init(&(intern->std), class_type); 
+#endif
 
     retval.handle = zend_objects_store_put(intern,
             (zend_objects_store_dtor_t) zend_objects_destroy_object,
